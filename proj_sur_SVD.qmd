@@ -23,7 +23,6 @@ format:
     self-contained: true
 ---
 
-
 ```{r setup, include=FALSE, eval = TRUE}
 library(RefManageR)
 library(tidyverse) ## to benefit from the tydiverse coding system
@@ -45,30 +44,28 @@ options(ggplot2.discrete.colour=   scale_color_manual(values = wesanderson::wes_
 couleur <-  wesanderson::wes_palette(name = "Darjeeling1")
 ```
 
-
-
-
 ::: hidden
 $$
 \newcommand\R{{\mathbb{R}}}
 \newcommand\norm[1]{\lVert#1\rVert}
-$$
-\definecolor{wongBlue}{RGB}{0, 114, 178}
-
+$$ \definecolor{wongBlue}{RGB}{0, 114, 178}
 :::
 
+$\boldsymbol{X}$ est la matrice des données, elle a $n$ lignes et $d$
+colonnes. On peut la voir comme une application de $\R^d$ dans $\R^n$.
 
-$\boldsymbol{X}$ est la matrice des données, elle a $n$ lignes et $d$ colonnes. On peut la voir comme une application de $\R^d$ dans $\R^n$.
-
-## La décomposition en valeurs sigulières 
+## La décomposition en valeurs sigulières
 
 $$\boldsymbol{X} = \boldsymbol{U}\boldsymbol{D}\boldsymbol{V^\intercal},$$
 
-où 
-* $\boldsymbol{U}$ est une matrice $n\times n$ orthogonale $\boldsymbol{U} \boldsymbol{U}^\intercal = \boldsymbol{I}_n,$
-* $\boldsymbol{V}$ est une matrice $d\times d$ orthogonale $\boldsymbol{V} \boldsymbol{V}^\intercal = \boldsymbol{I}_d,$
-* $\boldsymbol{D}$ est une matrice $n \times d$, diagnolae au sens où seul les termes $D_{ii}$ sont non nuls.
+où \* $\boldsymbol{U}$ est une matrice $n\times n$ orthogonale
+$\boldsymbol{U} \boldsymbol{U}^\intercal = \boldsymbol{I}_n,$ \*
+$\boldsymbol{V}$ est une matrice $d\times d$ orthogonale
+$\boldsymbol{V} \boldsymbol{V}^\intercal = \boldsymbol{I}_d,$ \*
+$\boldsymbol{D}$ est une matrice $n \times d$, diagonale au sens où seuls
+les termes $D_{ii}$ sont non nuls.
 
-::: {layout-ncol=2}
-![SVD et Changement de Base](r_code/change_base.svg){width=1200 #fig-change_base .lightbox}
-
+::: {layout-ncol="2"}
+![SVD et Changement de Base](r_code/change_base.svg){#fig-change_base
+.lightbox width="1200"}
+:::
