@@ -31,7 +31,7 @@ myBib <- ReadBib("./MAF.bib", check = FALSE)
 
 ```{r}
 liste <- 
-  readLines('topics.bib') |> 
+  readLines('MAF.bib') |> 
   as_tibble() |> 
   filter(stringr::str_detect(value, pattern = '@')) |> 
   mutate(key = stringr::str_remove(value, pattern = '@[:alnum:]+\\{')) |> 
@@ -47,10 +47,6 @@ NoCite(bib = myBib, liste)
 
 ```{r refs, echo=FALSE, results="asis", eval = TRUE, cache = FALSE}
 PrintBibliography(myBib)
-```
-
-```{r ggplot_back, echo = FALSE, eval = TRUE}
-ggplot <- function(...) ggplot2::ggplot(...) 
 ```
 
 
