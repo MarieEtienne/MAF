@@ -15,4 +15,4 @@ RUN apt-get install -y --no-install-recommends unzip python3-pip dvipng pandoc w
     pip3 install jupyter jupyter-cache flatlatex matplotlib && \
     apt-get --purge -y remove texlive.\*-doc$ && \
     apt-get clean
-
+RUN R -e "install.packages(c('reticulate'))"
