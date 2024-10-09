@@ -1,0 +1,72 @@
+---
+title: "Analyse en Composantes Principales"
+author: Marie-Pierre Etienne
+date: "Last updated on `r format(Sys.time(), '%d %B, %Y')`"
+institute: https://marieetienne.github.io/TopicsInStatistics/
+execute: 
+  freeze: false
+editor: 
+  markdown: 
+    wrap: 72
+css: mpe_pres_revealjs.css
+format:
+  revealjs: 
+    theme: [default, custom.scss]
+    width: 1050
+    margin: 0.05
+    slide-number: true
+    smaller: true
+    show-slide-number: print
+    menu:
+      useTextContentForMissingTitles: false
+    mathjax: true  # Active MathJax
+    self-contained: true
+---
+
+
+```{r setup, include=FALSE, eval = TRUE}
+library(RefManageR)
+library(tidyverse) ## to benefit from the tydiverse coding system
+library(reticulate) ## to use python from R
+library(wesanderson)
+library(plotly)
+```
+
+```{r reference,  include=FALSE, cache=FALSE, eval = TRUE}
+BibOptions(check.entries = FALSE,
+           bib.style = "authoryear",
+           cite.style = "alphabetic",
+           style = "markdown",
+           hyperlink = FALSE,
+           dashed = FALSE)
+myBib <- ReadBib("./topics.bib", check = FALSE)
+theme_set(theme_minimal())
+options(ggplot2.discrete.colour=   scale_color_manual(values = wesanderson::wes_palette(name = "Darjeeling1")) )
+couleur <-  wesanderson::wes_palette(name = "Darjeeling1")
+```
+
+
+
+
+::: hidden
+$$
+\newcommand\R{{\mathbb{R}}}
+\newcommand\norm[1]{\lVert#1\rVert}
+$$
+\definecolor{wongBlue}{RGB}{0, 114, 178}
+
+:::
+
+
+
+```{mermaid}
+graph TD;
+    R^d -->|V^T| Vx;
+    Vx -->|D| Dx;
+    Dx -->|U| Ax;
+    Ax -->|UDV^T| A;
+```
+
+
+
+

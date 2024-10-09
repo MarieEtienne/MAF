@@ -5,6 +5,14 @@ body {
   font-family: 'Fira Sans','Droid Serif', 'Palatino Linotype', 'Book Antiqua', Palatino, 'Microsoft YaHei', 'Songti SC', serif;
 }
 
+.math.inline .MathJax  {
+  font-size: 90% !important;
+}
+
+.math.display .MathJax  {
+  font-size: 90% !important;
+}
+
 /* color for equations*/
 .jaune {color: #F1D763;}
 .jauneb{color: #fdc455}
@@ -17,10 +25,50 @@ body {
 .alea{color: #398d55}
 .fixe{color: #33658a}
 
+.reveal section {
+    font-size: 0.85em; /* Ajustez cette valeur selon vos besoins */
+}
 
-/* strikeout for equations */
+.inverse h1, .inverse h2, .inverse h3 {
+  text-shadow: none;
+}
+/* Réduire la taille des titres */
+.reveal h1 {
+    font-size: 1.5em;
+    color: #33658a;
+ 
+}
 
-.barre{ text-decoration: line-through;}
+.reveal h2 {
+    font-size: 1.1em;
+    color: #C94326;
+}
+
+.reveal h3 {
+    font-size: 0.9em;
+    color: #0c324e;
+}
+
+/* Autres ajustements possibles */
+.reveal p {
+    font-size: 0.8em;
+}
+
+.reveal li {
+    font-size: 0.9em;
+}
+
+.reveal ul {
+    font-size: 0.9em;
+}
+
+
+/* changing color of callout-note*/
+div.callout-note {
+  border-left-color: #C94326 !important;
+  background-color: #edf7f6;
+}
+
 
 .addspace {
   padding-top: 1em;
@@ -97,6 +145,7 @@ a, a > code {
   color: #B40F20;
   text-decoration: none;
 }
+
 .footnote {
   position: absolute;
   bottom: 1em;
@@ -266,7 +315,6 @@ th, td { padding: 2px; }
 
 h1 {
   font-weight: normal;
-  margin-top: -60px;
   margin-left: -00px;
   color: #F7A913;
 }
@@ -279,7 +327,6 @@ h2  {
   font-weight: 400;
   text-align: left;
   margin-left: 00px;
-  margin-bottom: -10px;
 }
 
 
@@ -291,7 +338,6 @@ h3, h4 {
   font-weight: 400;
   text-align: left;
   margin-left: 00px;
-  margin-bottom: -10px;
 }
 .remark-slide-content h1 {
   font-size: 27px;

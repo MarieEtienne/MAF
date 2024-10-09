@@ -1,0 +1,33 @@
+project:
+  type: website
+
+website:
+  title: "Méthodes d'analyse factorielle"
+  navbar:
+    right:
+      - href: index.qmd
+        text: Home
+      - about.qmd
+    left:
+      - icon: github
+        href: https://github.com/MarieEtienne/MAF.git
+        aria-label: GitHub
+      - text: "References"
+        href: references.qmd
+      - text: "Cours"
+        menu: 
+          - href: 01_acp.qmd
+      - text: "Projecteurs sur"
+        menu: 
+          - href: proj_sur_SVD.qmd
+      
+       
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+
+editor: visual
+
