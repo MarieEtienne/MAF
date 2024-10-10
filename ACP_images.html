@@ -178,8 +178,8 @@ window.Quarto = {
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-cours">    
         <li>
-    <a class="dropdown-item" href="./01_intro.qmd">
- <span class="dropdown-text"></span></a>
+    <a class="dropdown-item" href="./01_intro.html">
+ <span class="dropdown-text">Méthodes d’Analyse Factorielle</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="./01_acp.html">
@@ -425,66 +425,17 @@ window.Quarto = {
 <p><img src="img/abbey_road.jpg" class="img-fluid"></p>
 <p>Pour la charger avec R, on utilise le package <code>imager</code> et la fonction <code>load.image</code>. puis la fonction <code>grayscale</code>pour bien s’assurer que l’image est codée en niveaux de gris.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(imager)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Loading required package: magrittr</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>
-Attaching package: 'magrittr'</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following object is masked from 'package:purrr':
-
-    set_names</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following object is masked from 'package:tidyr':
-
-    extract</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>
-Attaching package: 'imager'</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following object is masked from 'package:magrittr':
-
-    add</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following object is masked from 'package:stringr':
-
-    boundary</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following object is masked from 'package:dplyr':
-
-    where</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following object is masked from 'package:tidyr':
-
-    fill</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following objects are masked from 'package:stats':
-
-    convolve, spectrum</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following object is masked from 'package:graphics':
-
-    frame</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following object is masked from 'package:base':
-
-    save.image</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>image <span class="ot">&lt;-</span> <span class="fu">load.image</span>(<span class="st">'img/abbey_road.jpg'</span>)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>image <span class="ot">&lt;-</span> <span class="fu">grayscale</span>(image)</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(image)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(imager)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>image <span class="ot">&lt;-</span> <span class="fu">load.image</span>(<span class="st">'img/abbey_road.jpg'</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>image <span class="ot">&lt;-</span> <span class="fu">grayscale</span>(image)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>df_origine <span class="ot">&lt;-</span>image <span class="sc">%&gt;%</span> as.data.frame</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>p_origine <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_origine,<span class="fu">aes</span>(x,y))<span class="sc">+</span><span class="fu">geom_raster</span>(<span class="fu">aes</span>(<span class="at">fill=</span>value)) <span class="sc">+</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>   <span class="fu">scale_y_continuous</span>(<span class="at">trans=</span>scales<span class="sc">::</span><span class="fu">reverse_trans</span>(), <span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)) <span class="sc">+</span> <span class="do">## pour mettre l'image dans le bon sens et supprimer les bors gris</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(<span class="at">low=</span><span class="st">"black"</span>,<span class="at">high=</span><span class="st">"white"</span>) <span class="sc">+</span> <span class="do">##&nbsp;pour le noir et blanc</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>p_origine</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -496,12 +447,12 @@ Attaching package: 'imager'</code></pre>
 <p>L’objet obtenu est un <code>array</code> dont la première dimension est le nombre de pixels en ligne et la seconde dimension le nombre de pixel en colonnes. La troisème dimension est la profondeur et correspondrait au temps dan sun film par exemple et la dernière dimension est la couleur (on a donc 3 valeurs possibles sur cette dernière dimension dans le cas d’une image RGB et 1 dans le cas d’une image en niveau de gris).</p>
 <p>Si on se concentre sur les deux premières dimensions, on a donc une matrice dont la valeur est le niveau de gris du pixel correspondant.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(image)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(image)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1024  768    1    1</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>gray_channel <span class="ot">&lt;-</span> image[,,<span class="dv">1</span>,<span class="dv">1</span>]</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>gray_channel[<span class="dv">1</span>,<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>gray_channel <span class="ot">&lt;-</span> image[,,<span class="dv">1</span>,<span class="dv">1</span>]</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>gray_channel[<span class="dv">1</span>,<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.1529412</code></pre>
 </div>
@@ -510,23 +461,23 @@ Attaching package: 'imager'</code></pre>
 <p>On va découper l’image en buffer carré (patch, micro image) de coté <span class="math inline">\(bs.\)</span> Un individu sera un patch et une variable sera le niveau de gris dans un pixel particulier du patch.</p>
 <p>On a donc <span class="math inline">\(bs^2\)</span> variables et <span class="math inline">\(N_{buf} = (height/bs) * (width/bs)\)</span> buffers/individus.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set block size to 4x4</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>block_size <span class="ot">&lt;-</span> <span class="dv">4</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract blocks for each color channel in parallel</span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>image_blocks <span class="ot">&lt;-</span> <span class="fu">extract_blocks_parallel</span>(gray_channel, block_size)</span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(image_blocks)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set block size to 4x4</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>block_size <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract blocks for each color channel in parallel</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>image_blocks <span class="ot">&lt;-</span> <span class="fu">extract_blocks_parallel</span>(gray_channel, block_size)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(image_blocks)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="réduction-de-dimension-par-acp" class="level3">
 <h3 class="anchored" data-anchor-id="réduction-de-dimension-par-acp">Réduction de dimension par ACP</h3>
 <p>On va maintenant mettre en oeuvre une ACP, pour détermnier les composantes principales et on ne gardera quelques composantes pour réduire la dimension. On utilise <code>FactoMineR</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(FactoMineR)</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>images_pca <span class="ot">&lt;-</span> <span class="fu">PCA</span>(<span class="at">X =</span> image_blocks, <span class="at">scale.unit =</span> <span class="cn">TRUE</span>, <span class="at">ncp =</span> <span class="fu">ncol</span>(image_blocks))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(FactoMineR)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>images_pca <span class="ot">&lt;-</span> <span class="fu">PCA</span>(<span class="at">X =</span> image_blocks, <span class="at">scale.unit =</span> <span class="cn">TRUE</span>, <span class="at">ncp =</span> <span class="fu">ncol</span>(image_blocks))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Les valeurs propres nous donnent la quantité d’information contenu par chaque composante.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>eigen_restreint <span class="ot">&lt;-</span> images_pca<span class="sc">$</span>svd<span class="sc">$</span>V</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>eigen_restreint <span class="ot">&lt;-</span> images_pca<span class="sc">$</span>svd<span class="sc">$</span>V</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On constate que la première composante contient à elle toute seule 89.0652348<span class="math inline">\(\%\)</span> d’inertie. Ce qui signifie qu’en écrivant chaque buffet comme un nombre réel multiplé par le premier buffer on recontruit presque <span class="math inline">\(90\%\)</span> de l’information. Dans ca cas on a juste besoin de stocker</p>
 <ul>
@@ -536,27 +487,26 @@ Attaching package: 'imager'</code></pre>
 <p>On passe donc <span class="math inline">\(N_{buf} * 16\)</span> réels à stocker à <span class="math inline">\(N_{buf} + bs^2\)</span> si on ne garde qu’une seule composante ou <span class="math inline">\(2 N_{buf} + bs^2\)</span> si on en garde 2.</p>
 <p>Les vecteurs propres sont donnés par</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>eigen_restreint <span class="ot">&lt;-</span> images_pca<span class="sc">$</span>svd<span class="sc">$</span>V</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>eigen_restreint <span class="ot">&lt;-</span> images_pca<span class="sc">$</span>svd<span class="sc">$</span>V</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On sait q’un vecteur propre correspond à un patch de <span class="math inline">\(bc\times bs\)</span>, on peut donc les visualiser sous cette forme</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>list_eigen <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span>block_size<span class="sc">^</span><span class="dv">2</span>, <span class="cf">function</span>(i){</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  X_restreint <span class="ot">&lt;-</span> <span class="fu">matrix</span>(images_pca<span class="sc">$</span>svd<span class="sc">$</span>V[,i], <span class="at">ncol =</span> <span class="dv">4</span>, <span class="at">nrow =</span> <span class="dv">4</span>)</span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  image_eig <span class="ot">&lt;-</span> <span class="fu">as.cimg</span>(<span class="fu">array</span>(X_restreint, <span class="at">dim =</span> <span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">4</span>,<span class="dv">1</span>,<span class="dv">1</span>)))</span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> image_eig <span class="sc">%&gt;%</span> <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(x,y))<span class="sc">+</span><span class="fu">geom_raster</span>(<span class="fu">aes</span>(<span class="at">fill=</span>value)) <span class="sc">+</span></span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>   <span class="fu">scale_y_continuous</span>(<span class="at">trans=</span>scales<span class="sc">::</span><span class="fu">reverse_trans</span>(), <span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)) <span class="sc">+</span> <span class="do">## pour mettre l'image dans le bon sens et supprimer les bors gris</span></span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)) <span class="sc">+</span></span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(<span class="at">low=</span><span class="st">"black"</span>,<span class="at">high=</span><span class="st">"white"</span>) <span class="sc">+</span> <span class="do">##&nbsp;pour le noir et blanc</span></span>
-<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
-<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a><span class="fu">coord_fixed</span>()</span>
-<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(p)</span>
-<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a><span class="fu">ggarrange</span>(<span class="fu">unlist</span>(list_eigen), <span class="at">ncol =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in as_grob.default(plot): Cannot convert object of class list into a
-grob.</code></pre>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>list_eigen <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span>block_size<span class="sc">^</span><span class="dv">2</span>, <span class="cf">function</span>(i){</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  X_restreint <span class="ot">&lt;-</span> <span class="fu">matrix</span>(images_pca<span class="sc">$</span>svd<span class="sc">$</span>V[,i], <span class="at">ncol =</span> <span class="dv">4</span>, <span class="at">nrow =</span> <span class="dv">4</span>)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  image_eig <span class="ot">&lt;-</span> <span class="fu">as.cimg</span>(<span class="fu">array</span>(X_restreint, <span class="at">dim =</span> <span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">4</span>,<span class="dv">1</span>,<span class="dv">1</span>)))</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> image_eig <span class="sc">%&gt;%</span> <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(x,y))<span class="sc">+</span><span class="fu">geom_raster</span>(<span class="fu">aes</span>(<span class="at">fill=</span>value)) <span class="sc">+</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>   <span class="fu">scale_y_continuous</span>(<span class="at">trans=</span>scales<span class="sc">::</span><span class="fu">reverse_trans</span>(), <span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)) <span class="sc">+</span> <span class="do">## pour mettre l'image dans le bon sens et supprimer les bors gris</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(<span class="at">low=</span><span class="st">"black"</span>,<span class="at">high=</span><span class="st">"white"</span>) <span class="sc">+</span> <span class="do">##&nbsp;pour le noir et blanc</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="fu">coord_fixed</span>()</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(p)</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="fu">ggarrange</span>(<span class="at">plotlist =</span> list_eigen, <span class="at">ncol =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$`1`</code></pre>
 </div>
 <div class="cell-output-display">
 <div>
@@ -565,65 +515,95 @@ grob.</code></pre>
 </figure>
 </div>
 </div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+$`2`</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ACP_images_files/figure-html/eigenvectors_buffer-2.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+$`3`</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ACP_images_files/figure-html/eigenvectors_buffer-3.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+$`4`</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ACP_images_files/figure-html/eigenvectors_buffer-4.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+attr(,"class")
+[1] "list"      "ggarrange"</code></pre>
+</div>
 </div>
 </section>
 <section id="reconstruction-avec-une-seule-composante-principale" class="level3">
 <h3 class="anchored" data-anchor-id="reconstruction-avec-une-seule-composante-principale">Reconstruction avec une seule composante principale</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>new_coord <span class="ot">&lt;-</span> images_pca<span class="sc">$</span>ind<span class="sc">$</span>coord</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>reconstruction <span class="ot">&lt;-</span> new_coord[, <span class="dv">1</span>, drop <span class="ot">=</span> <span class="cn">FALSE</span>]<span class="sc">%*%</span> <span class="fu">t</span>(images_pca<span class="sc">$</span>svd<span class="sc">$</span>V)[<span class="dv">1</span>,] </span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>n_row_block <span class="ot">&lt;-</span> <span class="fu">dim</span>(image)[<span class="dv">1</span>]<span class="sc">/</span>block_size</span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>n_col_block <span class="ot">&lt;-</span> <span class="fu">dim</span>(image)[<span class="dv">2</span>]<span class="sc">/</span>block_size</span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>X_reconstruction_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span>n_col_block, <span class="cf">function</span>(j){</span>
-<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>  list_rows <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span>n_row_block, <span class="cf">function</span>(i){</span>
-<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">matrix</span>( reconstruction[(j<span class="dv">-1</span>)<span class="sc">*</span>n_row_block <span class="sc">+</span> i,], <span class="at">ncol =</span> block_size)</span>
-<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">do.call</span>(rbind, list_rows)</span>
-<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>}  </span>
-<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>X_reconstruction <span class="ot">&lt;-</span> <span class="fu">do.call</span>(cbind, X_reconstruction_list)</span>
-<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a>df_1 <span class="ot">&lt;-</span><span class="fu">as.cimg</span>(<span class="fu">array</span>(X_reconstruction, <span class="at">dim=</span><span class="fu">dim</span>(image))) <span class="sc">%&gt;%</span> as.data.frame</span>
-<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a>p_1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_1,<span class="fu">aes</span>(x,y))<span class="sc">+</span><span class="fu">geom_raster</span>(<span class="fu">aes</span>(<span class="at">fill=</span>value)) <span class="sc">+</span></span>
-<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a>   <span class="fu">scale_y_continuous</span>(<span class="at">trans=</span>scales<span class="sc">::</span><span class="fu">reverse_trans</span>(), <span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)) <span class="sc">+</span> <span class="do">## pour mettre l'image dans le bon sens et supprimer les bors gris</span></span>
-<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)) <span class="sc">+</span></span>
-<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(<span class="at">low=</span><span class="st">"black"</span>,<span class="at">high=</span><span class="st">"white"</span>) <span class="sc">+</span> <span class="do">##&nbsp;pour le noir et blanc</span></span>
-<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>new_coord <span class="ot">&lt;-</span> images_pca<span class="sc">$</span>ind<span class="sc">$</span>coord</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>reconstruction <span class="ot">&lt;-</span> new_coord[, <span class="dv">1</span>, drop <span class="ot">=</span> <span class="cn">FALSE</span>]<span class="sc">%*%</span> <span class="fu">t</span>(images_pca<span class="sc">$</span>svd<span class="sc">$</span>V)[<span class="dv">1</span>,] </span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>n_row_block <span class="ot">&lt;-</span> <span class="fu">dim</span>(image)[<span class="dv">1</span>]<span class="sc">/</span>block_size</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>n_col_block <span class="ot">&lt;-</span> <span class="fu">dim</span>(image)[<span class="dv">2</span>]<span class="sc">/</span>block_size</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>X_reconstruction_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span>n_col_block, <span class="cf">function</span>(j){</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  list_rows <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span>n_row_block, <span class="cf">function</span>(i){</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">matrix</span>( reconstruction[(j<span class="dv">-1</span>)<span class="sc">*</span>n_row_block <span class="sc">+</span> i,], <span class="at">ncol =</span> block_size)</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">do.call</span>(rbind, list_rows)</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>}  </span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>X_reconstruction <span class="ot">&lt;-</span> <span class="fu">do.call</span>(cbind, X_reconstruction_list)</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>df_1 <span class="ot">&lt;-</span><span class="fu">as.cimg</span>(<span class="fu">array</span>(X_reconstruction, <span class="at">dim=</span><span class="fu">dim</span>(image))) <span class="sc">%&gt;%</span> as.data.frame</span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>p_1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_1,<span class="fu">aes</span>(x,y))<span class="sc">+</span><span class="fu">geom_raster</span>(<span class="fu">aes</span>(<span class="at">fill=</span>value)) <span class="sc">+</span></span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>   <span class="fu">scale_y_continuous</span>(<span class="at">trans=</span>scales<span class="sc">::</span><span class="fu">reverse_trans</span>(), <span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)) <span class="sc">+</span> <span class="do">## pour mettre l'image dans le bon sens et supprimer les bors gris</span></span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(<span class="at">low=</span><span class="st">"black"</span>,<span class="at">high=</span><span class="st">"white"</span>) <span class="sc">+</span> <span class="do">##&nbsp;pour le noir et blanc</span></span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>new_coord <span class="ot">&lt;-</span> images_pca<span class="sc">$</span>ind<span class="sc">$</span>coord</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>reconstruction_2 <span class="ot">&lt;-</span> new_coord[, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]<span class="sc">%*%</span> <span class="fu">t</span>(images_pca<span class="sc">$</span>svd<span class="sc">$</span>V)[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,] </span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>X_reconstruction_list_2 <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span>n_col_block, <span class="cf">function</span>(j){</span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  list_rows <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span>n_row_block, <span class="cf">function</span>(i){</span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">matrix</span>( reconstruction_2[(j<span class="dv">-1</span>)<span class="sc">*</span>n_row_block <span class="sc">+</span> i,], <span class="at">ncol =</span> block_size)</span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">do.call</span>(rbind, list_rows)</span>
-<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>}  </span>
-<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>X_reconstruction_2 <span class="ot">&lt;-</span> <span class="fu">do.call</span>(cbind, X_reconstruction_list_2)</span>
-<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>df_2 <span class="ot">&lt;-</span><span class="fu">as.cimg</span>(<span class="fu">array</span>(X_reconstruction_2, <span class="at">dim=</span><span class="fu">dim</span>(image))) <span class="sc">%&gt;%</span> as.data.frame</span>
-<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>p_2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_2,<span class="fu">aes</span>(x,y))<span class="sc">+</span><span class="fu">geom_raster</span>(<span class="fu">aes</span>(<span class="at">fill=</span>value)) <span class="sc">+</span></span>
-<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>   <span class="fu">scale_y_continuous</span>(<span class="at">trans=</span>scales<span class="sc">::</span><span class="fu">reverse_trans</span>(), <span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)) <span class="sc">+</span> <span class="do">## pour mettre l'image dans le bon sens et supprimer les bors gris</span></span>
-<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)) <span class="sc">+</span></span>
-<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(<span class="at">low=</span><span class="st">"black"</span>,<span class="at">high=</span><span class="st">"white"</span>) <span class="sc">+</span> <span class="do">##&nbsp;pour le noir et blanc</span></span>
-<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>df_origine <span class="ot">&lt;-</span>image <span class="sc">%&gt;%</span> as.data.frame</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>p_origine <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_origine,<span class="fu">aes</span>(x,y))<span class="sc">+</span><span class="fu">geom_raster</span>(<span class="fu">aes</span>(<span class="at">fill=</span>value)) <span class="sc">+</span></span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>   <span class="fu">scale_y_continuous</span>(<span class="at">trans=</span>scales<span class="sc">::</span><span class="fu">reverse_trans</span>(), <span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)) <span class="sc">+</span> <span class="do">## pour mettre l'image dans le bon sens et supprimer les bors gris</span></span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)) <span class="sc">+</span></span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(<span class="at">low=</span><span class="st">"black"</span>,<span class="at">high=</span><span class="st">"white"</span>) <span class="sc">+</span> <span class="do">##&nbsp;pour le noir et blanc</span></span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>new_coord <span class="ot">&lt;-</span> images_pca<span class="sc">$</span>ind<span class="sc">$</span>coord</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>reconstruction_2 <span class="ot">&lt;-</span> new_coord[, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]<span class="sc">%*%</span> <span class="fu">t</span>(images_pca<span class="sc">$</span>svd<span class="sc">$</span>V)[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,] </span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>X_reconstruction_list_2 <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span>n_col_block, <span class="cf">function</span>(j){</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  list_rows <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span>n_row_block, <span class="cf">function</span>(i){</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">matrix</span>( reconstruction_2[(j<span class="dv">-1</span>)<span class="sc">*</span>n_row_block <span class="sc">+</span> i,], <span class="at">ncol =</span> block_size)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">do.call</span>(rbind, list_rows)</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>}  </span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>X_reconstruction_2 <span class="ot">&lt;-</span> <span class="fu">do.call</span>(cbind, X_reconstruction_list_2)</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>df_2 <span class="ot">&lt;-</span><span class="fu">as.cimg</span>(<span class="fu">array</span>(X_reconstruction_2, <span class="at">dim=</span><span class="fu">dim</span>(image))) <span class="sc">%&gt;%</span> as.data.frame</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>p_2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_2,<span class="fu">aes</span>(x,y))<span class="sc">+</span><span class="fu">geom_raster</span>(<span class="fu">aes</span>(<span class="at">fill=</span>value)) <span class="sc">+</span></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>   <span class="fu">scale_y_continuous</span>(<span class="at">trans=</span>scales<span class="sc">::</span><span class="fu">reverse_trans</span>(), <span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)) <span class="sc">+</span> <span class="do">## pour mettre l'image dans le bon sens et supprimer les bors gris</span></span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(<span class="at">low=</span><span class="st">"black"</span>,<span class="at">high=</span><span class="st">"white"</span>) <span class="sc">+</span> <span class="do">##&nbsp;pour le noir et blanc</span></span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="cell-output-display">

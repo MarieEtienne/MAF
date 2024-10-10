@@ -25,6 +25,13 @@ body {
 .alea{color: #398d55}
 .fixe{color: #33658a}
 
+/*  for code output wider */
+.reveal .custom3565 div.column:first-child {
+        width: 35%;
+}
+.reveal .custom3565 div.column:not(:first-child) {
+        width: 65%;
+}
 
 .reveal .slides section {
   font-size: 24px !important;  /* Remplacez 24px par la taille souhaitée */
