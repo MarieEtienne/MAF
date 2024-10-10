@@ -7,15 +7,19 @@ website:
     right:
       - href: index.qmd
         text: Home
-      - about.qmd
     left:
       - icon: github
         href: https://github.com/MarieEtienne/MAF.git
         aria-label: GitHub
-      - text: "References"
-        href: references.qmd
+      - text: "References "
+        menu: 
+          - text: Cours        
+            href: references_maf.qmd
+          - text: Algèbre linéaire        
+            href: references_linear.qmd
       - text: "Cours"
         menu: 
+          - href: 01_intro.qmd
           - href: 01_acp.qmd
       - text: "Projecteurs sur"
         menu: 

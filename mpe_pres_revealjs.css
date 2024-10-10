@@ -25,6 +25,11 @@ body {
 .alea{color: #398d55}
 .fixe{color: #33658a}
 
+
+.reveal .slides section {
+  font-size: 24px !important;  /* Remplacez 24px par la taille souhaitée */
+}
+
 .reveal section {
     font-size: 0.85em; /* Ajustez cette valeur selon vos besoins */
 }

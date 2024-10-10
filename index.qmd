@@ -5,18 +5,20 @@ format: html
 toc: true
 date: last-modified
 date-format: "[Dernière Mise à jour] Octobre 2024"
+css: mpe_pres_revealjs.css
 execute: 
   freeze: auto
 ---
 
 
-# Méthodes d'analyse Factorielle: Techniques et Applications
-
-## Description du cours
+# Description du cours
 
 Ce cours présente des techniques statistiques pour décire et viusualiser des données multivariés. Il présentera à la fois les fondements mathématiques (géométriques) mais fera surtout la part belle à la mise en oeuvre pratioque de ces outils. A l'issue de ce cours, vous disposerez d'un ensemble de méthodes pour analyser des ensembles de données complexes et créer des représentations visuelles qui révèlent des motifs, des tendances et des relations entre plusieurs variables. Le cours couvre les sujets suivants :
 
--   **Analyse en Composantes Principales (ACP)** : Un outil puissant de réduction dimensionnelle qui simplifie les grands ensembles de données tout en préservant autant que possible la variation. Les étudiants apprendront à visualiser des données à haute dimension à l'aide de l'ACP, rendant ainsi plus faciles à interpréter les relations complexes.
+
+# Contenu
+
+-   **Analyse en Composantes Principales (ACP)** : Un outil puissant de réduction dimensionnelle qui simplifie les grands ensembles de données tout en préservant autant que possible la variation. Les étudiants apprendront à visualiser des données à haute dimension à l'aide de l'ACP, rendant ainsi plus faciles à interpréter les relations complexes. Un extension, l'Analyse Factorielle Multiple (AFM) permet de prendre en compte des variables quantitatives organisées par groupe (on veut distinguer les variables physiques, des variables chimiques par exemple).
 
 -   **Analyse Factorielle Discriminante (AFD)** : Cette technique aide à classifier les observations dans des groupes prédéfinis. Le cours se concentrera sur la manière de différencier visuellement les groupes en utilisant plusieurs variables prédictives et d'interpréter les résultats.
 
@@ -28,4 +30,15 @@ Le cours mettra un accent particulier sur la visualisation des ensembles de donn
 
 À la fin du cours, les étudiants seront compétents dans l'application des méthodes multivariées à une variété d'ensembles de données et auront les compétences nécessaires pour créer des visualisations qui transmettent efficacement les insights découverts grâce à l'analyse statistique.
 
-**Prérequis** : Une connaissance de base des statistiques, de l'algèbre linéaire et une maîtrise des logiciels statistiques (R ou Python) sont recommandées. \`\`\`
+
+
+# Organisation du cours
+
+* 12h de cours 
+* 12h de De TD/TP
+
+Chaque cours contiendra un exemple détaillé et la mise en oeuvre pratique de la méthode étudiée ainsi que la présentation des concepts mathématiques (essentiellement géométriques) sur lesquels elle repose.
+
+# Prérequis 
+
+ Une connaissance de base des statistiques, de l'algèb.re linéaire et une maîtrise des logiciels statistiques (R ou Python) sont recommandées
