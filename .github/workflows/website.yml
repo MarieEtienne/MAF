@@ -13,13 +13,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      #- name: Install R packages
-      #  run: |
-      # Rscript -e "install.packages(c('Factoshiny', 'RefManageR', 'wesanderson', 'palmerpenguins', 'plotly'))"
-      #    Rscript -e "install.packages(c('reticulate', 'ggpubr', 'GGally', 'xaringanExtra', 'flipbookr', 'ggrepel'))"
-      # - name: Additional Python packages
-      #   run: |
-      #     pip install numpy scipy pandas seaborn scikit-learn statsmodels palmerpenguins
+      - name: Install R packages
+        run: |
+          Rscript -e "install.packages(c('palmerpenguins','GGally'))"
       - name: Generate slides
         run: "quarto render"
       - name: GitHub Pages action

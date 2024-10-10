@@ -1,10 +1,14 @@
 ---
 title: "Analyse en Composantes Principales"
-author: Marie-Pierre Etienne
+author:
+  - name: Marie-Pierre Etienne
+    affiliation: 
+      - ENSAI - CREST
+    email: marie-pierre.etienne@ensai.fr
 date: "Last updated on `r format(Sys.time(), '%d %B, %Y')`"
-institute: https://marieetienne.github.io/TopicsInStatistics/
+institute: https://marieetienne.github.io/MAF/
 execute: 
-  freeze: false
+  freeze: true
 editor: 
   markdown: 
     wrap: 72
@@ -15,7 +19,7 @@ format:
     width: 1050
     margin: 0.05
     slide-number: true
-    smaller: true
+    slide-level: 2
     show-slide-number: print
     menu:
       useTextContentForMissingTitles: false
@@ -29,6 +33,7 @@ library(tidyverse) ## to benefit from the tydiverse coding system
 library(reticulate) ## to use python from R
 library(wesanderson)
 library(plotly)
+library(ggforce)
 ```
 
 ```{r reference,  include=FALSE, cache=FALSE, eval = TRUE}
@@ -47,8 +52,1058 @@ couleur <-  wesanderson::wes_palette(name = "Darjeeling1")
 ::: hidden
 $$
 \newcommand\R{{\mathbb{R}}}
+\newcommand\Xbf{{\boldsymbol{X}}}
 \newcommand\norm[1]{\lVert#1\rVert}
-$$ \definecolor{wongBlue}{RGB}{0, 114, 178}
+\newcommand\xcol[1]{\boldsymbol{x}^{#1}}
+\newcommand\xrow[1]{\boldsymbol{x}_{#1}}
+\newcommand\xbf{\boldsymbol{x}}
+\newcommand\ybf{\boldsymbol{y}}
+
+$$ 
 :::
+
+
+
+
+
+```{r datapackage, eval = TRUE, echo = FALSE, warning = FALSE}
+library(plotly)
+ggplot <- function(...) ggplot2::ggplot(...) + scale_fill_manual(values = wesanderson::wes_palette(name = "Darjeeling1")) + scale_color_manual(values = wesanderson::wes_palette(name = "Darjeeling1")) + theme_minimal()
+#remotes::install_github('MarieEtienne/coursesdata', force = TRUE)
+doubs.env <- read.csv ('https://raw.githubusercontent.com/zdealveindy/anadat-r/master/data/DoubsEnv.csv', row.names = 1) %>% as_tibble()
+
+data(penguins, package = 'palmerpenguins')
+penguins <- penguins %>% na.omit()
+
+```
+
+
+# Et on commence avec les manchots
+
+
+<!-- ## L'exemple des caractéristiques du Doubs  -->
+
+<!-- On a mesuré les caractéristiques physico chimiques sur 30  sites différents le long de la rivière Doubs.  -->
+
+<!-- .pull-left[ Les 6 premières lignes (parmi 30) du jeu de données doubs.env -->
+<!-- ```{r extrait_doubs, echo = FALSE, eval = TRUE} -->
+<!-- doubs.env %>% print(n=6) -->
+<!-- ``` -->
+<!-- ] -->
+
+
+<!-- .pull-right[ -->
+<!-- * das :  distance à al source ( $km$ ),   -->
+<!-- * alt : altitude ( $m$ ) -->
+<!-- * pen : la pente (denivelelé pour  1000m) -->
+<!-- * deb : le débit () $m^3.s^{-1}$ ) -->
+<!-- * pH : le pH de l'eau, -->
+<!-- * dur : la concentration en calcium ( $mg.L^{-1}$ ), -->
+<!-- * pho	: concentration en phosphate ( $mg.L^{-1}$ ), -->
+<!-- * nit : concentration en nitrate  ( $mg.L^{-1}$ ), -->
+<!-- * amn	: concentration en ammonium ( $mg.L^{-1}$ ), -->
+<!-- * oxy	: concentration d'oxygène dissous ( $mg.L^{-1}$ ),  -->
+<!-- * dbo	: Demande biologique en oxygène ( $mg.L^{-1}$ ). -->
+<!-- ] -->
+
+
+
+<!-- [Comment visualiser au mieux ces données pour faire apparaître les liens entre variables et identifier des resemblances entre individus ?]{.rouge} -->
+
+
+## Rappel des données sur les manchots
+
+Données disponibles dans le package `palmerpenguins` mises à disposition par le Dr. Kristen Gorman et the  Palmer Station, Antarctica LTER.
+
+
+On a mesuré les caractéristiques morphologiques de divers manchots :
+
+
+:::: {.columns}
+
+::: {.column width="48%"}
+
+Les 6 premières lignes (parmi 333 ) 
+
+```{r extrait_penguins, echo = FALSE, eval = TRUE}
+ penguins %>% 
+ select(bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g) %>%  print(n=6)
+```
+
+
+:::
+
+
+::: {.column width="48%"}
+
+* bill_length_mm : la longueur du bec,
+
+* bill_depth_mm : l'épaisseur du bec, 
+
+* flipper_length_mm : la longueur de la nageoire,
+
+* body_mass_g : le poids du corps.
+
+:::
+
+::::
+
+
+[Comment visualiser au mieux ces données pour faire apparaître les liens entre variables et identifier des resemblances entre individus ?]{.rouge}
+
+## Voir c'est comprendre : comment représenter l'information contenue dans ce tableau ?
+
+### Idée 1 : on représente les liens des variables 2 à 2
+
+```{r ggpairs, eval = TRUE, echo = FALSE, fig.show='asis', out.height = "80%", out.width = "80%"}
+penguins %>% select(bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g) %>% GGally::ggpairs()
+```
+
+
+
+## Voir c'est comprendre : comment représenter l'information contenue dans ce tableau ?
+
+### Idée 1 : dangereuse
+
+
+```{r gen_data,eval = TRUE, out.width = "100%"}
+scene = list(camera = list(eye = list(x = -2, y = 0, z = 0)),
+             center = list(x= mean(penguins$bill_depth_mm, y = mean(penguins$body_mass_g), z = mean(penguins$flipper_length_mm) )))
+fig <- plot_ly(penguins, x = ~ bill_depth_mm, y = ~ -body_mass_g, z = ~flipper_length_mm, width = 500, height = 500) %>% 
+  add_markers(size = 12)  %>% 
+  layout(title = "3D Scatter plot", scene = scene)
+fig
+```
+
+## Voir c'est comprendre : comment représenter l'information contenue dans ce tableau ?
+
+### Objectifs
+
+* Représenter sans perdre trop d'information,
+* Quantifier la perte d'information,
+* Comprendre quelles sont les informations redondantes, (variables liées),
+* Idéalement des individus éloignés dans le nuage initial, restent éloignés dans la représentation
+
+
+Dans toute la suite, sans perte de généralité, on va considérer que les variables sont centrées. 
+
+
+## Si on savait faire une Analyse en Composantes Principales
+
+
+::: {.panel-tabset} 
+
+### Dans R on ferait
+
+```{r PCA_manchots_1, eval = TRUE, echo = TRUE}
+#| echo: true
+#| output-location: column
+#| results: hold
+#| message: false
+
+library(FactoMineR)
+dta <- penguins %>% select(bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g) 
+penguins.PCA <- PCA(X = dta, ncp = 4, graph = FALSE)
+```
+
+
+### Représentation des individus
+
+
+L'ACP permet de trouver la projection en 2 dimensions qui préserve au mieux l'information contenu dans le nuage de points (avec peu de déformation).
+
+
+```{r PCA_manchots_ind, eval = TRUE, echo = TRUE}
+#| classes: custom3565
+#| output-location: column
+#| results: hold
+plot(penguins.PCA, choix = "ind")
+```
+[Reste à comprendre]{.rouge}
+
+* Comment quantifier l'information contenue dans un nuage de points
+* Comment est construite  cette meilleure projection
+* Quels sont les individus bien représentés ?
+
+### Représentation des variables
+
+
+L'ACP définit de nouvelles variables, les composantes principales qui sont une combinaison linéaire des anciennes variables.  On peut représenter les variables dans le premier plan de l'ACP. 
+
+
+```{r PCA_manchots_var, eval = TRUE, echo = TRUE}
+#| classes: custom3565
+#| output-location: column
+#| results: hold
+plot(penguins.PCA, choix = "var")
+```
+
+
+[Reste à comprendre]{.rouge}
+
+* Comment interpréter cette représentation ?
+* Quelles sont les variables bien représentées ?
+* Que peut on déduire de ce graphique sur le lien entre les variables.
+* Comment lier graphique des individus et graphique des variables 
+
+
+### Visualisation par ACP
+
+
+:::: {.columns}
+
+::: {.column width="45%"}
+
+```{r PCA_manchots_ind_2}
+#| echo: false
+plot(penguins.PCA, choix = "ind")
+```
+
+:::
+
+::: {.column width="45%"}
+
+```{r PCA_manchots_var_2}
+#| echo: false
+plot(penguins.PCA, choix = "var")
+```
+
+:::
+
+::::
+
+:::
+
+
+# Les données
+
+## Mise en forme des données
+
+L’ACP s’applique à des données quantitatives sous forme de tableau. Ce tableau est composé de [n individus]{.alea} (lignes) et de [p variables]{.orange}  (colonnes).
+
+Dans la suite on va noter $\Xbf$ la matrice des données, $\Xbf \in \R^{n\times p}$.
+
+$x_{\class{alea}{i}\class{orange}{j}}$ est la valeur de la variable $\class{orange}{j}$ mesurée pour l'individu $\class{alea}{i}.$
+
+$$\Xbf = \overset{\color{orange}{\begin{matrix}var_1& \ldots \ &  \ \ldots \ &\  \ldots\  & \  var_p \end{matrix}}}{\begin{pmatrix}
+x_{\class{alea}{1}}^{\class{orange}{1}} &  \ldots &  \ldots &\ldots &  x_{\class{alea}{1}}^{\class{orange}{p}}\\
+\vdots & & &  &\vdots \\
+ & &  x_{\class{alea}{i}}^{\class{orange}{j}} & & \\
+\vdots & & & & \vdots \\
+x_{\class{alea}{n}}^{\class{orange}{1}} & & & & \ldots x_{\class{alea}{n}}^{\class{orange}{p}}\\
+ \end{pmatrix}}$$
+ 
+ 
+
+## Deux points de vue complémentaires
+
+:::: {.columns}
+
+::: {.column width="48%"}
+
+### Le nuage des individus $C^n$
+
+On peut considérer qu'un [individu]{.alea}  $i$ est un vecteur  $\class{alea}{\xrow{i}}$ dans un espace de dimension $p$. Par convention tous les vecteurs sont des vecteurs colonnes, donc on peut écrire 
+
+$$\Xbf=\begin{pmatrix}
+\class{alea}{\xrow{1}}^\top\\
+\vdots \\
+\class{alea}{\xrow{n}}^\top\\
+\end{pmatrix},$$
+
+L'ensemble des $n$ vecteurs forme le [nuage des individus]{.alea} (ce qu'on représente classiquement).
+
+```{r nuage_ind}
+#! message: false
+# Installer les packages si nécessaire
+# install.packages("ggplot2")
+# install.packages("ggforce")
+
+library(ggplot2)
+library(ggforce)
+
+# Créer une base de données pour les points et les annotations
+individus <- data.frame(
+  x = c(1.5, 0.5, -0.5, -1),   # Coordonnées des points individuels
+  y = c(1.0, -0.5, 0.2, -0.5),   # Coordonnées des points individuels
+  label = c("i", "", "", "")    # Nom de l'individu i
+)
+
+# Points pour O = G et l'origine des axes
+origins <- data.frame(
+  x = c(0.2, 1.5),
+  y = c(-0.3, 0),
+  label = c("O", "")
+)
+
+# Points var_k
+vark <- data.frame(
+  x = c(3),
+  y = c(-0.3)
+)
+
+
+
+# Schéma avec ggplot
+ggplot() +
+  # Tracer une ellipse représentant le nuage de points
+  geom_ellipse(aes(x0 = 0, y0 = 0, a = 2.5, b = 0.8, angle = 3.14159/6), fill = NA, color = "black") +
+  
+  # Ajouter les points des individus dans l'espace
+  geom_point(data = individus, aes(x = x, y = y), size = 3) +
+  
+  # Ajouter les labels des individus (point i)
+  geom_text(data = individus, aes(x = x, y = y, label = label), vjust = -1.5, hjust = -0.5, size = 5) +
+  
+  # Tracer les axes
+  geom_segment(aes(x = 0, y = 0, xend = 3, yend = 0), arrow = arrow(length = unit(0.3, "cm")), size = 0.5) +  # Axe des variables (horizontal)
+  geom_segment(aes(x = 0, y = 0, xend = 0, yend = 2), arrow = arrow(length = unit(0.3, "cm")), size = 0.5) +  # Axe vertical
+  geom_segment(aes(x = 0, y = 0, xend = -2, yend = -2), arrow = arrow(length = unit(0.3, "cm")), size = 0.5) +  # Axe vertical
+  
+  # Ajouter des lignes en pointillés (projection du point i)
+  geom_segment(aes(x = 1.5, y = 1, xend = 1.5, yend = -1), linetype = "dashed") +
+  geom_segment(aes(x = 1.5, y = -1, xend = 2.5, yend = 0), linetype = "dashed") +
+  
+  # Ajouter des labels mathématiques pour les distances
+  # geom_text(aes(x = 2.5, y = 0.2), label = expression(x[ik] - bar(x)[k]), size = 5) +
+  geom_text(aes(x = 2.5, y = 0.2), label = expression(x[i]^k), size = 5, col = "#398d55") +
+  
+  # Ajouter des labels mathématiques pour l'es distances l'espace
+  geom_text(aes(x = 0.3, y = 2), label = expression(R^p),col="#F7A913", size = 5) +
+  
+  # Ajouter l'origine O = G
+  geom_text(data = origins, aes(x = x, y = y, label = label), vjust = -0.8, size = 5) +
+  
+  # Ajouter variable k 
+  geom_text(data = vark, aes(x = x, y = y), label = expression(var[k]), col="#F7A913", vjust = -0.8, size = 5) +
+  
+  # Ajuster le thème
+  theme_minimal()  +
+  
+  coord_fixed() +  # Conserver un rapport d'aspect fixe pour les axes
+  ggtitle("Représentation  du nuage des individus") +
+  
+  # Ajuster le thème
+  theme (axis.title=element_blank(),
+   axis.text=element_blank(),
+   axis.ticks=element_blank(),
+   panel.grid = element_blank())
+
+```
+
+:::
+
+::: {.column width="48%"}
+
+### Le nuage des variables $C^p$
+
+On peut considérer qu'une  [variable]{.orange} $j$ est un vecteur  $\class{orange}{\xcol{j}}$ dans un espace de dimension $n$ et  on peut écrire 
+
+$$\Xbf=\begin{pmatrix}
+\class{orange}{\xcol{1}} & \ldots & \class{orange}{\xcol{p}}
+\end{pmatrix},$$
+
+L'ensemble des $p$ vecteurs forme le [nuage des variables]{.orange}.
+
+
+```{r nuage_var}
+#! message: false
+# Installer les packages si nécessaire
+# install.packages("ggplot2")
+# install.packages("ggforce")
+
+# Créer une base de données pour les points et les annotations
+individus <- data.frame(
+  x = c(1.5, 1.2, -0.5, -1),   # Coordonnées des points individuels
+  y = c(0.9, 1, 0.2, -0.5),   # Coordonnées des points individuels
+  label = c("k", "j", "", "")    # Nom de l'individu i
+)
+
+
+# Schéma avec ggplot
+ggplot() +
+  # Tracer une ellipse représentant le nuage de points
+  geom_ellipse(aes(x0 = 0, y0 = 0, a = 2, b = 2, angle = 3.14159/6), fill = NA, color = "black") +
+  geom_ellipse(aes(x0 = 0, y0 = 0, a = 1, b = 2, angle = 3.14159/2), fill = NA, color = "black") +
+  
+  
+  # Ajouter les labels des individus (point i)
+  geom_text(data = individus, aes(x = x, y = y, label = label),  col = "#F7A913", vjust = -1.5, hjust = -0.5, size = 5) +
+  
+  # Tracer les axes
+  geom_segment(aes(x = 0, y = 0, xend = 3, yend = 0), arrow = arrow(length = unit(0.3, "cm")), size = 0.5) +  # Axe des variables (horizontal)
+  geom_segment(aes(x = 0, y = 0, xend = 0, yend = 2), arrow = arrow(length = unit(0.3, "cm")), size = 0.5) +  # Axe vertical
+  geom_segment(aes(x = 0, y = 0, xend = -2, yend = -2), arrow = arrow(length = unit(0.3, "cm")), size = 0.5) +  # Axe vertical
+  
+  # Ajouter des lignes en pointillés (projection du point i)
+  geom_segment(aes(x = 1.5, y = 1, xend = 1.5, yend = -1), linetype = "dashed") +
+  geom_segment(aes(x = 1.5, y = -1, xend = 2.5, yend = 0), linetype = "dashed") +
+  
+  # Ajouter des labels mathématiques pour les distances
+  # geom_text(aes(x = 2.5, y = 0.2), label = expression(x[ik] - bar(x)[k]), size = 5) +
+  geom_text(aes(x = 2.5, y = 0.2), label = expression(x[i]^k), size = 5, col = "#F7A913") +
+  geom_segment(aes(x = 0, y = 0, xend = 1.5, yend = 1), col = "#F7A913", 
+               arrow = arrow(length = unit(0.5, "cm")), size = 0.7)  + 
+  # seconde variable
+  geom_segment(aes(x = 0, y = 0, xend = 1.1, yend = 1.2), col = "#F7A913", 
+               arrow = arrow(length = unit(0.5, "cm")), size = 0.7)  +
+  
+  # Ajouter des labels mathématiques pour l'es distances l'espace
+  geom_text(aes(x = 0.3, y = 2), label = expression(R^n),col="#398d55", size = 5) +
+  
+  # Ajouter l'origine O = G
+  geom_text(data = origins, aes(x = x, y = y, label = label), vjust = -0.8, size = 5) +
+  
+  # Ajouter variable k 
+  geom_text(data = vark, aes(x = x, y = y), label = expression(ind[i]), col="#398d55", vjust = -0.8, size = 5) +
+  
+  # Ajuster le thème
+  theme_minimal()  +
+  
+  coord_fixed() +  # Conserver un rapport d'aspect fixe pour les axes
+  ggtitle("Représentation  du nuage des variables") +
+  
+  # Ajuster le thème
+  theme (axis.title=element_blank(),
+         axis.text=element_blank(),
+         axis.ticks=element_blank(),
+         panel.grid = element_blank())
+
+
+```
+
+:::
+
+::::
+
+. . .
+
+[Bien sûr les deux nuages sont intimement liés]{.question}
+
+
+# Mesurer l'information contenue dans un nuage de points
+
+## L'inertie par rapport à un point 
+
+
+:::: {.callout-note icon="false" appearance="minimal"}
+### Definition 1
+L'inertie  (terme hérité de la physique) *par rapport à un point* $a \in \R^{p}$ est définie par  
+$$I_{\boldsymbol{a}} = \frac{1}{n} \sum_{i=1}^n \norm{\xrow{i} - \boldsymbol{a}}^2 = \frac{1}{n} \sum_{i=1}^n\sum_{k=1}^p  (x_i^k -a^k)^2$$
+
+::::
+
+
+
+::: {.panel-tabset} 
+
+### Intuitivement
+
+L'inertie par rapport à un point quantifie l'information perdue lorsque  le jeu de données est résumé par ce point. 
+
+
+[Quel est selon vous le point $\boldsymbol{a}$ qui minimise l'inertie ?]{.rouge}
+
+$$argmax_{\boldsymbol{a}} I_{\boldsymbol{a}} = ??$$
+
+
+### Réponse
+
+[BINGO !!!]{.rouge}
+
+Il s'agit du point $\boldsymbol{g}=\boldsymbol{x_{\bullet}}=({x}_{\bullet}^1, \ldots, {x}_{\bullet}^p )^\top,$ avec ${x}_{\bullet}^k=\frac{1}{n} \sum_{i=1}^n x_{i}^k$, la valeur moyenne de la variable $k$ sur l'ensemble des individus.
+
+Puisque nous avons supposé que nos variables étaient centrées, $G=O$ l'origine sur repère.
+
+### Théorème de Huyghens 
+
+$$\forall \boldsymbol{a}\in\mathbb{R}^p,\; I_\boldsymbol{a}=I_\boldsymbol{g} + \norm{\boldsymbol{a}- \boldsymbol{g}}^2.$$
+
+[Conséquence]{.rouge} 
+
+Le meilleur résumé du nuage de points se résumant à un point est le barycentre du nuage de points, c'est à dire la moyenne sur chacune des dimensions. 
+
+
+### Remarque 
+
+$$I_{\boldsymbol{g}} =\frac{1}{n}  \sum_{i=1}^n     \left( \sum_{k=1}^p \left( x_{i}^k - x_{\bullet}^k  \right)^2 \right)  = \sum_{k=1}^p  \left( \frac{1}{n}  \sum_{i=1}^n  \left( x_{i}^k - x_{\bullet}^k  \right)^2 \right)  = \sum_{k=1}^p  Var(\xcol{k})$$
+Si les variables sont réduites
+
+$$I = p$$
+
+:::
+
+
+
+## L'inertie par rapport à un axe
+
+
+:::: {.callout-note icon="false" appearance="minimal"}
+### Definition 2
+L'inertie  *par rapport à l'axe $\Delta$ *  est définie par 
+$$I_{\boldsymbol{\Delta}} = \frac{1}{n} \sum_{i=1}^n \norm{\xrow{i} - \boldsymbol{p_i}^{\Delta}}^2 = \frac{1}{n} \sum_{i=1}^n\sum_{k=1}^p  (x_i^k -p^{k,\Delta}_i)^2, \quad \mbox{où }\  \boldsymbol{p_i}^{\Delta} \mbox{projeté orthogonal de } \boldsymbol{x_i} \mbox{ sur }\Delta.$$
+::::
+
+
+
+::: {.panel-tabset} 
+
+### Intuitivement
+
+
+:::: { .columns}
+
+::: { .column width=30%}
+
+L'inertie par rapport à l'axe $\Delta$ quantifie l'information perdue lorsque l'on résume le nuage de points à son projeté sur $\Delta$.
+
+:::
+
+
+::: { .column width=65%}
+
+```{r inertie_delta}
+
+individus <- data.frame(
+  x = c(1.5, -0.5, -1),   # Coordonnées des points individuels
+  y = c(0.9, 1, -0.5)
+)
+
+u = c(1,2)
+norme_u = sum(u^2)
+
+ind_proj <- (as.matrix(individus)%*% as.matrix(u, ncol= 1)/(norme_u)) %*% matrix(u, ncol = 2, nrow=1)
+ind_proj <- as.data.frame(ind_proj) %>% 
+  rename(xend= V1, yend=V2)
+individus_dessin <- cbind(individus, ind_proj) %>% as.data.frame()
+
+# Schéma avec ggplot
+ggplot() +
+  
+  # Tracer Delta
+   geom_segment(aes(x = -1, y = -2, xend = 1, yend = 2), arrow = arrow(length = unit(0.3, "cm")), size = 0.5) +  # Axe vertical
+  
+  # Ajouter des lignes en pointillés (projection du point i)
+  geom_point(data = individus, aes(x = x, y = y), size = 3, col= "#398d55") +
+  
+  # Ajouter les points en pointillés (projection du point i)
+  geom_segment(data = individus_dessin, aes(x = x, y = y, xend = xend, yend = yend), linetype = "dashed") +
+  
+  # Ajouter des labels mathématiques pour l'es distances l'espace
+  geom_text(aes(x = 0.3, y = 2), label = expression(R^p),col="#F7A913", size = 5) +
+  
+  # Ajouter le nom de l'axe
+  geom_text(aes(x = -1.2, y = -2), label = expression(Delta), vjust = -0.8, size = 5) +
+
+  # Ajouter le nom des individus
+  geom_text(data= individus_dessin, aes(x = xend, y =yend),  label = paste0("p[", 1:3, "]^Delta"), parse = TRUE, vjust = -0.8, size = 5) +
+  geom_text(data= individus_dessin, aes(x = x, y =y),  label = paste0("x[", 1:3, "]"), parse = TRUE, vjust = -0.8, size = 5, col = "#398d55") +
+  
+  # Ajouter l'origine O = G
+  geom_text(aes(x = 0.15, y = -0.1), label = "G", vjust = -0.8, size = 5) +
+  geom_point(aes(x = 0, y = 0),  size = 2) +
+  
+  # Ajouter l'origine O = G
+  geom_point(data = individus_dessin, aes(x = xend, y = yend),  size = 2) +
+  
+  # Ajuster le thème
+  theme_minimal()  +
+  
+  coord_fixed() +  # Conserver un rapport d'aspect fixe pour les axes
+
+  # Ajuster le thème
+  theme (axis.title=element_blank(),
+         axis.text=element_blank(),
+         axis.ticks=element_blank(),
+         panel.grid = element_blank())
+
+```
+
+:::
+
+::::
+
+
+### Que veut-on faire ?
+
+[Identifier $\Delta$ tel que $I_{\Delta}$ soit minimale]{.rouge}
+
+Ce qui revient à l'axe $\Delta$ qui assure que la projection sur $\Delta$ déforme le moins possible le nuage de points.
+
+
+Dans le cadre de l'ACP, on veut construire une ensemble d'axes orthongonaux (une nouvelle base de $\R^p$), de façon à ce que 
+
+* la projection sur le premier axe, soit le meilleur résumé du nuage de points en une dimension,
+* le deuxième axe est orthogonal au premier et représente "le deuxième meileur choix" .... dans un sens que l'on va définir
+* le troisième ...
+
+
+
+
+
+### Rappel projection orthogonale
+
+:::: { .columns}
+
+::: { .column width=55%}
+
+```{r proj_prodscalaire}
+#! message: false
+#! warning: false
+
+
+
+# Définition du point x
+point_a <- c(3, 0.8)
+u <- c(sqrt(2)/2, sqrt(2)/2)  # vecteur direteur de la droite
+
+# Calcul de la projection orthogonale de x sur Delta
+a_proj <- sum(point_a*u)*u
+
+# Création d'un data frame pour ggplot2
+data <- data.frame(
+  x = c(0,  point_a[1], a_proj[1]),
+  y = c(0,  point_a[2], a_proj[2]))
+label_dta = c(expression(O), expression(a), expression(a[u]))
+
+
+scale_f = max(point_a/u) +1
+# Plot avec ggplot2
+ggplot(data) +
+  geom_point(aes(x, y), color = "#33658A", size = 3) +
+  geom_text(aes(x, y), label = label_dta, hjust = -0.4, vjust = -0.8) +
+  geom_text(x=u[1]/2, y=u[2]/2, label = "u", hjust = 0.4, vjust = -0.8, color = "#C94326") +
+  geom_segment(aes(x = 0, y = 0, xend = scale_f*u[1], yend = scale_f*u[2]), 
+               color = "gray80", linetype = "dashed") +
+  geom_segment(aes(x = 0, y = 0, xend = u[1], yend = u[2]), 
+               color = "#C94326", linetype = "dashed", arrow = arrow(length = unit(0.2, "cm"))) +
+  geom_segment(aes(x = point_a[1], y = point_a[2], xend = a_proj[1], yend = a_proj[2]),
+               color = "#398d55") +  
+  geom_segment(aes(x = point_a[1], y = point_a[2], xend = 0, yend = 0),
+               color = "#398d55", linetype = "dotted") +
+  labs(title = "Projection orthogonale d'un point A sur un sous espace affine", 
+       x = "X", y = "Y") +
+  theme_minimal() +
+  coord_fixed() +
+  theme (axis.title=element_blank(),
+         axis.text=element_blank(),
+         axis.ticks=element_blank(),
+         panel.grid = element_blank())
+
+```
+
+
+:::
+
+::: { .column width=40%}
+
+
+* **Produit scalaire** : Soient  deux élements $\xbf$ et $\ybf$ de $\mathbb{R}^p$, le produit scalaire est noté $<\xbf,\ybf>$ et $<\xbf,\ybf>=\sum_{i=1}^p x_i y_i = \xbf^\top \ybf.$
+
+* **Orthogonalité**  Soient  deux élements $\xbf$ et $\ybf$ de $\mathbb{R}^p$, on dit que $\xbf$ et $\ybf$ sont orthogonaux (noté $\xbf \perp \ybf$) si $<\xbf,\ybf> = \xbf^\top  \ybf=0$. 
+
+* **Projection orthogonale** On note $\boldsymbol{a}_u$ le projeté de $\boldsymbol{a}$ sur la droite $\Delta$ définit par son vecteur directeur unitaire $\boldsymbol{u}$ et passant par l'origine
+$$\boldsymbol{a}_u = < \boldsymbol{a}, \boldsymbol{u} > \boldsymbol{u} = (\boldsymbol{a}^\top \boldsymbol{u})\,  \boldsymbol{u}.$$
+Le vecteur $\boldsymbol{a_u}$ est orthogonal à $\boldsymbol{a}-\boldsymbol{a_u}$:
+$$< \boldsymbol{a_u}, \boldsymbol{a}-\boldsymbol{a_u}> = \left ((\boldsymbol{a}^\top \boldsymbol{u}) \boldsymbol{u}\right)^\top \left ( \boldsymbol{a} -  (\boldsymbol{a}^\top \boldsymbol{u})\,  \boldsymbol{u} \right)=(\boldsymbol{a}^\top \boldsymbol{u}) (\boldsymbol{u}^\top \boldsymbol{a}) - (\boldsymbol{a}^\top \boldsymbol{u})^2 \boldsymbol{u}^\top \boldsymbol{u} =0  $$ 
+
+:::
+
+::::
+
+
+:::
+
+## L'inertie par rapport à un sous espace affine
+
+* **Espace orthogonal** Soit $E$ un sous-espace vectoriel de $\mathbb{R}^p$. On definit  $E^\perp=\{\xbf \in \mathbb{R}^p:\; \forall \ybf\in E,\; \xbf \perp \ybf\}$. 
+
+
+
+::: {.panel-tabset} 
+
+### Exemple
+
+Dans $\R^2$, on considère le sous espace vectoriel $E$, tel que 
+$$ E =\left \lbrace  \xbf =\begin{pmatrix} x_1 &  x_2 \end{pmatrix}^\top \in \R^2 : x_1 = x_2  \right \rbrace $$
+$E$ est la droite d'équation $y=x$.
+
+Qui est $E^\perp$ ?
+
+### Solution
+
+Soit $\ybf \in E^\perp,$ alors
+
+\begin{align}
+0 & = \xbf^\top \ybf \\
+  & = \begin{pmatrix} x_1 &  x_2 \end{pmatrix} \begin{pmatrix} y_1 \\  y_2 \end{pmatrix}\\
+  & = x_1 y_1 + x_2 y_2 \\
+  & = x_1 (y_1 + y_2) \quad (\xbf \in E \Rightarrow x_1 =x_2) \\
+\end{align}
+
+$$E^\perp =  \left \lbrace  \ybf =\begin{pmatrix} y_1 &  y_2 \end{pmatrix}^\top \in \R^2 : y_1 + y_2 = 0 \right \rbrace  $$
+:::
+
+. . .
+
+:::: {.callout-note icon="false" appearance="minimal"}
+### Definition 3
+L'inertie  *par rapport à un sous espace vectoriel $E$ *  est définie par 
+$$I_{E} = \frac{1}{n} \sum_{i=1}^n \norm{\xrow{i} - \boldsymbol{p_i}^{E}}^2 = \frac{1}{n} \sum_{i=1}^n\sum_{k=1}^p  (x_i^k -p^{k,E}_i)^2, \quad \mbox{où }\  \boldsymbol{p_i}^{E} = argmin_{\ybf \in E} d(\ybf, \xrow{i}), \mbox{i.e. projeté orthogonal de } \boldsymbol{x_i} \mbox{ sur }E.$$
+::::
+
+
+
+C'est [l'inertie perdue]{.rouge} lorsque l'on résume le nuage de points à sa projection sur le sous espace $E$.
+
+
+
+
+
+
+## Décomposition de l'inertie 
+
+::: { .lemme }
+Soit $E$ un sous espace vectoriel de $\R^p$, alors
+$$I = I_E + I_{E^\perp}.$$
+:::
+
+[Preuve]{.rouge}
+
+:::: { .columns}
+
+::: { .column width=30%}
+Un dessin vaut mieux qu'un long discours et Pythagore est ton ami !
+
+$$d(\class{alea}{\xrow{i}}, O)^2 = d(\xrow{i}, \class{bleu}{\xrow{i}^E})^2  +  d(\class{alea}{\xrow{i}}, \class{rouge}{\xrow{i}^{E^\perp}})^2.$$
+
+\begin{align}
+ I & = \frac{1}{n} \sum_{i=1}^n d(\class{alea}{\xrow{i}}, O)^2 \\
+   & = \frac{1}{n} \sum_{i=1}^n d(\class{alea}{\xrow{i}}, \class{bleu}{\xrow{i}^E})^2   +  \frac{1}{n} \sum_{i=1}^n d(\class{alea}{\xrow{i}}, \class{rouge}{\xrow{i}^{E^\perp}})^2 \\
+   & = \class{bleu}{I_E} + \class{rouge}{I_{E^\perp}}
+\end{align}
+
+
+::: 
+
+
+::: { .column width=65%}
+
+```{r inertie_decomp}
+individus <- data.frame(
+  x = c(1.5, -0.5, -1),   # Coordonnées des points individuels
+  y = c(0.9, 1, -0.5)
+) %>% 
+  mutate(x = x - mean(x), y = y -mean(y))
+
+
+u = c(1,2)
+v = c(2, -1)
+
+norme_u = sum(u^2)
+norme_v = sum(v^2)
+
+ind_proj_u <- (as.matrix(individus)%*% as.matrix(u, ncol= 1)/(norme_u)) %*% matrix(u, ncol = 2, nrow=1)
+ind_proj_u <- as.data.frame(ind_proj_u) %>% 
+  rename(xproj_u= V1, yproj_u=V2)
+ind_proj_v <- (as.matrix(individus)%*% as.matrix(v, ncol= 1)/(norme_v)) %*% matrix(v, ncol = 2, nrow=1)
+ind_proj_v <- as.data.frame(ind_proj_v) %>% 
+  rename(xproj_v= V1, yproj_v=V2)
+
+individus_dessin <- cbind(individus, ind_proj_u , ind_proj_v) %>% as.data.frame()
+
+# Schéma avec ggplot
+ggplot() +
+  
+  coord_fixed() +  # Conserver un rapport d'aspect fixe pour les axes
+  
+  # Tracer Delta
+  geom_segment(aes(x = -u[1], y = -u[2], xend = u[1], yend = u[2]), arrow = arrow(length = unit(0.3, "cm")), size = 0.5, col = "#33658A",  linetype = "dotted") +  # E
+  # Tracer Delta\perp
+  geom_segment(aes(x = -v[1], y = -v[2], xend = v[1], yend = v[2]), arrow = arrow(length = unit(0.3, "cm")), size = 0.5, linetype = "dashed", col = "#C94326") +  # E^\perp
+  
+  # Ajouter des lignes en pointillés (projection du point i)
+  geom_point(data = individus, aes(x = x, y = y), size = 3, col= "#398d55") +
+  
+  # Ajouter les points en pointillés (projection du point i)
+  geom_segment(data = individus_dessin, aes(x = x, y = y, xend = xproj_u, yend = yproj_u), col = "#33658A", linetype = "dotted") +
+  geom_point(data = individus_dessin, aes(x = xproj_u, y = yproj_u), size = 3, col= "#33658A", size= 2) +
+  
+  # Ajouter les points en pointillés (projectionsur E^\perp)
+  geom_segment(data = individus_dessin, aes(x = x, y = y, xend = xproj_v, yend = yproj_v), col = "#C94326", linetype = "dashed") +
+  geom_point(data = individus_dessin, aes(x = xproj_v, y = yproj_v), size = 3, col= "#C94326", size= 2) +
+  
+  
+  # Ajouter des labels mathématiques pour l'es distances l'espace
+  geom_text(aes(x = 0.3, y = 2), label = expression(R^p),col="#F7A913", size = 5) +
+  
+  # Ajouter le nom de l'axe
+  geom_text(aes(x = -1.2, y = -2), label = "E", vjust = -0.8, col = "#33658A", size = 5) +
+  geom_text(aes(x = -v[1], y = -v[2]), label = expression(E^"\u22A5"), vjust = -0.8, col = "#C94326", size = 5) +
+  
+  # Ajouter l'origine O = G
+  geom_text(aes(x = 0.15, y = -0.1), label = "O", vjust = -0.8, size = 5) +
+  geom_point(aes(x = 0, y = 0),  size = 2) +
+  
+  # Ajuster le thème
+  theme_minimal()  +
+
+  # Ajuster le thème
+  theme (axis.title=element_blank(),
+         axis.text=element_blank(),
+         axis.ticks=element_blank(),
+         panel.grid = element_blank())
+
+```
+
+:::
+
+::::
+
+
+
+## Principe de la décomposition à venir
+
+1.  Identifier le vecteur $\boldsymbol{u_1}$ de $\R^p$, tel que $I_{E_1}$ soit minimale avec $E_1=\left \lbrace \lambda \boldsymbol{u_1}, \lambda \in \R \right\rbrace,$
+
+2. Dans $E_1^\perp$, identifier le vecteur $\boldsymbol{u_2}$ de $\R^p$, tel que $I_{E_2}$ soit minimale avec $E_2=\left \lbrace \lambda \boldsymbol{u_2}, \lambda \in \R \right\rbrace,$
+
+3. Dans $\left (  E_1 \oplus E_2 \right)^\perp$, identifier le vecteur $\boldsymbol{u_3}$ de $\R^p$, tel que ....
+
+...
+
+Finalement on aura la décomposition
+
+$$I= I_{E_1} + I_{E_2} + \ldots + I_{E_p}, \quad \mbox{avec } I_{E_1} \leq I_{E_2} \leq \ldots \leq I_{E_p}$$
+
+# Construction de la base des composantes principales
+
+## Se donner des intuitions
+
+```{r prep_inertie_plot}
+#| echo: false
+
+set.seed(123)
+n = 50
+p = 2
+X = matrix(rnorm(n*p, mean = 0, sd =0.5), ncol= p) %>%
+  as_tibble() %>%
+  rename(x1 = V1, x2 = V2,) %>%
+  mutate(x1 = x1 - mean(x1), x2 = x2 -mean(x2) ) %>%
+  mutate(x3 = (x1 + 0.1 * x2)/2) %>%
+  mutate(x3 = x3 -mean(x3)) %>%
+  mutate(x1= x1/ (sd(x1)), x2= x2/ (sd(x2)), x3= x3/ (sd(x3)))
+
+prov <- PCA(X[, 1:2], graph = FALSE)
+X = X %>% mutate(x1_bis = prov$ind$coord[,1], x2_bis = prov$ind$coord[,2])
+
+Xmat <- as.matrix(X)
+eigen_1 <- svd(t(Xmat[,4:5])%*% Xmat[, 4:5])$v
+
+
+p1 <- X %>% ggplot() + aes(x=x1_bis, y = x2_bis) + geom_point(size = 4) +# Ajuster le thème
+  theme_minimal()  +
+  coord_fixed() +
+  geom_hline(aes(yintercept = 0), col = "gray50") +
+  geom_vline(aes(xintercept = 0), col = "gray50") +
+
+  # Ajuster le thème
+  theme (axis.title=element_blank(),
+         axis.text=element_blank(),
+         axis.ticks=element_blank(),
+         panel.grid = element_blank())
+
+eigen_2 <- svd(t(Xmat[,c(1,3)])%*% Xmat[, c(1,3)])$v
+
+
+p2 <- X %>% ggplot() + aes(x=x1, y = x3) + geom_point(size = 4) +
+  coord_fixed() +
+  theme_minimal()  +
+  geom_hline(aes(yintercept = 0), col = "gray50") +
+  geom_vline(aes(xintercept = 0), col = "gray50") +
+  # Ajuster le thème
+  theme (axis.title=element_blank(),
+         axis.text=element_blank(),
+         axis.ticks=element_blank(),
+         panel.grid = element_blank())
+
+```
+
+::: { .columns}
+
+:::: { .column width=45%}
+
+```{r inert_p1}
+p1
+```
+
+::::
+
+:::: { .column width=45%}
+
+```{r inert_p2}
+p2
+```
+
+::::
+
+:::
+
+
+
+## Se donner des intuitions
+
+
+
+::: { .columns}
+
+:::: { .column width=45%}
+
+```{r inert_p1_var}
+p1  +
+  geom_segment(aes(x= 0, y = 0, xend = eigen_1[1,1], yend = eigen_1[2,1]), col = "#f76f07", arrow = arrow(length = unit(0.3, "cm"))) +
+  geom_segment(aes(x= 0, y = 0, xend = eigen_1[1,2], yend = eigen_1[2,2]), col = "#d61d09", arrow = arrow(length = unit(0.3, "cm")))
+```
+
+::::
+
+:::: { .column width=45%}
+
+```{r inert_p2_var}
+p2 +
+  geom_segment(aes(x= 0, y = 0, xend = eigen_2[1,1], yend = eigen_2[2,1]), col = "#f76f07", arrow = arrow(length = unit(0.3, "cm"))) +
+  geom_segment(aes(x= 0, y = 0, xend = eigen_2[1,2], yend = eigen_2[2,2]), col = "#d61d09", arrow = arrow(length = unit(0.3, "cm")))
+```
+
+::::
+
+:::
+
+
+## Identifier $\boldsymbol{u_1}$ - Formalisation
+
+:::: { .columns}
+
+::: { .column width=45%}
+
+* On cherche $\boldsymbol{u_1}$ tel que $I_{u_1}$ soit minimale mais $I_{u_1} + I_{u_1^\perp}=I$. [Minimiser $I_{u_1}$ revient à maximiser $I_{u_1^\perp}$]{.rouge}, i.e l'inertie du nuage projeté.
+
+  * Le premier individu se projette en  $\class{alea}{x_{1}}^\top \boldsymbol{u_1}$ sur $\boldsymbol{u_1}$
+  * Le deuxième individu se projette en  $\class{alea}{x_{2}}^\top \boldsymbol{u_1}$ sur $\boldsymbol{u_1}$
+  * ...
+
+
+* On rappelle que 
+$$\Xbf = \begin{pmatrix} \class{alea}{x_{1}}^\top \\ \vdots \\ \class{alea}{x_{n}}^\top \end{pmatrix}.$$
+La projection de l'individu $i$ est obtenue en multipliant le vecteur ligne $\class{alea}{x_{1}}^\top$ par $\boldsymbol{u_1}$. Le vecteur des coordonnées sur $\boldsymbol{u_1}$ pour chaque individu est 
+
+$$\begin{pmatrix} \class{alea}{x_{1}}^\top \boldsymbol{u_1} \\ \vdots \\ \class{alea}{x_{n}}^\top \boldsymbol{u_1} \end{pmatrix} = X  \boldsymbol{u_1}.$$
+
+:::
+
+
+::: { .column width=45%}
+
+### Minimiser $I_{u_1^\perp}$
+
+sous la contrainte $\norm{\boldsymbol{u_1}}$
+\begin{align}
+ I_{u_1^\perp} & = \norm{X  \boldsymbol{u_1}}^2 \\
+        & = (X  \boldsymbol{u_1})^\top (X  \boldsymbol{u_1})\\
+        & =   \boldsymbol{u_1}^\top X^\top X   \boldsymbol{u_1}
+\end{align}
+
+::: {.panel-tabset} 
+
+#### Remarque
+
+$X^\top X$ est la matrice de covariance, elle est [symétrique]{.rouge} et [définie positive]{.rouge} donc [diagonalisable]{.rouge}. Il existe une matrice $P$ unitaire $P^\top P = I_p,$ et $D$ une matrice diagonale telle que 
+$$X^\top X = P D P^\top.$$
+
+Les termes diagonaux de $D$ sont les [valeurs propres, toutes positives, ]{.rouge} de $X^\top X$ rangées par odre décroissant, $\lambda_1 > \lambda_1 \ldots >\lambda_p$ et  $P$ est la matrice des vecteurs propres associés.
+
+#### Ce que ça signifie
+
+![](change_baseXtX.png)
+
+
+$\bolsymbol{b}$ est une base orthonormale, la base formée par les vecteurs propres de $X^\top X$.
+:::
+
+:::
+
+::::
+
+
+## Identifier les directions principales
+
+### Chercher $\boldsymbol{u_1}$ 
+
+Posons $\boldsymbol{v_1} = P^\top \boldsymbol{u_1},$  $\norm{\boldsymbol{v_1}}=1$:
+
+Maximiser $\boldsymbol{v_1}^\top D \boldsymbol{v_1} = \sum_{k=1}^p v_{1p}^2 \lambda_p$, sous la contrainte $\sum_{k=1}^p  v_{1p}^2=1$
+
+$$\boldsymbol{v_1} = (1, 0, \ldots, 0)^\top, \quad \boldsymbol{u_1} = P \boldsymbol{v_1} = \begin{pmatrix} P_{11} \\ \vdots \\P_{p1} \end{pmatrix}.$$
+
+
+
+[$\boldsymbol{u_1}$ est le premier vecteur propre]{.rouge}
+
+
+### Chercher $\boldsymbol{u_2}$ 
+
+On cherche  $\boldsymbol{u_2}\perp \boldsymbol{u_1}$, tel que $\boldsymbol{u_2}^\top X^\top X   \boldsymbol{u_2}$,
+
+Posons $\boldsymbol{v_2} = P^\top \boldsymbol{u_2},$  $\norm{\boldsymbol{v_2}}=1$:
+Maximiser $\boldsymbol{v_2}^\top D \boldsymbol{v_2} = \sum_{k=1}^p v_{2p}^2 \lambda_p$, sous la contrainte $\sum_{k=1}^p  v_{1p}^2=1$ et $v_{1p}=0$ pour assurer l'orthogonalité avec $\boldsymbol{v_1}$ 
+ 
+
+$$\boldsymbol{v_2} = (0, 1, \ldots, 0)^\top, \quad \boldsymbol{u_2} = P \boldsymbol{v_2} = \begin{pmatrix} P_{12} \\ \vdots \\P_{p2} \end{pmatrix}.$$
+
+
+
+[$\boldsymbol{u_2}$ est le deuxième vecteur propre]{.rouge}
+
+## Illustration on the Penguins data
+
+```{r PCA_manchots_2, eval = TRUE, echo = TRUE}
+#| echo: true
+#| output-location: column
+#| results: hold
+#| message: false
+
+library(FactoMineR)
+
+penguins.PCA <- PCA(X = penguins, 
+                    scale.unit = FALSE, ## should we scale the data, let's lmention this later
+                    ncp = 4, ## number of components : as many as initial variables
+                    graph = FALSE, ## no graph right now
+                    quali.sup = c(1, 2, 7,8)) ## to indicate the column number of qualitative variable
+penguins.PCA$eig
+
+penguins.PCA$svd$V ## what is named P in the lecture
+```
+
+
+
+
+# Mise en oeuvre pratique
+
+## Attention aux unités
+
+## Représentation des individus
+
+## Représentation des variables
+
+## Contribution des individus
+
+## Contribution des variables
+
+# Un exemple de bout en bout 
+
+# Une autre utilisation de l'ACP
+
+# Bilan 
+
 
 

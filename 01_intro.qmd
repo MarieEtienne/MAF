@@ -1,0 +1,263 @@
+---
+title: "Introduction"
+author:
+  - name: Marie-Pierre Etienne
+    affiliation: 
+      - ENSAI - CREST
+    email: marie-pierre.etienne@ensai.fr
+date: "Last updated on `r format(Sys.time(), '%d %B, %Y')`"
+institute: https://marieetienne.github.io/MAF
+execute: 
+  freeze: true
+editor: 
+  markdown: 
+    wrap: 72
+css: mpe_pres_revealjs.css
+format:
+  revealjs: 
+    slide-number: true
+    show-slide-number: print
+    menu:
+      useTextContentForMissingTitles: false
+    mathjax: true  # Active MathJax
+    self-contained: true
+---
+
+```{r setup, include=FALSE, eval = TRUE}
+library(RefManageR)
+library(tidyverse) ## to benefit from the tydiverse coding system
+library(reticulate) ## to use python from R
+library(wesanderson)
+library(plotly)
+```
+
+```{r reference,  include=FALSE, cache=FALSE, eval = TRUE}
+BibOptions(check.entries = FALSE,
+           bib.style = "authoryear",
+           cite.style = "alphabetic",
+           style = "markdown",
+           hyperlink = FALSE,
+           dashed = FALSE)
+myBib <- ReadBib("./MAF.bib", check = FALSE)
+theme_set(theme_minimal())
+options(ggplot2.discrete.colour=   scale_color_manual(values = wesanderson::wes_palette(name = "Darjeeling1")) )
+couleur <-  wesanderson::wes_palette(name = "Darjeeling1")
+```
+
+::: hidden
+$$
+\newcommand\R{{\mathbb{R}}}
+\newcommand\Xbf{{\boldsymbol{X}}}
+\newcommand\norm[1]{\lVert#1\rVert}
+$$ \definecolor{wongBlue}{RGB}{0, 114, 178}
+
+:::
+
+
+
+
+## Où l'on commence par parler de manchots 
+
+::: {.panel-tabset} 
+
+### Data presentation
+From the `palmerpenguins` package, data courtesy of Dr. Kristen Gorman and the Palmer Station, Antarctica LTER.
+
+```{r penguins}
+#| echo: true
+library(palmerpenguins)
+data(penguins)
+head(penguins, n= 10)
+penguins <- penguins %>% na.omit() %>% mutate(year=as.factor(year))
+```
+
+### Data description
+
+Artwork by @allison_horst
+
+![](https://allisonhorst.github.io/palmerpenguins/reference/figures/culmen_depth.png){width="50%"}
+
+### Les questions que l'on se pose
+
+
+[Point de vue science des données]{.orange}
+
+* Comment représenter ces données en perdant le moins d'information ? [Visualisation]{.bleu}
+* Toutes les variables sont-elles utiles ? [Compression]{.bleu}
+
+
+[Point de vue biologique]{.rouge}
+
+* Quelles sont les différences morpholgiques entre espèces, entre sexe et entre les îles ?
+* Existe-t-il des relations morphométriques ?
+
+:::
+
+
+## Représenter c'est déjà comprendre
+
+
+::: {.panel-tabset} 
+
+### Représenter les liens entre variables 2 à 2
+
+```{r penguins_ggpairs}
+#| echo: true
+#| output-location: column
+#| results: hold
+#| message: false
+
+penguins %>%
+  select(species, body_mass_g, ends_with("_mm")) %>% 
+  GGally::ggpairs(aes(color = species),
+          columns = c("flipper_length_mm", "body_mass_g", 
+                      "bill_length_mm", "bill_depth_mm")) +
+  scale_colour_manual(values = c("darkorange","purple","cyan4")) +
+  scale_fill_manual(values = c("darkorange","purple","cyan4"))
+```
+Projection sur un espace à deux dimensions
+
+### DANGER 
+
+Le mensonge de la projection
+
+
+```{r gen_data,eval = TRUE, out.width = "100%"}
+#| output-location: column
+#| results: hold
+#| message: false
+#| 
+scene = list(camera = list(eye = list(x = -2, y = 0, z = 0)),
+             center = list(x= mean(penguins$bill_depth_mm, y = mean(penguins$body_mass_g), z = mean(penguins$flipper_length_mm) )))
+fig <- plot_ly(penguins, x = ~ bill_depth_mm, y = ~ -body_mass_g, z = ~flipper_length_mm, width = 500, height = 500) %>% 
+  add_markers(size = 12)  %>% 
+  layout(title = "3D Scatter plot", scene = scene)
+fig
+```
+
+:::
+
+## Objectifs de ce cours
+
+Découvrir des méthodes permettant de 
+
+* Trouver une (ou plusieurs) représentations en 2 dimensions la plus fidèle possible,
+* Faire apparaître les liens entre les différentes variables,
+* Identifier les individus qui se ressemblent.
+
+### Les ingrédients
+
+* un peu de géométrie et d'algèbre linéaire,
+* mesurer la quantité d'information présente dans un jeu de données,
+* un bon esprit pratique pour bien poser le problème au départ
+* des données bien rangées dans un tableau $\Xbf$ où
+  * une ligne $i$ correspond à un individu 
+  * une colonne $j$ à une variable
+  $X_{ij}$ la valeur de la variable $j$ mesurée sur l'individu $i$.
+  
+ 
+ 
+## Un aperçu du type de données
+
+::: {.panel-tabset} 
+
+
+### ACP
+
+Comprendre les relations entre des variables toutes quantitatives. 
+
+[Example]{.rouge}
+
+Quels sont lens entre les différentes variables morphométriques ?
+
+```{r x_pca}
+#| echo: true
+#| classes: custom3565
+#| output-location: column
+#| results: hold
+#| message: false
+X_pca <- penguins %>%select(where(is.numeric)) 
+head(X_pca)
+```
+
+$$\Xbf \in \R^{n\times d}; \quad \Xbf = \begin{pmatrix}
+x_{1,1} &  \ldots & x_{1,p} \\
+\vdots & &\vdots \\
+x_{n,1} &  \ldots & x_{n,p} \\
+\end{pmatrix}.
+$$
+
+### AFD 
+
+
+Comprendre les combinaisons de variables quantitatives qui expliquent les groupes, ou comment visualiser au mieux les différences entre les groupes. 
+
+[Example]{.rouge}
+Comment visualiser au mieux les différences morpohologiques entre les espèces ?
+
+```{r x_afd}
+#| echo: true
+#| output-location: column
+#| results: hold
+#| message: false
+X_afd <- penguins %>% select(-island, -sex, -year) 
+head(X_afd)
+```
+
+$$ \Xbf = \begin{pmatrix}
+\class{rouge}{y_1} & x_{1,1} &  \ldots & x_{1,p} \\
+\vdots & &\vdots \\
+\class{rouge}{y_n} & x_{n,1} &  \ldots & x_{n,p} \\
+\end{pmatrix}, \quad x_{ij}\in\R,\  g_i \in \mathcal{G} =\left \lbrace g_1, \ldots, g_G\right \rbrace.
+$$
+
+
+
+### ACM
+On souhaite étudier les liens entre deux variables qualitatives.
+
+
+[Example]{.rouge}
+
+Comment la répartition entre espèce diffère entre les îles.
+
+
+```{r x_acm}
+#| echo: true
+#| output-location: column
+#| results: hold
+#| message: false
+X_acm <- penguins %>%select(species, island) 
+head(X_acm)
+```
+
+$$\Xbf = \begin{pmatrix}
+\class{bleu}{a_1} & \class{orange}{b_1} \\
+\class{bleu}{\vdots} &\class{orange}{\vdots} \\
+\class{bleue}{a_n} & \class{orange}{b_n} \\
+\end{pmatrix}, \quad a_{i}\in \mathcal{A}, \ \#\mathcal{A}= p,\quad   b_{i}\in \mathcal{B}, \ \#\mathcal{B}= q.  
+$$
+
+
+:::
+
+
+
+## Organisation du cours
+
+* Ces méthodes ont beaucoup de points communs 
+* Comprendre finement l'ACP permet de bien comprendre toutes les extensions suivantes
+* La mise en oeuvre requiert un peu de pratique car il faut faire des choix avisés.
+
+### Plan du cours
+
+* Analyse en composante principale
+  * Un exemple d'ACP    
+  * Comprendre les mécanismes derrière l'ACP (notion d'inertie, distance entre individus, changement de repères, la correlation comme un cosinus)
+* Analyse Factorielle multiple AFM : une extension de l'ACP
+* Analyse Factorielle Discriminante : AFD
+* Analyse Factorielle des Correspondances : AFC
+
+
+
+

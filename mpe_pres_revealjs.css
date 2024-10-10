@@ -25,6 +25,13 @@ body {
 .alea{color: #398d55}
 .fixe{color: #33658a}
 
+/*  for code output wider */
+.reveal .custom3565 div.column:first-child {
+        width: 35%;
+}
+.reveal .custom3565 div.column:not(:first-child) {
+        width: 65%;
+}
 
 .reveal .slides section {
   font-size: 24px !important;  /* Remplacez 24px par la taille souhaitée */
@@ -67,11 +74,57 @@ body {
     font-size: 0.9em;
 }
 
+/* Modifier la couleur de fond et la bordure des callout-note */
+.callout-note {
+  background-color: #f0f9ff; /* Couleur de fond */
+  border-left: 4px solid #C94326; /* Couleur de la bordure gauche */
+}
+
+.callout-note h3 {
+  color: #C94326; /* Couleur du titre de la callout-note */
+}
+
+.callout-note h2 {
+  color: #C94326; /* Couleur du titre de la callout-note */
+}
+
+body .callout.callout-note {
+  border-left: 6px solid #C94326 !important;
+    font-size: 14px;
+
+}
+
+
+/* Modifier la couleur et l'épaisseur du liseré vertical à gauche d'une callout-note */
+.callout-note > .callout-border-left {
+  background-color: #C94326 !important; /* Couleur personnalisée pour le liseré */
+  width: 6px; /* Épaisseur du liseré */
+}
+
 
 /* changing color of callout-note*/
 div.callout-note {
+  border-left: 4px solid #C94326! important; /* Couleur de la bordure gauche */
   border-left-color: #C94326 !important;
-  background-color: #edf7f6;
+  background-color: #f0f2f0; /* Couleur de fond du texte */
+}
+
+div.callout-title {
+  background-color: #f0f2f0;/* je ne sais pas si ca sert */
+}
+
+/* Modifier la couleur de fond du titre de la callout-note */
+.callout-note .callout-title {
+  background-color:  #f0f2f0 !important; /* Couleur de fond personnalisée */
+  color: #C94326!important; /* Couleur du texte (optionnel) */
+  font-size: 1.6em!important;
+  border-left-color: #C94326!important;
+
+}
+
+
+.callout-note .callout-content{
+  font-size: 1.4em!important;
 }
 
 
@@ -101,9 +154,29 @@ div.callout-note {
 }
 
 
+.lemme {
+  padding-top: 1em;
+  display: block;
+  font-style: italic;
+  font-family: "avenir";
+  color: black;
+}
+
+.theorem::before {
+  content: "Lemme: ";
+  color: #c94326;
+  font-weight: bold;
+  font-style: normal;
+}
+.theorem[text]::before {
+  content: "Lemme (" attr(text) ") ";
+}
+.theorem p {
+  display: inline;
+}
+
 /* for background image in title slide */
 .title-slide {
-  background-image: url("background.png");
   background-size: cover;
 }
 
@@ -179,7 +252,6 @@ a, a > code {
 
 
 .question {
-  background-color: #ecefef;
   color: #C94326;
   text-align: center;
   align-content: center;
