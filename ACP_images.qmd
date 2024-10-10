@@ -6,8 +6,6 @@ knitr:
     out.width: "80%"
 ---
 
-
-
 ```{r utils, echo = FALSE}
 library(parallel)
 library(ggpubr)
@@ -57,10 +55,9 @@ extract_blocks_parallel <- function(channel_matrix, block_size) {
 
 ```
 
-Pour bien comprendre comment sont décomposées les images en bloc de 16 par 16, on peut créer une matrice avecdes cases numérotées et constater comment elle est transformée. 
+Pour bien comprendre comment sont décomposées les images en bloc de 16 par 16, on peut créer une matrice avecdes cases numérotées et constater comment elle est transformée.
 
 Un bloc de 1- pixels est un individu à 16 variables.
-
 
 ```{r micro_example}
 test_image <- array(1:1024, dim= c(32, 16, 1, 1))
@@ -69,30 +66,33 @@ test_image
 test_image_blocks
 ```
 
-
 ## Peut on compresser les Beatles ?
-
 
 On va travailler sur la fameuse image de l'album Abbey Road des Beatles.
 
 ![](img/abbey_road.jpg)
 
-
-Pour la charger avec R, on utilise le package  `imager` et la fonction `load.image`. puis la fonction `grayscale`pour bien s'assurer que l'image est codée en niveaux de gris.
+Pour la charger avec R, on utilise le package `imager` et la fonction `load.image`. puis la fonction `grayscale`pour bien s'assurer que l'image est codée en niveaux de gris.
 
 ```{r load_abbey}
+#| message: false
+
 library(imager)
 image <- load.image('img/abbey_road.jpg')
 image <- grayscale(image)
-plot(image)
-```
+df_origine <-image %>% as.data.frame
+p_origine <- ggplot(df_origine,aes(x,y))+geom_raster(aes(fill=value)) +
+   scale_y_continuous(trans=scales::reverse_trans(), expand = c(0,0)) + ## pour mettre l'image dans le bon sens et supprimer les bors gris
+  scale_x_continuous(expand=c(0,0)) +
+  scale_fill_gradient(low="black",high="white") + ## pour le noir et blanc
+  theme(legend.position = "none")
 
+p_origine
+```
 
 L'objet obtenu est un `array` dont la première dimension est le nombre de pixels en ligne et la seconde dimension le nombre de pixel en colonnes. La troisème dimension est la profondeur et correspondrait au temps dan sun film par exemple et la dernière dimension est la couleur (on a donc 3 valeurs possibles sur cette dernière dimension dans le cas d'une image RGB et 1 dans le cas d'une image en niveau de gris).
 
 Si on se concentre sur les deux premières dimensions, on a donc une matrice dont la valeur est le niveau de gris du pixel correspondant.
-
-
 
 ```{r understand_cimg}
 dim(image)
@@ -102,10 +102,9 @@ gray_channel[1,1]
 
 Pour rentrer dans le formalisme de l'ACP, on a besoin qu'une ligne soit un individu et une colonne une variable. Ici, le choix nous revient de définir comme on le souhaite ce qu'est un individu et une varaible.
 
-On va découper l'image en buffer carré (patch, micro image) de coté $bs.$ Un individu sera un patch et une variable sera le niveau de gris dans un pixel particulier du patch. 
+On va découper l'image en buffer carré (patch, micro image) de coté $bs.$ Un individu sera un patch et une variable sera le niveau de gris dans un pixel particulier du patch.
 
 On a donc $bs^2$ variables et $N_{buf} = (height/bs) * (width/bs)$ buffers/individus.
-
 
 ```{r prepare_abbey}
 # Set block size to 4x4
@@ -125,21 +124,20 @@ library(FactoMineR)
 images_pca <- PCA(X = image_blocks, scale.unit = TRUE, ncp = ncol(image_blocks))
 ```
 
-Les valeurs propres nous donnent la quantité d'information contenu par chaque composante. 
+Les valeurs propres nous donnent la quantité d'information contenu par chaque composante.
 
 ```{r eigenvalues}
 eigen_restreint <- images_pca$svd$V
 ```
 
-On constate que la première composante contient à elle toute seule `r images_pca$eig[1,2]`$\%$ d'inertie. Ce qui signifie qu'en écrivant chaque buffet comme un nombre réel multiplé par le premier buffer on recontruit presque $90\%$ de l'information.
-Dans ca cas on a juste besoin de stocker 
+On constate que la première composante contient à elle toute seule `r images_pca$eig[1,2]`$\%$ d'inertie. Ce qui signifie qu'en écrivant chaque buffet comme un nombre réel multiplé par le premier buffer on recontruit presque $90\%$ de l'information. Dans ca cas on a juste besoin de stocker
 
-* la matrice $1\times bs^2$ qui permet de reconstruire les 16 variables initiales avec l'information contenu dans ce  premier buffer,
-* les coefficients que chaque buffer individu attribue à ce premier buffer, soit $N_{buf}$
+-   la matrice $1\times bs^2$ qui permet de reconstruire les 16 variables initiales avec l'information contenu dans ce premier buffer,
+-   les coefficients que chaque buffer individu attribue à ce premier buffer, soit $N_{buf}$
 
-On passe donc $N_{buf} * 16$ réels à stocker à $N_{buf} + bs^2$ si on ne garde qu'une seule composante ou   $2 N_{buf} + bs^2$ si on en garde 2.
+On passe donc $N_{buf} * 16$ réels à stocker à $N_{buf} + bs^2$ si on ne garde qu'une seule composante ou $2 N_{buf} + bs^2$ si on en garde 2.
 
-Les vecteurs propres sont donnés par 
+Les vecteurs propres sont donnés par
 
 ```{r eigenvectors}
 eigen_restreint <- images_pca$svd$V
@@ -161,12 +159,10 @@ coord_fixed()
 }
 )
 
-ggarrange(unlist(list_eigen), ncol = 4)
+ggarrange(plotlist = list_eigen, ncol = 4)
 ```
 
 ### Reconstruction avec une seule composante principale
-
-
 
 ```{r reconstruction_abbey_1}
 #| echo: true
@@ -199,8 +195,6 @@ p_1 <- ggplot(df_1,aes(x,y))+geom_raster(aes(fill=value)) +
 
 ```
 
-
-
 ```{r reconstruction_abbey_2}
 #| echo: true
 
@@ -228,24 +222,13 @@ p_2 <- ggplot(df_2,aes(x,y))+geom_raster(aes(fill=value)) +
 
 ```
 
-```{r original_abbey}
-#| echo: true
 
-df_origine <-image %>% as.data.frame
-p_origine <- ggplot(df_origine,aes(x,y))+geom_raster(aes(fill=value)) +
-   scale_y_continuous(trans=scales::reverse_trans(), expand = c(0,0)) + ## pour mettre l'image dans le bon sens et supprimer les bors gris
-  scale_x_continuous(expand=c(0,0)) +
-  scale_fill_gradient(low="black",high="white") + ## pour le noir et blanc
-  theme(legend.position = "none")
-```
 
 ```{r original_img}
 #| echo: false
 #| fig-cap: "Original Beatles"
 p_origine
 ```
-
-
 
 ```{r twodim_img}
 #| echo: false
@@ -258,5 +241,3 @@ p_2
 #| fig-cap: "With 1 principal component"
 p_1
 ```
-
-
