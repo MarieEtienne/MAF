@@ -70,6 +70,7 @@ ul.task-list li input[type="checkbox"] {
 
 
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="mpe_pres_revealjs.css">
 </head>
 
 <body class="nav-fixed">
@@ -94,15 +95,30 @@ ul.task-list li input[type="checkbox"] {
 </i> 
 <span class="menu-text"></span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./references.html"> 
-<span class="menu-text">References</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-references-" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">References</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-references-">    
+        <li>
+    <a class="dropdown-item" href="./references_maf.html">
+ <span class="dropdown-text">Cours</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="./references_linear.html">
+ <span class="dropdown-text">Algèbre linéaire</span></a>
+  </li>  
+    </ul>
+  </li>
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-cours" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Cours</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-cours">    
+        <li>
+    <a class="dropdown-item" href="./01_intro.qmd">
+ <span class="dropdown-text"></span></a>
+  </li>  
         <li>
     <a class="dropdown-item" href="./01_acp.html">
  <span class="dropdown-text">Analyse en Composantes Principales</span></a>
@@ -126,11 +142,6 @@ ul.task-list li input[type="checkbox"] {
     <a class="nav-link active" href="./index.html" aria-current="page"> 
 <span class="menu-text">Home</span></a>
   </li>  
-  <li class="nav-item">
-    <span class="nav-link">
-<span class="menu-text">about.qmd</span>
-    </span>
-  </li>  
 </ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
@@ -147,10 +158,10 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#méthodes-danalyse-factorielle-techniques-et-applications" id="toc-méthodes-danalyse-factorielle-techniques-et-applications" class="nav-link active" data-scroll-target="#méthodes-danalyse-factorielle-techniques-et-applications">Méthodes d’analyse Factorielle: Techniques et Applications</a>
-  <ul class="collapse">
-  <li><a href="#description-du-cours" id="toc-description-du-cours" class="nav-link" data-scroll-target="#description-du-cours">Description du cours</a></li>
-  </ul></li>
+  <li><a href="#description-du-cours" id="toc-description-du-cours" class="nav-link active" data-scroll-target="#description-du-cours">Description du cours</a></li>
+  <li><a href="#contenu" id="toc-contenu" class="nav-link" data-scroll-target="#contenu">Contenu</a></li>
+  <li><a href="#organisation-du-cours" id="toc-organisation-du-cours" class="nav-link" data-scroll-target="#organisation-du-cours">Organisation du cours</a></li>
+  <li><a href="#prérequis" id="toc-prérequis" class="nav-link" data-scroll-target="#prérequis">Prérequis</a></li>
   </ul>
 </nav>
     </div>
@@ -188,23 +199,34 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="méthodes-danalyse-factorielle-techniques-et-applications" class="level1">
-<h1>Méthodes d’analyse Factorielle: Techniques et Applications</h1>
-<section id="description-du-cours" class="level2">
-<h2 class="anchored" data-anchor-id="description-du-cours">Description du cours</h2>
+<section id="description-du-cours" class="level1">
+<h1>Description du cours</h1>
 <p>Ce cours présente des techniques statistiques pour décire et viusualiser des données multivariés. Il présentera à la fois les fondements mathématiques (géométriques) mais fera surtout la part belle à la mise en oeuvre pratioque de ces outils. A l’issue de ce cours, vous disposerez d’un ensemble de méthodes pour analyser des ensembles de données complexes et créer des représentations visuelles qui révèlent des motifs, des tendances et des relations entre plusieurs variables. Le cours couvre les sujets suivants :</p>
+</section>
+<section id="contenu" class="level1">
+<h1>Contenu</h1>
 <ul>
-<li><p><strong>Analyse en Composantes Principales (ACP)</strong> : Un outil puissant de réduction dimensionnelle qui simplifie les grands ensembles de données tout en préservant autant que possible la variation. Les étudiants apprendront à visualiser des données à haute dimension à l’aide de l’ACP, rendant ainsi plus faciles à interpréter les relations complexes.</p></li>
+<li><p><strong>Analyse en Composantes Principales (ACP)</strong> : Un outil puissant de réduction dimensionnelle qui simplifie les grands ensembles de données tout en préservant autant que possible la variation. Les étudiants apprendront à visualiser des données à haute dimension à l’aide de l’ACP, rendant ainsi plus faciles à interpréter les relations complexes. Un extension, l’Analyse Factorielle Multiple (AFM) permet de prendre en compte des variables quantitatives organisées par groupe (on veut distinguer les variables physiques, des variables chimiques par exemple).</p></li>
 <li><p><strong>Analyse Factorielle Discriminante (AFD)</strong> : Cette technique aide à classifier les observations dans des groupes prédéfinis. Le cours se concentrera sur la manière de différencier visuellement les groupes en utilisant plusieurs variables prédictives et d’interpréter les résultats.</p></li>
 <li><p><strong>Analyse de Corrélation Multiple (ACM)</strong> : Les étudiants exploreront comment évaluer et visualiser les relations entre plusieurs variables quantitatives simultanément, à l’aide de représentations graphiques qui rendent les structures de corrélation claires et instructives.</p></li>
 <li><p><strong>Analyse des Correspondances Multiples (ACM)</strong> : En étendant l’analyse des correspondances aux données catégorielles, cette technique permet aux étudiants de visualiser des motifs dans de grands ensembles de données catégorielles, en mettant en évidence des structures sous-jacentes dans un format visuellement interprétable.</p></li>
 </ul>
 <p>Le cours mettra un accent particulier sur la visualisation des ensembles de données multivariés complexes. Les concepts théoriques seront complétés par des exercices pratiques, où les étudiants utiliseront des logiciels statistiques (R, Python, etc.) pour générer des visualisations informatives telles que des biplots, des nuages de points et des matrices de corrélation. Ces outils visuels sont précieux pour communiquer les résultats des analyses multivariées de manière intuitive et accessible.</p>
 <p>À la fin du cours, les étudiants seront compétents dans l’application des méthodes multivariées à une variété d’ensembles de données et auront les compétences nécessaires pour créer des visualisations qui transmettent efficacement les insights découverts grâce à l’analyse statistique.</p>
-<p><strong>Prérequis</strong> : Une connaissance de base des statistiques, de l’algèbre linéaire et une maîtrise des logiciels statistiques (R ou Python) sont recommandées. ```</p>
-
-
 </section>
+<section id="organisation-du-cours" class="level1">
+<h1>Organisation du cours</h1>
+<ul>
+<li>12h de cours</li>
+<li>12h de De TD/TP</li>
+</ul>
+<p>Chaque cours contiendra un exemple détaillé et la mise en oeuvre pratique de la méthode étudiée ainsi que la présentation des concepts mathématiques (essentiellement géométriques) sur lesquels elle repose.</p>
+</section>
+<section id="prérequis" class="level1">
+<h1>Prérequis</h1>
+<p>Une connaissance de base des statistiques, de l’algèb.re linéaire et une maîtrise des logiciels statistiques (R ou Python) sont recommandées</p>
+
+
 </section>
 
 </main> <!-- /main -->

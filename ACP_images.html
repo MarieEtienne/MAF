@@ -157,15 +157,30 @@ window.Quarto = {
 </i> 
 <span class="menu-text"></span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./references.html"> 
-<span class="menu-text">References</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-references-" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">References</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-references-">    
+        <li>
+    <a class="dropdown-item" href="./references_maf.html">
+ <span class="dropdown-text">Cours</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="./references_linear.html">
+ <span class="dropdown-text">Algèbre linéaire</span></a>
+  </li>  
+    </ul>
+  </li>
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-cours" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Cours</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-cours">    
+        <li>
+    <a class="dropdown-item" href="./01_intro.qmd">
+ <span class="dropdown-text"></span></a>
+  </li>  
         <li>
     <a class="dropdown-item" href="./01_acp.html">
  <span class="dropdown-text">Analyse en Composantes Principales</span></a>
@@ -188,11 +203,6 @@ window.Quarto = {
   <li class="nav-item">
     <a class="nav-link" href="./index.html"> 
 <span class="menu-text">Home</span></a>
-  </li>  
-  <li class="nav-item">
-    <span class="nav-link">
-<span class="menu-text">about.qmd</span>
-    </span>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
