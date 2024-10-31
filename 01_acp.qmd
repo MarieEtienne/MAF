@@ -1068,6 +1068,7 @@ $$\boldsymbol{v_2} = (0, 1, \ldots, 0)^\top, \quad \boldsymbol{u_2} = P \boldsym
 
 ```{r PCA_manchots_2, eval = TRUE, echo = TRUE}
 #| echo: true
+#| classes: custom3565
 #| output-location: column
 #| results: hold
 #| message: false
@@ -1084,7 +1085,12 @@ penguins.PCA$eig
 penguins.PCA$svd$V ## what is named P in the lecture
 ```
 
+La dispersion du nuage projeté sur le premier axe représente $6.45 10^5$ en terme d'inertie soit $99.98%$ de l'inertie totale.
 
+trop beau pour être vrai ?
+
+
+Réfléchissons aux données ce qui sera essentiel dan sce cours et dans la suite
 
 
 # Mise en oeuvre pratique
