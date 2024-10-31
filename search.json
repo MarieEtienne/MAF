@@ -16,35 +16,35 @@
   {
     "objectID": "01_intro.html#où-lon-commence-par-parler-de-manchots",
     "href": "01_intro.html#où-lon-commence-par-parler-de-manchots",
-    "title": "Méthodes d’Analyse Factorielle",
+    "title": "Introduction",
     "section": "Où l’on commence par parler de manchots",
     "text": "Où l’on commence par parler de manchots\n\nData presentationData descriptionLes questions que l’on se pose\n\n\nFrom the palmerpenguins package, data courtesy of Dr. Kristen Gorman and the Palmer Station, Antarctica LTER.\n\nlibrary(palmerpenguins)\ndata(penguins)\nhead(penguins, n= 10)\n\n# A tibble: 10 × 8\n   species island    bill_length_mm bill_depth_mm flipper_length_mm body_mass_g\n   &lt;fct&gt;   &lt;fct&gt;              &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;\n 1 Adelie  Torgersen           39.1          18.7               181        3750\n 2 Adelie  Torgersen           39.5          17.4               186        3800\n 3 Adelie  Torgersen           40.3          18                 195        3250\n 4 Adelie  Torgersen           NA            NA                  NA          NA\n 5 Adelie  Torgersen           36.7          19.3               193        3450\n 6 Adelie  Torgersen           39.3          20.6               190        3650\n 7 Adelie  Torgersen           38.9          17.8               181        3625\n 8 Adelie  Torgersen           39.2          19.6               195        4675\n 9 Adelie  Torgersen           34.1          18.1               193        3475\n10 Adelie  Torgersen           42            20.2               190        4250\n# ℹ 2 more variables: sex &lt;fct&gt;, year &lt;int&gt;\n\npenguins &lt;- penguins %&gt;% na.omit() %&gt;% mutate(year=as.factor(year))\n\n\n\nArtwork by @allison_horst\n\n\n\nPoint de vue science des données\n\nComment représenter ces données en perdant le moins d’information ? Visualisation\nToutes les variables sont-elles utiles ? Compression\n\nPoint de vue biologique\n\nQuelles sont les différences morpholgiques entre espèces, entre sexe et entre les îles ?\nExiste-t-il des relations morphométriques ?"
   },
   {
     "objectID": "01_intro.html#représenter-cest-déjà-comprendre",
     "href": "01_intro.html#représenter-cest-déjà-comprendre",
-    "title": "Méthodes d’Analyse Factorielle",
+    "title": "Introduction",
     "section": "Représenter c’est déjà comprendre",
     "text": "Représenter c’est déjà comprendre\n\nReprésenter les liens entre variables 2 à 2DANGER\n\n\n\n\npenguins %&gt;%\n  select(species, body_mass_g, ends_with(\"_mm\")) %&gt;% \n  GGally::ggpairs(aes(color = species),\n          columns = c(\"flipper_length_mm\", \"body_mass_g\", \n                      \"bill_length_mm\", \"bill_depth_mm\")) +\n  scale_colour_manual(values = c(\"darkorange\",\"purple\",\"cyan4\")) +\n  scale_fill_manual(values = c(\"darkorange\",\"purple\",\"cyan4\"))\n\n\n\n\n\n\n\n\n\nProjection sur un espace à deux dimensions\n\n\nLe mensonge de la projection"
   },
   {
     "objectID": "01_intro.html#objectifs-de-ce-cours",
     "href": "01_intro.html#objectifs-de-ce-cours",
-    "title": "Méthodes d’Analyse Factorielle",
+    "title": "Introduction",
     "section": "Objectifs de ce cours",
     "text": "Objectifs de ce cours\nDécouvrir des méthodes permettant de\n\nTrouver une (ou plusieurs) représentations en 2 dimensions la plus fidèle possible,\nFaire apparaître les liens entre les différentes variables,\nIdentifier les individus qui se ressemblent.\n\nLes ingrédients\n\nun peu de géométrie et d’algèbre linéaire,\nmesurer la quantité d’information présente dans un jeu de données,\nun bon esprit pratique pour bien poser le problème au départ\ndes données bien rangées dans un tableau \\(\\Xbf\\) où\n\nune ligne \\(i\\) correspond à un individu\nune colonne \\(j\\) à une variable \\(X_{ij}\\) la valeur de la variable \\(j\\) mesurée sur l’individu \\(i\\)."
   },
   {
     "objectID": "01_intro.html#un-aperçu-du-type-de-données",
     "href": "01_intro.html#un-aperçu-du-type-de-données",
-    "title": "Méthodes d’Analyse Factorielle",
+    "title": "Introduction",
     "section": "Un aperçu du type de données",
     "text": "Un aperçu du type de données\n\nACPAFDACM\n\n\nComprendre les relations entre des variables toutes quantitatives.\nExample\nQuels sont lens entre les différentes variables morphométriques ?\n\n\nX_pca &lt;- penguins %&gt;%select(where(is.numeric)) \nhead(X_pca)\n\n\n# A tibble: 6 × 4\n  bill_length_mm bill_depth_mm flipper_length_mm body_mass_g\n           &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;\n1           39.1          18.7               181        3750\n2           39.5          17.4               186        3800\n3           40.3          18                 195        3250\n4           36.7          19.3               193        3450\n5           39.3          20.6               190        3650\n6           38.9          17.8               181        3625\n\n\n\\[\\Xbf \\in \\R^{n\\times d}; \\quad \\Xbf = \\begin{pmatrix}\nx_{1,1} &  \\ldots & x_{1,p} \\\\\n\\vdots & &\\vdots \\\\\nx_{n,1} &  \\ldots & x_{n,p} \\\\\n\\end{pmatrix}.\n\\]\n\n\nComprendre les combinaisons de variables quantitatives qui expliquent les groupes, ou comment visualiser au mieux les différences entre les groupes.\nExample Comment visualiser au mieux les différences morpohologiques entre les espèces ?\n\n\nX_afd &lt;- penguins %&gt;% select(-island, -sex, -year) \nhead(X_afd)\n\n\n# A tibble: 6 × 5\n  species bill_length_mm bill_depth_mm flipper_length_mm body_mass_g\n  &lt;fct&gt;            &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;\n1 Adelie            39.1          18.7               181        3750\n2 Adelie            39.5          17.4               186        3800\n3 Adelie            40.3          18                 195        3250\n4 Adelie            36.7          19.3               193        3450\n5 Adelie            39.3          20.6               190        3650\n6 Adelie            38.9          17.8               181        3625\n\n\n\\[ \\Xbf = \\begin{pmatrix}\n\\class{rouge}{y_1} & x_{1,1} &  \\ldots & x_{1,p} \\\\\n\\vdots & &\\vdots \\\\\n\\class{rouge}{y_n} & x_{n,1} &  \\ldots & x_{n,p} \\\\\n\\end{pmatrix}, \\quad x_{ij}\\in\\R,\\  g_i \\in \\mathcal{G} =\\left \\lbrace g_1, \\ldots, g_G\\right \\rbrace.\n\\]\n\n\nOn souhaite étudier les liens entre deux variables qualitatives.\nExample\nComment la répartition entre espèce diffère entre les îles.\n\n\nX_acm &lt;- penguins %&gt;%select(species, island) \nhead(X_acm)\n\n\n# A tibble: 6 × 2\n  species island   \n  &lt;fct&gt;   &lt;fct&gt;    \n1 Adelie  Torgersen\n2 Adelie  Torgersen\n3 Adelie  Torgersen\n4 Adelie  Torgersen\n5 Adelie  Torgersen\n6 Adelie  Torgersen\n\n\n\\[\\Xbf = \\begin{pmatrix}\n\\class{bleu}{a_1} & \\class{orange}{b_1} \\\\\n\\class{bleu}{\\vdots} &\\class{orange}{\\vdots} \\\\\n\\class{bleue}{a_n} & \\class{orange}{b_n} \\\\\n\\end{pmatrix}, \\quad a_{i}\\in \\mathcal{A}, \\ \\#\\mathcal{A}= p,\\quad   b_{i}\\in \\mathcal{B}, \\ \\#\\mathcal{B}= q.  \n\\]"
   },
   {
     "objectID": "01_intro.html#organisation-du-cours",
     "href": "01_intro.html#organisation-du-cours",
-    "title": "Méthodes d’Analyse Factorielle",
+    "title": "Introduction",
     "section": "Organisation du cours",
     "text": "Organisation du cours\n\nCes méthodes ont beaucoup de points communs\nComprendre finement l’ACP permet de bien comprendre toutes les extensions suivantes\nLa mise en oeuvre requiert un peu de pratique car il faut faire des choix avisés.\n\nPlan du cours\n\nAnalyse en composante principale\n\nUn exemple d’ACP\n\nComprendre les mécanismes derrière l’ACP (notion d’inertie, distance entre individus, changement de repères, la correlation comme un cosinus)\n\nAnalyse Factorielle multiple AFM : une extension de l’ACP\nAnalyse Factorielle Discriminante : AFD\nAnalyse Factorielle des Correspondances : AFC"
   },
@@ -82,6 +82,160 @@
     "title": "Singular Value Decomposition et ACP",
     "section": "La décomposition en valeurs sigulières",
     "text": "La décomposition en valeurs sigulières\n\\[\\boldsymbol{X} = \\boldsymbol{U}\\boldsymbol{D}\\boldsymbol{V^\\intercal},\\]\noù * \\(\\boldsymbol{U}\\) est une matrice \\(n\\times n\\) orthogonale \\(\\boldsymbol{U} \\boldsymbol{U}^\\intercal = \\boldsymbol{I}_n,\\) * \\(\\boldsymbol{V}\\) est une matrice \\(d\\times d\\) orthogonale \\(\\boldsymbol{V} \\boldsymbol{V}^\\intercal = \\boldsymbol{I}_d,\\) * \\(\\boldsymbol{D}\\) est une matrice \\(n \\times d\\), diagonale au sens où seuls les termes \\(D_{ii}\\) sont non nuls.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFigure 1: SVD et Changement de Base"
+  },
+  {
+    "objectID": "01_acp.html#rappel-des-données-sur-les-manchots",
+    "href": "01_acp.html#rappel-des-données-sur-les-manchots",
+    "title": "Analyse en Composantes Principales",
+    "section": "Rappel des données sur les manchots",
+    "text": "Rappel des données sur les manchots\nDonnées disponibles dans le package palmerpenguins mises à disposition par le Dr. Kristen Gorman et the Palmer Station, Antarctica LTER.\nOn a mesuré les caractéristiques morphologiques de divers manchots :\n\n\nLes 6 premières lignes (parmi 333 )\n\n\n# A tibble: 333 × 4\n  bill_length_mm bill_depth_mm flipper_length_mm body_mass_g\n           &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;\n1           39.1          18.7               181        3750\n2           39.5          17.4               186        3800\n3           40.3          18                 195        3250\n4           36.7          19.3               193        3450\n5           39.3          20.6               190        3650\n6           38.9          17.8               181        3625\n# ℹ 327 more rows\n\n\n\n\nbill_length_mm : la longueur du bec,\nbill_depth_mm : l’épaisseur du bec,\nflipper_length_mm : la longueur de la nageoire,\nbody_mass_g : le poids du corps.\n\n\nComment visualiser au mieux ces données pour faire apparaître les liens entre variables et identifier des resemblances entre individus ?"
+  },
+  {
+    "objectID": "01_acp.html#voir-cest-comprendre-comment-représenter-linformation-contenue-dans-ce-tableau",
+    "href": "01_acp.html#voir-cest-comprendre-comment-représenter-linformation-contenue-dans-ce-tableau",
+    "title": "Analyse en Composantes Principales",
+    "section": "Voir c’est comprendre : comment représenter l’information contenue dans ce tableau ?",
+    "text": "Voir c’est comprendre : comment représenter l’information contenue dans ce tableau ?\nIdée 1 : on représente les liens des variables 2 à 2"
+  },
+  {
+    "objectID": "01_acp.html#voir-cest-comprendre-comment-représenter-linformation-contenue-dans-ce-tableau-1",
+    "href": "01_acp.html#voir-cest-comprendre-comment-représenter-linformation-contenue-dans-ce-tableau-1",
+    "title": "Analyse en Composantes Principales",
+    "section": "Voir c’est comprendre : comment représenter l’information contenue dans ce tableau ?",
+    "text": "Voir c’est comprendre : comment représenter l’information contenue dans ce tableau ?\nIdée 1 : dangereuse"
+  },
+  {
+    "objectID": "01_acp.html#voir-cest-comprendre-comment-représenter-linformation-contenue-dans-ce-tableau-2",
+    "href": "01_acp.html#voir-cest-comprendre-comment-représenter-linformation-contenue-dans-ce-tableau-2",
+    "title": "Analyse en Composantes Principales",
+    "section": "Voir c’est comprendre : comment représenter l’information contenue dans ce tableau ?",
+    "text": "Voir c’est comprendre : comment représenter l’information contenue dans ce tableau ?\nObjectifs\n\nReprésenter sans perdre trop d’information,\nQuantifier la perte d’information,\nComprendre quelles sont les informations redondantes, (variables liées),\nIdéalement des individus éloignés dans le nuage initial, restent éloignés dans la représentation\n\nDans toute la suite, sans perte de généralité, on va considérer que les variables sont centrées."
+  },
+  {
+    "objectID": "01_acp.html#si-on-savait-faire-une-analyse-en-composantes-principales",
+    "href": "01_acp.html#si-on-savait-faire-une-analyse-en-composantes-principales",
+    "title": "Analyse en Composantes Principales",
+    "section": "Si on savait faire une Analyse en Composantes Principales",
+    "text": "Si on savait faire une Analyse en Composantes Principales\n\nDans R on feraitReprésentation des individusReprésentation des variablesVisualisation par ACP\n\n\n\n\nlibrary(FactoMineR)\ndta &lt;- penguins %&gt;% select(bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g) \npenguins.PCA &lt;- PCA(X = dta, ncp = 4, graph = FALSE)\n\n\n\n\n\nL’ACP permet de trouver la projection en 2 dimensions qui préserve au mieux l’information contenu dans le nuage de points (avec peu de déformation).\n\n\nplot(penguins.PCA, choix = \"ind\")\n\n\n\n\n\n\n\n\n\nReste à comprendre\n\nComment quantifier l’information contenue dans un nuage de points\nComment est construite cette meilleure projection\nQuels sont les individus bien représentés ?\n\n\n\nL’ACP définit de nouvelles variables, les composantes principales qui sont une combinaison linéaire des anciennes variables. On peut représenter les variables dans le premier plan de l’ACP.\n\n\nplot(penguins.PCA, choix = \"var\")\n\n\n\n\n\n\n\n\n\nReste à comprendre\n\nComment interpréter cette représentation ?\nQuelles sont les variables bien représentées ?\nQue peut on déduire de ce graphique sur le lien entre les variables.\nComment lier graphique des individus et graphique des variables"
+  },
+  {
+    "objectID": "01_acp.html#mise-en-forme-des-données",
+    "href": "01_acp.html#mise-en-forme-des-données",
+    "title": "Analyse en Composantes Principales",
+    "section": "Mise en forme des données",
+    "text": "Mise en forme des données\nL’ACP s’applique à des données quantitatives sous forme de tableau. Ce tableau est composé de n individus (lignes) et de p variables (colonnes).\nDans la suite on va noter \\({\\boldsymbol{X}}\\) la matrice des données, \\({\\boldsymbol{X}}\\in {\\mathbb{R}}^{n\\times p}\\).\n\\(x_{\\class{alea}{i}\\class{orange}{j}}\\) est la valeur de la variable \\(\\class{orange}{j}\\) mesurée pour l’individu \\(\\class{alea}{i}.\\)\n\\[{\\boldsymbol{X}}= \\overset{\\color{orange}{\\begin{matrix}var_1& \\ldots \\ &  \\ \\ldots \\ &\\  \\ldots\\  & \\  var_p \\end{matrix}}}{\\begin{pmatrix}\nx_{\\class{alea}{1}}^{\\class{orange}{1}} &  \\ldots &  \\ldots &\\ldots &  x_{\\class{alea}{1}}^{\\class{orange}{p}}\\\\\n\\vdots & & &  &\\vdots \\\\\n& &  x_{\\class{alea}{i}}^{\\class{orange}{j}} & & \\\\\n\\vdots & & & & \\vdots \\\\\nx_{\\class{alea}{n}}^{\\class{orange}{1}} & & & & \\ldots x_{\\class{alea}{n}}^{\\class{orange}{p}}\\\\\n\\end{pmatrix}}\\]"
+  },
+  {
+    "objectID": "01_acp.html#deux-points-de-vue-complémentaires",
+    "href": "01_acp.html#deux-points-de-vue-complémentaires",
+    "title": "Analyse en Composantes Principales",
+    "section": "Deux points de vue complémentaires",
+    "text": "Deux points de vue complémentaires\n\n\nLe nuage des individus \\(C^n\\)\nOn peut considérer qu’un individu \\(i\\) est un vecteur \\(\\class{alea}{\\boldsymbol{x}_{i}}\\) dans un espace de dimension \\(p\\). Par convention tous les vecteurs sont des vecteurs colonnes, donc on peut écrire\n\\[{\\boldsymbol{X}}=\\begin{pmatrix}\n\\class{alea}{\\boldsymbol{x}_{1}}^\\top\\\\\n\\vdots \\\\\n\\class{alea}{\\boldsymbol{x}_{n}}^\\top\\\\\n\\end{pmatrix},\\]\nL’ensemble des \\(n\\) vecteurs forme le nuage des individus (ce qu’on représente classiquement).\n\n\n\n\n\n\n\n\n\n\nLe nuage des variables \\(C^p\\)\nOn peut considérer qu’une variable \\(j\\) est un vecteur \\(\\class{orange}{\\boldsymbol{x}^{j}}\\) dans un espace de dimension \\(n\\) et on peut écrire\n\\[{\\boldsymbol{X}}=\\begin{pmatrix}\n\\class{orange}{\\boldsymbol{x}^{1}} & \\ldots & \\class{orange}{\\boldsymbol{x}^{p}}\n\\end{pmatrix},\\]\nL’ensemble des \\(p\\) vecteurs forme le nuage des variables.\n\n\n\n\n\n\n\n\n\n\n\nBien sûr les deux nuages sont intimement liés"
+  },
+  {
+    "objectID": "01_acp.html#linertie-par-rapport-à-un-point",
+    "href": "01_acp.html#linertie-par-rapport-à-un-point",
+    "title": "Analyse en Composantes Principales",
+    "section": "L’inertie par rapport à un point",
+    "text": "L’inertie par rapport à un point\n\n\n\nDefinition 1\n\n\nL’inertie (terme hérité de la physique) par rapport à un point \\(a \\in {\\mathbb{R}}^{p}\\) est définie par\n\\[I_{\\boldsymbol{a}} = \\frac{1}{n} \\sum_{i=1}^n \\lVert\\boldsymbol{x}_{i} - \\boldsymbol{a}\\rVert^2 = \\frac{1}{n} \\sum_{i=1}^n\\sum_{k=1}^p  (x_i^k -a^k)^2\\]\n\n\n\n\nIntuitivementRéponseThéorème de HuyghensRemarque\n\n\nL’inertie par rapport à un point quantifie l’information perdue lorsque le jeu de données est résumé par ce point.\nQuel est selon vous le point \\(\\boldsymbol{a}\\) qui minimise l’inertie ?\n\\[argmax_{\\boldsymbol{a}} I_{\\boldsymbol{a}} = ??\\]\n\n\nBINGO !!!\nIl s’agit du point \\(\\boldsymbol{g}=\\boldsymbol{x_{\\bullet}}=({x}_{\\bullet}^1, \\ldots, {x}_{\\bullet}^p )^\\top,\\) avec \\({x}_{\\bullet}^k=\\frac{1}{n} \\sum_{i=1}^n x_{i}^k\\), la valeur moyenne de la variable \\(k\\) sur l’ensemble des individus.\nPuisque nous avons supposé que nos variables étaient centrées, \\(G=O\\) l’origine sur repère.\n\n\n\\[\\forall \\boldsymbol{a}\\in\\mathbb{R}^p,\\; I_\\boldsymbol{a}=I_\\boldsymbol{g} + \\lVert\\boldsymbol{a}- \\boldsymbol{g}\\rVert^2.\\]\nConséquence\nLe meilleur résumé du nuage de points se résumant à un point est le barycentre du nuage de points, c’est à dire la moyenne sur chacune des dimensions.\n\n\n\\[I_{\\boldsymbol{g}} =\\frac{1}{n}  \\sum_{i=1}^n     \\left( \\sum_{k=1}^p \\left( x_{i}^k - x_{\\bullet}^k  \\right)^2 \\right)  = \\sum_{k=1}^p  \\left( \\frac{1}{n}  \\sum_{i=1}^n  \\left( x_{i}^k - x_{\\bullet}^k  \\right)^2 \\right)  = \\sum_{k=1}^p  Var(\\boldsymbol{x}^{k})\\] Si les variables sont réduites\n\\[I = p\\]"
+  },
+  {
+    "objectID": "01_acp.html#linertie-par-rapport-à-un-axe",
+    "href": "01_acp.html#linertie-par-rapport-à-un-axe",
+    "title": "Analyse en Composantes Principales",
+    "section": "L’inertie par rapport à un axe",
+    "text": "L’inertie par rapport à un axe\n\n\n\nDefinition 2\n\n\nL’inertie par rapport à l’axe \\(\\Delta\\)  est définie par \\[I_{\\boldsymbol{\\Delta}} = \\frac{1}{n} \\sum_{i=1}^n \\lVert\\boldsymbol{x}_{i} - \\boldsymbol{p_i}^{\\Delta}\\rVert^2 = \\frac{1}{n} \\sum_{i=1}^n\\sum_{k=1}^p  (x_i^k -p^{k,\\Delta}_i)^2, \\quad \\mbox{où }\\  \\boldsymbol{p_i}^{\\Delta} \\mbox{projeté orthogonal de } \\boldsymbol{x_i} \\mbox{ sur }\\Delta.\\]\n\n\n\n\nIntuitivementQue veut-on faire ?Rappel projection orthogonale\n\n\n\n\nL’inertie par rapport à l’axe \\(\\Delta\\) quantifie l’information perdue lorsque l’on résume le nuage de points à son projeté sur \\(\\Delta\\).\n\n\n\n\n\n\n\n\n\n\n\n\n\nIdentifier \\(\\Delta\\) tel que \\(I_{\\Delta}\\) soit minimale\nCe qui revient à l’axe \\(\\Delta\\) qui assure que la projection sur \\(\\Delta\\) déforme le moins possible le nuage de points.\nDans le cadre de l’ACP, on veut construire une ensemble d’axes orthongonaux (une nouvelle base de \\({\\mathbb{R}}^p\\)), de façon à ce que\n\nla projection sur le premier axe, soit le meilleur résumé du nuage de points en une dimension,\nle deuxième axe est orthogonal au premier et représente “le deuxième meileur choix” …. dans un sens que l’on va définir\nle troisième …\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nProduit scalaire : Soient deux élements \\(\\boldsymbol{x}\\) et \\(\\boldsymbol{y}\\) de \\(\\mathbb{R}^p\\), le produit scalaire est noté \\(&lt;\\boldsymbol{x},\\boldsymbol{y}&gt;\\) et \\(&lt;\\boldsymbol{x},\\boldsymbol{y}&gt;=\\sum_{i=1}^p x_i y_i = \\boldsymbol{x}^\\top \\boldsymbol{y}.\\)\nOrthogonalité Soient deux élements \\(\\boldsymbol{x}\\) et \\(\\boldsymbol{y}\\) de \\(\\mathbb{R}^p\\), on dit que \\(\\boldsymbol{x}\\) et \\(\\boldsymbol{y}\\) sont orthogonaux (noté \\(\\boldsymbol{x}\\perp \\boldsymbol{y}\\)) si \\(&lt;\\boldsymbol{x},\\boldsymbol{y}&gt; = \\boldsymbol{x}^\\top  \\boldsymbol{y}=0\\).\nProjection orthogonale On note \\(\\boldsymbol{a}_u\\) le projeté de \\(\\boldsymbol{a}\\) sur la droite \\(\\Delta\\) définit par son vecteur directeur unitaire \\(\\boldsymbol{u}\\) et passant par l’origine \\[\\boldsymbol{a}_u = &lt; \\boldsymbol{a}, \\boldsymbol{u} &gt; \\boldsymbol{u} = (\\boldsymbol{a}^\\top \\boldsymbol{u})\\,  \\boldsymbol{u}.\\] Le vecteur \\(\\boldsymbol{a_u}\\) est orthogonal à \\(\\boldsymbol{a}-\\boldsymbol{a_u}\\): \\[&lt; \\boldsymbol{a_u}, \\boldsymbol{a}-\\boldsymbol{a_u}&gt; = \\left ((\\boldsymbol{a}^\\top \\boldsymbol{u}) \\boldsymbol{u}\\right)^\\top \\left ( \\boldsymbol{a} -  (\\boldsymbol{a}^\\top \\boldsymbol{u})\\,  \\boldsymbol{u} \\right)=(\\boldsymbol{a}^\\top \\boldsymbol{u}) (\\boldsymbol{u}^\\top \\boldsymbol{a}) - (\\boldsymbol{a}^\\top \\boldsymbol{u})^2 \\boldsymbol{u}^\\top \\boldsymbol{u} =0  \\]"
+  },
+  {
+    "objectID": "01_acp.html#linertie-par-rapport-à-un-sous-espace-affine",
+    "href": "01_acp.html#linertie-par-rapport-à-un-sous-espace-affine",
+    "title": "Analyse en Composantes Principales",
+    "section": "L’inertie par rapport à un sous espace affine",
+    "text": "L’inertie par rapport à un sous espace affine\n\nEspace orthogonal Soit \\(E\\) un sous-espace vectoriel de \\(\\mathbb{R}^p\\). On definit \\(E^\\perp=\\{\\boldsymbol{x}\\in \\mathbb{R}^p:\\; \\forall \\boldsymbol{y}\\in E,\\; \\boldsymbol{x}\\perp \\boldsymbol{y}\\}\\).\n\n\nExempleSolution\n\n\nDans \\({\\mathbb{R}}^2\\), on considère le sous espace vectoriel \\(E\\), tel que \\[ E =\\left \\lbrace  \\boldsymbol{x}=\\begin{pmatrix} x_1 &  x_2 \\end{pmatrix}^\\top \\in {\\mathbb{R}}^2 : x_1 = x_2  \\right \\rbrace \\] \\(E\\) est la droite d’équation \\(y=x\\).\nQui est \\(E^\\perp\\) ?\n\n\nSoit \\(\\boldsymbol{y}\\in E^\\perp,\\) alors\n\\[\\begin{align}\n0 & = \\boldsymbol{x}^\\top \\boldsymbol{y}\\\\\n  & = \\begin{pmatrix} x_1 &  x_2 \\end{pmatrix} \\begin{pmatrix} y_1 \\\\  y_2 \\end{pmatrix}\\\\\n  & = x_1 y_1 + x_2 y_2 \\\\\n  & = x_1 (y_1 + y_2) \\quad (\\boldsymbol{x}\\in E \\Rightarrow x_1 =x_2) \\\\\n\\end{align}\\]\n\\[E^\\perp =  \\left \\lbrace  \\boldsymbol{y}=\\begin{pmatrix} y_1 &  y_2 \\end{pmatrix}^\\top \\in {\\mathbb{R}}^2 : y_1 + y_2 = 0 \\right \\rbrace  \\]\n\n\n\n\n\n\n\nDefinition 3\n\n\nL’inertie par rapport à un sous espace vectoriel \\(E\\)  est définie par \\[I_{E} = \\frac{1}{n} \\sum_{i=1}^n \\lVert\\boldsymbol{x}_{i} - \\boldsymbol{p_i}^{E}\\rVert^2 = \\frac{1}{n} \\sum_{i=1}^n\\sum_{k=1}^p  (x_i^k -p^{k,E}_i)^2, \\quad \\mbox{où }\\  \\boldsymbol{p_i}^{E} = argmin_{\\boldsymbol{y}\\in E} d(\\boldsymbol{y}, \\boldsymbol{x}_{i}), \\mbox{i.e. projeté orthogonal de } \\boldsymbol{x_i} \\mbox{ sur }E.\\]\n\n\n\nC’est l’inertie perdue lorsque l’on résume le nuage de points à sa projection sur le sous espace \\(E\\)."
+  },
+  {
+    "objectID": "01_acp.html#décomposition-de-linertie",
+    "href": "01_acp.html#décomposition-de-linertie",
+    "title": "Analyse en Composantes Principales",
+    "section": "Décomposition de l’inertie",
+    "text": "Décomposition de l’inertie\n\nSoit \\(E\\) un sous espace vectoriel de \\({\\mathbb{R}}^p\\), alors \\[I = I_E + I_{E^\\perp}.\\]\n\nPreuve\n\n\nUn dessin vaut mieux qu’un long discours et Pythagore est ton ami !\n\\[d(\\class{alea}{\\boldsymbol{x}_{i}}, O)^2 = d(\\boldsymbol{x}_{i}, \\class{bleu}{\\boldsymbol{x}_{i}^E})^2  +  d(\\class{alea}{\\boldsymbol{x}_{i}}, \\class{rouge}{\\boldsymbol{x}_{i}^{E^\\perp}})^2.\\]\n\\[\\begin{align}\nI & = \\frac{1}{n} \\sum_{i=1}^n d(\\class{alea}{\\boldsymbol{x}_{i}}, O)^2 \\\\\n   & = \\frac{1}{n} \\sum_{i=1}^n d(\\class{alea}{\\boldsymbol{x}_{i}}, \\class{bleu}{\\boldsymbol{x}_{i}^E})^2   +  \\frac{1}{n} \\sum_{i=1}^n d(\\class{alea}{\\boldsymbol{x}_{i}}, \\class{rouge}{\\boldsymbol{x}_{i}^{E^\\perp}})^2 \\\\\n   & = \\class{bleu}{I_E} + \\class{rouge}{I_{E^\\perp}}\n\\end{align}\\]"
+  },
+  {
+    "objectID": "01_acp.html#principe-de-la-décomposition-à-venir",
+    "href": "01_acp.html#principe-de-la-décomposition-à-venir",
+    "title": "Analyse en Composantes Principales",
+    "section": "Principe de la décomposition à venir",
+    "text": "Principe de la décomposition à venir\n\nIdentifier le vecteur \\(\\boldsymbol{u_1}\\) de \\({\\mathbb{R}}^p\\), tel que \\(I_{E_1}\\) soit minimale avec \\(E_1=\\left \\lbrace \\lambda \\boldsymbol{u_1}, \\lambda \\in {\\mathbb{R}}\\right\\rbrace,\\)\nDans \\(E_1^\\perp\\), identifier le vecteur \\(\\boldsymbol{u_2}\\) de \\({\\mathbb{R}}^p\\), tel que \\(I_{E_2}\\) soit minimale avec \\(E_2=\\left \\lbrace \\lambda \\boldsymbol{u_2}, \\lambda \\in {\\mathbb{R}}\\right\\rbrace,\\)\nDans \\(\\left (  E_1 \\oplus E_2 \\right)^\\perp\\), identifier le vecteur \\(\\boldsymbol{u_3}\\) de \\({\\mathbb{R}}^p\\), tel que ….\n\n…\nFinalement on aura la décomposition\n\\[I= I_{E_1} + I_{E_2} + \\ldots + I_{E_p}, \\quad \\mbox{avec } I_{E_1} \\leq I_{E_2} \\leq \\ldots \\leq I_{E_p}\\]"
+  },
+  {
+    "objectID": "01_acp.html#se-donner-des-intuitions",
+    "href": "01_acp.html#se-donner-des-intuitions",
+    "title": "Analyse en Composantes Principales",
+    "section": "Se donner des intuitions",
+    "text": "Se donner des intuitions"
+  },
+  {
+    "objectID": "01_acp.html#se-donner-des-intuitions-1",
+    "href": "01_acp.html#se-donner-des-intuitions-1",
+    "title": "Analyse en Composantes Principales",
+    "section": "Se donner des intuitions",
+    "text": "Se donner des intuitions"
+  },
+  {
+    "objectID": "01_acp.html#identifier-boldsymbolu_1---formalisation",
+    "href": "01_acp.html#identifier-boldsymbolu_1---formalisation",
+    "title": "Analyse en Composantes Principales",
+    "section": "Identifier \\(\\boldsymbol{u_1}\\) - Formalisation",
+    "text": "Identifier \\(\\boldsymbol{u_1}\\) - Formalisation\n\n\n\nOn cherche \\(\\boldsymbol{u_1}\\) tel que \\(I_{u_1}\\) soit minimale mais \\(I_{u_1} + I_{u_1^\\perp}=I\\). Minimiser \\(I_{u_1}\\) revient à maximiser \\(I_{u_1^\\perp}\\), i.e l’inertie du nuage projeté.\n\nLe premier individu se projette en \\(\\class{alea}{x_{1}}^\\top \\boldsymbol{u_1}\\) sur \\(\\boldsymbol{u_1}\\)\nLe deuxième individu se projette en \\(\\class{alea}{x_{2}}^\\top \\boldsymbol{u_1}\\) sur \\(\\boldsymbol{u_1}\\)\n…\n\nOn rappelle que \\[{\\boldsymbol{X}}= \\begin{pmatrix} \\class{alea}{x_{1}}^\\top \\\\ \\vdots \\\\ \\class{alea}{x_{n}}^\\top \\end{pmatrix}.\\] La projection de l’individu \\(i\\) est obtenue en multipliant le vecteur ligne \\(\\class{alea}{x_{1}}^\\top\\) par \\(\\boldsymbol{u_1}\\). Le vecteur des coordonnées sur \\(\\boldsymbol{u_1}\\) pour chaque individu est\n\n\\[\\begin{pmatrix} \\class{alea}{x_{1}}^\\top \\boldsymbol{u_1} \\\\ \\vdots \\\\ \\class{alea}{x_{n}}^\\top \\boldsymbol{u_1} \\end{pmatrix} = X  \\boldsymbol{u_1}.\\]\n\nMinimiser \\(I_{u_1^\\perp}\\)\nsous la contrainte \\(\\lVert\\boldsymbol{u_1}\\rVert\\) \\[\\begin{align}\nI_{u_1^\\perp} & = \\lVert X  \\boldsymbol{u_1}\\rVert^2 \\\\\n        & = (X  \\boldsymbol{u_1})^\\top (X  \\boldsymbol{u_1})\\\\\n        & =   \\boldsymbol{u_1}^\\top X^\\top X   \\boldsymbol{u_1}\n\\end{align}\\]\n\nRemarqueCe que ça signifie\n\n\n\\(X^\\top X\\) est la matrice de covariance, elle est symétrique et définie positive donc diagonalisable. Il existe une matrice \\(P\\) unitaire \\(P^\\top P = I_p,\\) et \\(D\\) une matrice diagonale telle que \\[X^\\top X = P D P^\\top.\\]\nLes termes diagonaux de \\(D\\) sont les valeurs propres, toutes positives, de \\(X^\\top X\\) rangées par odre décroissant, \\(\\lambda_1 &gt; \\lambda_1 \\ldots &gt;\\lambda_p\\) et \\(P\\) est la matrice des vecteurs propres associés.\n\n\n\n\\(\\bolsymbol{b}\\) est une base orthonormale, la base formée par les vecteurs propres de \\(X^\\top X\\)."
+  },
+  {
+    "objectID": "01_acp.html#identifier-les-directions-principales",
+    "href": "01_acp.html#identifier-les-directions-principales",
+    "title": "Analyse en Composantes Principales",
+    "section": "Identifier les directions principales",
+    "text": "Identifier les directions principales\nChercher \\(\\boldsymbol{u_1}\\)\nPosons \\(\\boldsymbol{v_1} = P^\\top \\boldsymbol{u_1},\\) \\(\\lVert\\boldsymbol{v_1}\\rVert=1\\):\nMaximiser \\(\\boldsymbol{v_1}^\\top D \\boldsymbol{v_1} = \\sum_{k=1}^p v_{1p}^2 \\lambda_p\\), sous la contrainte \\(\\sum_{k=1}^p  v_{1p}^2=1\\)\n\\[\\boldsymbol{v_1} = (1, 0, \\ldots, 0)^\\top, \\quad \\boldsymbol{u_1} = P \\boldsymbol{v_1} = \\begin{pmatrix} P_{11} \\\\ \\vdots \\\\P_{p1} \\end{pmatrix}.\\]\n\\(\\boldsymbol{u_1}\\) est le premier vecteur propre\nChercher \\(\\boldsymbol{u_2}\\)\nOn cherche \\(\\boldsymbol{u_2}\\perp \\boldsymbol{u_1}\\), tel que \\(\\boldsymbol{u_2}^\\top X^\\top X   \\boldsymbol{u_2}\\),\nPosons \\(\\boldsymbol{v_2} = P^\\top \\boldsymbol{u_2},\\) \\(\\lVert\\boldsymbol{v_2}\\rVert=1\\): Maximiser \\(\\boldsymbol{v_2}^\\top D \\boldsymbol{v_2} = \\sum_{k=1}^p v_{2p}^2 \\lambda_p\\), sous la contrainte \\(\\sum_{k=1}^p  v_{1p}^2=1\\) et \\(v_{1p}=0\\) pour assurer l’orthogonalité avec \\(\\boldsymbol{v_1}\\)\n\\[\\boldsymbol{v_2} = (0, 1, \\ldots, 0)^\\top, \\quad \\boldsymbol{u_2} = P \\boldsymbol{v_2} = \\begin{pmatrix} P_{12} \\\\ \\vdots \\\\P_{p2} \\end{pmatrix}.\\]\n\\(\\boldsymbol{u_2}\\) est le deuxième vecteur propre"
+  },
+  {
+    "objectID": "01_acp.html#illustration-on-the-penguins-data",
+    "href": "01_acp.html#illustration-on-the-penguins-data",
+    "title": "Analyse en Composantes Principales",
+    "section": "Illustration on the Penguins data",
+    "text": "Illustration on the Penguins data\n\n\nlibrary(FactoMineR)\n\npenguins.PCA &lt;- PCA(X = penguins, \n                    scale.unit = FALSE, ## should we scale the data, let's lmention this later\n                    ncp = 4, ## number of components : as many as initial variables\n                    graph = FALSE, ## no graph right now\n                    quali.sup = c(1, 2, 7,8)) ## to indicate the column number of qualitative variable\npenguins.PCA$eig\n\npenguins.PCA$svd$V ## what is named P in the lecture\n\n\n         eigenvalue percentage of variance cumulative percentage of variance\ncomp 1 6.465859e+05           9.998932e+01                          99.98932\ncomp 2 5.058345e+01           7.822325e-03                          99.99715\ncomp 3 1.610647e+01           2.490736e-03                          99.99964\ncomp 4 2.353778e+00           3.639929e-04                         100.00000\n             [,1]        [,2]        [,3]          [,4]\n[1,]  0.004003162  0.31927773  0.94126475 -0.1098470736\n[2,] -0.001154327 -0.08684753  0.14449479  0.9856862728\n[3,]  0.015194547  0.94354238 -0.30518986  0.1278908060\n[4,]  0.999875876 -0.01571702  0.00103611 -0.0003657482"
+  },
+  {
+    "objectID": "01_acp.html#attention-aux-unités",
+    "href": "01_acp.html#attention-aux-unités",
+    "title": "Analyse en Composantes Principales",
+    "section": "Attention aux unités",
+    "text": "Attention aux unités"
+  },
+  {
+    "objectID": "01_acp.html#représentation-des-individus-1",
+    "href": "01_acp.html#représentation-des-individus-1",
+    "title": "Analyse en Composantes Principales",
+    "section": "Représentation des individus",
+    "text": "Représentation des individus"
+  },
+  {
+    "objectID": "01_acp.html#représentation-des-variables-1",
+    "href": "01_acp.html#représentation-des-variables-1",
+    "title": "Analyse en Composantes Principales",
+    "section": "Représentation des variables",
+    "text": "Représentation des variables"
+  },
+  {
+    "objectID": "01_acp.html#contribution-des-individus",
+    "href": "01_acp.html#contribution-des-individus",
+    "title": "Analyse en Composantes Principales",
+    "section": "Contribution des individus",
+    "text": "Contribution des individus"
+  },
+  {
+    "objectID": "01_acp.html#contribution-des-variables",
+    "href": "01_acp.html#contribution-des-variables",
+    "title": "Analyse en Composantes Principales",
+    "section": "Contribution des variables",
+    "text": "Contribution des variables"
   },
   {
     "objectID": "index.html",
