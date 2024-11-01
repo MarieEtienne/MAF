@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Install R packages
         run: |
-          Rscript -e "install.packages(c('palmerpenguins','GGally', 'ggforce'))"
+          Rscript -e "install.packages(c('palmerpenguins','GGally', 'ggforce', 'factoextra')"
       - name: Generate slides
         run: "quarto render"
       - name: GitHub Pages action
