@@ -47,6 +47,8 @@ myBib <- ReadBib("./MAF.bib", check = FALSE)
 theme_set(theme_minimal())
 options(ggplot2.discrete.colour=   scale_color_manual(values = wesanderson::wes_palette(name = "Darjeeling1")) )
 couleur <-  wesanderson::wes_palette(name = "Darjeeling1")
+scale2 <- function(x, na.rm = FALSE) (x - mean(x, na.rm = na.rm)) / ( sqrt((length(x)-1) / length(x)) *sd(x, na.rm) )
+
 ```
 
 ::: hidden
@@ -73,7 +75,8 @@ ggplot <- function(...) ggplot2::ggplot(...) + scale_fill_manual(values = wesand
 doubs.env <- read.csv ('https://raw.githubusercontent.com/zdealveindy/anadat-r/master/data/DoubsEnv.csv', row.names = 1) %>% as_tibble()
 
 data(penguins, package = 'palmerpenguins')
-penguins <- penguins %>% na.omit()
+penguins <- penguins %>% na.omit() %>% 
+  mutate(year = as.factor(year))
 
 ```
 
@@ -126,6 +129,7 @@ On a mesuré les caractéristiques morphologiques de divers manchots :
 Les 6 premières lignes (parmi 333 ) 
 
 ```{r extrait_penguins, echo = FALSE, eval = TRUE}
+  
  penguins %>% 
  select(bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g) %>%  print(n=6)
 ```
@@ -483,7 +487,7 @@ ggplot() +
 
 # Mesurer l'information contenue dans un nuage de points
 
-## L'inertie par rapport à un point 
+## L'inertie par rapport à un point   
 
 
 :::: {.callout-note icon="false" appearance="minimal"}
@@ -524,15 +528,17 @@ $$\forall \boldsymbol{a}\in\mathbb{R}^p,\; I_\boldsymbol{a}=I_\boldsymbol{g} + \
 Le meilleur résumé du nuage de points se résumant à un point est le barycentre du nuage de points, c'est à dire la moyenne sur chacune des dimensions. 
 
 
-### Remarque 
-
-$$I_{\boldsymbol{g}} =\frac{1}{n}  \sum_{i=1}^n     \left( \sum_{k=1}^p \left( x_{i}^k - x_{\bullet}^k  \right)^2 \right)  = \sum_{k=1}^p  \left( \frac{1}{n}  \sum_{i=1}^n  \left( x_{i}^k - x_{\bullet}^k  \right)^2 \right)  = \sum_{k=1}^p  Var(\xcol{k})$$
-Si les variables sont réduites
-
-$$I = p$$
 
 :::
 
+. . . 
+
+### Remarque {#sec-inertie}
+
+$$I_{\boldsymbol{g}} = I = \frac{1}{n}  \sum_{i=1}^n     \left( \sum_{k=1}^p \left( x_{i}^k - x_{\bullet}^k  \right)^2 \right)  = \sum_{k=1}^p  \left( \frac{1}{n}  \sum_{i=1}^n  \left( x_{i}^k - x_{\bullet}^k  \right)^2 \right)  = \sum_{k=1}^p  Var(\xcol{k})$$
+Si les variables sont réduites
+
+$$I = p$$
 
 
 ## L'inertie par rapport à un axe
@@ -1017,17 +1023,17 @@ sous la contrainte $\norm{\boldsymbol{u_1}}$
 
 #### Remarque
 
-$X^\top X$ est la matrice de covariance, elle est [symétrique]{.rouge} et [définie positive]{.rouge} donc [diagonalisable]{.rouge}. Il existe une matrice $P$ unitaire $P^\top P = I_p,$ et $D$ une matrice diagonale telle que 
-$$X^\top X = P D P^\top.$$
+$X^\top X$ est la matrice de covariance, elle est [symétrique]{.rouge} et [définie positive]{.rouge} donc [diagonalisable]{.rouge}. Il existe une matrice $U$ unitaire $U^\top U = I_p,$ et $D$ une matrice diagonale telle que 
+$$X^\top X = U D U^\top.$$
 
-Les termes diagonaux de $D$ sont les [valeurs propres, toutes positives, ]{.rouge} de $X^\top X$ rangées par odre décroissant, $\lambda_1 > \lambda_1 \ldots >\lambda_p$ et  $P$ est la matrice des vecteurs propres associés.
+Les termes diagonaux de $D$ sont les [valeurs propres, toutes positives, ]{.rouge} de $X^\top X$ rangées par odre décroissant, $\lambda_1 > \lambda_1 \ldots >\lambda_p$ et  $U$ est la matrice des vecteurs propres associés.
 
 #### Ce que ça signifie
 
 ![](change_baseXtX.png)
 
 
-$\bolsymbol{b}$ est une base orthonormale, la base formée par les vecteurs propres de $X^\top X$.
+$\boldsymbol{b}$ est une base orthonormale, la base formée par les vecteurs propres de $X^\top X$.
 :::
 
 :::
@@ -1039,11 +1045,11 @@ $\bolsymbol{b}$ est une base orthonormale, la base formée par les vecteurs prop
 
 ### Chercher $\boldsymbol{u_1}$ 
 
-Posons $\boldsymbol{v_1} = P^\top \boldsymbol{u_1},$  $\norm{\boldsymbol{v_1}}=1$:
+Posons $\boldsymbol{v_1} = U^\top \boldsymbol{u_1},$  $\norm{\boldsymbol{v_1}}=1$:
 
 Maximiser $\boldsymbol{v_1}^\top D \boldsymbol{v_1} = \sum_{k=1}^p v_{1p}^2 \lambda_p$, sous la contrainte $\sum_{k=1}^p  v_{1p}^2=1$
 
-$$\boldsymbol{v_1} = (1, 0, \ldots, 0)^\top, \quad \boldsymbol{u_1} = P \boldsymbol{v_1} = \begin{pmatrix} P_{11} \\ \vdots \\P_{p1} \end{pmatrix}.$$
+$$\boldsymbol{v_1} = (1, 0, \ldots, 0)^\top, \quad \boldsymbol{u_1} = U \boldsymbol{v_1} = \begin{pmatrix} U_{11} \\ \vdots \\U_{p1} \end{pmatrix}.$$
 
 
 
@@ -1054,17 +1060,19 @@ $$\boldsymbol{v_1} = (1, 0, \ldots, 0)^\top, \quad \boldsymbol{u_1} = P \boldsym
 
 On cherche  $\boldsymbol{u_2}\perp \boldsymbol{u_1}$, tel que $\boldsymbol{u_2}^\top X^\top X   \boldsymbol{u_2}$,
 
-Posons $\boldsymbol{v_2} = P^\top \boldsymbol{u_2},$  $\norm{\boldsymbol{v_2}}=1$:
+Posons $\boldsymbol{v_2} = U^\top \boldsymbol{u_2},$  $\norm{\boldsymbol{v_2}}=1$:
 Maximiser $\boldsymbol{v_2}^\top D \boldsymbol{v_2} = \sum_{k=1}^p v_{2p}^2 \lambda_p$, sous la contrainte $\sum_{k=1}^p  v_{1p}^2=1$ et $v_{1p}=0$ pour assurer l'orthogonalité avec $\boldsymbol{v_1}$ 
  
 
-$$\boldsymbol{v_2} = (0, 1, \ldots, 0)^\top, \quad \boldsymbol{u_2} = P \boldsymbol{v_2} = \begin{pmatrix} P_{12} \\ \vdots \\P_{p2} \end{pmatrix}.$$
+$$\boldsymbol{v_2} = (0, 1, \ldots, 0)^\top, \quad \boldsymbol{u_2} = U \boldsymbol{v_2} = \begin{pmatrix} U_{12} \\ \vdots \\U_{p2} \end{pmatrix}.$$
 
 
 
 [$\boldsymbol{u_2}$ est le deuxième vecteur propre]{.rouge}
 
-## Illustration on the Penguins data
+# Mise en oeuvre pratique 
+
+## Attention aux unités - Illustration sur les données de manchots
 
 ```{r PCA_manchots_2, eval = TRUE, echo = TRUE}
 #| echo: true
@@ -1076,7 +1084,7 @@ $$\boldsymbol{v_2} = (0, 1, \ldots, 0)^\top, \quad \boldsymbol{u_2} = P \boldsym
 library(FactoMineR)
 
 penguins.PCA <- PCA(X = penguins, 
-                    scale.unit = FALSE, ## should we scale the data, let's lmention this later
+                    scale.unit = FALSE, ## should we scale the data ?
                     ncp = 4, ## number of components : as many as initial variables
                     graph = FALSE, ## no graph right now
                     quali.sup = c(1, 2, 7,8)) ## to indicate the column number of qualitative variable
@@ -1087,17 +1095,178 @@ penguins.PCA$svd$V ## what is named P in the lecture
 
 La dispersion du nuage projeté sur le premier axe représente $6.45 10^5$ en terme d'inertie soit $99.98%$ de l'inertie totale.
 
-trop beau pour être vrai ?
+. . . 
+
+[Trop beau pour être vrai ?]{.rouge}
+
+Réfléchissons aux données ce qui sera essentiel dans ce cours et dans la suite
 
 
-Réfléchissons aux données ce qui sera essentiel dan sce cours et dans la suite
+
+```{r PCA_manchots_desc, eval = TRUE, echo = TRUE}
+#| echo: true
+#| classes: custom3565
+#| output-location: column
+#| results: hold
+#| message: false
 
 
-# Mise en oeuvre pratique
+penguins %>% 
+  summarise(across(where(is.numeric), list(mean = mean, sd= sd)))  %>%  
+  pivot_longer(cols = everything(),  names_to = c("Var", "Resume"), 
+      names_pattern = "(.*)_(mean|sd)") %>% 
+  pivot_wider(names_from = Resume,values_from = value)
+```
+. . .
 
-## Attention aux unités
+Les variables ont des ordres de grandeur variable.
 
-## Représentation des individus
+La contribution à la distance entre individu de la variable  `Mass`est plus importante que celle de la variable `bill_length_mm`.
+
+[Est-ce souhaitable ?]{.rouge}
+
+
+
+## Attention aux unités - Illustration sur les données de manchots normalisées
+
+
+```{r PCA_manchots_3, eval = TRUE, echo = TRUE}
+#| echo: true
+#| classes: custom3565
+#| output-location: column
+#| results: hold
+#| message: false
+
+penguins.PCA <- PCA(X = penguins, 
+                    scale.unit = TRUE, ## should we scale the data,
+                    ncp = 4, ## number of components : as many as initial variables
+                    graph = FALSE, ## no graph right now
+                    quali.sup = c(1, 2, 7,8)) ## to indicate the column number of qualitative variable
+penguins.PCA$eig
+
+penguins.PCA$svd$V ## what is named P in the lecture
+```
+
+On a centré réduit les variables pour les rendre comparables et leur donner la même importance. 
+
+Dans ce cas l'inertie totale est le nombre de variables (voir remarque @sec-inertie) 
+
+
+## Choix de la distance
+
+L'ACP normée (ACP sur les données centrées et réduites) peut-être envisagée comme une ACP avec une autre distance que la distance euclidienne.
+
+
+Une autre manière de présenter la même approche est de dire qu'on change la métrique utilisée
+
+:::: {.callout-note icon="false" appearance="minimal"}
+### Definition (métrique)
+Une métrique $M$ permet de définir une distance entre les observations (ainsi, M est une matrice de $\R^p\times\R^p$ symétrique, définie et positive).
+
+:::
+
+### Calcul de distance
+
+Soient $\xbf_1 \in \R^p$ et $\xbf_é\in\R^p$, la distance entre $\xbf_1$ et $\xbf_2$pour la métrique $M$ est
+$$d_M(\xbf_1, \xbf_2)^2= \norm{\xbf_1 - \xbf_2}_M^2 = (\xbf_1 - \xbf_2)^\top M (\xbf_1 - \xbf_2).$$
+
+::: {.panel-tabset} 
+
+### Exemple $I_p$
+ Si $M= I_p$,
+ 
+ $$d_M(\xbf_1, \xbf_2)^2= \norm{\xbf_1 - \xbf_2}_M^2 = (\xbf_1 - \xbf_2)^\top I_p (\xbf_1 - \xbf_2) =\sum_{k=1}^p (x_{1k}-x_{2k})^2.$$
+
+
+
+
+### Distance normalisant les variables
+Si $M$ est diagonale est $M_{ii}= 1/ s_i^2$ où $s_i^2$ est la variance de la variable $i$, 
+ 
+$$d_M(\xbf_1, \xbf_2)^2=  (\xbf_1 - \xbf_2)^\top M (\xbf_1 - \xbf_2) =\sum_{k=1}^p \frac{(x_{1k}-x_{2k})^2}{s_k^2}=\sum_{k=1}^p \left ( \frac{x_{1k}}{s_k}-\frac{x_{2k}}{s_k} \right)^2.$$
+
+Dans une ACP normée on s'intéresse donc aux valeurs propres de la matrice $X^\top M X.$
+
+:::
+
+## Représentation des individus - Composantes principales
+
+:::: {.callout-note icon="false" appearance="minimal"}
+### Definition (Composantes principales)
+Les coordonnées  des $n$ observations sur les  $p$ axes factoriels sont groupées dans la matrice $C$: 
+$c_{ik}$ est la coordonnée de l'observation $i$ sur l'axe $\Delta_{\boldsymbol{u_k}}$. La  $k$-ème composante principale est la colonne $k$ de la matrice $C$, notée $C^k$.
+$$
+C = [\class{orange}{C^1} | \ldots | \class{orange}{C^p}] \text{ avec } \class{orange}{C^k}=\begin{pmatrix}
+c_{1k}\\
+\vdots\\
+c_{nk}
+\end{pmatrix}.
+$$
+:::: 
+
+
+::: {.panel-tabset} 
+
+### Vectoriellement
+
+On a les expressions suivantes 
+$$
+C^k=Xu_k \mbox{ et } C=XP,
+$$
+où $P$ désigne la matrice de changement base, i.e la matrice contenant les vecteurs propres.
+
+### Visuellement
+
+![](change_baseXtX_acp.png)
+
+
+### Remarques 
+
+* Les $C^k$ sont des combinaisons linéaires des variables de départ. 
+* Elles sont centrées, de variance $\lambda_k=\sum_{i=1}^n p_i c_{ik}^2$ et non-corrélées 2 à 2. 
+* Les $C^k$ sont vecteurs propres de $XX^\top$ de valeur propre $\lambda_k$.
+
+:::
+
+## Représentation des manchots
+
+
+```{r CompPrinc_manchots, eval = TRUE, echo = TRUE}
+#| echo: true
+#| classes: custom3565
+#| output-location: column
+#| results: hold
+#| message: false
+
+
+X <- penguins |> 
+  mutate(year = as.factor(year))|>  ## year willnot be considered as numerical variable
+  select(where(is.numeric)) |>      ## select all numeric columns
+  mutate_all(list(scale2)) |>          ## and scale them
+  as.matrix()
+
+n <- nrow(X) # number of individuals
+d <- ncol(X)
+
+penguins_svd <- svd( 1/n * t(X)%*% X ) # to get P and D from t(X)WX
+
+## eigenvalues
+penguins_eigenvalue <- penguins_svd$d
+
+P <- penguins_svd$v
+cp <- X %*% P
+head(cp[, 1:2])
+cat("\n")
+head(penguins.PCA$ind$coord[,1:2])
+
+#plot(penguins.PCA, choix = "ind", axes = c(1,2),invisible=c('ind.sup'),label =c('ind') )
+library(factoextra)
+fviz_pca_ind(penguins.PCA, label="none", addEllipses=FALSE)
+```
+
+
+
+
 
 ## Représentation des variables
 
