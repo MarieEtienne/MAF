@@ -637,7 +637,7 @@ ggplot() +
 Ce qui revient à l'axe $\Delta$ qui assure que la projection sur $\Delta$ déforme le moins possible le nuage de points.
 
 
-Dans le cadre de l'ACP, on veut construire une ensemble d'axes orthongonaux (une nouvelle base de $\R^p$), de façon à ce que 
+Dans le cadre de l'ACP, on veut construire une ensemble d'axes orthogonaux (une nouvelle base de $\R^p$), de façon à ce que 
 
 * la projection sur le premier axe, soit le meilleur résumé du nuage de points en une dimension,
 * le deuxième axe est orthogonal au premier et représente "le deuxième meileur choix" .... dans un sens que l'on va définir
@@ -1014,19 +1014,24 @@ $$\begin{pmatrix} \class{alea}{x_{1}}^\top \boldsymbol{u_1} \\ \vdots \\ \class{
 
 sous la contrainte $\norm{\boldsymbol{u_1}}$
 \begin{align}
- I_{u_1^\perp} & = \norm{X  \boldsymbol{u_1}}^2 \\
-        & = (X  \boldsymbol{u_1})^\top (X  \boldsymbol{u_1})\\
-        & =   \boldsymbol{u_1}^\top X^\top X   \boldsymbol{u_1}
+ I_{u_1^\perp} & = \frac{1}{n}\norm{X  \boldsymbol{u_1}}^2 \\
+        & = \frac{1}{n} (X  \boldsymbol{u_1})^\top (X  \boldsymbol{u_1})\\
+        & =   \boldsymbol{u_1}^\top \left (\frac{1}{n} X^\top X \right)  \boldsymbol{u_1}
 \end{align}
 
 ::: {.panel-tabset} 
 
 #### Remarque
 
-$X^\top X$ est la matrice de covariance, elle est [symétrique]{.rouge} et [définie positive]{.rouge} donc [diagonalisable]{.rouge}. Il existe une matrice $U$ unitaire $U^\top U = I_p,$ et $D$ une matrice diagonale telle que 
-$$X^\top X = U D U^\top.$$
+$\frac{1}{n} X^\top X$ est la matrice de covariance, on écrit souvent $\frac{1}{n} X^\top X$ sous la forme
+$X^\top W X$ ($W$ est une matrice diagonale, dont chaque terme diagonal vaut $1/n$, $W_{ii}$ est le poids attribué à l'observation $i$).
 
-Les termes diagonaux de $D$ sont les [valeurs propres, toutes positives, ]{.rouge} de $X^\top X$ rangées par odre décroissant, $\lambda_1 > \lambda_1 \ldots >\lambda_p$ et  $U$ est la matrice des vecteurs propres associés.
+$X^\top W X$ est [symétrique]{.rouge} et [définie positive]{.rouge} donc [diagonalisable]{.rouge}. 
+
+Il existe une matrice $P$ unitaire $P^\top P = I_p,$ et $D$ une matrice diagonale telle que 
+$$X^\top W X = P D P^\top.$$
+
+Les termes diagonaux de $D$ sont les [valeurs propres, toutes positives, ]{.rouge} de $X^\topW X$ rangées par odre décroissant, $\lambda_1 > \lambda_1 \ldots >\lambda_p$ et  $U$ est la matrice des vecteurs propres associés.
 
 #### Ce que ça signifie
 
@@ -1043,32 +1048,32 @@ $\boldsymbol{b}$ est une base orthonormale, la base formée par les vecteurs pro
 
 ## Identifier les directions principales
 
-### Chercher $\boldsymbol{u_1}$ 
+### Chercher $\boldsymbol{u_1}$ tel que $I_{u_1^\perp}$ soit maximale 
 
-Posons $\boldsymbol{v_1} = U^\top \boldsymbol{u_1},$  $\norm{\boldsymbol{v_1}}=1$:
+En se plaçant dans la nouvelle base, posons $\boldsymbol{v_1} = P^\top \boldsymbol{u_1},$  $\norm{\boldsymbol{v_1}}=1$:
 
 Maximiser $\boldsymbol{v_1}^\top D \boldsymbol{v_1} = \sum_{k=1}^p v_{1p}^2 \lambda_p$, sous la contrainte $\sum_{k=1}^p  v_{1p}^2=1$
 
-$$\boldsymbol{v_1} = (1, 0, \ldots, 0)^\top, \quad \boldsymbol{u_1} = U \boldsymbol{v_1} = \begin{pmatrix} U_{11} \\ \vdots \\U_{p1} \end{pmatrix}.$$
+$$\boldsymbol{v_1} = (1, 0, \ldots, 0)^\top, \quad \boldsymbol{u_1} = P \boldsymbol{v_1} = \begin{pmatrix} P_{11} \\ \vdots \\P_{p1} \end{pmatrix}.$$
 
 
 
-[$\boldsymbol{u_1}$ est le premier vecteur propre]{.rouge}
+[$\boldsymbol{u_1}$ est le premier vecteur propre]{.rouge} de $X^\top W X$. (la matrice de covariance).
 
 
 ### Chercher $\boldsymbol{u_2}$ 
 
-On cherche  $\boldsymbol{u_2}\perp \boldsymbol{u_1}$, tel que $\boldsymbol{u_2}^\top X^\top X   \boldsymbol{u_2}$,
+On cherche  $\boldsymbol{u_2}\perp \boldsymbol{u_1}$, tel que $\boldsymbol{u_2}^\top X^\top W X   \boldsymbol{u_2}$ soit maximale.
 
-Posons $\boldsymbol{v_2} = U^\top \boldsymbol{u_2},$  $\norm{\boldsymbol{v_2}}=1$:
+Posons $\boldsymbol{v_2} = P^\top \boldsymbol{u_2},$  $\norm{\boldsymbol{v_2}}=1$:
 Maximiser $\boldsymbol{v_2}^\top D \boldsymbol{v_2} = \sum_{k=1}^p v_{2p}^2 \lambda_p$, sous la contrainte $\sum_{k=1}^p  v_{1p}^2=1$ et $v_{1p}=0$ pour assurer l'orthogonalité avec $\boldsymbol{v_1}$ 
  
 
-$$\boldsymbol{v_2} = (0, 1, \ldots, 0)^\top, \quad \boldsymbol{u_2} = U \boldsymbol{v_2} = \begin{pmatrix} U_{12} \\ \vdots \\U_{p2} \end{pmatrix}.$$
+$$\boldsymbol{v_2} = (0, 1, \ldots, 0)^\top, \quad \boldsymbol{u_2} = P \boldsymbol{v_2} = \begin{pmatrix} P_{12} \\ \vdots \\U_{p2} \end{pmatrix}.$$
 
 
 
-[$\boldsymbol{u_2}$ est le deuxième vecteur propre]{.rouge}
+[$\boldsymbol{u_2}$ est le deuxième vecteur propre]{.rouge} de  de $X^\top W X$.
 
 # Mise en oeuvre pratique 
 
@@ -1099,7 +1104,7 @@ La dispersion du nuage projeté sur le premier axe représente $6.45 10^5$ en te
 
 [Trop beau pour être vrai ?]{.rouge}
 
-Réfléchissons aux données ce qui sera essentiel dans ce cours et dans la suite
+Réfléchissons aux données, ce qui est crucial dans toutes analyses de données.
 
 
 
@@ -1112,9 +1117,9 @@ Réfléchissons aux données ce qui sera essentiel dans ce cours et dans la suit
 
 
 penguins %>% 
-  summarise(across(where(is.numeric), list(mean = mean, sd= sd)))  %>%  
+  summarise(across(where(is.numeric), list(mean = mean, sd= sd)))  |> 
   pivot_longer(cols = everything(),  names_to = c("Var", "Resume"), 
-      names_pattern = "(.*)_(mean|sd)") %>% 
+      names_pattern = "(.*)_(mean|sd)") |> 
   pivot_wider(names_from = Resume,values_from = value)
 ```
 . . .
@@ -1152,6 +1157,8 @@ On a centré réduit les variables pour les rendre comparables et leur donner la
 Dans ce cas l'inertie totale est le nombre de variables (voir remarque @sec-inertie) 
 
 
+Lorsque l'on veut s'abstraire des unités, on centre te on réduit les données pour réaliser une [ACP normée]{.rouge}.
+
 ## Choix de la distance
 
 L'ACP normée (ACP sur les données centrées et réduites) peut-être envisagée comme une ACP avec une autre distance que la distance euclidienne.
@@ -1185,8 +1192,8 @@ Si $M$ est diagonale est $M_{ii}= 1/ s_i^2$ où $s_i^2$ est la variance de la va
  
 $$d_M(\xbf_1, \xbf_2)^2=  (\xbf_1 - \xbf_2)^\top M (\xbf_1 - \xbf_2) =\sum_{k=1}^p \frac{(x_{1k}-x_{2k})^2}{s_k^2}=\sum_{k=1}^p \left ( \frac{x_{1k}}{s_k}-\frac{x_{2k}}{s_k} \right)^2.$$
 
-Dans une ACP normée on s'intéresse donc aux valeurs propres de la matrice $X^\top M X.$
-
+Dans une ACP normée on s'intéresse donc aux valeurs propres de la matrice $X^\top M W X,$ il s'agit de la matrice de corrélation.
+ 
 :::
 
 ## Représentation des individus - Composantes principales
@@ -1217,7 +1224,7 @@ où $P$ désigne la matrice de changement base, i.e la matrice contenant les vec
 
 ### Visuellement
 
-![](change_baseXtX_acp.png)
+![](change_baseXtX_acp.png){width="50%"}
 
 
 ### Remarques 
