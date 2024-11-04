@@ -508,7 +508,7 @@ L'inertie par rapport à un point quantifie l'information perdue lorsque  le jeu
 
 [Quel est selon vous le point $\boldsymbol{a}$ qui minimise l'inertie ?]{.rouge}
 
-$$argmax_{\boldsymbol{a}} I_{\boldsymbol{a}} = ??$$
+$$argmin_{\boldsymbol{a}} I_{\boldsymbol{a}} = ??$$
 
 
 ### Réponse
@@ -1010,7 +1010,7 @@ $$\begin{pmatrix} \class{alea}{x_{1}}^\top \boldsymbol{u_1} \\ \vdots \\ \class{
 
 ::: { .column width=45%}
 
-### Minimiser $I_{u_1^\perp}$
+### Maximiser $I_{u_1^\perp}$
 
 sous la contrainte $\norm{\boldsymbol{u_1}}$
 \begin{align}
@@ -1436,10 +1436,45 @@ $$Ctr(i, k) =  \frac{w_i c_{ik}^2}{\lambda_k}.$$
 
 ## Qualité de la représentation d'une variable sur un plan factoriel
 
-
 ::: {.panel-tabset} 
 
-### Intuitivement
+### Intuitivement 
+
+```{r angle_var}
+#| echo: false
+#| message: false
+a <- 0.5
+b <- 0.2
+lambda1 <- 1.6
+lambda2 <- 0.4
+
+variables <- data.frame(
+  xend = c(a/sqrt(a^2+b^2),  1, 0.5/sqrt(4.25), -sqrt(2)/2),   # Coordonnées des points individuels
+  yend = c(b/sqrt(a^2+b^2), 0, 2/sqrt(4.25), -sqrt(2)/2),
+  x0 = c(0,0, 0, 0),
+  y0= c(0,0, 0, 0)
+) 
+
+pos <- data.frame(x=0.5, y = 0.06)
+
+# Schéma avec ggplot
+ggplot() +
+  #geom_segment(aes(x = -2*u[1], y = -2*u[2], xend = 2*u[1], yend = 2*u[2]), linewidth = 0.5) +  # Axe vertical
+  geom_segment(data = variables, aes(xend = xend, yend = yend, x= x0, y = y0), arrow = arrow(length = unit(0.3, "cm")),   col= c("#F7A913", "#d61d09","#F7A913","#d61d09")) +
+  geom_segment(aes(xend = lambda1 * variables$xend[2], yend = lambda1 * variables$yend[2], x= 0, y = 0), arrow = arrow(length = unit(0.3, "cm")),   col= "#d61d09", alpha = 0.5) +
+  geom_text(aes(x = lambda1 * variables$xend[2], y = lambda1 * variables$yend[2]), label = expression(C^k == lambda_k~u^k),   col= "#d61d09", alpha = 0.5) +
+  # geom_text(aes(x = -1.2, y = -2), label = expression(Delta), vjust = -0.8, size = 5) +
+  geom_text(data= variables, aes(x = xend, y =yend),  label = c("X^j", "u^k", "X^i", "u^l"), parse = TRUE, vjust = -0.1, hjust =  0.5,  size = 5,   col= c("#F7A913", "#d61d09", "#F7A913", "#d61d09"))  +
+  geom_text(data = pos, aes(x = x, y = y), label = expression(theta["j,k"]), size = 5) +
+  geom_text(data = pos, aes(x = x/3, y = 3*y), label = expression(theta["i,k"]), size = 5) +
+  theme_minimal()  +
+  coord_fixed() +  # Conserver un rapport d'aspect fixe pour les axes
+  theme (axis.title=element_blank(),
+         axis.text=element_blank(),
+         axis.ticks=element_blank(),
+         panel.grid = element_blank()) 
+
+```
 
 ### Formellement
 
@@ -1448,6 +1483,7 @@ $$Ctr(i, k) =  \frac{w_i c_{ik}^2}{\lambda_k}.$$
 ::: {.column width="45%"}
 
 ![](change_baseXtX_acp.png)
+
 :::
 
 ::: {.column width= "45%"}
@@ -1464,7 +1500,7 @@ Or $<X^j, C^k> = \norm{X^j}\norm{C^k}cos(\theta_{jk})$
 Ainsi $<X^j, C^k>$ est le $j^\text{ème}$ terme du vecteur $PC^\top C^k$, or $C^\top C$ est diagonale  avec $C_k^k = n lambda_k$, donc $C^\top C^k=(0, \dots, n\lambda_k, 0, \ldots)$
 et
 
-$$cos(\theta_{jk}) = \frac{n \lambda_k \boldsymbol{u_k^j}}{\sqrt{\norm{X^j} \, \norm{C_k}}}=  \sqrt{\lambda_k} \boldsymbol{u_k^j}.$$
+$$\cos(\theta_{jk}) = \frac{n \lambda_k \boldsymbol{u_k^j}}{\sqrt{\norm{X^j}^2 \, \norm{C_k}^2}}=  \sqrt{\lambda_k} \boldsymbol{u_k^j},  \quad \cos^2(\theta_{jk}) =  \lambda_k{(\boldsymbol{u_k^j})^2}$$
 
 
 :::
@@ -1474,19 +1510,122 @@ $$cos(\theta_{jk}) = \frac{n \lambda_k \boldsymbol{u_k^j}}{\sqrt{\norm{X^j} \, \
 :::
 
 
-## Contribution des individus
 
-## Contribution des variables
+## Ajouter des informations supplémentaires
 
-# Mise en oeuvre pratique 
+Il est possible d'ajouter des informations supplémentaires
+
+### Des individus supplémentaires qui ne seront pas utiliser pour cuitruire les axes 
+
+Si on veut ajouter un nouvel individu $x_{new}$
+
+* on calcule $\boldsymbol{x}_{new} - \boldsymbol{g}$, le point centré (et potentiellement on divise par l'écart type des variables calculés sur le jeu de données initial)
+
+* On projette sur les axes principaux : $(\boldsymbol{x}_{new} - \boldsymbol{g} )^\top \boldsymbol{u_k}$
+
+### Une variable supplémentaire
+
+Si on souhaite ajouter une nouvelle variable $\boldsymbol{x}^{new}= (x^{new}_1, \ldots, x^{new}_n)^\top \in \R^n$
+
+* On soustrait sa moyenne  $\tilde{\boldsymbol{x}}^{new} = \boldsymbol{x}^{new} - m^{new}$, $m^{new}=\frac{1}{n} \sum_{i=1}^n x^{new}_i$ (ou $m^{new}= \sum_{i=1}^n w_i x^{new}_i$ si toutes les observations n'ont pas le même poids)
+
+* On projette $\tilde{\boldsymbol{x}}^{new}$ sur $\boldsymbol{u_k},$ 
+
+$$Cor(\tilde{\boldsymbol{x}}^{new}, u_k) = \frac{(\tilde{\boldsymbol{x}}^{new})^\top W \boldsymbol{u_k} }{\norm{\tilde{\boldsymbol{x}}^{new}}}$$
+ 
+
+## Retournons à nos manchots
+
+```{r PCA_manchots_final, eval = TRUE, echo = TRUE}
+#| echo: true
+#| classes: custom3565
+#| output-location: column
+#| results: hold
+#| message: false
+
+penguins.PCA <- PCA(X = penguins, 
+                    scale.unit = TRUE, ## should we scale the data,
+                    ncp = 4, ## number of components : as many as initial variables
+                    quali.sup = c(1, 2, 7,8)) ## to indicate the column number of qualitative variable
+
+# library(Factoshiny)
+# PCAshiny(penguins)
+```
 
 
 
-# Une autre utilisation de l'ACP
+# Comprendre les données du Doubs
 
-l'ACP peut petre utilisée pour compresser de l'information, voir [l'exemple sur une image ](ACP_images.html)
+## Présentation des données
+
+
+## L'exemple des caractéristiques du Doubs
+
+On a mesuré les caractéristiques physico chimiques sur 30  sites différents le long de la rivière Doubs.
+
+:::: {.columns}
+
+::: {.column width="48%"}
+
+Les 6 premières lignes (parmi 30) du jeu de données doubs.env
+```{r extrait_doubs, echo = FALSE, eval = TRUE}
+doubs.env %>% print(n=6)
+```
+
+:::
+
+::: {.column width="48%"}
+
+* das :  distance à la source ( $km$ ),
+* alt : altitude ( $m$ )
+* pen : la pente (dénivelé pour  1000m)
+* deb : le débit () $m^3.s^{-1}$ )
+* pH : le pH de l'eau,
+* dur : la concentration en calcium ( $mg.L^{-1}$ ),
+* pho	: concentration en phosphate ( $mg.L^{-1}$ ),
+* nit : concentration en nitrate  ( $mg.L^{-1}$ ),
+* amn	: concentration en ammonium ( $mg.L^{-1}$ ),
+* oxy	: concentration d'oxygène dissous ( $mg.L^{-1}$ ),
+* dbo	: Demande biologique en oxygène ( $mg.L^{-1}$ ).
+]
+
+:::
+
+::::
+
+
+ [Comment visualiser au mieux ces données pour faire apparaître les liens entre variables et identifier des ressemblances entre individus ?]{.rouge} 
+
+
+## Analyse par ACP
+
+* Poids des individus ?
+* Quelle distance entre les poids ?
+* Lancer l'analyse 
+  * quelles sont les composantes intéressantes (règle empririque du choix du nombre d'axes) ? 
+  * quelles informations sont visibles sur le premier plan factoriel ?
+  * Que peut on dire des liens entre les variables ?
+  * A votre avis quels sites contribuent le plus à la formation de l'axe 1 ?
+  * Que peut on dire du pH ?
+
+
+
+
+# L'ACP comme une méthode de compression
+
+## Ne garder que l'information pertinente 
+
+On a utilisé l'ACP comme une technique de visualisation, mais on peut sen servir comme une technique de compression (avec perte).
+Il suffit de ne garder que les première composantes principales.
+
+ [L'exemple sur une image ](ACP_images.html)
 
 # Bilan 
+
+
+## Ce que vous pensez devoir retenir 
+
+A construire ensemble
 
 
 
