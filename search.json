@@ -109,14 +109,14 @@
     "href": "01_acp.html#voir-cest-comprendre-comment-représenter-linformation-contenue-dans-ce-tableau-2",
     "title": "Analyse en Composantes Principales",
     "section": "Voir c’est comprendre : comment représenter l’information contenue dans ce tableau ?",
-    "text": "Voir c’est comprendre : comment représenter l’information contenue dans ce tableau ?\nObjectifs\n\nReprésenter sans perdre trop d’information,\nQuantifier la perte d’information,\nComprendre quelles sont les informations redondantes, (variables liées),\nIdéalement des individus éloignés dans le nuage initial, restent éloignés dans la représentation\n\nDans toute la suite, sans perte de généralité, on va considérer que les variables sont centrées."
+    "text": "Voir c’est comprendre : comment représenter l’information contenue dans ce tableau ?\nObjectifs\n\nReprésenter sans perdre trop d’information,\nQuantifier la perte d’information,\nComprendre quelles sont les informations redondantes (variables liées),\nIdéalement des individus éloignés dans le nuage initial, restent éloignés dans la représentation\n\nDans toute la suite, sans perte de généralité, on va considérer que les variables sont centrées."
   },
   {
     "objectID": "01_acp.html#si-on-savait-faire-une-analyse-en-composantes-principales",
     "href": "01_acp.html#si-on-savait-faire-une-analyse-en-composantes-principales",
     "title": "Analyse en Composantes Principales",
     "section": "Si on savait faire une Analyse en Composantes Principales",
-    "text": "Si on savait faire une Analyse en Composantes Principales\n\nDans R on feraitReprésentation des individusReprésentation des variablesVisualisation par ACP\n\n\n\n\nlibrary(FactoMineR)\ndta &lt;- penguins %&gt;% select(bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g) \npenguins.PCA &lt;- PCA(X = dta, ncp = 4, graph = FALSE)\n\n\n\n\n\nL’ACP permet de trouver la projection en 2 dimensions qui préserve au mieux l’information contenu dans le nuage de points (avec peu de déformation).\n\n\nplot(penguins.PCA, choix = \"ind\")\n\n\n\n\n\n\n\n\n\nReste à comprendre\n\nComment quantifier l’information contenue dans un nuage de points\nComment est construite cette meilleure projection\nQuels sont les individus bien représentés ?\n\n\n\nL’ACP définit de nouvelles variables, les composantes principales qui sont une combinaison linéaire des anciennes variables. On peut représenter les variables dans le premier plan de l’ACP.\n\n\nplot(penguins.PCA, choix = \"var\")\n\n\n\n\n\n\n\n\n\nReste à comprendre\n\nComment interpréter cette représentation ?\nQuelles sont les variables bien représentées ?\nQue peut on déduire de ce graphique sur le lien entre les variables.\nComment lier graphique des individus et graphique des variables"
+    "text": "Si on savait faire une Analyse en Composantes Principales\n\nDans R on feraitReprésentation des individusReprésentation des variablesVisualisation par ACP\n\n\n\n\nlibrary(FactoMineR)\ndta &lt;- penguins %&gt;% select(bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g) \npenguins.PCA &lt;- PCA(X = dta, ncp = 4, graph = FALSE)\n\n\n\n\n\nL’ACP permet de trouver la projection en 2 dimensions qui préserve au mieux l’information contenue dans le nuage de points (avec peu de déformation).\n\n\nplot(penguins.PCA, choix = \"ind\")\n\n\n\n\n\n\n\n\n\nReste à comprendre\n\nComment quantifier l’information contenue dans un nuage de points\nComment est construite cette meilleure projection\nQuels sont les individus bien représentés ?\n\n\n\nL’ACP définit de nouvelles variables, les composantes principales qui sont une combinaison linéaire des anciennes variables. On peut représenter les variables dans le premier plan de l’ACP.\n\n\nplot(penguins.PCA, choix = \"var\")\n\n\n\n\n\n\n\n\n\nReste à comprendre\n\nComment interpréter cette représentation ?\nQuelles sont les variables bien représentées ?\nQue peut-on déduire de ce graphique sur le lien entre les variables.\nComment lier graphique des individus et graphique des variables"
   },
   {
     "objectID": "01_acp.html#mise-en-forme-des-données",
@@ -137,7 +137,7 @@
     "href": "01_acp.html#linertie-par-rapport-à-un-point",
     "title": "Analyse en Composantes Principales",
     "section": "L’inertie par rapport à un point",
-    "text": "L’inertie par rapport à un point\n\n\n\nDefinition 1\n\n\nL’inertie (terme hérité de la physique) par rapport à un point \\(a \\in {\\mathbb{R}}^{p}\\) est définie par\n\\[I_{\\boldsymbol{a}} = \\frac{1}{n} \\sum_{i=1}^n \\lVert\\boldsymbol{x}_{i} - \\boldsymbol{a}\\rVert^2 = \\frac{1}{n} \\sum_{i=1}^n\\sum_{k=1}^p  (x_i^k -a^k)^2\\]\n\n\n\n\nIntuitivementRéponseThéorème de Huyghens\n\n\nL’inertie par rapport à un point quantifie l’information perdue lorsque le jeu de données est résumé par ce point.\nQuel est selon vous le point \\(\\boldsymbol{a}\\) qui minimise l’inertie ?\n\\[argmax_{\\boldsymbol{a}} I_{\\boldsymbol{a}} = ??\\]\n\n\nBINGO !!!\nIl s’agit du point \\(\\boldsymbol{g}=\\boldsymbol{x_{\\bullet}}=({x}_{\\bullet}^1, \\ldots, {x}_{\\bullet}^p )^\\top,\\) avec \\({x}_{\\bullet}^k=\\frac{1}{n} \\sum_{i=1}^n x_{i}^k\\), la valeur moyenne de la variable \\(k\\) sur l’ensemble des individus.\nPuisque nous avons supposé que nos variables étaient centrées, \\(G=O\\) l’origine sur repère.\n\n\n\\[\\forall \\boldsymbol{a}\\in\\mathbb{R}^p,\\; I_\\boldsymbol{a}=I_\\boldsymbol{g} + \\lVert\\boldsymbol{a}- \\boldsymbol{g}\\rVert^2.\\]\nConséquence\nLe meilleur résumé du nuage de points se résumant à un point est le barycentre du nuage de points, c’est à dire la moyenne sur chacune des dimensions.\n\n\n\n\nRemarque\n\\[I_{\\boldsymbol{g}} = I = \\frac{1}{n}  \\sum_{i=1}^n     \\left( \\sum_{k=1}^p \\left( x_{i}^k - x_{\\bullet}^k  \\right)^2 \\right)  = \\sum_{k=1}^p  \\left( \\frac{1}{n}  \\sum_{i=1}^n  \\left( x_{i}^k - x_{\\bullet}^k  \\right)^2 \\right)  = \\sum_{k=1}^p  Var(\\boldsymbol{x}^{k})\\] Si les variables sont réduites\n\\[I = p\\]"
+    "text": "L’inertie par rapport à un point\n\n\n\nDefinition 1\n\n\nL’inertie (terme hérité de la physique) par rapport à un point \\(a \\in {\\mathbb{R}}^{p}\\) est définie par\n\\[I_{\\boldsymbol{a}} = \\frac{1}{n} \\sum_{i=1}^n \\lVert\\boldsymbol{x}_{i} - \\boldsymbol{a}\\rVert^2 = \\frac{1}{n} \\sum_{i=1}^n\\sum_{k=1}^p  (x_i^k -a^k)^2\\]\n\n\n\n\nIntuitivementRéponseThéorème de Huyghens\n\n\nL’inertie par rapport à un point quantifie l’information perdue lorsque le jeu de données est résumé par ce point.\nQuel est selon vous le point \\(\\boldsymbol{a}\\) qui minimise l’inertie ?\n\\[argmin_{\\boldsymbol{a}} I_{\\boldsymbol{a}} = ??\\]\n\n\nBINGO !!!\nIl s’agit du point \\(\\boldsymbol{g}=\\boldsymbol{x_{\\bullet}}=({x}_{\\bullet}^1, \\ldots, {x}_{\\bullet}^p )^\\top,\\) avec \\({x}_{\\bullet}^k=\\frac{1}{n} \\sum_{i=1}^n x_{i}^k\\), la valeur moyenne de la variable \\(k\\) sur l’ensemble des individus.\nPuisque nous avons supposé que nos variables étaient centrées, \\(G=O\\) l’origine sur repère.\n\n\n\\[\\forall \\boldsymbol{a}\\in\\mathbb{R}^p,\\; I_\\boldsymbol{a}=I_\\boldsymbol{g} + \\lVert\\boldsymbol{a}- \\boldsymbol{g}\\rVert^2.\\]\nConséquence\nLe meilleur résumé du nuage de points se résumant à un point est le barycentre du nuage de points, c’est à dire la moyenne sur chacune des dimensions.\n\n\n\n\nRemarque\n\\[I_{\\boldsymbol{g}} = I = \\frac{1}{n}  \\sum_{i=1}^n     \\left( \\sum_{k=1}^p \\left( x_{i}^k - x_{\\bullet}^k  \\right)^2 \\right)  = \\sum_{k=1}^p  \\left( \\frac{1}{n}  \\sum_{i=1}^n  \\left( x_{i}^k - x_{\\bullet}^k  \\right)^2 \\right)  = \\sum_{k=1}^p  Var(\\boldsymbol{x}^{k})\\] Si les variables sont réduites\n\\[I = p\\]"
   },
   {
     "objectID": "01_acp.html#linertie-par-rapport-à-un-axe",
@@ -186,7 +186,7 @@
     "href": "01_acp.html#identifier-boldsymbolu_1---formalisation",
     "title": "Analyse en Composantes Principales",
     "section": "Identifier \\(\\boldsymbol{u_1}\\) - Formalisation",
-    "text": "Identifier \\(\\boldsymbol{u_1}\\) - Formalisation\n\n\n\nOn cherche \\(\\boldsymbol{u_1}\\) tel que \\(I_{u_1}\\) soit minimale mais \\(I_{u_1} + I_{u_1^\\perp}=I\\). Minimiser \\(I_{u_1}\\) revient à maximiser \\(I_{u_1^\\perp}\\), i.e l’inertie du nuage projeté.\n\nLe premier individu se projette en \\(\\class{alea}{x_{1}}^\\top \\boldsymbol{u_1}\\) sur \\(\\boldsymbol{u_1}\\)\nLe deuxième individu se projette en \\(\\class{alea}{x_{2}}^\\top \\boldsymbol{u_1}\\) sur \\(\\boldsymbol{u_1}\\)\n…\n\nOn rappelle que \\[{\\boldsymbol{X}}= \\begin{pmatrix} \\class{alea}{x_{1}}^\\top \\\\ \\vdots \\\\ \\class{alea}{x_{n}}^\\top \\end{pmatrix}.\\] La projection de l’individu \\(i\\) est obtenue en multipliant le vecteur ligne \\(\\class{alea}{x_{1}}^\\top\\) par \\(\\boldsymbol{u_1}\\). Le vecteur des coordonnées sur \\(\\boldsymbol{u_1}\\) pour chaque individu est\n\n\\[\\begin{pmatrix} \\class{alea}{x_{1}}^\\top \\boldsymbol{u_1} \\\\ \\vdots \\\\ \\class{alea}{x_{n}}^\\top \\boldsymbol{u_1} \\end{pmatrix} = X  \\boldsymbol{u_1}.\\]\n\nMinimiser \\(I_{u_1^\\perp}\\)\nsous la contrainte \\(\\lVert\\boldsymbol{u_1}\\rVert\\) \\[\\begin{align}\nI_{u_1^\\perp} & = \\frac{1}{n}\\lVert X  \\boldsymbol{u_1}\\rVert^2 \\\\\n        & = \\frac{1}{n} (X  \\boldsymbol{u_1})^\\top (X  \\boldsymbol{u_1})\\\\\n        & =   \\boldsymbol{u_1}^\\top \\left (\\frac{1}{n} X^\\top X \\right)  \\boldsymbol{u_1}\n\\end{align}\\]\n\nRemarqueCe que ça signifie\n\n\n\\(\\frac{1}{n} X^\\top X\\) est la matrice de covariance, on écrit souvent \\(\\frac{1}{n} X^\\top X\\) sous la forme \\(X^\\top W X\\) (\\(W\\) est une matrice diagonale, dont chaque terme diagonal vaut \\(1/n\\), \\(W_{ii}\\) est le poids attribué à l’observation \\(i\\)).\n\\(X^\\top W X\\) est symétrique et définie positive donc diagonalisable.\nIl existe une matrice \\(P\\) unitaire \\(P^\\top P = I_p,\\) et \\(D\\) une matrice diagonale telle que \\[X^\\top W X = P D P^\\top.\\]\nLes termes diagonaux de \\(D\\) sont les valeurs propres, toutes positives, de \\(X^\\topW X\\) rangées par odre décroissant, \\(\\lambda_1 &gt; \\lambda_1 \\ldots &gt;\\lambda_p\\) et \\(U\\) est la matrice des vecteurs propres associés.\n\n\n\n\\(\\boldsymbol{b}\\) est une base orthonormale, la base formée par les vecteurs propres de \\(X^\\top X\\)."
+    "text": "Identifier \\(\\boldsymbol{u_1}\\) - Formalisation\n\n\n\nOn cherche \\(\\boldsymbol{u_1}\\) tel que \\(I_{u_1}\\) soit minimale mais \\(I_{u_1} + I_{u_1^\\perp}=I\\). Minimiser \\(I_{u_1}\\) revient à maximiser \\(I_{u_1^\\perp}\\), i.e l’inertie du nuage projeté.\n\nLe premier individu se projette en \\(\\class{alea}{x_{1}}^\\top \\boldsymbol{u_1}\\) sur \\(\\boldsymbol{u_1}\\)\nLe deuxième individu se projette en \\(\\class{alea}{x_{2}}^\\top \\boldsymbol{u_1}\\) sur \\(\\boldsymbol{u_1}\\)\n…\n\nOn rappelle que \\[{\\boldsymbol{X}}= \\begin{pmatrix} \\class{alea}{x_{1}}^\\top \\\\ \\vdots \\\\ \\class{alea}{x_{n}}^\\top \\end{pmatrix}.\\] La projection de l’individu \\(i\\) est obtenue en multipliant le vecteur ligne \\(\\class{alea}{x_{1}}^\\top\\) par \\(\\boldsymbol{u_1}\\). Le vecteur des coordonnées sur \\(\\boldsymbol{u_1}\\) pour chaque individu est\n\n\\[\\begin{pmatrix} \\class{alea}{x_{1}}^\\top \\boldsymbol{u_1} \\\\ \\vdots \\\\ \\class{alea}{x_{n}}^\\top \\boldsymbol{u_1} \\end{pmatrix} = X  \\boldsymbol{u_1}.\\]\n\nMaximiser \\(I_{u_1^\\perp}\\)\nsous la contrainte \\(\\lVert\\boldsymbol{u_1}\\rVert\\) \\[\\begin{align}\nI_{u_1^\\perp} & = \\frac{1}{n}\\lVert X  \\boldsymbol{u_1}\\rVert^2 \\\\\n        & = \\frac{1}{n} (X  \\boldsymbol{u_1})^\\top (X  \\boldsymbol{u_1})\\\\\n        & =   \\boldsymbol{u_1}^\\top \\left (\\frac{1}{n} X^\\top X \\right)  \\boldsymbol{u_1}\n\\end{align}\\]\n\nRemarqueCe que ça signifie\n\n\n\\(\\frac{1}{n} X^\\top X\\) est la matrice de covariance, on écrit souvent \\(\\frac{1}{n} X^\\top X\\) sous la forme \\(X^\\top W X\\) (\\(W\\) est une matrice diagonale, dont chaque terme diagonal vaut \\(1/n\\), \\(W_{ii}\\) est le poids attribué à l’observation \\(i\\)).\n\\(X^\\top W X\\) est symétrique et définie positive donc diagonalisable.\nIl existe une matrice \\(P\\) unitaire \\(P^\\top P = I_p,\\) et \\(D\\) une matrice diagonale telle que \\[X^\\top W X = P D P^\\top.\\]\nLes termes diagonaux de \\(D\\) sont les valeurs propres, toutes positives, de \\(X^\\topW X\\) rangées par odre décroissant, \\(\\lambda_1 &gt; \\lambda_1 \\ldots &gt;\\lambda_p\\) et \\(U\\) est la matrice des vecteurs propres associés.\n\n\n\n\\(\\boldsymbol{b}\\) est une base orthonormale, la base formée par les vecteurs propres de \\(X^\\top X\\)."
   },
   {
     "objectID": "01_acp.html#identifier-les-directions-principales",
@@ -194,6 +194,13 @@
     "title": "Analyse en Composantes Principales",
     "section": "Identifier les directions principales",
     "text": "Identifier les directions principales\nChercher \\(\\boldsymbol{u_1}\\) tel que \\(I_{u_1^\\perp}\\) soit maximale\nEn se plaçant dans la nouvelle base, posons \\(\\boldsymbol{v_1} = P^\\top \\boldsymbol{u_1},\\) \\(\\lVert\\boldsymbol{v_1}\\rVert=1\\):\nMaximiser \\(\\boldsymbol{v_1}^\\top D \\boldsymbol{v_1} = \\sum_{k=1}^p v_{1p}^2 \\lambda_p\\), sous la contrainte \\(\\sum_{k=1}^p  v_{1p}^2=1\\)\n\\[\\boldsymbol{v_1} = (1, 0, \\ldots, 0)^\\top, \\quad \\boldsymbol{u_1} = P \\boldsymbol{v_1} = \\begin{pmatrix} P_{11} \\\\ \\vdots \\\\P_{p1} \\end{pmatrix}.\\]\n\\(\\boldsymbol{u_1}\\) est le premier vecteur propre de \\(X^\\top W X\\). (la matrice de covariance).\nChercher \\(\\boldsymbol{u_2}\\)\nOn cherche \\(\\boldsymbol{u_2}\\perp \\boldsymbol{u_1}\\), tel que \\(\\boldsymbol{u_2}^\\top X^\\top W X   \\boldsymbol{u_2}\\) soit maximale.\nPosons \\(\\boldsymbol{v_2} = P^\\top \\boldsymbol{u_2},\\) \\(\\lVert\\boldsymbol{v_2}\\rVert=1\\): Maximiser \\(\\boldsymbol{v_2}^\\top D \\boldsymbol{v_2} = \\sum_{k=1}^p v_{2p}^2 \\lambda_p\\), sous la contrainte \\(\\sum_{k=1}^p  v_{1p}^2=1\\) et \\(v_{1p}=0\\) pour assurer l’orthogonalité avec \\(\\boldsymbol{v_1}\\)\n\\[\\boldsymbol{v_2} = (0, 1, \\ldots, 0)^\\top, \\quad \\boldsymbol{u_2} = P \\boldsymbol{v_2} = \\begin{pmatrix} P_{12} \\\\ \\vdots \\\\U_{p2} \\end{pmatrix}.\\]\n\\(\\boldsymbol{u_2}\\) est le deuxième vecteur propre de de \\(X^\\top W X\\)."
+  },
+  {
+    "objectID": "01_acp.html#mesurer-linformation-préservée-par-projection",
+    "href": "01_acp.html#mesurer-linformation-préservée-par-projection",
+    "title": "Analyse en Composantes Principales",
+    "section": "Mesurer l’information préservée par projection",
+    "text": "Mesurer l’information préservée par projection\nSur un axe principal\n\nLorsque l’on résume le nuage à sa projection sur un axe factoriel \\(\\boldsymbol{u_k}\\), on ne garde que l’information associée à cet axe soit \\(I_{\\boldsymbol{u_k}^\\perp}=\\lambda_k\\).\nLa quantité d’information préservée par projection sur l’axe \\(k\\) est donc \\(\\lambda_k\\).\nLa part d’information portée par l’axe \\(k\\) est donnée par \\(\\displaystyle\\frac{\\lambda_k}{\\sum_{k=1}^p\\lambda_k}\\)\n\nSur un axe principal\n\nL’inertie du nuage projeté sur plan \\(k_1, k_2\\) est donnée par \\[\\lambda_{k_1} +\\lambda_{k_2}\\]\nLa part d’information portée par le plan \\(k_1, k_2\\) est donnée par \\[\\frac{\\lambda_k}{\\sum_{k=1}^p\\lambda_{k_1} +\\lambda_{k_2}}\\]"
   },
   {
     "objectID": "01_acp.html#attention-aux-unités---illustration-sur-les-données-de-manchots",
@@ -231,25 +238,74 @@
     "text": "Représentation des manchots\n\n\nX &lt;- penguins |&gt; \n  mutate(year = as.factor(year))|&gt;  ## year willnot be considered as numerical variable\n  select(where(is.numeric)) |&gt;      ## select all numeric columns\n  mutate_all(list(scale2)) |&gt;          ## and scale them\n  as.matrix()\n\nn &lt;- nrow(X) # number of individuals\nd &lt;- ncol(X)\n\npenguins_svd &lt;- svd( 1/n * t(X)%*% X ) # to get P and D from t(X)WX\n\n## eigenvalues\npenguins_eigenvalue &lt;- penguins_svd$d\n\nP &lt;- penguins_svd$v\ncp &lt;- X %*% P\nhead(cp[, 1:2])\ncat(\"\\n\")\nhead(penguins.PCA$ind$coord[,1:2])\n\n#plot(penguins.PCA, choix = \"ind\", axes = c(1,2),invisible=c('ind.sup'),label =c('ind') )\nlibrary(factoextra)\nfviz_pca_ind(penguins.PCA, label=\"none\", addEllipses=FALSE)\n\n\n\n\n\n\n\n\n\n         [,1]        [,2]\n[1,] 1.853593 -0.03206938\n[2,] 1.316254  0.44352677\n[3,] 1.376605  0.16123048\n[4,] 1.885288  0.01235124\n[5,] 1.919981 -0.81759813\n[6,] 1.773020  0.36622296\n\n      Dim.1       Dim.2\n1 -1.853593  0.03206938\n2 -1.316254 -0.44352677\n3 -1.376605 -0.16123048\n4 -1.885288 -0.01235124\n5 -1.919981  0.81759813\n6 -1.773020 -0.36622296"
   },
   {
-    "objectID": "01_acp.html#représentation-des-variables-1",
-    "href": "01_acp.html#représentation-des-variables-1",
+    "objectID": "01_acp.html#qualité-de-la-représentation-dun-individu",
+    "href": "01_acp.html#qualité-de-la-représentation-dun-individu",
     "title": "Analyse en Composantes Principales",
-    "section": "Représentation des variables",
-    "text": "Représentation des variables"
+    "section": "Qualité de la représentation d’un individu",
+    "text": "Qualité de la représentation d’un individu\n\nMême avec ces précautions, on déforme le nuage de points\nCertains sont plus déformés que d’autre, il faut les identifier\n\nUn individu est d’autant moins déformé qu’il est proche du plan sur lequel on le projette, ce qui est donné par l’angle entre le vecteur initial et le vteur projeté\n\n\n\n\n\n\n\n\n\n\n\n\n\\[\\begin{align}\n&lt;\\class{alea}{x_i}, \\boldsymbol{u_1}&gt; &= \\lVert\\class{alea}{x_i}\\rVert \\lVert\\boldsymbol{u_1}\\rVert cos(\\theta_i) \\\\\n& = \\class{alea}{x_i}^\\top \\boldsymbol{u_1}, \\quad \\left( \\text{ou} \\class{alea}{x_i}^\\top M \\boldsymbol{u_1}  \\text{avec une autre métrique \\right) \\\\\n\\end{align}\\]\n\\[\\cos^2(\\theta_i) = \\frac{\\class{alea}{x_i}^\\top \\boldsymbol{u_1}}{\\lVert\\class{alea}{x_i}\\rVert}\\]\n\n[Interprétation}{.rouge}: plus \\(\\cos^2(\\theta_i)\\) est proche de \\(1\\), mieux l’individu est représenté."
   },
   {
-    "objectID": "01_acp.html#contribution-des-individus",
-    "href": "01_acp.html#contribution-des-individus",
+    "objectID": "01_acp.html#contribution-dun-individu-à-la-définition-de-laxe",
+    "href": "01_acp.html#contribution-dun-individu-à-la-définition-de-laxe",
     "title": "Analyse en Composantes Principales",
-    "section": "Contribution des individus",
-    "text": "Contribution des individus"
+    "section": "Contribution d’un individu à la définition de l’axe",
+    "text": "Contribution d’un individu à la définition de l’axe\n\nLes individus sont plus ou moins important dans la définition des axes\n\n\nIntuitivementFormellement\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nQuels sont les points qui vont le plus contribuer à la détermination des axes ?\n\n\n\nLa contribution relative de l’observation \\(\\class{alea}{x_i}\\) à la construction de l’axe principal \\(k\\) est la part d’inertie de l’axe \\(k\\) expliquée par \\(\\class{alea}{x_i}\\) donnée par\n\\[Ctr(i, k) = \\frac{1}{n} \\frac{c_{ik}^2}{\\lambda_k}.\\] En effet \\(\\lambda_k = \\frac{1}{n} \\sum_{i=1}^n c_{ik}^2\\) (ie. la variance du nuage projeté).\nRemarque : si les individus ont des poids \\(w_i\\) alors \\[Ctr(i, k) =  \\frac{w_i c_{ik}^2}{\\lambda_k}.\\]"
   },
   {
-    "objectID": "01_acp.html#contribution-des-variables",
-    "href": "01_acp.html#contribution-des-variables",
+    "objectID": "01_acp.html#qualité-de-la-représentation-dune-variable-sur-un-plan-factoriel",
+    "href": "01_acp.html#qualité-de-la-représentation-dune-variable-sur-un-plan-factoriel",
     "title": "Analyse en Composantes Principales",
-    "section": "Contribution des variables",
-    "text": "Contribution des variables"
+    "section": "Qualité de la représentation d’une variable sur un plan factoriel",
+    "text": "Qualité de la représentation d’une variable sur un plan factoriel\n\nIntuitivementFormellement\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n::: {.column width= “45%”}\nUne variable est bien représentée sur l’axe \\(k\\) si l’angle entre cette variable et la composante \\(C^k\\) est petit, son cosinus est proche de 1 ou -1.\nOr \\(&lt;X^j, C^k&gt; = \\lVert X^j\\rVert\\lVert C^k\\rVert cos(\\theta_{jk})\\)\\[\\begin{align}\n&lt;X^j, C^k&gt; & = &lt;(CP^\\top)^j, C^k&gt; \\\\\n& = \\underbrace{\\left((CP^\\top)^j\\right)^\\top}{= (P C^\\top)_j}   C^k \\\\\n\\end{align}\\]Ainsi \\(&lt;X^j, C^k&gt;\\) est le \\(j^\\text{ème}\\) terme du vecteur \\(PC^\\top C^k\\), or \\(C^\\top C\\) est diagonale avec \\(C_k^k = n lambda_k\\), donc \\(C^\\top C^k=(0, \\dots, n\\lambda_k, 0, \\ldots)\\) et\\[\\cos(\\theta_{jk}) = \\frac{n \\lambda_k \\boldsymbol{u_k^j}}{\\sqrt{\\lVert X^j\\rVert^2 \\, \\lVert C_k\\rVert^2}}=  \\sqrt{\\lambda_k} \\boldsymbol{u_k^j},  \\quad \\cos^2(\\theta_{jk}) =  \\lambda_k{(\\boldsymbol{u_k^j})^2}\\]\n\n\n\n\n:::"
+  },
+  {
+    "objectID": "01_acp.html#ajouter-des-informations-supplémentaires",
+    "href": "01_acp.html#ajouter-des-informations-supplémentaires",
+    "title": "Analyse en Composantes Principales",
+    "section": "Ajouter des informations supplémentaires",
+    "text": "Ajouter des informations supplémentaires\nIl est possible d’ajouter des informations supplémentaires\nDes individus supplémentaires qui ne seront pas utiliser pour cuitruire les axes\nSi on veut ajouter un nouvel individu \\(x_{new}\\)\n\non calcule \\(\\boldsymbol{x}_{new} - \\boldsymbol{g}\\), le point centré (et potentiellement on divise par l’écart type des variables calculés sur le jeu de données initial)\nOn projette sur les axes principaux : \\((\\boldsymbol{x}_{new} - \\boldsymbol{g} )^\\top \\boldsymbol{u_k}\\)\n\nUne variable supplémentaire\nSi on souhaite ajouter une nouvelle variable \\(\\boldsymbol{x}^{new}= (x^{new}_1, \\ldots, x^{new}_n)^\\top \\in {\\mathbb{R}}^n\\)\n\nOn soustrait sa moyenne \\(\\tilde{\\boldsymbol{x}}^{new} = \\boldsymbol{x}^{new} - m^{new}\\), \\(m^{new}=\\frac{1}{n} \\sum_{i=1}^n x^{new}_i\\) (ou \\(m^{new}= \\sum_{i=1}^n w_i x^{new}_i\\) si toutes les observations n’ont pas le même poids)\nOn projette \\(\\tilde{\\boldsymbol{x}}^{new}\\) sur \\(\\boldsymbol{u_k},\\)\n\n\\[Cor(\\tilde{\\boldsymbol{x}}^{new}, u_k) = \\frac{(\\tilde{\\boldsymbol{x}}^{new})^\\top W \\boldsymbol{u_k} }{\\lVert\\tilde{\\boldsymbol{x}}^{new}\\rVert}\\]"
+  },
+  {
+    "objectID": "01_acp.html#retournons-à-nos-manchots",
+    "href": "01_acp.html#retournons-à-nos-manchots",
+    "title": "Analyse en Composantes Principales",
+    "section": "Retournons à nos manchots",
+    "text": "Retournons à nos manchots\n\n\npenguins.PCA &lt;- PCA(X = penguins, \n                    scale.unit = TRUE, ## should we scale the data,\n                    ncp = 4, ## number of components : as many as initial variables\n                    quali.sup = c(1, 2, 7,8)) ## to indicate the column number of qualitative variable\n\n# library(Factoshiny)\n# PCAshiny(penguins)"
+  },
+  {
+    "objectID": "01_acp.html#présentation-des-données",
+    "href": "01_acp.html#présentation-des-données",
+    "title": "Analyse en Composantes Principales",
+    "section": "Présentation des données",
+    "text": "Présentation des données"
+  },
+  {
+    "objectID": "01_acp.html#lexemple-des-caractéristiques-du-doubs",
+    "href": "01_acp.html#lexemple-des-caractéristiques-du-doubs",
+    "title": "Analyse en Composantes Principales",
+    "section": "L’exemple des caractéristiques du Doubs",
+    "text": "L’exemple des caractéristiques du Doubs\nOn a mesuré les caractéristiques physico chimiques sur 30 sites différents le long de la rivière Doubs.\n\n\nLes 6 premières lignes (parmi 30) du jeu de données doubs.env\n\n\n# A tibble: 30 × 11\n    das   alt   pen   deb    pH   dur   pho   nit   amm   oxy   dbo\n  &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1   0.3   934  48    0.84   7.9    45  0.01  0.2   0     12.2   2.7\n2   2.2   932   3    1      8      40  0.02  0.2   0.1   10.3   1.9\n3  10.2   914   3.7  1.8    8.3    52  0.05  0.22  0.05  10.5   3.5\n4  18.5   854   3.2  2.53   8      72  0.1   0.21  0     11     1.3\n5  21.5   849   2.3  2.64   8.1    84  0.38  0.52  0.2    8     6.2\n6  32.4   846   3.2  2.86   7.9    60  0.2   0.15  0     10.2   5.3\n# ℹ 24 more rows\n\n\n\n\ndas : distance à la source ( \\(km\\) ),\nalt : altitude ( \\(m\\) )\npen : la pente (dénivelé pour 1000m)\ndeb : le débit () \\(m^3.s^{-1}\\) )\npH : le pH de l’eau,\ndur : la concentration en calcium ( \\(mg.L^{-1}\\) ),\npho : concentration en phosphate ( \\(mg.L^{-1}\\) ),\nnit : concentration en nitrate ( \\(mg.L^{-1}\\) ),\namn : concentration en ammonium ( \\(mg.L^{-1}\\) ),\noxy : concentration d’oxygène dissous ( \\(mg.L^{-1}\\) ),\ndbo : Demande biologique en oxygène ( \\(mg.L^{-1}\\) ). ]\n\n\nComment visualiser au mieux ces données pour faire apparaître les liens entre variables et identifier des ressemblances entre individus ?"
+  },
+  {
+    "objectID": "01_acp.html#analyse-par-acp",
+    "href": "01_acp.html#analyse-par-acp",
+    "title": "Analyse en Composantes Principales",
+    "section": "Analyse par ACP",
+    "text": "Analyse par ACP\n\nPoids des individus ?\nQuelle distance entre les poids ?\nLancer l’analyse\n\nquelles sont les composantes intéressantes (règle empririque du choix du nombre d’axes) ?\nquelles informations sont visibles sur le premier plan factoriel ?\nQue peut on dire des liens entre les variables ?\nA votre avis quels sites contribuent le plus à la formation de l’axe 1 ?\nQue peut on dire du pH ?"
+  },
+  {
+    "objectID": "01_acp.html#ne-garder-que-linformation-pertinente",
+    "href": "01_acp.html#ne-garder-que-linformation-pertinente",
+    "title": "Analyse en Composantes Principales",
+    "section": "Ne garder que l’information pertinente",
+    "text": "Ne garder que l’information pertinente\nOn a utilisé l’ACP comme une technique de visualisation, mais on peut sen servir comme une technique de compression (avec perte). Il suffit de ne garder que les première composantes principales.\nL’exemple sur une image"
+  },
+  {
+    "objectID": "01_acp.html#ce-que-vous-pensez-devoir-retenir",
+    "href": "01_acp.html#ce-que-vous-pensez-devoir-retenir",
+    "title": "Analyse en Composantes Principales",
+    "section": "Ce que vous pensez devoir retenir",
+    "text": "Ce que vous pensez devoir retenir\nA construire ensemble"
   },
   {
     "objectID": "index.html",
