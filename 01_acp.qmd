@@ -29,7 +29,7 @@ format:
 
 ```{r setup, include=FALSE, eval = TRUE}
 library(RefManageR)
-library(tidyverse) ## to benefit from the tydiverse coding system
+library(tidyverse) ## to benefit from the tidyverse coding system
 library(reticulate) ## to use python from R
 library(wesanderson)
 library(plotly)
@@ -96,9 +96,9 @@ penguins <- penguins %>% na.omit() %>%
 
 
 <!-- .pull-right[ -->
-<!-- * das :  distance à al source ( $km$ ),   -->
+<!-- * das :  distance à la source ( $km$ ),   -->
 <!-- * alt : altitude ( $m$ ) -->
-<!-- * pen : la pente (denivelelé pour  1000m) -->
+<!-- * pen : la pente (dénivelé pour  1000m) -->
 <!-- * deb : le débit () $m^3.s^{-1}$ ) -->
 <!-- * pH : le pH de l'eau, -->
 <!-- * dur : la concentration en calcium ( $mg.L^{-1}$ ), -->
@@ -111,7 +111,7 @@ penguins <- penguins %>% na.omit() %>%
 
 
 
-<!-- [Comment visualiser au mieux ces données pour faire apparaître les liens entre variables et identifier des resemblances entre individus ?]{.rouge} -->
+<!-- [Comment visualiser au mieux ces données pour faire apparaître les liens entre variables et identifier des ressemblances entre individus ?]{.rouge} -->
 
 
 ## Rappel des données sur les manchots
@@ -185,7 +185,7 @@ fig
 
 * Représenter sans perdre trop d'information,
 * Quantifier la perte d'information,
-* Comprendre quelles sont les informations redondantes, (variables liées),
+* Comprendre quelles sont les informations redondantes (variables liées),
 * Idéalement des individus éloignés dans le nuage initial, restent éloignés dans la représentation
 
 
@@ -214,7 +214,7 @@ penguins.PCA <- PCA(X = dta, ncp = 4, graph = FALSE)
 ### Représentation des individus
 
 
-L'ACP permet de trouver la projection en 2 dimensions qui préserve au mieux l'information contenu dans le nuage de points (avec peu de déformation).
+L'ACP permet de trouver la projection en 2 dimensions qui préserve au mieux l'information contenue dans le nuage de points (avec peu de déformation).
 
 
 ```{r PCA_manchots_ind, eval = TRUE, echo = TRUE}
@@ -247,7 +247,7 @@ plot(penguins.PCA, choix = "var")
 
 * Comment interpréter cette représentation ?
 * Quelles sont les variables bien représentées ?
-* Que peut on déduire de ce graphique sur le lien entre les variables.
+* Que peut-on déduire de ce graphique sur le lien entre les variables.
 * Comment lier graphique des individus et graphique des variables 
 
 
@@ -372,7 +372,7 @@ ggplot() +
   # geom_text(aes(x = 2.5, y = 0.2), label = expression(x[ik] - bar(x)[k]), size = 5) +
   geom_text(aes(x = 2.5, y = 0.2), label = expression(x[i]^k), size = 5, col = "#398d55") +
   
-  # Ajouter des labels mathématiques pour l'es distances l'espace
+  # Ajouter des labels mathématiques pour l'espace
   geom_text(aes(x = 0.3, y = 2), label = expression(R^p),col="#F7A913", size = 5) +
   
   # Ajouter l'origine O = G
@@ -1075,7 +1075,25 @@ $$\boldsymbol{v_2} = (0, 1, \ldots, 0)^\top, \quad \boldsymbol{u_2} = P \boldsym
 
 [$\boldsymbol{u_2}$ est le deuxième vecteur propre]{.rouge} de  de $X^\top W X$.
 
-# Mise en oeuvre pratique 
+
+## Mesurer l'information préservée par projection
+
+### Sur un axe principal 
+
+* Lorsque l'on résume  le nuage à sa projection sur un [axe factoriel]{.rouge} $\boldsymbol{u_k}$, on ne garde que l'information associée à cet axe soit $I_{\boldsymbol{u_k}^\perp}=\lambda_k$.
+
+* La quantité d'information préservée par projection sur l'axe $k$ est donc $\lambda_k$.
+
+* La part d'information portée par l'axe $k$ est donnée par $\displaystyle\frac{\lambda_k}{\sum_{k=1}^p\lambda_k}$
+
+### Sur un axe principal 
+
+* L'inertie du nuage projeté sur plan $k_1, k_2$ est  donnée par 
+$$\lambda_{k_1} +\lambda_{k_2}$$
+
+* La part d'information portée par le plan $k_1, k_2$ est donnée par 
+$$\frac{\lambda_k}{\sum_{k=1}^p\lambda_{k_1} +\lambda_{k_2}}$$
+
 
 ## Attention aux unités - Illustration sur les données de manchots
 
@@ -1196,6 +1214,9 @@ Dans une ACP normée on s'intéresse donc aux valeurs propres de la matrice $X^\
  
 :::
 
+
+# Etude du nuage des individus 
+
 ## Représentation des individus - Composantes principales
 
 :::: {.callout-note icon="false" appearance="minimal"}
@@ -1274,16 +1295,196 @@ fviz_pca_ind(penguins.PCA, label="none", addEllipses=FALSE)
 
 
 
+## Qualité de la représentation d'un individu
 
-## Représentation des variables
+* Même avec ces précautions, on déforme le nuage de points
+* Certains sont plus déformés que d'autre, il faut les identifier
+
+Un individu est d'autant moins déformé qu'il est proche du plan sur lequel on le projette, ce qui est donné par l'angle entre le vecteur initial et le vteur projeté
+
+:::: {.columns}
+
+::: {.column width="55%"}
+
+
+```{r angle_ind}
+#| echo: false
+#| message: false
+
+
+individus <- data.frame(
+  x = c(1, -2),   # Coordonnées des points individuels
+  y = c(0.9, -0.5)
+)
+
+u = c(1,2)
+norme_u = sum(u^2)
+
+ind_proj <- (as.matrix(individus)%*% as.matrix(u, ncol= 1)/(norme_u)) %*% matrix(u, ncol = 2, nrow=1)
+ind_proj <- as.data.frame(ind_proj) %>% 
+  rename(xend= V1, yend=V2)
+individus_dessin <- cbind(individus, ind_proj) %>% as.data.frame()
+
+# Schéma avec ggplot
+ggplot() +
+  geom_segment(aes(x = -1, y = -2, xend = 1, yend = 2), arrow = arrow(length = unit(0.3, "cm")), linewidth = 0.5) +  # Axe vertical
+  geom_point(data = individus, aes(x = x, y = y), size = 3, col= "#398d55") +
+  geom_segment(data = individus_dessin, aes(x = x, y = y, xend = xend, yend = yend), linetype = "dashed", alpha = 0.2) +
+  geom_segment(data = individus_dessin, aes(x = x, y = y, xend = 0, yend = 0), linetype = "dotted") +
+  
+  geom_text(aes(x = 0.3, y = 2), label = expression(R^p),col="#F7A913", size = 5) +
+  geom_text(aes(x = -1.2, y = -2), label = expression(Delta), vjust = -0.8, size = 5) +
+  geom_text(data= individus_dessin, aes(x = xend, y =yend),  label = paste0("p[", 1:2, "]^Delta"), parse = TRUE, vjust = -0.8, size = 5) +
+  geom_text(data= individus_dessin, aes(x = x, y =y),  label = paste0("x[", 1:2, "]"), parse = TRUE, vjust = -0.8, size = 5, col = "#398d55") +
+  geom_text(data= individus_dessin, x=c(0.5, -0.4), y =c(0.3, -0.5),  label = paste0("theta[", 1:2, "]"), parse = TRUE, vjust = -0.8, size = 5, col = "#398d55") +
+  geom_text(aes(x = 0.15, y = -0.1), label = "G", vjust = -0.8, size = 5) +
+  geom_point(aes(x = 0, y = 0),  size = 2) +
+  geom_point(data = individus_dessin, aes(x = xend, y = yend),  size = 2) +
+  theme_minimal()  +
+  coord_fixed() +  # Conserver un rapport d'aspect fixe pour les axes
+  theme (axis.title=element_blank(),
+         axis.text=element_blank(),
+         axis.ticks=element_blank(),
+         panel.grid = element_blank())
+
+```
+:::
+
+::: {.column width="40%"}
+
+\begin{align}
+<\class{alea}{x_i}, \boldsymbol{u_1}> &= \norm{\class{alea}{x_i}} \norm{\boldsymbol{u_1}} cos(\theta_i) \\
+& = \class{alea}{x_i}^\top \boldsymbol{u_1}, \quad \left( \text{ou} \class{alea}{x_i}^\top M \boldsymbol{u_1}  \text{avec une autre métrique \right) \\
+\end{align}
+
+$$\cos^2(\theta_i) = \frac{\class{alea}{x_i}^\top \boldsymbol{u_1}}{\norm{\class{alea}{x_i}}}$$
+:::
+
+::::
+
+[Interprétation}{.rouge}: plus $\cos^2(\theta_i)$ est proche de $1$, mieux l'individu est représenté.
+
+## Contribution d'un individu à la définition de l'axe
+
+* Les individus sont plus ou moins important dans la définition des axes
+
+::: {.panel-tabset} 
+
+### Intuitivement
+
+:::: {.columns}
+
+::: {.column width="55%"}
+
+```{r contrib_ind}
+#| echo: false
+#| message: false
+
+individus <- data.frame(
+  x = c(1,   -1,    0.2,   0.3, -0.2, 1.5),   # Coordonnées des points individuels
+  y = c(0.9, -2.4, -0.1, 0.3, -0.4, 2.8)
+) |>
+  mutate(x = x- mean(x), y = y -mean(y))
+
+
+u = svd(as.matrix(individus))$v[,1]
+norme_u = sum(u^2)
+
+# Schéma avec ggplot
+ggplot() +
+  #geom_segment(aes(x = -2*u[1], y = -2*u[2], xend = 2*u[1], yend = 2*u[2]), linewidth = 0.5) +  # Axe vertical
+  geom_point(data = individus, aes(x = x, y = y), size = 3, col= "#398d55") +
+  # geom_text(aes(x = -1.2, y = -2), label = expression(Delta), vjust = -0.8, size = 5) +
+  geom_text(data= individus, aes(x = x, y =y),  label = paste0("x[", 1:6, "]"), parse = TRUE, vjust = -0.8, size = 5, col = "#398d55") +
+  geom_text(aes(x = 0.15, y = -0.1), label = "G", vjust = -0.8, size = 5) +
+  geom_point(aes(x = 0, y = 0),  size = 2) +
+  theme_minimal()  +
+  coord_fixed() +  # Conserver un rapport d'aspect fixe pour les axes
+  theme (axis.title=element_blank(),
+         axis.text=element_blank(),
+         axis.ticks=element_blank(),
+         panel.grid = element_blank())
+
+```
+
+:::
+
+::: {.column width="40%"}
+
+[Quels sont les points qui vont le plus contribuer à la détermination des axes ?]{.rouge}
+
+:::
+
+::::
+
+### Formellement
+
+La [contribution relative de l’observation]{.rouge} $\class{alea}{x_i}$  à la construction de l’axe principal $k$  est la part d’inertie de l’axe $k$ expliquée par $\class{alea}{x_i}$ donnée par
+
+$$Ctr(i, k) = \frac{1}{n} \frac{c_{ik}^2}{\lambda_k}.$$
+En effet $\lambda_k = \frac{1}{n} \sum_{i=1}^n c_{ik}^2$ (ie. la variance du nuage projeté).
+
+Remarque : si les individus ont des poids $w_i$ alors
+$$Ctr(i, k) =  \frac{w_i c_{ik}^2}{\lambda_k}.$$
+
+:::
+
+
+
+
+# Etude des variables
+
+## Qualité de la représentation d'une variable sur un plan factoriel
+
+
+::: {.panel-tabset} 
+
+### Intuitivement
+
+### Formellement
+
+:::: {.columns}
+
+::: {.column width="45%"}
+
+![](change_baseXtX_acp.png)
+:::
+
+::: {.column width= "45%"}
+
+* Une variable est bien représentée sur l'axe $k$ si l'angle entre cette variable et la composante $C^k$ est petit, son cosinus est proche de 1 ou -1.
+
+Or $<X^j, C^k> = \norm{X^j}\norm{C^k}cos(\theta_{jk})$
+
+\begin{align}
+<X^j, C^k> & = <(CP^\top)^j, C^k> \\
+& = \underbrace{\left((CP^\top)^j\right)^\top}{= (P C^\top)_j}   C^k \\
+\end{align}
+
+Ainsi $<X^j, C^k>$ est le $j^\text{ème}$ terme du vecteur $PC^\top C^k$, or $C^\top C$ est diagonale  avec $C_k^k = n lambda_k$, donc $C^\top C^k=(0, \dots, n\lambda_k, 0, \ldots)$
+et
+
+$$cos(\theta_{jk}) = \frac{n \lambda_k \boldsymbol{u_k^j}}{\sqrt{\norm{X^j} \, \norm{C_k}}}=  \sqrt{\lambda_k} \boldsymbol{u_k^j}.$$
+
+
+:::
+
+::::
+
+:::
+
 
 ## Contribution des individus
 
 ## Contribution des variables
 
-# Un exemple de bout en bout 
+# Mise en oeuvre pratique 
+
+
 
 # Une autre utilisation de l'ACP
+
+l'ACP peut petre utilisée pour compresser de l'information, voir [l'exemple sur une image ](ACP_images.html)
 
 # Bilan 
 
