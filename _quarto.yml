@@ -21,9 +21,6 @@ website:
         menu: 
           - href: 01_intro.qmd
           - href: 01_acp.qmd
-      - text: "Projecteurs sur"
-        menu: 
-          - href: proj_sur_SVD.qmd
       
        
 
