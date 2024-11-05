@@ -1486,7 +1486,7 @@ ggplot() +
 
 :::
 
-::: {.column width= "45%"}
+::: {.column width="45%"}
 
 * Une variable est bien représentée sur l'axe $k$ si l'angle entre cette variable et la composante $C^k$ est petit, son cosinus est proche de 1 ou -1.
 
@@ -1548,8 +1548,8 @@ penguins.PCA <- PCA(X = penguins,
                     ncp = 4, ## number of components : as many as initial variables
                     quali.sup = c(1, 2, 7,8)) ## to indicate the column number of qualitative variable
 
-# library(Factoshiny)
-# PCAshiny(penguins)
+ # library(Factoshiny)
+ # PCAshiny(penguins)
 ```
 
 
@@ -1600,7 +1600,7 @@ doubs.env %>% print(n=6)
 ## Analyse par ACP
 
 * Poids des individus ?
-* Quelle distance entre les poids ?
+* Quelle distance entre les variables ?
 * Lancer l'analyse 
   * quelles sont les composantes intéressantes (règle empririque du choix du nombre d'axes) ? 
   * quelles informations sont visibles sur le premier plan factoriel ?
