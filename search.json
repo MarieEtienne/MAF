@@ -256,7 +256,7 @@
     "href": "01_acp.html#qualité-de-la-représentation-dune-variable-sur-un-plan-factoriel",
     "title": "Analyse en Composantes Principales",
     "section": "Qualité de la représentation d’une variable sur un plan factoriel",
-    "text": "Qualité de la représentation d’une variable sur un plan factoriel\n\nIntuitivementFormellement\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n::: {.column width= “45%”}\nUne variable est bien représentée sur l’axe \\(k\\) si l’angle entre cette variable et la composante \\(C^k\\) est petit, son cosinus est proche de 1 ou -1.\nOr \\(&lt;X^j, C^k&gt; = \\lVert X^j\\rVert\\lVert C^k\\rVert cos(\\theta_{jk})\\)\\[\\begin{align}\n&lt;X^j, C^k&gt; & = &lt;(CP^\\top)^j, C^k&gt; \\\\\n& = \\underbrace{\\left((CP^\\top)^j\\right)^\\top}{= (P C^\\top)_j}   C^k \\\\\n\\end{align}\\]Ainsi \\(&lt;X^j, C^k&gt;\\) est le \\(j^\\text{ème}\\) terme du vecteur \\(PC^\\top C^k\\), or \\(C^\\top C\\) est diagonale avec \\(C_k^k = n lambda_k\\), donc \\(C^\\top C^k=(0, \\dots, n\\lambda_k, 0, \\ldots)\\) et\\[\\cos(\\theta_{jk}) = \\frac{n \\lambda_k \\boldsymbol{u_k^j}}{\\sqrt{\\lVert X^j\\rVert^2 \\, \\lVert C_k\\rVert^2}}=  \\sqrt{\\lambda_k} \\boldsymbol{u_k^j},  \\quad \\cos^2(\\theta_{jk}) =  \\lambda_k{(\\boldsymbol{u_k^j})^2}\\]\n\n\n\n\n:::"
+    "text": "Qualité de la représentation d’une variable sur un plan factoriel\n\nIntuitivementFormellement\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nUne variable est bien représentée sur l’axe \\(k\\) si l’angle entre cette variable et la composante \\(C^k\\) est petit, son cosinus est proche de 1 ou -1.\n\nOr \\(&lt;X^j, C^k&gt; = \\lVert X^j\\rVert\\lVert C^k\\rVert cos(\\theta_{jk})\\)\n\\[\\begin{align}\n&lt;X^j, C^k&gt; & = &lt;(CP^\\top)^j, C^k&gt; \\\\\n& = \\underbrace{\\left((CP^\\top)^j\\right)^\\top}{= (P C^\\top)_j}   C^k \\\\\n\\end{align}\\]\nAinsi \\(&lt;X^j, C^k&gt;\\) est le \\(j^\\text{ème}\\) terme du vecteur \\(PC^\\top C^k\\), or \\(C^\\top C\\) est diagonale avec \\(C_k^k = n lambda_k\\), donc \\(C^\\top C^k=(0, \\dots, n\\lambda_k, 0, \\ldots)\\) et\n\\[\\cos(\\theta_{jk}) = \\frac{n \\lambda_k \\boldsymbol{u_k^j}}{\\sqrt{\\lVert X^j\\rVert^2 \\, \\lVert C_k\\rVert^2}}=  \\sqrt{\\lambda_k} \\boldsymbol{u_k^j},  \\quad \\cos^2(\\theta_{jk}) =  \\lambda_k{(\\boldsymbol{u_k^j})^2}\\]"
   },
   {
     "objectID": "01_acp.html#ajouter-des-informations-supplémentaires",
@@ -270,7 +270,7 @@
     "href": "01_acp.html#retournons-à-nos-manchots",
     "title": "Analyse en Composantes Principales",
     "section": "Retournons à nos manchots",
-    "text": "Retournons à nos manchots\n\n\npenguins.PCA &lt;- PCA(X = penguins, \n                    scale.unit = TRUE, ## should we scale the data,\n                    ncp = 4, ## number of components : as many as initial variables\n                    quali.sup = c(1, 2, 7,8)) ## to indicate the column number of qualitative variable\n\n# library(Factoshiny)\n# PCAshiny(penguins)"
+    "text": "Retournons à nos manchots\n\n\npenguins.PCA &lt;- PCA(X = penguins, \n                    scale.unit = TRUE, ## should we scale the data,\n                    ncp = 4, ## number of components : as many as initial variables\n                    quali.sup = c(1, 2, 7,8)) ## to indicate the column number of qualitative variable\n\n # library(Factoshiny)\n # PCAshiny(penguins)"
   },
   {
     "objectID": "01_acp.html#présentation-des-données",
@@ -291,7 +291,7 @@
     "href": "01_acp.html#analyse-par-acp",
     "title": "Analyse en Composantes Principales",
     "section": "Analyse par ACP",
-    "text": "Analyse par ACP\n\nPoids des individus ?\nQuelle distance entre les poids ?\nLancer l’analyse\n\nquelles sont les composantes intéressantes (règle empririque du choix du nombre d’axes) ?\nquelles informations sont visibles sur le premier plan factoriel ?\nQue peut on dire des liens entre les variables ?\nA votre avis quels sites contribuent le plus à la formation de l’axe 1 ?\nQue peut on dire du pH ?"
+    "text": "Analyse par ACP\n\nPoids des individus ?\nQuelle distance entre les variables ?\nLancer l’analyse\n\nquelles sont les composantes intéressantes (règle empririque du choix du nombre d’axes) ?\nquelles informations sont visibles sur le premier plan factoriel ?\nQue peut on dire des liens entre les variables ?\nA votre avis quels sites contribuent le plus à la formation de l’axe 1 ?\nQue peut on dire du pH ?"
   },
   {
     "objectID": "01_acp.html#ne-garder-que-linformation-pertinente",
