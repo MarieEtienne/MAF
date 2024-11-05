@@ -1023,22 +1023,21 @@ sous la contrainte $\norm{\boldsymbol{u_1}}$
 
 #### Remarque
 
-$\frac{1}{n} X^\top X$ est la matrice de covariance, on écrit souvent $\frac{1}{n} X^\top X$ sous la forme
+* $\frac{1}{n} X^\top X$ est la matrice de covariance, on écrit souvent $\frac{1}{n} X^\top X$ sous la forme
 $X^\top W X$ ($W$ est une matrice diagonale, dont chaque terme diagonal vaut $1/n$, $W_{ii}$ est le poids attribué à l'observation $i$).
 
-$X^\top W X$ est [symétrique]{.rouge} et [définie positive]{.rouge} donc [diagonalisable]{.rouge}. 
+* $X^\top W X$ est [symétrique]{.rouge} et [définie positive]{.rouge} donc [diagonalisable]{.rouge}. 
 
-Il existe une matrice $P$ unitaire $P^\top P = I_p,$ et $D$ une matrice diagonale telle que 
+* Il existe une matrice $P$ unitaire $P^\top P = I_p,$ et $D$ une matrice diagonale telle que 
 $$X^\top W X = P D P^\top.$$
-
-Les termes diagonaux de $D$ sont les [valeurs propres, toutes positives, ]{.rouge} de $X^\topW X$ rangées par odre décroissant, $\lambda_1 > \lambda_1 \ldots >\lambda_p$ et  $U$ est la matrice des vecteurs propres associés.
+* Les termes diagonaux de $D$ sont les [valeurs propres, toutes positives, ]{.rouge} de $X^\top W X$ rangées par odre décroissant, $\lambda_1 > \lambda_1 \ldots >\lambda_p$ et  $U$ est la matrice des vecteurs propres associés.
 
 #### Ce que ça signifie
 
 ![](change_baseXtX.png)
 
 
-$\boldsymbol{b}$ est une base orthonormale, la base formée par les vecteurs propres de $X^\top X$.
+$\boldsymbol{b}$ est une base orthonormale, la base formée par les vecteurs propres de $X^\top W X$.
 :::
 
 :::
@@ -1354,15 +1353,15 @@ ggplot() +
 
 \begin{align}
 <\class{alea}{x_i}, \boldsymbol{u_1}> &= \norm{\class{alea}{x_i}} \norm{\boldsymbol{u_1}} cos(\theta_i) \\
-& = \class{alea}{x_i}^\top \boldsymbol{u_1}, \quad \left( \text{ou} \class{alea}{x_i}^\top M \boldsymbol{u_1}  \text{avec une autre métrique \right) \\
+& = \class{alea}{x_i}^\top \boldsymbol{u_1}, \quad \left( \text{ou } \class{alea}{x_i}^\top M \boldsymbol{u_1}  \text{avec une autre métrique} \right) \\
 \end{align}
 
-$$\cos^2(\theta_i) = \frac{\class{alea}{x_i}^\top \boldsymbol{u_1}}{\norm{\class{alea}{x_i}}}$$
+$$\cos^2(\theta_i) = \frac{(\class{alea}{x_i}^\top \boldsymbol{u_1})^2}{\norm{\class{alea}{x_i}}^2}$$
 :::
 
 ::::
 
-[Interprétation}{.rouge}: plus $\cos^2(\theta_i)$ est proche de $1$, mieux l'individu est représenté.
+[Interprétation]{.rouge}: plus $\cos^2(\theta_i)$ est proche de $1$, mieux l'individu est représenté.
 
 ## Contribution d'un individu à la définition de l'axe
 
@@ -1462,9 +1461,9 @@ ggplot() +
   #geom_segment(aes(x = -2*u[1], y = -2*u[2], xend = 2*u[1], yend = 2*u[2]), linewidth = 0.5) +  # Axe vertical
   geom_segment(data = variables, aes(xend = xend, yend = yend, x= x0, y = y0), arrow = arrow(length = unit(0.3, "cm")),   col= c("#F7A913", "#d61d09","#F7A913","#d61d09")) +
   geom_segment(aes(xend = lambda1 * variables$xend[2], yend = lambda1 * variables$yend[2], x= 0, y = 0), arrow = arrow(length = unit(0.3, "cm")),   col= "#d61d09", alpha = 0.5) +
-  geom_text(aes(x = lambda1 * variables$xend[2], y = lambda1 * variables$yend[2]), label = expression(C^k == lambda_k~u^k),   col= "#d61d09", alpha = 0.5) +
+  geom_text(aes(x = lambda1 * variables$xend[2], y = lambda1 * variables$yend[2]), label = expression(C^k == lambda[k]~u^k),   col= "#d61d09", alpha = 0.5) +
   # geom_text(aes(x = -1.2, y = -2), label = expression(Delta), vjust = -0.8, size = 5) +
-  geom_text(data= variables, aes(x = xend, y =yend),  label = c("X^j", "u^k", "X^i", "u^l"), parse = TRUE, vjust = -0.1, hjust =  0.5,  size = 5,   col= c("#F7A913", "#d61d09", "#F7A913", "#d61d09"))  +
+  geom_text(data= variables, aes(x = xend, y =yend),  label = c("X^j", "u^k", "X^i", "u^l"), parse = TRUE, vjust = -0.1, hjust =  -0.5,  size = 5,   col= c("#F7A913", "#d61d09", "#F7A913", "#d61d09"))  +
   geom_text(data = pos, aes(x = x, y = y), label = expression(theta["j,k"]), size = 5) +
   geom_text(data = pos, aes(x = x/3, y = 3*y), label = expression(theta["i,k"]), size = 5) +
   theme_minimal()  +
