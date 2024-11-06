@@ -52,7 +52,8 @@ scale2 <- function(x, na.rm = FALSE) (x - mean(x, na.rm = na.rm)) / ( sqrt((leng
 ```
 
 ::: hidden
-$$
+\$\$
+
 \newcommand\R{{\mathbb{R}}}
 \newcommand\Xbf{{\boldsymbol{X}}}
 \newcommand\norm[1]{\lVert#1\rVert}
@@ -61,12 +62,8 @@ $$
 \newcommand\xbf{\boldsymbol{x}}
 \newcommand\ybf{\boldsymbol{y}}
 
-$$ 
+\$\$
 :::
-
-
-
-
 
 ```{r datapackage, eval = TRUE, echo = FALSE, warning = FALSE}
 library(plotly)
@@ -80,80 +77,40 @@ penguins <- penguins %>% na.omit() %>%
 
 ```
 
-
 # Et on commence avec les manchots
-
-
-<!-- ## L'exemple des caractéristiques du Doubs  -->
-
-<!-- On a mesuré les caractéristiques physico chimiques sur 30  sites différents le long de la rivière Doubs.  -->
-
-<!-- .pull-left[ Les 6 premières lignes (parmi 30) du jeu de données doubs.env -->
-<!-- ```{r extrait_doubs, echo = FALSE, eval = TRUE} -->
-<!-- doubs.env %>% print(n=6) -->
-<!-- ``` -->
-<!-- ] -->
-
-
-<!-- .pull-right[ -->
-<!-- * das :  distance à la source ( $km$ ),   -->
-<!-- * alt : altitude ( $m$ ) -->
-<!-- * pen : la pente (dénivelé pour  1000m) -->
-<!-- * deb : le débit () $m^3.s^{-1}$ ) -->
-<!-- * pH : le pH de l'eau, -->
-<!-- * dur : la concentration en calcium ( $mg.L^{-1}$ ), -->
-<!-- * pho	: concentration en phosphate ( $mg.L^{-1}$ ), -->
-<!-- * nit : concentration en nitrate  ( $mg.L^{-1}$ ), -->
-<!-- * amn	: concentration en ammonium ( $mg.L^{-1}$ ), -->
-<!-- * oxy	: concentration d'oxygène dissous ( $mg.L^{-1}$ ),  -->
-<!-- * dbo	: Demande biologique en oxygène ( $mg.L^{-1}$ ). -->
-<!-- ] -->
-
-
-
-<!-- [Comment visualiser au mieux ces données pour faire apparaître les liens entre variables et identifier des ressemblances entre individus ?]{.rouge} -->
-
 
 ## Rappel des données sur les manchots
 
-Données disponibles dans le package `palmerpenguins` mises à disposition par le Dr. Kristen Gorman et the  Palmer Station, Antarctica LTER.
-
+Données disponibles dans le package `palmerpenguins` mises à disposition
+par le Dr. Kristen Gorman et the Palmer Station, Antarctica LTER.
 
 On a mesuré les caractéristiques morphologiques de divers manchots :
 
-
-:::: {.columns}
-
+::::: columns
 ::: {.column width="48%"}
-
-Les 6 premières lignes (parmi 333 ) 
+Les 6 premières lignes (parmi 333 )
 
 ```{r extrait_penguins, echo = FALSE, eval = TRUE}
   
  penguins %>% 
  select(bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g) %>%  print(n=6)
 ```
-
-
 :::
-
 
 ::: {.column width="48%"}
+-   bill_length_mm : la longueur du bec,
 
-* bill_length_mm : la longueur du bec,
+-   bill_depth_mm : l'épaisseur du bec,
 
-* bill_depth_mm : l'épaisseur du bec, 
+-   flipper_length_mm : la longueur de la nageoire,
 
-* flipper_length_mm : la longueur de la nageoire,
-
-* body_mass_g : le poids du corps.
-
+-   body_mass_g : le poids du corps.
 :::
+:::::
 
-::::
-
-
-[Comment visualiser au mieux ces données pour faire apparaître les liens entre variables et identifier des resemblances entre individus ?]{.rouge}
+[Comment visualiser au mieux ces données pour faire apparaître les liens
+entre variables et identifier des resemblances entre individus
+?]{.rouge}
 
 ## Voir c'est comprendre : comment représenter l'information contenue dans ce tableau ?
 
@@ -163,12 +120,9 @@ Les 6 premières lignes (parmi 333 )
 penguins %>% select(bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g) %>% GGally::ggpairs()
 ```
 
-
-
 ## Voir c'est comprendre : comment représenter l'information contenue dans ce tableau ?
 
 ### Idée 1 : dangereuse
-
 
 ```{r gen_data,eval = TRUE, out.width = "100%"}
 scene = list(camera = list(eye = list(x = -2, y = 0, z = 0)),
@@ -183,20 +137,19 @@ fig
 
 ### Objectifs
 
-* Représenter sans perdre trop d'information,
-* Quantifier la perte d'information,
-* Comprendre quelles sont les informations redondantes (variables liées),
-* Idéalement des individus éloignés dans le nuage initial, restent éloignés dans la représentation
+-   Représenter sans perdre trop d'information,
+-   Quantifier la perte d'information,
+-   Comprendre quelles sont les informations redondantes (variables
+    liées),
+-   Idéalement des individus éloignés dans le nuage initial, restent
+    éloignés dans la représentation
 
-
-Dans toute la suite, sans perte de généralité, on va considérer que les variables sont centrées. 
-
+Dans toute la suite, sans perte de généralité, on va considérer que les
+variables sont centrées.
 
 ## Si on savait faire une Analyse en Composantes Principales
 
-
-::: {.panel-tabset} 
-
+:::::: panel-tabset
 ### Dans R on ferait
 
 ```{r PCA_manchots_1, eval = TRUE, echo = TRUE}
@@ -210,12 +163,11 @@ dta <- penguins %>% select(bill_length_mm, bill_depth_mm, flipper_length_mm, bod
 penguins.PCA <- PCA(X = dta, ncp = 4, graph = FALSE)
 ```
 
-
 ### Représentation des individus
 
-
-L'ACP permet de trouver la projection en 2 dimensions qui préserve au mieux l'information contenue dans le nuage de points (avec peu de déformation).
-
+L'ACP permet de trouver la projection en 2 dimensions qui préserve au
+mieux l'information contenue dans le nuage de points (avec peu de
+déformation).
 
 ```{r PCA_manchots_ind, eval = TRUE, echo = TRUE}
 #| classes: custom3565
@@ -223,17 +175,18 @@ L'ACP permet de trouver la projection en 2 dimensions qui préserve au mieux l'i
 #| results: hold
 plot(penguins.PCA, choix = "ind")
 ```
+
 [Reste à comprendre]{.rouge}
 
-* Comment quantifier l'information contenue dans un nuage de points
-* Comment est construite  cette meilleure projection
-* Quels sont les individus bien représentés ?
+-   Comment quantifier l'information contenue dans un nuage de points
+-   Comment est construite cette meilleure projection
+-   Quels sont les individus bien représentés ?
 
 ### Représentation des variables
 
-
-L'ACP définit de nouvelles variables, les composantes principales qui sont une combinaison linéaire des anciennes variables.  On peut représenter les variables dans le premier plan de l'ACP. 
-
+L'ACP définit de nouvelles variables, les composantes principales qui
+sont une combinaison linéaire des anciennes variables. On peut
+représenter les variables dans le premier plan de l'ACP.
 
 ```{r PCA_manchots_var, eval = TRUE, echo = TRUE}
 #| classes: custom3565
@@ -242,80 +195,73 @@ L'ACP définit de nouvelles variables, les composantes principales qui sont une 
 plot(penguins.PCA, choix = "var")
 ```
 
-
 [Reste à comprendre]{.rouge}
 
-* Comment interpréter cette représentation ?
-* Quelles sont les variables bien représentées ?
-* Que peut-on déduire de ce graphique sur le lien entre les variables.
-* Comment lier graphique des individus et graphique des variables 
-
+-   Comment interpréter cette représentation ?
+-   Quelles sont les variables bien représentées ?
+-   Que peut-on déduire de ce graphique sur le lien entre les variables.
+-   Comment lier graphique des individus et graphique des variables
 
 ### Visualisation par ACP
 
-
-:::: {.columns}
-
+::::: columns
 ::: {.column width="45%"}
-
 ```{r PCA_manchots_ind_2}
 #| echo: false
 plot(penguins.PCA, choix = "ind")
 ```
-
 :::
 
 ::: {.column width="45%"}
-
 ```{r PCA_manchots_var_2}
 #| echo: false
 plot(penguins.PCA, choix = "var")
 ```
-
 :::
-
-::::
-
-:::
-
+:::::
+::::::
 
 # Les données
 
 ## Mise en forme des données
 
-L’ACP s’applique à des données quantitatives sous forme de tableau. Ce tableau est composé de [n individus]{.alea} (lignes) et de [p variables]{.orange}  (colonnes).
+L’ACP s’applique à des données quantitatives sous forme de tableau. Ce
+tableau est composé de [n individus]{.alea} (lignes) et de [p
+variables]{.orange} (colonnes).
 
-Dans la suite on va noter $\Xbf$ la matrice des données, $\Xbf \in \R^{n\times p}$.
+Dans la suite on va noter ${\boldsymbol{X}}$ la matrice des données,
+${\boldsymbol{X}}\in {\mathbb{R}}^{n\times p}$.
 
-$x_{\class{alea}{i}\class{orange}{j}}$ est la valeur de la variable $\class{orange}{j}$ mesurée pour l'individu $\class{alea}{i}.$
+$x_{\class{alea}{i}\class{orange}{j}}$ est la valeur de la variable
+$\class{orange}{j}$ mesurée pour l'individu $\class{alea}{i}.$
 
-$$\Xbf = \overset{\color{orange}{\begin{matrix}var_1& \ldots \ &  \ \ldots \ &\  \ldots\  & \  var_p \end{matrix}}}{\begin{pmatrix}
+$${\boldsymbol{X}}= \overset{\color{orange}{\begin{matrix}var_1& \ldots \ &  \ \ldots \ &\  \ldots\  & \  var_p \end{matrix}}}{\begin{pmatrix}
 x_{\class{alea}{1}}^{\class{orange}{1}} &  \ldots &  \ldots &\ldots &  x_{\class{alea}{1}}^{\class{orange}{p}}\\
 \vdots & & &  &\vdots \\
  & &  x_{\class{alea}{i}}^{\class{orange}{j}} & & \\
 \vdots & & & & \vdots \\
 x_{\class{alea}{n}}^{\class{orange}{1}} & & & & \ldots x_{\class{alea}{n}}^{\class{orange}{p}}\\
  \end{pmatrix}}$$
- 
- 
 
 ## Deux points de vue complémentaires
 
-:::: {.columns}
-
+::::: columns
 ::: {.column width="48%"}
-
 ### Le nuage des individus $C^n$
 
-On peut considérer qu'un [individu]{.alea}  $i$ est un vecteur  $\class{alea}{\xrow{i}}$ dans un espace de dimension $p$. Par convention tous les vecteurs sont des vecteurs colonnes, donc on peut écrire 
+On peut considérer qu'un [individu]{.alea} $i$ est un vecteur
+$\class{alea}{\boldsymbol{x}_{i}}$ dans un espace de dimension $p$. Par
+convention tous les vecteurs sont des vecteurs colonnes, donc on peut
+écrire
 
-$$\Xbf=\begin{pmatrix}
-\class{alea}{\xrow{1}}^\top\\
+$${\boldsymbol{X}}=\begin{pmatrix}
+\class{alea}{\boldsymbol{x}_{1}}^\top\\
 \vdots \\
-\class{alea}{\xrow{n}}^\top\\
+\class{alea}{\boldsymbol{x}_{n}}^\top\\
 \end{pmatrix},$$
 
-L'ensemble des $n$ vecteurs forme le [nuage des individus]{.alea} (ce qu'on représente classiquement).
+L'ensemble des $n$ vecteurs forme le [nuage des individus]{.alea} (ce
+qu'on représente classiquement).
 
 ```{r nuage_ind}
 #! message: false
@@ -394,21 +340,20 @@ ggplot() +
    panel.grid = element_blank())
 
 ```
-
 :::
 
 ::: {.column width="48%"}
-
 ### Le nuage des variables $C^p$
 
-On peut considérer qu'une  [variable]{.orange} $j$ est un vecteur  $\class{orange}{\xcol{j}}$ dans un espace de dimension $n$ et  on peut écrire 
+On peut considérer qu'une [variable]{.orange} $j$ est un vecteur
+$\class{orange}{\boldsymbol{x}^{j}}$ dans un espace de dimension $n$ et
+on peut écrire
 
-$$\Xbf=\begin{pmatrix}
-\class{orange}{\xcol{1}} & \ldots & \class{orange}{\xcol{p}}
+$${\boldsymbol{X}}=\begin{pmatrix}
+\class{orange}{\boldsymbol{x}^{1}} & \ldots & \class{orange}{\boldsymbol{x}^{p}}
 \end{pmatrix},$$
 
 L'ensemble des $p$ vecteurs forme le [nuage des variables]{.orange}.
-
 
 ```{r nuage_var}
 #! message: false
@@ -475,99 +420,87 @@ ggplot() +
 
 
 ```
-
 :::
-
-::::
+:::::
 
 . . .
 
 [Bien sûr les deux nuages sont intimement liés]{.question}
 
-
 # Mesurer l'information contenue dans un nuage de points
 
-## L'inertie par rapport à un point   
+## L'inertie par rapport à un point
 
-
-:::: {.callout-note icon="false" appearance="minimal"}
+::: {.callout-note icon="false" appearance="minimal"}
 ### Definition 1
-L'inertie  (terme hérité de la physique) *par rapport à un point* $a \in \R^{p}$ est définie par  
-$$I_{\boldsymbol{a}} = \frac{1}{n} \sum_{i=1}^n \norm{\xrow{i} - \boldsymbol{a}}^2 = \frac{1}{n} \sum_{i=1}^n\sum_{k=1}^p  (x_i^k -a^k)^2$$
 
-::::
+L'inertie (terme hérité de la physique) *par rapport à un point*
+$a \in {\mathbb{R}}^{p}$ est définie par\
+$$I_{\boldsymbol{a}} = \frac{1}{n} \sum_{i=1}^n \lVert\boldsymbol{x}_{i} - \boldsymbol{a}\rVert^2 = \frac{1}{n} \sum_{i=1}^n\sum_{k=1}^p  (x_i^k -a^k)^2$$
+:::
 
-
-
-::: {.panel-tabset} 
-
+::: panel-tabset
 ### Intuitivement
 
-L'inertie par rapport à un point quantifie l'information perdue lorsque  le jeu de données est résumé par ce point. 
+L'inertie par rapport à un point quantifie l'information perdue lorsque
+le jeu de données est résumé par ce point.
 
-
-[Quel est selon vous le point $\boldsymbol{a}$ qui minimise l'inertie ?]{.rouge}
+[Quel est selon vous le point $\boldsymbol{a}$ qui minimise l'inertie
+?]{.rouge}
 
 $$argmin_{\boldsymbol{a}} I_{\boldsymbol{a}} = ??$$
-
 
 ### Réponse
 
 [BINGO !!!]{.rouge}
 
-Il s'agit du point $\boldsymbol{g}=\boldsymbol{x_{\bullet}}=({x}_{\bullet}^1, \ldots, {x}_{\bullet}^p )^\top,$ avec ${x}_{\bullet}^k=\frac{1}{n} \sum_{i=1}^n x_{i}^k$, la valeur moyenne de la variable $k$ sur l'ensemble des individus.
+Il s'agit du point
+$\boldsymbol{g}=\boldsymbol{x_{\bullet}}=({x}_{\bullet}^1, \ldots, {x}_{\bullet}^p )^\top,$
+avec ${x}_{\bullet}^k=\frac{1}{n} \sum_{i=1}^n x_{i}^k$, la valeur
+moyenne de la variable $k$ sur l'ensemble des individus.
 
-Puisque nous avons supposé que nos variables étaient centrées, $G=O$ l'origine sur repère.
+Puisque nous avons supposé que nos variables étaient centrées, $G=O$
+l'origine sur repère.
 
-### Théorème de Huyghens 
+### Théorème de Huyghens
 
-$$\forall \boldsymbol{a}\in\mathbb{R}^p,\; I_\boldsymbol{a}=I_\boldsymbol{g} + \norm{\boldsymbol{a}- \boldsymbol{g}}^2.$$
+$$\forall \boldsymbol{a}\in\mathbb{R}^p,\; I_\boldsymbol{a}=I_\boldsymbol{g} + \lVert\boldsymbol{a}- \boldsymbol{g}\rVert^2.$$
 
-[Conséquence]{.rouge} 
+[Conséquence]{.rouge}
 
-Le meilleur résumé du nuage de points se résumant à un point est le barycentre du nuage de points, c'est à dire la moyenne sur chacune des dimensions. 
-
-
-
+Le meilleur résumé du nuage de points se résumant à un point est le
+barycentre du nuage de points, c'est à dire la moyenne sur chacune des
+dimensions.
 :::
 
-. . . 
+. . .
 
 ### Remarque {#sec-inertie}
 
-$$I_{\boldsymbol{g}} = I = \frac{1}{n}  \sum_{i=1}^n     \left( \sum_{k=1}^p \left( x_{i}^k - x_{\bullet}^k  \right)^2 \right)  = \sum_{k=1}^p  \left( \frac{1}{n}  \sum_{i=1}^n  \left( x_{i}^k - x_{\bullet}^k  \right)^2 \right)  = \sum_{k=1}^p  Var(\xcol{k})$$
+$$I_{\boldsymbol{g}} = I = \frac{1}{n}  \sum_{i=1}^n     \left( \sum_{k=1}^p \left( x_{i}^k - x_{\bullet}^k  \right)^2 \right)  = \sum_{k=1}^p  \left( \frac{1}{n}  \sum_{i=1}^n  \left( x_{i}^k - x_{\bullet}^k  \right)^2 \right)  = \sum_{k=1}^p  Var(\boldsymbol{x}^{k})$$
 Si les variables sont réduites
 
 $$I = p$$
 
-
 ## L'inertie par rapport à un axe
 
-
-:::: {.callout-note icon="false" appearance="minimal"}
+::: {.callout-note icon="false" appearance="minimal"}
 ### Definition 2
-L'inertie  *par rapport à l'axe $\Delta$ *  est définie par 
-$$I_{\boldsymbol{\Delta}} = \frac{1}{n} \sum_{i=1}^n \norm{\xrow{i} - \boldsymbol{p_i}^{\Delta}}^2 = \frac{1}{n} \sum_{i=1}^n\sum_{k=1}^p  (x_i^k -p^{k,\Delta}_i)^2, \quad \mbox{où }\  \boldsymbol{p_i}^{\Delta} \mbox{projeté orthogonal de } \boldsymbol{x_i} \mbox{ sur }\Delta.$$
-::::
 
-
-
-::: {.panel-tabset} 
-
-### Intuitivement
-
-
-:::: { .columns}
-
-::: { .column width=30%}
-
-L'inertie par rapport à l'axe $\Delta$ quantifie l'information perdue lorsque l'on résume le nuage de points à son projeté sur $\Delta$.
-
+L'inertie *par rapport à l'axe* $\Delta$ est définie par
+$$I_{\boldsymbol{\Delta}} = \frac{1}{n} \sum_{i=1}^n \lVert\boldsymbol{x}_{i} - \boldsymbol{p_i}^{\Delta}\rVert^2 = \frac{1}{n} \sum_{i=1}^n\sum_{k=1}^p  (x_i^k -p^{k,\Delta}_i)^2, \quad \mbox{où }\  \boldsymbol{p_i}^{\Delta} \mbox{projeté orthogonal de } \boldsymbol{x_i} \mbox{ sur }\Delta.$$
 :::
 
+::::::::: panel-tabset
+### Intuitivement
 
-::: { .column width=65%}
+::::: columns
+::: {.column width="30%"}
+L'inertie par rapport à l'axe $\Delta$ quantifie l'information perdue
+lorsque l'on résume le nuage de points à son projeté sur $\Delta$.
+:::
 
+::: {.column width="65%"}
 ```{r inertie_delta}
 
 individus <- data.frame(
@@ -624,35 +557,29 @@ ggplot() +
          panel.grid = element_blank())
 
 ```
-
 :::
-
-::::
-
+:::::
 
 ### Que veut-on faire ?
 
 [Identifier $\Delta$ tel que $I_{\Delta}$ soit minimale]{.rouge}
 
-Ce qui revient à l'axe $\Delta$ qui assure que la projection sur $\Delta$ déforme le moins possible le nuage de points.
+Ce qui revient à l'axe $\Delta$ qui assure que la projection sur
+$\Delta$ déforme le moins possible le nuage de points.
 
+Dans le cadre de l'ACP, on veut construire une ensemble d'axes
+orthogonaux (une nouvelle base de ${\mathbb{R}}^p$), de façon à ce que
 
-Dans le cadre de l'ACP, on veut construire une ensemble d'axes orthogonaux (une nouvelle base de $\R^p$), de façon à ce que 
-
-* la projection sur le premier axe, soit le meilleur résumé du nuage de points en une dimension,
-* le deuxième axe est orthogonal au premier et représente "le deuxième meileur choix" .... dans un sens que l'on va définir
-* le troisième ...
-
-
-
-
+-   la projection sur le premier axe, soit le meilleur résumé du nuage
+    de points en une dimension,
+-   le deuxième axe est orthogonal au premier et représente "le deuxième
+    meileur choix" .... dans un sens que l'on va définir
+-   le troisième ...
 
 ### Rappel projection orthogonale
 
-:::: { .columns}
-
-::: { .column width=55%}
-
+::::: columns
+::: {.column width="55%"}
 ```{r proj_prodscalaire}
 #! message: false
 #! warning: false
@@ -697,104 +624,96 @@ ggplot(data) +
          panel.grid = element_blank())
 
 ```
-
-
 :::
 
-::: { .column width=40%}
+::: {.column width="40%"}
+-   **Produit scalaire** : Soient deux élements $\boldsymbol{x}$ et
+    $\boldsymbol{y}$ de $\mathbb{R}^p$, le produit scalaire est noté
+    $<\boldsymbol{x},\boldsymbol{y}>$ et
+    $<\boldsymbol{x},\boldsymbol{y}>=\sum_{i=1}^p x_i y_i = \boldsymbol{x}^\top \boldsymbol{y}.$
 
+-   **Orthogonalité** Soient deux élements $\boldsymbol{x}$ et
+    $\boldsymbol{y}$ de $\mathbb{R}^p$, on dit que $\boldsymbol{x}$ et
+    $\boldsymbol{y}$ sont orthogonaux (noté
+    $\boldsymbol{x}\perp \boldsymbol{y}$) si
+    $<\boldsymbol{x},\boldsymbol{y}> = \boldsymbol{x}^\top  \boldsymbol{y}=0$.
 
-* **Produit scalaire** : Soient  deux élements $\xbf$ et $\ybf$ de $\mathbb{R}^p$, le produit scalaire est noté $<\xbf,\ybf>$ et $<\xbf,\ybf>=\sum_{i=1}^p x_i y_i = \xbf^\top \ybf.$
-
-* **Orthogonalité**  Soient  deux élements $\xbf$ et $\ybf$ de $\mathbb{R}^p$, on dit que $\xbf$ et $\ybf$ sont orthogonaux (noté $\xbf \perp \ybf$) si $<\xbf,\ybf> = \xbf^\top  \ybf=0$. 
-
-* **Projection orthogonale** On note $\boldsymbol{a}_u$ le projeté de $\boldsymbol{a}$ sur la droite $\Delta$ définit par son vecteur directeur unitaire $\boldsymbol{u}$ et passant par l'origine
-$$\boldsymbol{a}_u = < \boldsymbol{a}, \boldsymbol{u} > \boldsymbol{u} = (\boldsymbol{a}^\top \boldsymbol{u})\,  \boldsymbol{u}.$$
-Le vecteur $\boldsymbol{a_u}$ est orthogonal à $\boldsymbol{a}-\boldsymbol{a_u}$:
-$$< \boldsymbol{a_u}, \boldsymbol{a}-\boldsymbol{a_u}> = \left ((\boldsymbol{a}^\top \boldsymbol{u}) \boldsymbol{u}\right)^\top \left ( \boldsymbol{a} -  (\boldsymbol{a}^\top \boldsymbol{u})\,  \boldsymbol{u} \right)=(\boldsymbol{a}^\top \boldsymbol{u}) (\boldsymbol{u}^\top \boldsymbol{a}) - (\boldsymbol{a}^\top \boldsymbol{u})^2 \boldsymbol{u}^\top \boldsymbol{u} =0  $$ 
-
+-   **Projection orthogonale** On note $\boldsymbol{a}_u$ le projeté de
+    $\boldsymbol{a}$ sur la droite $\Delta$ définit par son vecteur
+    directeur unitaire $\boldsymbol{u}$ et passant par l'origine
+    $$\boldsymbol{a}_u = < \boldsymbol{a}, \boldsymbol{u} > \boldsymbol{u} = (\boldsymbol{a}^\top \boldsymbol{u})\,  \boldsymbol{u}.$$
+    Le vecteur $\boldsymbol{a_u}$ est orthogonal à
+    $\boldsymbol{a}-\boldsymbol{a_u}$:
+    $$< \boldsymbol{a_u}, \boldsymbol{a}-\boldsymbol{a_u}> = \left ((\boldsymbol{a}^\top \boldsymbol{u}) \boldsymbol{u}\right)^\top \left ( \boldsymbol{a} -  (\boldsymbol{a}^\top \boldsymbol{u})\,  \boldsymbol{u} \right)=(\boldsymbol{a}^\top \boldsymbol{u}) (\boldsymbol{u}^\top \boldsymbol{a}) - (\boldsymbol{a}^\top \boldsymbol{u})^2 \boldsymbol{u}^\top \boldsymbol{u} =0  $$
 :::
-
-::::
-
-
-:::
+:::::
+:::::::::
 
 ## L'inertie par rapport à un sous espace affine
 
-* **Espace orthogonal** Soit $E$ un sous-espace vectoriel de $\mathbb{R}^p$. On definit  $E^\perp=\{\xbf \in \mathbb{R}^p:\; \forall \ybf\in E,\; \xbf \perp \ybf\}$. 
+-   **Espace orthogonal** Soit $E$ un sous-espace vectoriel de
+    $\mathbb{R}^p$. On definit
+    $E^\perp=\{\boldsymbol{x}\in \mathbb{R}^p:\; \forall \boldsymbol{y}\in E,\; \boldsymbol{x}\perp \boldsymbol{y}\}$.
 
-
-
-::: {.panel-tabset} 
-
+::: panel-tabset
 ### Exemple
 
-Dans $\R^2$, on considère le sous espace vectoriel $E$, tel que 
-$$ E =\left \lbrace  \xbf =\begin{pmatrix} x_1 &  x_2 \end{pmatrix}^\top \in \R^2 : x_1 = x_2  \right \rbrace $$
+Dans ${\mathbb{R}}^2$, on considère le sous espace vectoriel $E$, tel
+que
+$$ E =\left \lbrace  \boldsymbol{x}=\begin{pmatrix} x_1 &  x_2 \end{pmatrix}^\top \in {\mathbb{R}}^2 : x_1 = x_2  \right \rbrace $$
 $E$ est la droite d'équation $y=x$.
 
 Qui est $E^\perp$ ?
 
 ### Solution
 
-Soit $\ybf \in E^\perp,$ alors
+Soit $\boldsymbol{y}\in E^\perp,$ alors
 
 \begin{align}
-0 & = \xbf^\top \ybf \\
+0 & = \boldsymbol{x}^\top \boldsymbol{y}\\
   & = \begin{pmatrix} x_1 &  x_2 \end{pmatrix} \begin{pmatrix} y_1 \\  y_2 \end{pmatrix}\\
   & = x_1 y_1 + x_2 y_2 \\
-  & = x_1 (y_1 + y_2) \quad (\xbf \in E \Rightarrow x_1 =x_2) \\
+  & = x_1 (y_1 + y_2) \quad (\boldsymbol{x}\in E \Rightarrow x_1 =x_2) \\
 \end{align}
 
-$$E^\perp =  \left \lbrace  \ybf =\begin{pmatrix} y_1 &  y_2 \end{pmatrix}^\top \in \R^2 : y_1 + y_2 = 0 \right \rbrace  $$
+$$E^\perp =  \left \lbrace  \boldsymbol{y}=\begin{pmatrix} y_1 &  y_2 \end{pmatrix}^\top \in {\mathbb{R}}^2 : y_1 + y_2 = 0 \right \rbrace  $$
 :::
 
 . . .
 
-:::: {.callout-note icon="false" appearance="minimal"}
+::: {.callout-note icon="false" appearance="minimal"}
 ### Definition 3
-L'inertie  *par rapport à un sous espace vectoriel $E$ *  est définie par 
-$$I_{E} = \frac{1}{n} \sum_{i=1}^n \norm{\xrow{i} - \boldsymbol{p_i}^{E}}^2 = \frac{1}{n} \sum_{i=1}^n\sum_{k=1}^p  (x_i^k -p^{k,E}_i)^2, \quad \mbox{où }\  \boldsymbol{p_i}^{E} = argmin_{\ybf \in E} d(\ybf, \xrow{i}), \mbox{i.e. projeté orthogonal de } \boldsymbol{x_i} \mbox{ sur }E.$$
-::::
 
+L'inertie *par rapport à un sous espace vectoriel* $E$ est définie par
+$$I_{E} = \frac{1}{n} \sum_{i=1}^n \lVert\boldsymbol{x}_{i} - \boldsymbol{p_i}^{E}\rVert^2 = \frac{1}{n} \sum_{i=1}^n\sum_{k=1}^p  (x_i^k -p^{k,E}_i)^2, \quad \mbox{où }\  \boldsymbol{p_i}^{E} = argmin_{\boldsymbol{y}\in E} d(\boldsymbol{y}, \boldsymbol{x}_{i}), \mbox{i.e. projeté orthogonal de } \boldsymbol{x_i} \mbox{ sur }E.$$
+:::
 
+C'est [l'inertie perdue]{.rouge} lorsque l'on résume le nuage de points
+à sa projection sur le sous espace $E$.
 
-C'est [l'inertie perdue]{.rouge} lorsque l'on résume le nuage de points à sa projection sur le sous espace $E$.
+## Décomposition de l'inertie
 
-
-
-
-
-
-## Décomposition de l'inertie 
-
-::: { .lemme }
-Soit $E$ un sous espace vectoriel de $\R^p$, alors
+::: lemme
+Soit $E$ un sous espace vectoriel de ${\mathbb{R}}^p$, alors
 $$I = I_E + I_{E^\perp}.$$
 :::
 
 [Preuve]{.rouge}
 
-:::: { .columns}
-
-::: { .column width=30%}
+::::: columns
+::: {.column width="30%"}
 Un dessin vaut mieux qu'un long discours et Pythagore est ton ami !
 
-$$d(\class{alea}{\xrow{i}}, O)^2 = d(\xrow{i}, \class{bleu}{\xrow{i}^E})^2  +  d(\class{alea}{\xrow{i}}, \class{rouge}{\xrow{i}^{E^\perp}})^2.$$
+$$d(\class{alea}{\boldsymbol{x}_{i}}, O)^2 = d(\boldsymbol{x}_{i}, \class{bleu}{\boldsymbol{x}_{i}^E})^2  +  d(\class{alea}{\boldsymbol{x}_{i}}, \class{rouge}{\boldsymbol{x}_{i}^{E^\perp}})^2.$$
 
 \begin{align}
- I & = \frac{1}{n} \sum_{i=1}^n d(\class{alea}{\xrow{i}}, O)^2 \\
-   & = \frac{1}{n} \sum_{i=1}^n d(\class{alea}{\xrow{i}}, \class{bleu}{\xrow{i}^E})^2   +  \frac{1}{n} \sum_{i=1}^n d(\class{alea}{\xrow{i}}, \class{rouge}{\xrow{i}^{E^\perp}})^2 \\
+ I & = \frac{1}{n} \sum_{i=1}^n d(\class{alea}{\boldsymbol{x}_{i}}, O)^2 \\
+   & = \frac{1}{n} \sum_{i=1}^n d(\class{alea}{\boldsymbol{x}_{i}}, \class{bleu}{\boldsymbol{x}_{i}^E})^2   +  \frac{1}{n} \sum_{i=1}^n d(\class{alea}{\boldsymbol{x}_{i}}, \class{rouge}{\boldsymbol{x}_{i}^{E^\perp}})^2 \\
    & = \class{bleu}{I_E} + \class{rouge}{I_{E^\perp}}
 \end{align}
+:::
 
-
-::: 
-
-
-::: { .column width=65%}
-
+::: {.column width="65%"}
 ```{r inertie_decomp}
 individus <- data.frame(
   x = c(1.5, -0.5, -1),   # Coordonnées des points individuels
@@ -861,20 +780,21 @@ ggplot() +
          panel.grid = element_blank())
 
 ```
-
 :::
-
-::::
-
-
+:::::
 
 ## Principe de la décomposition à venir
 
-1.  Identifier le vecteur $\boldsymbol{u_1}$ de $\R^p$, tel que $I_{E_1}$ soit minimale avec $E_1=\left \lbrace \lambda \boldsymbol{u_1}, \lambda \in \R \right\rbrace,$
+1.  Identifier le vecteur $\boldsymbol{u_1}$ de ${\mathbb{R}}^p$, tel
+    que $I_{E_1}$ soit minimale avec
+    $E_1=\left \lbrace \lambda \boldsymbol{u_1}, \lambda \in {\mathbb{R}}\right\rbrace,$
 
-2. Dans $E_1^\perp$, identifier le vecteur $\boldsymbol{u_2}$ de $\R^p$, tel que $I_{E_2}$ soit minimale avec $E_2=\left \lbrace \lambda \boldsymbol{u_2}, \lambda \in \R \right\rbrace,$
+2.  Dans $E_1^\perp$, identifier le vecteur $\boldsymbol{u_2}$ de
+    ${\mathbb{R}}^p$, tel que $I_{E_2}$ soit minimale avec
+    $E_2=\left \lbrace \lambda \boldsymbol{u_2}, \lambda \in {\mathbb{R}}\right\rbrace,$
 
-3. Dans $\left (  E_1 \oplus E_2 \right)^\perp$, identifier le vecteur $\boldsymbol{u_3}$ de $\R^p$, tel que ....
+3.  Dans $\left (  E_1 \oplus E_2 \right)^\perp$, identifier le vecteur
+    $\boldsymbol{u_3}$ de ${\mathbb{R}}^p$, tel que ....
 
 ...
 
@@ -935,164 +855,158 @@ p2 <- X %>% ggplot() + aes(x=x1, y = x3) + geom_point(size = 4) +
 
 ```
 
-::: { .columns}
-
-:::: { .column width=45%}
-
+::::: columns
+::: {.column width="45%"}
 ```{r inert_p1}
 p1
 ```
+:::
 
-::::
-
-:::: { .column width=45%}
-
+::: {.column width="45%"}
 ```{r inert_p2}
 p2
 ```
-
-::::
-
 :::
-
-
+:::::
 
 ## Se donner des intuitions
 
-
-
-::: { .columns}
-
-:::: { .column width=45%}
-
+::::: columns
+::: {.column width="45%"}
 ```{r inert_p1_var}
 p1  +
   geom_segment(aes(x= 0, y = 0, xend = eigen_1[1,1], yend = eigen_1[2,1]), col = "#f76f07", arrow = arrow(length = unit(0.3, "cm"))) +
   geom_segment(aes(x= 0, y = 0, xend = eigen_1[1,2], yend = eigen_1[2,2]), col = "#d61d09", arrow = arrow(length = unit(0.3, "cm")))
 ```
+:::
 
-::::
-
-:::: { .column width=45%}
-
+::: {.column width="45%"}
 ```{r inert_p2_var}
 p2 +
   geom_segment(aes(x= 0, y = 0, xend = eigen_2[1,1], yend = eigen_2[2,1]), col = "#f76f07", arrow = arrow(length = unit(0.3, "cm"))) +
   geom_segment(aes(x= 0, y = 0, xend = eigen_2[1,2], yend = eigen_2[2,2]), col = "#d61d09", arrow = arrow(length = unit(0.3, "cm")))
 ```
-
-::::
-
 :::
-
+:::::
 
 ## Identifier $\boldsymbol{u_1}$ - Formalisation
 
-:::: { .columns}
+:::::: columns
+::: {.column width="45%"}
+-   On cherche $\boldsymbol{u_1}$ tel que $I_{u_1}$ soit minimale mais
+    $I_{u_1} + I_{u_1^\perp}=I$. [Minimiser $I_{u_1}$ revient à
+    maximiser $I_{u_1^\perp}$]{.rouge}, i.e l'inertie du nuage projeté.
 
-::: { .column width=45%}
+    -   Le premier individu se projette en
+        $\class{alea}{x_{1}}^\top \boldsymbol{u_1}$ sur
+        $\boldsymbol{u_1}$
+    -   Le deuxième individu se projette en
+        $\class{alea}{x_{2}}^\top \boldsymbol{u_1}$ sur
+        $\boldsymbol{u_1}$
+    -   ...
 
-* On cherche $\boldsymbol{u_1}$ tel que $I_{u_1}$ soit minimale mais $I_{u_1} + I_{u_1^\perp}=I$. [Minimiser $I_{u_1}$ revient à maximiser $I_{u_1^\perp}$]{.rouge}, i.e l'inertie du nuage projeté.
-
-  * Le premier individu se projette en  $\class{alea}{x_{1}}^\top \boldsymbol{u_1}$ sur $\boldsymbol{u_1}$
-  * Le deuxième individu se projette en  $\class{alea}{x_{2}}^\top \boldsymbol{u_1}$ sur $\boldsymbol{u_1}$
-  * ...
-
-
-* On rappelle que 
-$$\Xbf = \begin{pmatrix} \class{alea}{x_{1}}^\top \\ \vdots \\ \class{alea}{x_{n}}^\top \end{pmatrix}.$$
-La projection de l'individu $i$ est obtenue en multipliant le vecteur ligne $\class{alea}{x_{1}}^\top$ par $\boldsymbol{u_1}$. Le vecteur des coordonnées sur $\boldsymbol{u_1}$ pour chaque individu est 
+-   On rappelle que
+    $${\boldsymbol{X}}= \begin{pmatrix} \class{alea}{x_{1}}^\top \\ \vdots \\ \class{alea}{x_{n}}^\top \end{pmatrix}.$$
+    La projection de l'individu $i$ est obtenue en multipliant le
+    vecteur ligne $\class{alea}{x_{1}}^\top$ par $\boldsymbol{u_1}$. Le
+    vecteur des coordonnées sur $\boldsymbol{u_1}$ pour chaque individu
+    est
 
 $$\begin{pmatrix} \class{alea}{x_{1}}^\top \boldsymbol{u_1} \\ \vdots \\ \class{alea}{x_{n}}^\top \boldsymbol{u_1} \end{pmatrix} = X  \boldsymbol{u_1}.$$
-
 :::
 
-
-::: { .column width=45%}
-
+:::: {.column width="45%"}
 ### Maximiser $I_{u_1^\perp}$
 
-sous la contrainte $\norm{\boldsymbol{u_1}}$
-\begin{align}
- I_{u_1^\perp} & = \frac{1}{n}\norm{X  \boldsymbol{u_1}}^2 \\
+sous la contrainte $\lVert\boldsymbol{u_1}\rVert$ \begin{align}
+ I_{u_1^\perp} & = \frac{1}{n}\lVert X  \boldsymbol{u_1}\rVert^2 \\
         & = \frac{1}{n} (X  \boldsymbol{u_1})^\top (X  \boldsymbol{u_1})\\
         & =   \boldsymbol{u_1}^\top \left (\frac{1}{n} X^\top X \right)  \boldsymbol{u_1}
 \end{align}
 
-::: {.panel-tabset} 
-
+::: panel-tabset
 #### Remarque
 
-* $\frac{1}{n} X^\top X$ est la matrice de covariance, on écrit souvent $\frac{1}{n} X^\top X$ sous la forme
-$X^\top W X$ ($W$ est une matrice diagonale, dont chaque terme diagonal vaut $1/n$, $W_{ii}$ est le poids attribué à l'observation $i$).
+-   $\frac{1}{n} X^\top X$ est la matrice de covariance, on écrit
+    souvent $\frac{1}{n} X^\top X$ sous la forme $X^\top W X$ ($W$ est
+    une matrice diagonale, dont chaque terme diagonal vaut $1/n$,
+    $W_{ii}$ est le poids attribué à l'observation $i$).
 
-* $X^\top W X$ est [symétrique]{.rouge} et [définie positive]{.rouge} donc [diagonalisable]{.rouge}. 
+-   $X^\top W X$ est [symétrique]{.rouge} et [définie positive]{.rouge}
+    donc [diagonalisable]{.rouge}.
 
-* Il existe une matrice $P$ unitaire $P^\top P = I_p,$ et $D$ une matrice diagonale telle que 
-$$X^\top W X = P D P^\top.$$
-* Les termes diagonaux de $D$ sont les [valeurs propres, toutes positives, ]{.rouge} de $X^\top W X$ rangées par odre décroissant, $\lambda_1 > \lambda_1 \ldots >\lambda_p$ et  $U$ est la matrice des vecteurs propres associés.
+-   Il existe une matrice $P$ unitaire $P^\top P = I_p,$ et $D$ une
+    matrice diagonale telle que $$X^\top W X = P D P^\top.$$
+
+-   Les termes diagonaux de $D$ sont les [valeurs propres, toutes
+    positives,]{.rouge} de $X^\top W X$ rangées par odre décroissant,
+    $\lambda_1 > \lambda_1 \ldots >\lambda_p$ et $U$ est la matrice des
+    vecteurs propres associés.
 
 #### Ce que ça signifie
 
 ![](change_baseXtX.png)
 
-
-$\boldsymbol{b}$ est une base orthonormale, la base formée par les vecteurs propres de $X^\top W X$.
+$\boldsymbol{b}$ est une base orthonormale, la base formée par les
+vecteurs propres de $X^\top W X$.
 :::
-
-:::
-
 ::::
-
+::::::
 
 ## Identifier les directions principales
 
-### Chercher $\boldsymbol{u_1}$ tel que $I_{u_1^\perp}$ soit maximale 
+### Chercher $\boldsymbol{u_1}$ tel que $I_{u_1^\perp}$ soit maximale
 
-En se plaçant dans la nouvelle base, posons $\boldsymbol{v_1} = P^\top \boldsymbol{u_1},$  $\norm{\boldsymbol{v_1}}=1$:
+En se plaçant dans la nouvelle base, posons
+$\boldsymbol{v_1} = P^\top \boldsymbol{u_1},$
+$\lVert\boldsymbol{v_1}\rVert=1$:
 
-Maximiser $\boldsymbol{v_1}^\top D \boldsymbol{v_1} = \sum_{k=1}^p v_{1p}^2 \lambda_p$, sous la contrainte $\sum_{k=1}^p  v_{1p}^2=1$
+Maximiser
+$\boldsymbol{v_1}^\top D \boldsymbol{v_1} = \sum_{k=1}^p v_{1p}^2 \lambda_p$,
+sous la contrainte $\sum_{k=1}^p  v_{1p}^2=1$
 
 $$\boldsymbol{v_1} = (1, 0, \ldots, 0)^\top, \quad \boldsymbol{u_1} = P \boldsymbol{v_1} = \begin{pmatrix} P_{11} \\ \vdots \\P_{p1} \end{pmatrix}.$$
 
+[$\boldsymbol{u_1}$ est le premier vecteur propre]{.rouge} de
+$X^\top W X$. (la matrice de covariance).
 
+### Chercher $\boldsymbol{u_2}$
 
-[$\boldsymbol{u_1}$ est le premier vecteur propre]{.rouge} de $X^\top W X$. (la matrice de covariance).
+On cherche $\boldsymbol{u_2}\perp \boldsymbol{u_1}$, tel que
+$\boldsymbol{u_2}^\top X^\top W X   \boldsymbol{u_2}$ soit maximale.
 
-
-### Chercher $\boldsymbol{u_2}$ 
-
-On cherche  $\boldsymbol{u_2}\perp \boldsymbol{u_1}$, tel que $\boldsymbol{u_2}^\top X^\top W X   \boldsymbol{u_2}$ soit maximale.
-
-Posons $\boldsymbol{v_2} = P^\top \boldsymbol{u_2},$  $\norm{\boldsymbol{v_2}}=1$:
-Maximiser $\boldsymbol{v_2}^\top D \boldsymbol{v_2} = \sum_{k=1}^p v_{2p}^2 \lambda_p$, sous la contrainte $\sum_{k=1}^p  v_{1p}^2=1$ et $v_{1p}=0$ pour assurer l'orthogonalité avec $\boldsymbol{v_1}$ 
- 
+Posons $\boldsymbol{v_2} = P^\top \boldsymbol{u_2},$
+$\lVert\boldsymbol{v_2}\rVert=1$: Maximiser
+$\boldsymbol{v_2}^\top D \boldsymbol{v_2} = \sum_{k=1}^p v_{2p}^2 \lambda_p$,
+sous la contrainte $\sum_{k=1}^p  v_{1p}^2=1$ et $v_{1p}=0$ pour assurer
+l'orthogonalité avec $\boldsymbol{v_1}$
 
 $$\boldsymbol{v_2} = (0, 1, \ldots, 0)^\top, \quad \boldsymbol{u_2} = P \boldsymbol{v_2} = \begin{pmatrix} P_{12} \\ \vdots \\U_{p2} \end{pmatrix}.$$
 
-
-
-[$\boldsymbol{u_2}$ est le deuxième vecteur propre]{.rouge} de  de $X^\top W X$.
-
+[$\boldsymbol{u_2}$ est le deuxième vecteur propre]{.rouge} de de
+$X^\top W X$.
 
 ## Mesurer l'information préservée par projection
 
-### Sur un axe principal 
+### Sur un axe principal
 
-* Lorsque l'on résume  le nuage à sa projection sur un [axe factoriel]{.rouge} $\boldsymbol{u_k}$, on ne garde que l'information associée à cet axe soit $I_{\boldsymbol{u_k}^\perp}=\lambda_k$.
+-   Lorsque l'on résume le nuage à sa projection sur un [axe
+    factoriel]{.rouge} $\boldsymbol{u_k}$, on ne garde que l'information
+    associée à cet axe soit $I_{\boldsymbol{u_k}^\perp}=\lambda_k$.
 
-* La quantité d'information préservée par projection sur l'axe $k$ est donc $\lambda_k$.
+-   La quantité d'information préservée par projection sur l'axe $k$ est
+    donc $\lambda_k$.
 
-* La part d'information portée par l'axe $k$ est donnée par $\displaystyle\frac{\lambda_k}{\sum_{k=1}^p\lambda_k}$
+-   La part d'information portée par l'axe $k$ est donnée par
+    $\displaystyle\frac{\lambda_k}{\sum_{k=1}^p\lambda_k}$
 
-### Sur un axe principal 
+### Sur un axe principal
 
-* L'inertie du nuage projeté sur plan $k_1, k_2$ est  donnée par 
-$$\lambda_{k_1} +\lambda_{k_2}$$
+-   L'inertie du nuage projeté sur plan $k_1, k_2$ est donnée par
+    $$\lambda_{k_1} +\lambda_{k_2}$$
 
-* La part d'information portée par le plan $k_1, k_2$ est donnée par 
-$$\frac{\lambda_k}{\sum_{k=1}^p\lambda_{k_1} +\lambda_{k_2}}$$
-
+-   La part d'information portée par le plan $k_1, k_2$ est donnée par
+    $$\frac{\lambda_k}{\sum_{k=1}^p\lambda_{k_1} +\lambda_{k_2}}$$
 
 ## Attention aux unités - Illustration sur les données de manchots
 
@@ -1115,15 +1029,15 @@ penguins.PCA$eig
 penguins.PCA$svd$V ## what is named P in the lecture
 ```
 
-La dispersion du nuage projeté sur le premier axe représente $6.45 10^5$ en terme d'inertie soit $99.98%$ de l'inertie totale.
+La dispersion du nuage projeté sur le premier axe représente $6.45 10^5$
+en terme d'inertie soit $99.98%$ de l'inertie totale.
 
-. . . 
+. . .
 
 [Trop beau pour être vrai ?]{.rouge}
 
-Réfléchissons aux données, ce qui est crucial dans toutes analyses de données.
-
-
+Réfléchissons aux données, ce qui est crucial dans toutes analyses de
+données.
 
 ```{r PCA_manchots_desc, eval = TRUE, echo = TRUE}
 #| echo: true
@@ -1139,18 +1053,17 @@ penguins %>%
       names_pattern = "(.*)_(mean|sd)") |> 
   pivot_wider(names_from = Resume,values_from = value)
 ```
+
 . . .
 
 Les variables ont des ordres de grandeur variable.
 
-La contribution à la distance entre individu de la variable  `Mass`est plus importante que celle de la variable `bill_length_mm`.
+La contribution à la distance entre individu de la variable `Mass`est
+plus importante que celle de la variable `bill_length_mm`.
 
 [Est-ce souhaitable ?]{.rouge}
 
-
-
 ## Attention aux unités - Illustration sur les données de manchots normalisées
-
 
 ```{r PCA_manchots_3, eval = TRUE, echo = TRUE}
 #| echo: true
@@ -1169,59 +1082,68 @@ penguins.PCA$eig
 penguins.PCA$svd$V ## what is named P in the lecture
 ```
 
-On a centré réduit les variables pour les rendre comparables et leur donner la même importance. 
+On a centré réduit les variables pour les rendre comparables et leur
+donner la même importance.
 
-Dans ce cas l'inertie totale est le nombre de variables (voir remarque @sec-inertie) 
+Dans ce cas l'inertie totale est le nombre de variables (voir remarque
+@sec-inertie)
 
-
-Lorsque l'on veut s'abstraire des unités, on centre te on réduit les données pour réaliser une [ACP normée]{.rouge}.
+Lorsque l'on veut s'abstraire des unités, on centre te on réduit les
+données pour réaliser une [ACP normée]{.rouge}.
 
 ## Choix de la distance
 
-L'ACP normée (ACP sur les données centrées et réduites) peut-être envisagée comme une ACP avec une autre distance que la distance euclidienne.
+L'ACP normée (ACP sur les données centrées et réduites) peut-être
+envisagée comme une ACP avec une autre distance que la distance
+euclidienne.
 
+Une autre manière de présenter la même approche est de dire qu'on change
+la métrique utilisée
 
-Une autre manière de présenter la même approche est de dire qu'on change la métrique utilisée
-
-:::: {.callout-note icon="false" appearance="minimal"}
+::: {.callout-note icon="false" appearance="minimal"}
 ### Definition (métrique)
-Une métrique $M$ permet de définir une distance entre les observations (ainsi, M est une matrice de $\R^p\times\R^p$ symétrique, définie et positive).
 
+Une métrique $M$ permet de définir une distance entre les observations
+(ainsi, M est une matrice de ${\mathbb{R}}^p\times{\mathbb{R}}^p$
+symétrique, définie et positive).
 :::
 
 ### Calcul de distance
 
-Soient $\xbf_1 \in \R^p$ et $\xbf_é\in\R^p$, la distance entre $\xbf_1$ et $\xbf_2$pour la métrique $M$ est
-$$d_M(\xbf_1, \xbf_2)^2= \norm{\xbf_1 - \xbf_2}_M^2 = (\xbf_1 - \xbf_2)^\top M (\xbf_1 - \xbf_2).$$
+Soient $\boldsymbol{x}_1 \in {\mathbb{R}}^p$ et
+$\boldsymbol{x}_é\in{\mathbb{R}}^p$, la distance entre
+$\boldsymbol{x}_1$ et $\boldsymbol{x}_2$pour la métrique $M$ est
+$$d_M(\boldsymbol{x}_1, \boldsymbol{x}_2)^2= \lVert\boldsymbol{x}_1 - \boldsymbol{x}_2\rVert_M^2 = (\boldsymbol{x}_1 - \boldsymbol{x}_2)^\top M (\boldsymbol{x}_1 - \boldsymbol{x}_2).$$
 
-::: {.panel-tabset} 
-
+::: panel-tabset
 ### Exemple $I_p$
- Si $M= I_p$,
- 
- $$d_M(\xbf_1, \xbf_2)^2= \norm{\xbf_1 - \xbf_2}_M^2 = (\xbf_1 - \xbf_2)^\top I_p (\xbf_1 - \xbf_2) =\sum_{k=1}^p (x_{1k}-x_{2k})^2.$$
 
+Si $M= I_p$,
 
-
+$$d_M(\boldsymbol{x}_1, \boldsymbol{x}_2)^2= \lVert\boldsymbol{x}_1 - \boldsymbol{x}_2\rVert_M^2 = (\boldsymbol{x}_1 - \boldsymbol{x}_2)^\top I_p (\boldsymbol{x}_1 - \boldsymbol{x}_2) =\sum_{k=1}^p (x_{1k}-x_{2k})^2.$$
 
 ### Distance normalisant les variables
-Si $M$ est diagonale est $M_{ii}= 1/ s_i^2$ où $s_i^2$ est la variance de la variable $i$, 
- 
-$$d_M(\xbf_1, \xbf_2)^2=  (\xbf_1 - \xbf_2)^\top M (\xbf_1 - \xbf_2) =\sum_{k=1}^p \frac{(x_{1k}-x_{2k})^2}{s_k^2}=\sum_{k=1}^p \left ( \frac{x_{1k}}{s_k}-\frac{x_{2k}}{s_k} \right)^2.$$
 
-Dans une ACP normée on s'intéresse donc aux valeurs propres de la matrice $X^\top M W X,$ il s'agit de la matrice de corrélation.
- 
+Si $M$ est diagonale est $M_{ii}= 1/ s_i^2$ où $s_i^2$ est la variance
+de la variable $i$,
+
+$$d_M(\boldsymbol{x}_1, \boldsymbol{x}_2)^2=  (\boldsymbol{x}_1 - \boldsymbol{x}_2)^\top M (\boldsymbol{x}_1 - \boldsymbol{x}_2) =\sum_{k=1}^p \frac{(x_{1k}-x_{2k})^2}{s_k^2}=\sum_{k=1}^p \left ( \frac{x_{1k}}{s_k}-\frac{x_{2k}}{s_k} \right)^2.$$
+
+Dans une ACP normée on s'intéresse donc aux valeurs propres de la
+matrice $X^\top M W X,$ il s'agit de la matrice de corrélation.
 :::
 
-
-# Etude du nuage des individus 
+# Etude du nuage des individus
 
 ## Représentation des individus - Composantes principales
 
-:::: {.callout-note icon="false" appearance="minimal"}
+::: {.callout-note icon="false" appearance="minimal"}
 ### Definition (Composantes principales)
-Les coordonnées  des $n$ observations sur les  $p$ axes factoriels sont groupées dans la matrice $C$: 
-$c_{ik}$ est la coordonnée de l'observation $i$ sur l'axe $\Delta_{\boldsymbol{u_k}}$. La  $k$-ème composante principale est la colonne $k$ de la matrice $C$, notée $C^k$.
+
+Les coordonnées des $n$ observations sur les $p$ axes factoriels sont
+groupées dans la matrice $C$: $c_{ik}$ est la coordonnée de
+l'observation $i$ sur l'axe $\Delta_{\boldsymbol{u_k}}$. La $k$-ème
+composante principale est la colonne $k$ de la matrice $C$, notée $C^k$.
 $$
 C = [\class{orange}{C^1} | \ldots | \class{orange}{C^p}] \text{ avec } \class{orange}{C^k}=\begin{pmatrix}
 c_{1k}\\
@@ -1229,34 +1151,30 @@ c_{1k}\\
 c_{nk}
 \end{pmatrix}.
 $$
-:::: 
+:::
 
-
-::: {.panel-tabset} 
-
+::: panel-tabset
 ### Vectoriellement
 
-On a les expressions suivantes 
-$$
+On a les expressions suivantes $$
 C^k=Xu_k \mbox{ et } C=XP,
-$$
-où $P$ désigne la matrice de changement base, i.e la matrice contenant les vecteurs propres.
+$$ où $P$ désigne la matrice de changement base, i.e la matrice
+contenant les vecteurs propres.
 
 ### Visuellement
 
 ![](change_baseXtX_acp.png){width="50%"}
 
+### Remarques
 
-### Remarques 
-
-* Les $C^k$ sont des combinaisons linéaires des variables de départ. 
-* Elles sont centrées, de variance $\lambda_k=\sum_{i=1}^n p_i c_{ik}^2$ et non-corrélées 2 à 2. 
-* Les $C^k$ sont vecteurs propres de $XX^\top$ de valeur propre $\lambda_k$.
-
+-   Les $C^k$ sont des combinaisons linéaires des variables de départ.
+-   Elles sont centrées, de variance
+    $\lambda_k=\sum_{i=1}^n p_i c_{ik}^2$ et non-corrélées 2 à 2.
+-   Les $C^k$ sont vecteurs propres de $XX^\top$ de valeur propre
+    $\lambda_k$.
 :::
 
 ## Représentation des manchots
-
 
 ```{r CompPrinc_manchots, eval = TRUE, echo = TRUE}
 #| echo: true
@@ -1291,21 +1209,17 @@ library(factoextra)
 fviz_pca_ind(penguins.PCA, label="none", addEllipses=FALSE)
 ```
 
-
-
-
 ## Qualité de la représentation d'un individu
 
-* Même avec ces précautions, on déforme le nuage de points
-* Certains sont plus déformés que d'autre, il faut les identifier
+-   Même avec ces précautions, on déforme le nuage de points
+-   Certains sont plus déformés que d'autre, il faut les identifier
 
-Un individu est d'autant moins déformé qu'il est proche du plan sur lequel on le projette, ce qui est donné par l'angle entre le vecteur initial et le vteur projeté
+Un individu est d'autant moins déformé qu'il est proche du plan sur
+lequel on le projette, ce qui est donné par l'angle entre le vecteur
+initial et le vteur projeté
 
-:::: {.columns}
-
+::::: columns
 ::: {.column width="55%"}
-
-
 ```{r angle_ind}
 #| echo: false
 #| message: false
@@ -1350,31 +1264,28 @@ ggplot() +
 :::
 
 ::: {.column width="40%"}
-
 \begin{align}
-<\class{alea}{x_i}, \boldsymbol{u_1}> &= \norm{\class{alea}{x_i}} \norm{\boldsymbol{u_1}} cos(\theta_i) \\
+<\class{alea}{x_i}, \boldsymbol{u_1}> &= \lVert\class{alea}{x_i}\rVert \lVert\boldsymbol{u_1}\rVert cos(\theta_i) \\
 & = \class{alea}{x_i}^\top \boldsymbol{u_1}, \quad \left( \text{ou } \class{alea}{x_i}^\top M \boldsymbol{u_1}  \text{avec une autre métrique} \right) \\
 \end{align}
 
-$$\cos^2(\theta_i) = \frac{(\class{alea}{x_i}^\top \boldsymbol{u_1})^2}{\norm{\class{alea}{x_i}}^2}$$
+$$\cos^2(\theta_i) = \frac{(\class{alea}{x_i}^\top \boldsymbol{u_1})^2}{\lVert\class{alea}{x_i}\rVert^2}$$
 :::
+:::::
 
-::::
-
-[Interprétation]{.rouge}: plus $\cos^2(\theta_i)$ est proche de $1$, mieux l'individu est représenté.
+[Interprétation]{.rouge}: plus $\cos^2(\theta_i)$ est proche de $1$,
+mieux l'individu est représenté.
 
 ## Contribution d'un individu à la définition de l'axe
 
-* Les individus sont plus ou moins important dans la définition des axes
+-   Les individus sont plus ou moins important dans la définition des
+    axes
 
-::: {.panel-tabset} 
-
+:::::: panel-tabset
 ### Intuitivement
 
-:::: {.columns}
-
+::::: columns
 ::: {.column width="55%"}
-
 ```{r contrib_ind}
 #| echo: false
 #| message: false
@@ -1405,39 +1316,34 @@ ggplot() +
          panel.grid = element_blank())
 
 ```
-
 :::
 
 ::: {.column width="40%"}
-
-[Quels sont les points qui vont le plus contribuer à la détermination des axes ?]{.rouge}
-
+[Quels sont les points qui vont le plus contribuer à la détermination
+des axes ?]{.rouge}
 :::
-
-::::
+:::::
 
 ### Formellement
 
-La [contribution relative de l’observation]{.rouge} $\class{alea}{x_i}$  à la construction de l’axe principal $k$  est la part d’inertie de l’axe $k$ expliquée par $\class{alea}{x_i}$ donnée par
+La [contribution relative de l’observation]{.rouge} $\class{alea}{x_i}$
+à la construction de l’axe principal $k$ est la part d’inertie de l’axe
+$k$ expliquée par $\class{alea}{x_i}$ donnée par
 
-$$Ctr(i, k) = \frac{1}{n} \frac{c_{ik}^2}{\lambda_k}.$$
-En effet $\lambda_k = \frac{1}{n} \sum_{i=1}^n c_{ik}^2$ (ie. la variance du nuage projeté).
+$$Ctr(i, k) = \frac{1}{n} \frac{c_{ik}^2}{\lambda_k}.$$ En effet
+$\lambda_k = \frac{1}{n} \sum_{i=1}^n c_{ik}^2$ (ie. la variance du
+nuage projeté).
 
 Remarque : si les individus ont des poids $w_i$ alors
 $$Ctr(i, k) =  \frac{w_i c_{ik}^2}{\lambda_k}.$$
-
-:::
-
-
-
+::::::
 
 # Etude des variables
 
 ## Qualité de la représentation d'une variable sur un plan factoriel
 
-::: {.panel-tabset} 
-
-### Intuitivement 
+:::::: panel-tabset
+### Intuitivement
 
 ```{r angle_var}
 #| echo: false
@@ -1477,61 +1383,61 @@ ggplot() +
 
 ### Formellement
 
-:::: {.columns}
-
+::::: columns
 ::: {.column width="45%"}
-
 ![](change_baseXtX_acp.png)
-
 :::
 
 ::: {.column width="45%"}
+-   Une variable est bien représentée sur l'axe $k$ si l'angle entre
+    cette variable et la composante $C^k$ est petit, son cosinus est
+    proche de 1 ou -1.
 
-* Une variable est bien représentée sur l'axe $k$ si l'angle entre cette variable et la composante $C^k$ est petit, son cosinus est proche de 1 ou -1.
-
-Or $<X^j, C^k> = \norm{X^j}\norm{C^k}cos(\theta_{jk})$
+Or $<X^j, C^k> = \lVert X^j\rVert\lVert C^k\rVert cos(\theta_{jk})$
 
 \begin{align}
 <X^j, C^k> & = <(CP^\top)^j, C^k> \\
 & = \underbrace{\left((CP^\top)^j\right)^\top}{= (P C^\top)_j}   C^k \\
 \end{align}
 
-Ainsi $<X^j, C^k>$ est le $j^\text{ème}$ terme du vecteur $PC^\top C^k$, or $C^\top C$ est diagonale  avec $C_k^k = n lambda_k$, donc $C^\top C^k=(0, \dots, n\lambda_k, 0, \ldots)$
-et
+Ainsi $<X^j, C^k>$ est le $j^\text{ème}$ terme du vecteur $PC^\top C^k$,
+or $C^\top C$ est diagonale avec $C_k^k = n lambda_k$, donc
+$C^\top C^k=(0, \dots, n\lambda_k, 0, \ldots)$ et
 
-$$\cos(\theta_{jk}) = \frac{n \lambda_k \boldsymbol{u_k^j}}{\sqrt{\norm{X^j}^2 \, \norm{C_k}^2}}=  \sqrt{\lambda_k} \boldsymbol{u_k^j},  \quad \cos^2(\theta_{jk}) =  \lambda_k{(\boldsymbol{u_k^j})^2}$$
-
-
+$$\cos(\theta_{jk}) = \frac{n \lambda_k \boldsymbol{u_k^j}}{\sqrt{\lVert X^j\rVert^2 \, \lVert C_k\rVert^2}}=  \sqrt{\lambda_k} \boldsymbol{u_k^j},  \quad \cos^2(\theta_{jk}) =  \lambda_k{(\boldsymbol{u_k^j})^2}$$
 :::
-
-::::
-
-:::
-
-
+:::::
+::::::
 
 ## Ajouter des informations supplémentaires
 
 Il est possible d'ajouter des informations supplémentaires
 
-### Des individus supplémentaires qui ne seront pas utiliser pour cuitruire les axes 
+### Des individus supplémentaires qui ne seront pas utiliser pour cuitruire les axes
 
 Si on veut ajouter un nouvel individu $x_{new}$
 
-* on calcule $\boldsymbol{x}_{new} - \boldsymbol{g}$, le point centré (et potentiellement on divise par l'écart type des variables calculés sur le jeu de données initial)
+-   on calcule $\boldsymbol{x}_{new} - \boldsymbol{g}$, le point centré
+    (et potentiellement on divise par l'écart type des variables
+    calculés sur le jeu de données initial)
 
-* On projette sur les axes principaux : $(\boldsymbol{x}_{new} - \boldsymbol{g} )^\top \boldsymbol{u_k}$
+-   On projette sur les axes principaux :
+    $(\boldsymbol{x}_{new} - \boldsymbol{g} )^\top \boldsymbol{u_k}$
 
 ### Une variable supplémentaire
 
-Si on souhaite ajouter une nouvelle variable $\boldsymbol{x}^{new}= (x^{new}_1, \ldots, x^{new}_n)^\top \in \R^n$
+Si on souhaite ajouter une nouvelle variable
+$\boldsymbol{x}^{new}= (x^{new}_1, \ldots, x^{new}_n)^\top \in {\mathbb{R}}^n$
 
-* On soustrait sa moyenne  $\tilde{\boldsymbol{x}}^{new} = \boldsymbol{x}^{new} - m^{new}$, $m^{new}=\frac{1}{n} \sum_{i=1}^n x^{new}_i$ (ou $m^{new}= \sum_{i=1}^n w_i x^{new}_i$ si toutes les observations n'ont pas le même poids)
+-   On soustrait sa moyenne
+    $\tilde{\boldsymbol{x}}^{new} = \boldsymbol{x}^{new} - m^{new}$,
+    $m^{new}=\frac{1}{n} \sum_{i=1}^n x^{new}_i$ (ou
+    $m^{new}= \sum_{i=1}^n w_i x^{new}_i$ si toutes les observations
+    n'ont pas le même poids)
 
-* On projette $\tilde{\boldsymbol{x}}^{new}$ sur $\boldsymbol{u_k},$ 
+-   On projette $\tilde{\boldsymbol{x}}^{new}$ sur $\boldsymbol{u_k},$
 
-$$Cor(\tilde{\boldsymbol{x}}^{new}, u_k) = \frac{(\tilde{\boldsymbol{x}}^{new})^\top W \boldsymbol{u_k} }{\norm{\tilde{\boldsymbol{x}}^{new}}}$$
- 
+$$Cor(\tilde{\boldsymbol{x}}^{new}, u_k) = \frac{(\tilde{\boldsymbol{x}}^{new})^\top W \boldsymbol{u_k} }{\lVert\tilde{\boldsymbol{x}}^{new}\rVert}$$
 
 ## Retournons à nos manchots
 
@@ -1551,80 +1457,69 @@ penguins.PCA <- PCA(X = penguins,
  # PCAshiny(penguins)
 ```
 
-
-
 # Comprendre les données du Doubs
 
 ## Présentation des données
 
-
 ## L'exemple des caractéristiques du Doubs
 
-On a mesuré les caractéristiques physico chimiques sur 30  sites différents le long de la rivière Doubs.
+On a mesuré les caractéristiques physico chimiques sur 30 sites
+différents le long de la rivière Doubs.
 
-:::: {.columns}
-
+::::: columns
 ::: {.column width="48%"}
-
 Les 6 premières lignes (parmi 30) du jeu de données doubs.env
+
 ```{r extrait_doubs, echo = FALSE, eval = TRUE}
 doubs.env %>% print(n=6)
 ```
-
 :::
 
 ::: {.column width="48%"}
-
-* das :  distance à la source ( $km$ ),
-* alt : altitude ( $m$ )
-* pen : la pente (dénivelé pour  1000m)
-* deb : le débit () $m^3.s^{-1}$ )
-* pH : le pH de l'eau,
-* dur : la concentration en calcium ( $mg.L^{-1}$ ),
-* pho	: concentration en phosphate ( $mg.L^{-1}$ ),
-* nit : concentration en nitrate  ( $mg.L^{-1}$ ),
-* amn	: concentration en ammonium ( $mg.L^{-1}$ ),
-* oxy	: concentration d'oxygène dissous ( $mg.L^{-1}$ ),
-* dbo	: Demande biologique en oxygène ( $mg.L^{-1}$ ).
-]
-
+-   das : distance à la source ( $km$ ),
+-   alt : altitude ( $m$ )
+-   pen : la pente (dénivelé pour 1000m)
+-   deb : le débit () $m^3.s^{-1}$ )
+-   pH : le pH de l'eau,
+-   dur : la concentration en calcium ( $mg.L^{-1}$ ),
+-   pho : concentration en phosphate ( $mg.L^{-1}$ ),
+-   nit : concentration en nitrate ( $mg.L^{-1}$ ),
+-   amn : concentration en ammonium ( $mg.L^{-1}$ ),
+-   oxy : concentration d'oxygène dissous ( $mg.L^{-1}$ ),
+-   dbo : Demande biologique en oxygène ( $mg.L^{-1}$ ). 
 :::
+:::::
 
-::::
-
-
- [Comment visualiser au mieux ces données pour faire apparaître les liens entre variables et identifier des ressemblances entre individus ?]{.rouge} 
-
+[Comment visualiser au mieux ces données pour faire apparaître les liens
+entre variables et identifier des ressemblances entre individus
+?]{.rouge}
 
 ## Analyse par ACP
 
-* Poids des individus ?
-* Quelle distance entre les variables ?
-* Lancer l'analyse 
-  * quelles sont les composantes intéressantes (règle empririque du choix du nombre d'axes) ? 
-  * quelles informations sont visibles sur le premier plan factoriel ?
-  * Que peut on dire des liens entre les variables ?
-  * A votre avis quels sites contribuent le plus à la formation de l'axe 1 ?
-  * Que peut on dire du pH ?
-
-
-
+-   Poids des individus ?
+-   Quelle distance entre les variables ?
+-   Lancer l'analyse
+    -   quelles sont les composantes intéressantes (règle empririque du
+        choix du nombre d'axes) ?
+    -   quelles informations sont visibles sur le premier plan factoriel
+        ?
+    -   Que peut on dire des liens entre les variables ?
+    -   A votre avis quels sites contribuent le plus à la formation de
+        l'axe 1 ?
+    -   Que peut on dire du pH ?
 
 # L'ACP comme une méthode de compression
 
-## Ne garder que l'information pertinente 
+## Ne garder que l'information pertinente
 
-On a utilisé l'ACP comme une technique de visualisation, mais on peut sen servir comme une technique de compression (avec perte).
-Il suffit de ne garder que les première composantes principales.
+On a utilisé l'ACP comme une technique de visualisation, mais on peut
+sen servir comme une technique de compression (avec perte). Il suffit de
+ne garder que les première composantes principales.
 
- [L'exemple sur une image ](ACP_images.html)
+[L'exemple sur une image](ACP_images.html)
 
-# Bilan 
+# Bilan
 
-
-## Ce que vous pensez devoir retenir 
+## Ce que vous pensez devoir retenir
 
 A construire ensemble
-
-
-
