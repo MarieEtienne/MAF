@@ -191,7 +191,7 @@ Il s'agit ici de carcatériser les propriétés physico chimiques des sols. Pour
 
 ### Importation
 
-Nous allons importer les données et les manipuler en utiliser les possibilités de la suite de package `tidyverse`
+Nous allons importer les données et les manipuler en utiliser les possibilités de la suite de package `tidyverse`. Les données sont [disponibles sur ce lien](https://marieetienne.github.io/datasets/donnees_sols.txt)
 
 ```{r}
 #| label: donnees
@@ -199,7 +199,7 @@ Nous allons importer les données et les manipuler en utiliser les possibilités
 #| eval: true
 #| message: false
 library(tidyverse) # Pour la manipulation de données
-donnees_sols <- read.table("donnees_sols.txt",
+donnees_sols <- read.table("https://marieetienne.github.io/datasets/donnees_sols.txt",
                            sep = ";", # separateur de champs
                            header = TRUE, # 1ere ligne donne le nom des colonnes
                            encoding = "UTF-8")  # Encodage initial du fichier
