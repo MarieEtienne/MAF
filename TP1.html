@@ -413,10 +413,10 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="comprendre-les-données">Comprendre les données</h2>
 <section id="importation" class="level3">
 <h3 class="anchored" data-anchor-id="importation">Importation</h3>
-<p>Nous allons importer les données et les manipuler en utiliser les possibilités de la suite de package <code>tidyverse</code></p>
+<p>Nous allons importer les données et les manipuler en utiliser les possibilités de la suite de package <code>tidyverse</code>. Les données sont <a href="https://marieetienne.github.io/datasets/donnees_sols.txt">disponibles sur ce lien</a></p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># Pour la manipulation de données</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>donnees_sols <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"donnees_sols.txt"</span>,</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>donnees_sols <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"https://marieetienne.github.io/datasets/donnees_sols.txt"</span>,</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                           <span class="at">sep =</span> <span class="st">";"</span>, <span class="co"># separateur de champs</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="co"># 1ere ligne donne le nom des colonnes</span></span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>                           <span class="at">encoding =</span> <span class="st">"UTF-8"</span>)  <span class="co"># Encodage initial du fichier</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
