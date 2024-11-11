@@ -1,0 +1,399 @@
+---
+title: "Analyse Factorielle Multiple"
+subtitle: "Une ACP avec une métrique particulière"
+author:
+  - name: Marie-Pierre Etienne
+    affiliation: 
+      - ENSAI - CREST
+    email: marie-pierre.etienne@ensai.fr
+date: "Last updated on `r format(Sys.time(), '%d %B, %Y')`"
+institute: https://marieetienne.github.io/MAF/
+execute: 
+  freeze: true
+editor: 
+  markdown: 
+    wrap: 72
+css: mpe_pres_revealjs.css
+format:
+  revealjs: 
+    theme: [default, custom.scss]
+    width: 1050
+    margin: 0.05
+    slide-number: true
+    slide-level: 2
+    show-slide-number: print
+    menu:
+      useTextContentForMissingTitles: false
+    mathjax: true  # Active MathJax
+    self-contained: true
+---
+
+```{r setup, include=FALSE, eval = TRUE}
+library(RefManageR)
+library(tidyverse) ## to benefit from the tidyverse coding system
+library(reticulate) ## to use python from R
+library(wesanderson)
+library(plotly)
+library(ggforce)
+```
+
+```{r reference,  include=FALSE, cache=FALSE, eval = TRUE}
+BibOptions(check.entries = FALSE,
+           bib.style = "authoryear",
+           cite.style = "alphabetic",
+           style = "markdown",
+           hyperlink = FALSE,
+           dashed = FALSE)
+myBib <- ReadBib("./MAF.bib", check = FALSE)
+theme_set(theme_minimal())
+options(ggplot2.discrete.colour=   scale_color_manual(values = wesanderson::wes_palette(name = "Darjeeling1")) )
+couleur <-  wesanderson::wes_palette(name = "Darjeeling1")
+scale2 <- function(x, na.rm = FALSE) (x - mean(x, na.rm = na.rm)) / ( sqrt((length(x)-1) / length(x)) *sd(x, na.rm) )
+
+```
+
+::: hidden
+\$\$
+
+\newcommand\R{{\mathbb{R}}}
+\newcommand\Xbf{{\boldsymbol{X}}}
+\newcommand\norm[1]{\lVert#1\rVert}
+\newcommand\xcol[1]{\boldsymbol{x}^{#1}}
+\newcommand\xrow[1]{\boldsymbol{x}_{#1}}
+\newcommand\xbf{\boldsymbol{x}}
+\newcommand\ybf{\boldsymbol{y}}
+
+\$\$
+:::
+
+```{r datapackage, eval = TRUE, echo = FALSE, warning = FALSE}
+library(plotly)
+library(FactoMineR)
+ggplot <- function(...) ggplot2::ggplot(...) + scale_fill_manual(values = wesanderson::wes_palette(name = "Darjeeling1")) + scale_color_manual(values = wesanderson::wes_palette(name = "Darjeeling1")) + theme_minimal()
+#remotes::install_github('MarieEtienne/coursesdata', force = TRUE)
+doubs.env <- read.csv ('https://raw.githubusercontent.com/zdealveindy/anadat-r/master/data/DoubsEnv.csv', row.names = 1) %>% as_tibble()
+
+doubs.env_scaled <- scale(doubs.env)
+
+```
+
+# Introduction
+
+## Quelques exemples
+
+::::::::: panel-tabset
+### On (re)commence dans le Doubs
+
+On a mesuré les caractéristiques physico chimiques sur 30 sites
+différents le long de la rivière Doubs.
+
+::::: columns
+::: {.column width="49%"}
+Les 4 premières lignes (parmi 30) du jeu de données doubs.env
+
+```{r extrait_doubs, echo = FALSE, eval = TRUE}
+doubs.env %>% print(n=4)
+```
+
+On mesure des [caractéristiques physiques]{.bleu}, des [caractéristiques
+chimiques]{.orange}, des [caractéristiques écologiques]{.vert}.
+:::
+
+::: {.column width="49%"}
+-   [das : distance à la source ( $km$ )]{.bleu},
+-   [alt : altitude ( $m$ )]{.bleu}
+-   [pen : la pente (dénivelé pour 1000m)]{.bleu}
+-   [deb : le débit () $m^3.s^{-1}$ )]{.bleu}
+-   [pH : le pH de l'eau,]{.orange}
+-   [dur : la concentration en calcium ( $mg.L^{-1}$ )]{.orange},
+-   [pho : concentration en phosphate ( $mg.L^{-1}$ )]{.orange},
+-   [nit : concentration en nitrate ( $mg.L^{-1}$ )]{.orange},
+-   [amn : concentration en ammonium ( $mg.L^{-1}$ )]{.orange},
+-   [oxy : concentration d'oxygène dissous ( $mg.L^{-1}$ )]{.vert},
+-   [dbo : Demande biologique en oxygène ( $mg.L^{-1}$ )]{.vert}.
+:::
+:::::
+
+Si on travaille sur une ACP normée, puisqu'il ya 4 descripteurs pour les
+caractéristiques physiques, et seulement 2 pour les caractéristiques
+écologiques, les varaibles physiques auront par construction plus de
+poids que les variables écologiques.
+
+### Notes des élèves
+
+On s'intéresse aux notes des 30 élèves d'une classe. Le tableau de note
+complet contient
+
+-   [8 notes de mathématiques]{.bleu}
+-   [4 notes d'anglais]{.orange}
+-   [3 notes d'histoire géographie]{.vert}
+-   [3 notes de français]{.rouge}
+-   [1 note de dessin]{.jaune}
+
+On aimerait visualiser les notes à l'aide d'une méthode factorielle,
+notamment pour savoir si ce sont les mêmes élèves qui rencontrent des
+difficultés dans les différentes matières.
+
+-   On normalise les données car les gammes de variation des notes dans
+    les différentes matières sont assez différentes
+-   Que se passe-t-il si on fait une ACP normée ?
+
+Les mathématiques ont 8 fois plus de poids dans la détermination des
+axes que la note de dessin.
+
+[Est ce vraiment ce qu'on veut ?]{.rouge}
+
+(ça dépend qui "on" désigne)
+
+### Analyse sensorielle
+
+[Exemple tiré des cours de F. Husson]{.smaller}
+
+10 vins blancs du Val de Loire : 5 Vouvray - 5 Sauvignon • descripteurs
+sensoriels : acidité, amertume, odeur agrume, etc.
+
+::::: columns
+::: {.column width="49%"}
+```{r data_vin,  eval = TRUE}
+#| echo: true
+#| message: false
+#| 
+vins <- read.table("https://husson.github.io/MOOC_AnaDo/AnaDo_JeuDonnees_VinsJury.csv", 
+      header=TRUE, sep=";",dec=".", row.names=1, check.names=FALSE, fileEncoding="latin1")
+head(vins, n= 4)
+```
+:::
+
+::: {.column width="49%"}
+10 vins blancs du Val de Loire : 5 Vouvray - 5 Sauvignon
+
+-   descripteurs sensoriels : acidité, amertume, odeur agrume, etc.
+-   description sensorielle de 3 jurys : [oenologue]{.rouge},
+    [consommateurs]{.orange}, [étudiant]{.bleu}
+-   notes hédoniques de 60 consommateurs : \[appréciation globale\]{.
+    vert}
+
+Au total 118 variables, dont 60 sont des notes hédoniques
+:::
+:::::
+
+On souhaite étudier les relations entre les différentes varaibles mais
+aussi entre les groupes de variables
+
+Il est important d'équilibrer le poids de chaque ensemble de variables
+:::::::::
+
+## Formalisation du problème
+
+::::: columns
+::: {.column width="49%"}
+\begin{align}
+X & = \begin{pmatrix}
+\class{bleu}{X^{1}_1} & \class{bleu}{X^{2}_1}  &  \class{bleu}{X^{3}_1} & \class{orange}{X^{4}_1}& \class{orange}{X^{5}_1} & \class{vert}{X^{6}_1}& \class{vert}{X^{7}_1} \\
+\class{bleu}{\vdots} & \class{bleu}{\vdots}  &  \class{bleu}{\vdots} & \class{orange}{\vdots}& \class{orange}{\vdots} & \class{vert}{\vdots}& \class{vert}{\vdots} \\
+\class{bleu}{X^{1}_n} & \class{bleu}{X^{2}_n}  &  \class{bleu}{X^{3}_n} & \class{orange}{X^{4}_n}& \class{orange}{X^{5}_n} & \class{vert}{X^{6}_n}& \class{vert}{X^{7}_n} \\
+\end{pmatrix}\\
+ & = \begin{pmatrix}
+\class{bleu}{\boldsymbol{X^{1}}} &  \class{orange}{\boldsymbol{X^{2}}}  & \class{vert}{\boldsymbol{X^{3}}} \\
+\end{pmatrix}\\
+\end{align}
+
+On souhaite mettre en évidence
+
+-   Les relations entre les groupes de variables
+
+-   Equilibrer les contribution de chaque groupe de variables
+:::
+
+::: {.column width="49%"}
+### Première idée
+
+-   Rééquilibrer les variables entre groupes en attribuant à chaque
+    variable $k$ du groupe $i$ un poids $1/n_k$, où $n_k$ est le nombre de variables dans le groupe $k$.
+:::
+:::::
+
+## Illustration
+
+::: panel-tabset
+### Le Doubs
+
+::::: columns
+::: {.column width="49%"}
+
+```{r}
+#| echo: false
+#| message: false
+#| fig-cap: "ACP normée" 
+#| label: doubs_1ACP
+doubs_pca <- PCA(doubs.env, graph = FALSE, ncp = ncol(doubs.env))
+plot(doubs_pca, choix = "var")
+```
+
+```{r doubs_1ACP_group}
+#| echo: false
+#| message: false
+#| fig-cap: "ACP sur les données réduites en prenant un poids $1/n_k$ pour les variables du groupe $k$" 
+#| label: acp_nk 
+
+doubs.env_normgroup <- scale((doubs.env)) 
+weight_group <- diag(sqrt(c(rep(1/4, 4),rep(1/5,5), rep(1/2, 2))))*sqrt(3)
+dta <- doubs.env_normgroup %*% weight_group  |> as.data.frame()
+colnames(dta) = colnames(doubs.env)
+doubs_pca_normgroup <- PCA(dta, scale.unit = FALSE, graph = FALSE, ncp = ncol(doubs.env))
+plot(doubs_pca_normgroup, choix = "var")
+```
+:::
+
+::: {.column width="49%"}
+
+
+### Poids des groupes de variables (variance préservée )
+
+
+```{r}
+#| echo: false
+#| label: weight_var
+#| 
+vp1 <- svd(doubs.env_scaled[,1:4])$d
+vp2 <- svd(doubs.env_scaled[,5:9])$d
+vp3 <- svd(doubs.env_scaled[,10:11])$d
+
+valeurs_propres <- data.frame(Physique = svd(doubs.env_scaled[,1:4])$d[1:3], 
+                              Chimique = svd(doubs.env_scaled[,5:9])$d[1:3], 
+                              Ecologique = c(svd(doubs.env_scaled[,10:11])$d[1:2],NA) 
+) |> 
+  mutate(Methode = "ACP")
+
+valeurs_propres_nk <- data.frame(Physique = svd(doubs.env_scaled[,1:4]/sqrt(4))$d[1:3], 
+                                 Chimique = svd(doubs.env_scaled[,5:9]/sqrt(5))$d[1:3], 
+                                 Ecologique = c(svd(doubs.env_scaled[,10:11]/sqrt(2))$d[1:2],NA) 
+) |>   
+  mutate(Methode = "n_k")
+
+valeurs_propres_afm <- data.frame(Physique = svd(doubs.env_scaled[,1:4]/vp1[1])$d[1:3], 
+                                  Chimique = svd(doubs.env_scaled[,5:9]/vp2[1])$d[1:3], 
+                                  Ecologique = c(svd(doubs.env_scaled[,10:11]/vp3[1])$d[1:2],NA) 
+) |> 
+  mutate(Methode = "AFM")
+
+
+valeurs_propres |> bind_rows(valeurs_propres_nk) |> 
+  mutate(across(where(is.numeric), ~round(.x, 1))) |> 
+  select(Methode, Physique, Chimique, Ecologique) 
+
+```
+
+
+
+### Contribution des variables aux différents axes
+
+```{r}
+#| echo: false
+#| message: false
+#| label: doubs_contrib
+#| 
+comp <- doubs_pca$var$contrib[,1:2]
+comp |> as.data.frame() |> 
+  rename(Dim.1_acp = Dim.1, Dim.2_acp = Dim.2) |> 
+  bind_cols(doubs_pca_normgroup$var$contrib[,1:2]) |> 
+  rename(Dim.1_nk = Dim.1, Dim.2_nk = Dim.2) 
+```
+
+:::
+
+::::
+
+### Première idée
+
+-   Rééquilibrer les variables entre groupes en attribuant à chaque
+    variable $k$ du groupe $i$ un poids $1/n_k$, où $n_k$ est le nombre de variables dans le groupe $k$.
+
+[Problème]{.rouge}
+
+* les deux variables écologiques sont presque parfaitement corrélées, l'information qu'elles portent se résume très bien avec un seul axe. Ainsi cet axe porte presque la même information que l'ensemble des variables, elles  ont donc beaucoup de poids dans la création des axes finaux. 
+
+* Les variables chimiques (pH, dureté, phosphate, nitrite et ammoniaque) sont moins corélées, l'information qu'elles portent se diffusent sur plusieurs axes et donc le poids de ces variables est réparti sur plusieurs axes.
+
+[La première idée n'est pas toujours la bonne !]{.rouge} 
+
+On souhaiterait que l'axe résume aussi bien les différents types de variable, et donc que chaque groupe de variable ait un poids 1 pour le premier axe.
+
+:::
+
+
+## L'AFM en pratique
+
+
+Pour chaque groupe de variable $k$,
+
+* On calcule la 1ère valeur propre $\lambda_{k1}$ du groupe de variable $k$, (chaque variable ayant été normée) 
+* On réalise l'ACP  globale sur le tableau pondéré :
+
+\begin{align}
+X & = \begin{pmatrix}
+\class{bleu}{\frac{X^{1}_1}{\lambda_{11}}} & \class{bleu}{\frac{X^{2}_1}{\lambda_{11}}}  &  \class{bleu}{\frac{X^{3}_1}{\lambda_{11}}} & \class{orange}{\frac{X^{4}_1}{\lambda_{21}}}& \class{orange}{\frac{X^{5}_1}{\lambda_{21}}} & \class{vert}{\frac{X^{6}_1}{\lambda_{31}}}& \class{vert}{\frac{X^{7}_1}{\lambda_{31}}} \\
+\class{bleu}{\vdots} & \class{bleu}{\vdots}  &  \class{bleu}{\vdots} & \class{orange}{\vdots}& \class{orange}{\vdots} & \class{vert}{\vdots}& \class{vert}{\vdots} \\
+\class{bleu}{\frac{X^{1}_n}{\lambda_{11}}} & \class{bleu}{\frac{X^{2}_n}{\lambda_{11}}}  &  \class{bleu}{\frac{X^{3}_n}{\lambda_{11}}} & \class{orange}{\frac{X^{4}_n}{\lambda_{21}}} & \class{orange}{\frac{X^{5}_n}{\lambda_{21}}} & \class{vert}{\frac{X^{6}_n}{\lambda_{31}}}& \class{vert}{\frac{X^{7}_n}{\lambda_{31}}} \\
+\end{pmatrix}\\
+ & = \begin{pmatrix}
+\class{bleu}{\frac{\boldsymbol{X^{1}}}{\lambda_{11}}} &  \class{orange}{\frac{\boldsymbol{X^{2}}}{\lambda_{21}}}  & \class{vert}{\frac{\boldsymbol{X^{3}}}{\lambda_{31}}} \\
+\end{pmatrix}\\
+\end{align}
+
+
+On a ainsi la pondération 
+
+
+```{r}
+#| echo: false
+#| label: weight_afm
+
+valeurs_propres |> 
+  bind_rows(valeurs_propres_nk) |> 
+  bind_rows(valeurs_propres_afm) |>  
+  mutate(across(where(is.numeric), ~round(.x, 1))) |> 
+  select(Methode, Physique, Chimique, Ecologique) 
+
+```
+
+## L'AFM : une ACP Particulière
+
+Finalement dans une AFM, on étudie
+
+* le nuage de points $\boldsymbol{X}$,
+* Les points sont potentiellement pondérés avec lamatrice de poids  $W \in \R^{n\times n}$,
+* on utilise la mérique 
+$$M = Diag\left (\frac{1}{s_1 \lambda_{g_1},\ldots ,\frac{1}{s_p \lambda_{g_p} \right)$$
+où Diag désigne la matrice diagonale, le terme $i$ est donné par  $\frac{1}{s_i \lambda_{g_i},$ $s_i$ est l'écart type de la variable $i$ et $\lambda_{g_i}$ est la première valeur propre du groupe de variable auquel appartient la variable  $i$.
+
+On a notre tryptique 
+$$(X, W, M)$$
+
+
+
+## En pratique 
+
+```{r}
+#| message: false
+#| label: doubs_mfa
+#| echo: true
+#| output-location: column
+#| results: hold
+
+doubs_mfa <- MFA(doubs.env, 
+    group = c(4, 5, 2), # un vecteur qui spécifie le nombre de variable dans chaque groupe. Les variables doivent être organisées comme il faut
+    type = rep("s", 3), # pour indiquer que ce sont de svariables quanti que l'on souhaite normaliser et ce pour chaque groupe
+    ncp=11, # on garde tous les axes
+    name.group=c("Physique","Chimique","Ecologique"), graph = FALSE)
+#summary(doubs_mfa)
+# library(Factoshiny)
+# MFAshiny(doubs_mfa)
+
+```
+
+# Bilan
+
+## Ce que vous pensez devoir retenir
+
+A construire ensemble
