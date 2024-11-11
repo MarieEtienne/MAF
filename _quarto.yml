@@ -21,6 +21,8 @@ website:
         menu: 
           - href: 01_intro.qmd
           - href: 01_acp.qmd
+          - href: 01_afm.qmd
+
       - text: "TP"
         menu: 
           - href: TP1.qmd
