@@ -362,10 +362,10 @@ valeurs_propres |>
 Finalement dans une AFM, on étudie
 
 * le nuage de points $\boldsymbol{X}$,
-* Les points sont potentiellement pondérés avec lamatrice de poids  $W \in \R^{n\times n}$,
+* Les points sont potentiellement pondérés avec la matrice de poids  $W \in \R^{n\times n}$,
 * on utilise la mérique 
-$$M = Diag\left (\frac{1}{s_1 \lambda_{g_1},\ldots ,\frac{1}{s_p \lambda_{g_p} \right)$$
-où Diag désigne la matrice diagonale, le terme $i$ est donné par  $\frac{1}{s_i \lambda_{g_i},$ $s_i$ est l'écart type de la variable $i$ et $\lambda_{g_i}$ est la première valeur propre du groupe de variable auquel appartient la variable  $i$.
+$$M = Diag\left (\frac{1}{s_1 \lambda_{c_1},\ldots ,\frac{1}{s_p \lambda_{c_p} \right)$$
+où Diag désigne la matrice diagonale, le terme $i$ est donné par  $\frac{1}{s_i \lambda_{c_i},$ $s_i$ est l'écart type de la variable $i$ et $\lambda_{c_i}$ est la première valeur propre de la classe à laquelle appartient la variable  $i$.
 
 On a notre tryptique 
 $$(X, W, M)$$
