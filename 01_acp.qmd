@@ -152,8 +152,9 @@ variables sont centrées.
 :::::: panel-tabset
 ### Dans R on ferait
 
-```{r PCA_manchots_1, eval = TRUE, echo = TRUE}
+```{r PCA_manchots_1}
 #| echo: true
+#| eval: true
 #| output-location: column
 #| results: hold
 #| message: false
@@ -1517,6 +1518,50 @@ sen servir comme une technique de compression (avec perte). Il suffit de
 ne garder que les première composantes principales.
 
 [L'exemple sur une image](ACP_images.html)
+
+
+# Point Technique
+
+## Matrice d'inertie
+
+:::: columns
+::: {.column width="49%"}
+
+### Revisiter l'inertie 
+
+L'inertie du nuage de points est définie comme 
+$$I = \sum_{i=1}^n w_i \norm{\class{alea}{x_i} -\boldsymbol{g}}^2_M$$
+On a considéré des variables centrées donc $\boldsymbol{g} = \boldsymbol{0}$.
+
+* Or 
+
+\begin{align}
+ I = & \sum_{i=1}^n w_i x_i^\top M x_i = tr(\sum_{i=1}^n w_i x_i^\top M x_i ) \\
+   = & tr(\sum_{i=1}^n M x_i w_i x_i^\top ) \quad \text{(commutatitvité de la trace)} \\
+   = & tr(M \sum_{i=1}^n  x_i w_i x_i^\top )\\
+   = & tr(M X^\top W X)\\
+   = & tr( X^\top W X M)\\
+   = & tr( V M)\\
+   
+\end{align}
+
+* Ainsi l'inertie est la trace de la matrice $VM$, avec $V=  X^\top W X.$ 
+
+:::
+
+::: {.column width="49%"}
+
+### Exemple sur les cas présentés
+
+* Dans le cas de l'ACP, la matrice $V$ est la matrice de covariance et $M = Id$,
+
+* Dans le cas de l'ACP normée , la matrice $V$ est la matrice de covariance et $M = Diag(s_k^{-1})$,
+
+
+:::
+
+::::
+
 
 # Bilan
 
