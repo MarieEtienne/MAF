@@ -4,3 +4,15 @@
 .Ruserdata
 
 /.quarto/
+TP1_cache/
+TP1_files/
+*.aux
+*ps
+*.dvi
+*synctex.gz
+
+
+_site/
+_freeze/
+*_cache/
+*_files/
