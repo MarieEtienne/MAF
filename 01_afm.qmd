@@ -170,7 +170,7 @@ head(vins, n= 4)
 -   descripteurs sensoriels : acidité, amertume, odeur agrume, etc.
 -   description sensorielle de 3 jurys : [oenologue]{.rouge},
     [consommateurs]{.orange}, [étudiant]{.bleu}
--   notes hédoniques de 60 consommateurs : \[appréciation globale\]{.
+-   notes hédoniques de 60 consommateurs : [appréciation globale]{.
     vert}
 
 Au total 118 variables, dont 60 sont des notes hédoniques
@@ -195,7 +195,7 @@ X & = \begin{pmatrix}
 \end{pmatrix}\\
  & = \begin{pmatrix}
 \class{bleu}{\boldsymbol{X^{1}}} &  \class{orange}{\boldsymbol{X^{2}}}  & \class{vert}{\boldsymbol{X^{3}}} \\
-\end{pmatrix}\\
+\end{pmatrix}
 \end{align}
 
 On souhaite mettre en évidence
@@ -332,12 +332,12 @@ Pour chaque groupe de variable $k$,
 
 \begin{align}
 X & = \begin{pmatrix}
-\class{bleu}{\frac{X^{1}_1}{\lambda_{11}}} & \class{bleu}{\frac{X^{2}_1}{\lambda_{11}}}  &  \class{bleu}{\frac{X^{3}_1}{\lambda_{11}}} & \class{orange}{\frac{X^{4}_1}{\lambda_{21}}}& \class{orange}{\frac{X^{5}_1}{\lambda_{21}}} & \class{vert}{\frac{X^{6}_1}{\lambda_{31}}}& \class{vert}{\frac{X^{7}_1}{\lambda_{31}}} \\
+\class{bleu}{\frac{X^{1}_1}{\sqrt{\lambda_{11}}}} & \class{bleu}{\frac{X^{2}_1}{\sqrt{\lambda_{11}}}}  &  \class{bleu}{\frac{X^{3}_1}{\sqrt{\lambda_{11}}}} & \class{orange}{\frac{X^{4}_1}{\sqrt{\lambda_{21}}}} & \class{orange}{\frac{X^{5}_1}{\sqrt{\lambda_{21}}}} & \class{vert}{\frac{X^{6}_1}{\sqrt{\lambda_{31}}}}& \class{vert}{\frac{X^{7}_1}{\sqrt{\lambda_{31}}}} \\
 \class{bleu}{\vdots} & \class{bleu}{\vdots}  &  \class{bleu}{\vdots} & \class{orange}{\vdots}& \class{orange}{\vdots} & \class{vert}{\vdots}& \class{vert}{\vdots} \\
-\class{bleu}{\frac{X^{1}_n}{\lambda_{11}}} & \class{bleu}{\frac{X^{2}_n}{\lambda_{11}}}  &  \class{bleu}{\frac{X^{3}_n}{\lambda_{11}}} & \class{orange}{\frac{X^{4}_n}{\lambda_{21}}} & \class{orange}{\frac{X^{5}_n}{\lambda_{21}}} & \class{vert}{\frac{X^{6}_n}{\lambda_{31}}}& \class{vert}{\frac{X^{7}_n}{\lambda_{31}}} \\
+\class{bleu}{\frac{X^{1}_n}{\sqrt{\lambda_{11}}}} & \class{bleu}{\sqrt{\frac{X^{2}_n}{\lambda_{11}}}}  &  \class{bleu}{\frac{X^{3}_n}{\lambda_{11}}} & \class{orange}{\frac{X^{4}_n}{\lambda_{21}}} & \class{orange}{\frac{X^{5}_n}{\sqrt{\lambda_{21}}}} & \class{vert}{\sqrt{\frac{X^{6}_n}{\lambda_{31}}}}& \class{vert}{\frac{X^{7}_n}{\lambda_{31}}} \\
 \end{pmatrix}\\
  & = \begin{pmatrix}
-\class{bleu}{\frac{\boldsymbol{X^{1}}}{\lambda_{11}}} &  \class{orange}{\frac{\boldsymbol{X^{2}}}{\lambda_{21}}}  & \class{vert}{\frac{\boldsymbol{X^{3}}}{\lambda_{31}}} \\
+\class{bleu}{\frac{\boldsymbol{X^{1}}}{\sqrt{\lambda_{11}}}} &  \class{orange}{\frac{\boldsymbol{X^{2}}}{\sqrt{\lambda_{21}}}}  & \class{vert}{\frac{\boldsymbol{X^{3}}}{\sqrt{\lambda_{31}}}} \\
 \end{pmatrix}\\
 \end{align}
 
@@ -364,8 +364,9 @@ Finalement dans une AFM, on étudie
 * le nuage de points $\boldsymbol{X}$,
 * Les points sont potentiellement pondérés avec la matrice de poids  $W \in \R^{n\times n}$,
 * on utilise la mérique 
-$$M = Diag\left (\frac{1}{s_1 \lambda_{c_1},\ldots ,\frac{1}{s_p \lambda_{c_p} \right)$$
-où Diag désigne la matrice diagonale, le terme $i$ est donné par  $\frac{1}{s_i \lambda_{c_i},$ $s_i$ est l'écart type de la variable $i$ et $\lambda_{c_i}$ est la première valeur propre de la classe à laquelle appartient la variable  $i$.
+$$M = Diag\left (\frac{1}{s_1^2 \lambda_{c_1}},\ldots ,\frac{1}{s_p^2 \lambda_{c_p}} \right)$$
+
+où Diag désigne la matrice diagonale, le terme $i$ est donné par  $\frac{1}{s_i^2 \lambda_{c_i},}$ $s_i$ est l'écart type de la variable $i$ et $\lambda_{c_i}$ est la première valeur propre de la classe à laquelle appartient la variable  $i$.
 
 On a notre tryptique 
 $$(X, W, M)$$
@@ -385,7 +386,7 @@ doubs_mfa <- MFA(doubs.env,
     group = c(4, 5, 2), # un vecteur qui spécifie le nombre de variable dans chaque groupe. Les variables doivent être organisées comme il faut
     type = rep("s", 3), # pour indiquer que ce sont de svariables quanti que l'on souhaite normaliser et ce pour chaque groupe
     ncp=11, # on garde tous les axes
-    name.group=c("Physique","Chimique","Ecologique"), graph = FALSE)
+    name.group=c("Physique","Chimique","Ecologique"), graph = TRUE)
 #summary(doubs_mfa)
 # library(Factoshiny)
 # MFAshiny(doubs_mfa)
@@ -396,4 +397,13 @@ doubs_mfa <- MFA(doubs.env,
 
 ## Ce que vous pensez devoir retenir
 
-A construire ensemble
+On *choisit* de faire une AFM si  on veut mettre l'accent sur les liens entre les groupes de variables
+
+* Pour ce faire, on veut  que chaque groupe contribue de la même manière à construire  des premmiers axes principaux 
+
+* Pour normaliser l'importance de chaque groupe, on calcule la première valeur propre de chaque groupe et on normalise les données par la racine de cette vp, ou de manière équivalente on prend une métrique $M£ dans maquelle le terme $M_{ii}$ contient la première valeur propre du groupe de variables auquel appartient $i$.
+
+
+La méthode est proche de l'ACP, c'est une ACP avec une métrique particulière. 
+
+On va inetrpéter les relations entre les groupes de variables.
