@@ -155,9 +155,9 @@ On a considéré des variables centrées donc $\boldsymbol{g} = \boldsymbol{0}$.
 
 * Dans le cas de l'ACP, la matrice $V$ est la matrice de covariance et $M = Id$,
 
-* Dans le cas de l'ACP normée , la matrice $V$ est la matrice de covariance et $M = Diag(s_k^{-1})$,
+* Dans le cas de l'ACP normée , la matrice $V$ est la matrice de covariance et $M = Diag(s_k^{-2})$,
 
-* Dans le cas de l'AFM, la matrice $V$ est la matrice de covariance et $M = Diag( s_k^{-1} \lambda_{c_k}^{-1})$.
+* Dans le cas de l'AFM, la matrice $V$ est la matrice de covariance et $M = Diag( s_k^{-2} \lambda_{c_k}^{-1})$.
 
 :::
 
@@ -165,7 +165,7 @@ On a considéré des variables centrées donc $\boldsymbol{g} = \boldsymbol{0}$.
 
 L'inertie du nuage est la *trace de la matrice d'inertie*.
 
-[Trouver les axes principaux dans ces méthodes se résume à trouver les vecteurs propres de  $MVM$]{.rouge}
+[Trouver les axes principaux dans ces méthodes se résume à trouver les vecteurs propres de  $VM$]{.rouge}
 
 ## Matrice d'inertie dans l'AFD
 
@@ -251,6 +251,16 @@ $$u_1^T  (MV_TM)^{-1} M V_B M  u_1= u_1^T M^{-1} V_T^{-1} V_B M u_1 $$
 ::::
 
 On cherche donc les vecteurs propres de  $M^{-1} V_T^{-1} V_B M$
+
+
+## L'AFD = une méthode factorielle
+
+
+Si $u_1$ est vecteur propre de $M^{-1} V_T^{-1} V_B M$, donc
+$$M^{-1} V_T^{-1} V_B M u_1 = \lambda_1 u_1  \quad \text{ i .e} \quad V_T^{-1} V_B M u_1  = \lambda_1  M u_1 $$
+
+Dans une ACP, on fait une décomposition de $V_T M$
+
 
 
 
