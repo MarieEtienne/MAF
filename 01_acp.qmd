@@ -1487,7 +1487,7 @@ doubs.env %>% print(n=6)
 -   nit : concentration en nitrate ( $mg.L^{-1}$ ),
 -   amn : concentration en ammonium ( $mg.L^{-1}$ ),
 -   oxy : concentration d'oxygène dissous ( $mg.L^{-1}$ ),
--   dbo : Demande biologique en oxygène ( $mg.L^{-1}$ ). 
+-   dbo : Demande biologique en oxygène ( $mg.L^{-1}$ ).
 :::
 :::::
 
@@ -1519,21 +1519,20 @@ ne garder que les première composantes principales.
 
 [L'exemple sur une image](ACP_images.html)
 
-
 # Point Technique
 
 ## Matrice d'inertie
 
-:::: columns
+::::: columns
 ::: {.column width="49%"}
+### Revisiter l'inertie
 
-### Revisiter l'inertie 
+L'inertie du nuage de points est définie comme
+$$I = \sum_{i=1}^n w_i \lVert\class{alea}{x_i} -\boldsymbol{g}\rVert^2_M$$
+On a considéré des variables centrées donc
+$\boldsymbol{g} = \boldsymbol{0}$.
 
-L'inertie du nuage de points est définie comme 
-$$I = \sum_{i=1}^n w_i \norm{\class{alea}{x_i} -\boldsymbol{g}}^2_M$$
-On a considéré des variables centrées donc $\boldsymbol{g} = \boldsymbol{0}$.
-
-* Or 
+-   Or
 
 \begin{align}
  I = & \sum_{i=1}^n w_i x_i^\top M x_i = tr(\sum_{i=1}^n w_i x_i^\top M x_i ) \\
@@ -1544,27 +1543,46 @@ On a considéré des variables centrées donc $\boldsymbol{g} = \boldsymbol{0}$.
    = & tr( V M)\\
    
 \end{align}
-
-* Ainsi l'inertie est la trace de la matrice $VM$, avec $V=  X^\top W X.$ 
-
 :::
 
 ::: {.column width="49%"}
-
 ### Exemple sur les cas présentés
 
-* Dans le cas de l'ACP, la matrice $V$ est la matrice de covariance et $M = Id$,
+-   Dans le cas de l'ACP, la matrice $V$ est la matrice de covariance et
+    $M = Id$,
 
-* Dans le cas de l'ACP normée , la matrice $V$ est la matrice de covariance et $M = Diag(s_k^{-1})$,
-
-
+-   Dans le cas de l'ACP normée , la matrice $V$ est la matrice de
+    covariance et $M = Diag(s_k^{-2})$,
 :::
-
-::::
-
+:::::
 
 # Bilan
 
 ## Ce que vous pensez devoir retenir
 
-A construire ensemble
+-   l'ACP permet de mettre en valeur l'information principale contenu
+    dans un jeu de données
+
+    -   les relations entre variables
+    -   les proximités entre individus
+
+-   Cette méthode permet d'obtenir une projection sur queluqes axes
+    indépendants et bien choisis, au sens ou ils résument le mieux
+    l'information
+
+-   Techniquement l'ACP consiste à diagonaliser la matrice de covariance
+
+-   Les axes sont définis par les vecteurs propres de la matrice\
+    $$ X^\top W X$$
+
+-   Ils sont rangés par ordre d'importance décroissante, au sens où le
+    premier est celui qui préserve le plus l'inertie du nuage projeté
+    (i.e a la plus grande valeur propre)
+
+-   Il faut adapter la métrique au probleme
+
+-   l'information portée par un axe est mesurée par la valeur propre
+    associé à l'axe
+
+-   il faut savoir interpréter le nuage des individus, éclairés par les
+    liens entre axes principaux et anciennes variables
