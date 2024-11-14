@@ -572,7 +572,7 @@ Les données sont disponibles dans le package `FactoMineR` et peuvent etre charg
 
 ## Plan de l'étude 
 
-* Une étude descriptive simple et bivariée pour identifier des individus atypiques, les varaibles les plus corrélées. 
+* Une étude descriptive simple et bivariée pour identifier des individus atypiques, les variables les plus corrélées. 
 * Mettre en place une ACP
   * Bien réfléchir aux variables actives et supplémentaires
   * Choisir la métrique adaptée et les poids des individus.
