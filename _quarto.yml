@@ -1,4 +1,7 @@
 project:
+  render: 
+    - "*.qmd"
+    - "!TP_MAF_exemple.qmd"
   type: website
 
 website:
