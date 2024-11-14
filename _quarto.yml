@@ -1,8 +1,7 @@
 project:
-  type: website
-    render:
-      - "*.qmd"
-      - "!TP_MAF_exemple.qmd"
+  render:
+    - "*.qmd"
+    - "!TP_MAF_exemple.qmd"
 
 website:
   title: "Méthodes d'analyse factorielle"
