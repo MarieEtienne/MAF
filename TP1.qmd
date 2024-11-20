@@ -172,20 +172,20 @@ Cette commande crée une version finalisée du document dans le format spécifi�
 
 Avec Quarto on peut tout autant faire des slides, des rapports en pdf, en word etc. Ceci permet de s'assurer que les résulats présentés sont ceux de l'analyse et c'est un *premier pas important dans le sens d'assurer plus de reproductibilité en science*. (d'autres outils sont utiles voir [ici](https://marieetienne.github.io/reproductibilite/_presentation/#1) )
 
-C'est très utile en TP puisque vous pouvez commentez les analyses proposés, les résultats obtenus directement dans le TP.
+C'est très utile en TP puisque vous pouvez commenter les analyses proposées, les résultats obtenus directement dans le fichier qui contient les codes permettant d'obetenir ces résultats.
 
 
 Plus largement, en suivant cette structure, vous pouvez organiser vos analyses de manière professionnelle et claire.
 
 ### Création du document
 
-Lors de la mise en place de l'analyse, on peut éxécuter chaque chunk avec le raccourci CTL + Enter, ou en cliquant sur la petite flèxche verte en haut à droit du chunk.
+Lors de la mise en place de l'analyse, on peut éxécuter chaque chunk avec le raccourci CTL + Enter, ou en cliquant sur la petite flèxche verte en haut à droite du chunk.
 
 
 # Analyse des caractéristiques géochimiques des sols en forêt de Bornéo
 
 
-Il s'agit ici de carcatériser les propriétés physico chimiques des sols. Pour ceci on a prélevé des échantillons dans diffférentes forêts de Borneo et on cherche à mettre en évidence des typologies de sols et à identifier des prélèvements qui se ressemblent. Les données consistent en la mesure de caractéristiques géochimiques de sols dans une forêt pluviale de Bornéo et sont issues de @sellan2021differences.
+Il s'agit ici de carcatériser les propriétés physico chimiques des sols en forêt à Bornéo. Pour ceci on a prélevé des échantillons de sol, à diverses profondeurs et on cherche à mettre en évidence des typologies de sols et à identifier des sites de prélèvement qui se ressemblent. Les données consistent en la mesure de caractéristiques géochimiques de sols dans une forêt pluviale de Bornéo et sont issues de @sellan2021differences.
 
 ## Comprendre les données
 
@@ -253,7 +253,35 @@ donnees_sols |> group_by(Site, Profondeur) |> count()
 * Sont-ils tous prélevés à la même profondeur ?
 
 * Quel est le pH moyen tout site/Sol et Profondeur confondu ?
+* Chercher le sens de chaque variable.
+ * Av.P Phospore disponible
+ * C  Carbone
+ * N  Azote
+ * NO3 Nitrate
+ * NH4 Amonium
+ * Exc.Ac Actinium Echangeable
+ * Exc.Al Aluminium Echangeable 
+ * Exc.Ca Calcium Echangeable
+ * Exc.Mg Magnésium 2changeable 
+ * Exc.K Potassium échangeable
+ * Exc.Na Sodium échangeable
+ * Exc.Cations Cations (ions chargés positivement) échangeables 
+ * SatBase [Taux de Saturation du sol](https://fr.wikipedia.org/wiki/Taux_de_saturation_du_sol)
+ * Argile pourcentage d'argile dans le sol,
+ * Limon pourcentage de Limon dans le sol,
+ * Sable pourcentage de sable dans le sol.
+ 
+ 
+ 
 * Quelle la variance de la teneur en Eau ? Quelle est la variance de la teneur en Sodium (Na) ?
+
+```{r}
+#| label: variance
+#| echo: false
+#| include: false
+donnees_sols |> summarize(Eau_var = var(Eau), Na_var = var(Exc.Na)) 
+```
+
 
 ### Représentation bivariée
 
