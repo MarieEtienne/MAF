@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Marie-Pierre Etienne">
-<meta name="dcterms.date" content="2024-11-14">
+<meta name="dcterms.date" content="2024-11-20">
 
 <title>Labs1 - Analyse en composante Principale – Méthodes d’analyse factorielle</title>
 <style>
@@ -323,7 +323,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">November 14, 2024</p>
+      <p class="date">November 20, 2024</p>
     </div>
   </div>
   
@@ -405,18 +405,18 @@ window.Quarto = {
 <p>Une fois le document terminé, on peut le rendre dans le format souhaité en utilisant la commande suivante dans le terminal <code>quarto render mon_document.qmd</code>ou en cliquant sur Render dans RStudio.</p>
 <p>Cette commande crée une version finalisée du document dans le format spécifié (HTML, PDF, etc.).</p>
 <p>Avec Quarto on peut tout autant faire des slides, des rapports en pdf, en word etc. Ceci permet de s’assurer que les résulats présentés sont ceux de l’analyse et c’est un <em>premier pas important dans le sens d’assurer plus de reproductibilité en science</em>. (d’autres outils sont utiles voir <a href="https://marieetienne.github.io/reproductibilite/_presentation/#1">ici</a> )</p>
-<p>C’est très utile en TP puisque vous pouvez commentez les analyses proposés, les résultats obtenus directement dans le TP.</p>
+<p>C’est très utile en TP puisque vous pouvez commenter les analyses proposées, les résultats obtenus directement dans le fichier qui contient les codes permettant d’obetenir ces résultats.</p>
 <p>Plus largement, en suivant cette structure, vous pouvez organiser vos analyses de manière professionnelle et claire.</p>
 </section>
 <section id="création-du-document" class="level3">
 <h3 class="anchored" data-anchor-id="création-du-document">Création du document</h3>
-<p>Lors de la mise en place de l’analyse, on peut éxécuter chaque chunk avec le raccourci CTL + Enter, ou en cliquant sur la petite flèxche verte en haut à droit du chunk.</p>
+<p>Lors de la mise en place de l’analyse, on peut éxécuter chaque chunk avec le raccourci CTL + Enter, ou en cliquant sur la petite flèxche verte en haut à droite du chunk.</p>
 </section>
 </section>
 </section>
 <section id="analyse-des-caractéristiques-géochimiques-des-sols-en-forêt-de-bornéo" class="level1">
 <h1>Analyse des caractéristiques géochimiques des sols en forêt de Bornéo</h1>
-<p>Il s’agit ici de carcatériser les propriétés physico chimiques des sols. Pour ceci on a prélevé des échantillons dans diffférentes forêts de Borneo et on cherche à mettre en évidence des typologies de sols et à identifier des prélèvements qui se ressemblent. Les données consistent en la mesure de caractéristiques géochimiques de sols dans une forêt pluviale de Bornéo et sont issues de <span class="citation" data-cites="sellan2021differences">Sellan et al. (<a href="#ref-sellan2021differences" role="doc-biblioref">2021</a>)</span>.</p>
+<p>Il s’agit ici de carcatériser les propriétés physico chimiques des sols en forêt à Bornéo. Pour ceci on a prélevé des échantillons de sol, à diverses profondeurs et on cherche à mettre en évidence des typologies de sols et à identifier des sites de prélèvement qui se ressemblent. Les données consistent en la mesure de caractéristiques géochimiques de sols dans une forêt pluviale de Bornéo et sont issues de <span class="citation" data-cites="sellan2021differences">Sellan et al. (<a href="#ref-sellan2021differences" role="doc-biblioref">2021</a>)</span>.</p>
 <section id="comprendre-les-données" class="level2">
 <h2 class="anchored" data-anchor-id="comprendre-les-données">Comprendre les données</h2>
 <section id="importation" class="level3">
@@ -439,6 +439,23 @@ window.Quarto = {
 <li><p>Combien d’échantillons sont mesurés par site ?</p></li>
 <li><p>Sont-ils tous prélevés à la même profondeur ?</p></li>
 <li><p>Quel est le pH moyen tout site/Sol et Profondeur confondu ?</p></li>
+<li><p>Chercher le sens de chaque variable.</p></li>
+<li><p>Av.P Phospore disponible</p></li>
+<li><p>C Carbone</p></li>
+<li><p>N Azote</p></li>
+<li><p>NO3 Nitrate</p></li>
+<li><p>NH4 Amonium</p></li>
+<li><p>Exc.Ac Actinium Echangeable</p></li>
+<li><p>Exc.Al Aluminium Echangeable</p></li>
+<li><p>Exc.Ca Calcium Echangeable</p></li>
+<li><p>Exc.Mg Magnésium 2changeable</p></li>
+<li><p>Exc.K Potassium échangeable</p></li>
+<li><p>Exc.Na Sodium échangeable</p></li>
+<li><p>Exc.Cations Cations (ions chargés positivement) échangeables</p></li>
+<li><p>SatBase <a href="https://fr.wikipedia.org/wiki/Taux_de_saturation_du_sol">Taux de Saturation du sol</a></p></li>
+<li><p>Argile pourcentage d’argile dans le sol,</p></li>
+<li><p>Limon pourcentage de Limon dans le sol,</p></li>
+<li><p>Sable pourcentage de sable dans le sol.</p></li>
 <li><p>Quelle la variance de la teneur en Eau ? Quelle est la variance de la teneur en Sodium (Na) ?</p></li>
 </ul>
 </section>
