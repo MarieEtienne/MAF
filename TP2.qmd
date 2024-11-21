@@ -1,0 +1,260 @@
+---
+title: "Labs2 - Analyse en composante Principale et au-delà"
+author:
+  - name: Marie-Pierre Etienne
+    affiliation: 
+      - ENSAI - CREST
+    email: marie-pierre.etienne@ensai.fr
+date: "Last updated on `r format(Sys.time(), '%d %B, %Y')`"
+institute: https://marieetienne.github.io/MAF/
+bibliography: TPs.bib
+execute: 
+  freeze: true
+editor: 
+  markdown: 
+    wrap: 72
+css: mpe_pres_revealjs.css
+---
+
+
+
+```{r setup, include=FALSE, eval = TRUE}
+library(tidyverse)
+knitr::opts_chunk$set(echo = FALSE, comment = NA, cache = TRUE, message = FALSE,
+                      warning = FALSE, eval = FALSE,
+                      fig.align = "center")
+theme_set(theme_minimal())
+options(ggplot2.discrete.colour=   scale_color_manual(values = wesanderson::wes_palette(name = "Darjeeling1")) )
+couleur <-  wesanderson::wes_palette(name = "Darjeeling1")
+scale2 <- function(x, na.rm = FALSE) (x - mean(x, na.rm = na.rm)) / ( sqrt((length(x)-1) / length(x)) *sd(x, na.rm) )
+
+```
+
+::: hidden
+\$\$
+
+\newcommand\R{{\mathbb{R}}}
+\newcommand\Xbf{{\boldsymbol{X}}}
+\newcommand\norm[1]{\lVert#1\rVert}
+\newcommand\xcol[1]{\boldsymbol{x}^{#1}}
+\newcommand\xrow[1]{\boldsymbol{x}_{#1}}
+\newcommand\xbf{\boldsymbol{x}}
+\newcommand\ybf{\boldsymbol{y}}
+
+\$\$
+:::
+
+
+# Le jour du dépassement
+
+## Description des données
+
+Le jeu de données utilisé dans ce laboratoire provient du [site web de Global Footprint Network](https://www.footprintnetwork.org/licenses/public-data-package-free/).  Il contient les résultats d'empreinte écologique et de biocapacité pour 184 pays.
+
+### Quelques définitions
+
+Le calcul de l'empreinte écologique et de la biocapacité nous aide à répondre à la question de recherche fondamentale : Quelle est la demande des êtres humains envers les surfaces biologiquement productives (empreinte écologique) par rapport à la quantité que la planète (ou la surface productive d'une région) peut régénérer sur ces surfaces (biocapacité) ?
+
+ - Hectare global (gha) : C'est l'unité choisie pour exprimer toutes les quantités d'intérêt concernant la consommation/émission de carbone. Une unité de surface correspondant à la productivité moyenne d'un hectare de terres mondiales. Un hectare de terres agricoles vaudra plus d'hectares globaux qu'un hectare de désert.
+ - Empreinte écologique (en gha par personne) : Le nombre de gha requis pour produire les besoins et absorber les déchets d'un pays.
+ - Biocapacité (en gha) : La capacité d'un pays à produire ce dont il a besoin et à absorber ses déchets (réserve écologique).
+ - Jour de dépassement : Jour de l'année où la demande d'un pays dépasse sa biocapacité annuelle.
+
+
+Des détails supplémentaires sont disponibles [ici](https://data.footprintnetwork.org/?_ga=2.237587203.280109455.1689844989-712229654.1682588383#/abouttheData)
+
+## Objectifs
+
+Les relations entre les différentes mesures de l'empreinte écologique et les caractéristiques des pays.
+
+### Chargement des Données
+
+```{r}
+#| label: load_data
+#| echo: false
+#| eval: true
+#| output: false
+# Chargement des données
+overshoot_dta <- read.table("https://marieetienne.github.io/datasets/overshootday_overview.csv", 
+                            sep = ",",
+                            header = TRUE, row.names = 1) 
+
+head(overshoot_dta)
+```
+
+### Analyse Exploratoire des Données
+
+* Pouvez vous indiquer le nombre de lignes et de colonnes 
+
+L'unité utilisé pour comparer est le Global Hectare (gha):  Unité de surface qui correspondrait à la production moyenne d'un hectare du monde.  Un hectare de champ vaudra donc plus de global hectare qu'un hectare de desert. 
+
+Le gha par personne correspondant à une production (ou cosommation) globale d'une unité, (ici un pays) divisé par le nombre d'habitants dans cette unité.
+
+Les **Variables disponibles** sont
+
+1. **life_expectancy** : Espérance de vie moyenne (années).
+2. **hdi** : Indice de développement humain.
+3. **per_capita_gdp** : PIB par habitant (USD).
+4. **region** : Région géographique.
+5. **income_group** : Catégorie de revenu (HI : Haut, UM : Moyen supérieur, LM : Moyen inférieur, LI : Faible).
+6. **pop** : Population (en millions).
+7. **total_prod** : Production totale (gha par personne) la production du pays par habitant.
+8. **total_cons** : Consommation totale (gha par personne) la consommation par habitant.
+9. **biocapacity** : La production durable (gha par personne) par habitant, ce que peut fournir le pays ramené par habitant. 
+9. **number_of_countries_required** : Nombre de pays nécessaires pour satisfaire la consommation (total_cons/biocapacity)
+10. **number_of_earths_required** : Nombre de terres dont on aurait besoin si tout le monde faisait comme dans le pays en question (nb gha par personnes du pays / 1.583 (nb de gha par habitant de la terre, ce chiffre est mis à jour chaque année))
+11. **overshoot_day** : Jour de dépassement (numéro du jour dans l'année).
+
+Plus de détails peuvent être trouvés ici \url{https://data.footprintnetwork.org/?_ga=2.237587203.280109455.1689844989-712229654.1682588383#/abouttheData}, mais on peut préciser de la manière suivante
+
+
+
+
+### Statistiques descriptives :
+
+Proposez des résumés numériques pour chaque variable, ainsi qu'une étude des corrélations.
+
+```{r}
+#| label: desc_data
+#| echo: false
+#| include: false
+
+overshoot_dta <- overshoot_dta |> 
+  mutate(across(c(region, income_group), ~as.factor(.x)))
+summary(overshoot_dta)
+```
+
+Pour le moment, on va supprimer les données manquantes (on verra par la suite comment gérer ce problème de manière plus satisfaisante). Pour ceci on peut utiliser `drop_na`du package tidyverse ou `na.omit`de R Base.
+
+```{r}
+#| label: drop_na
+#| echo: false
+#| include: false
+
+overshoot_dta <- overshoot_dta |> drop_na(overshoot_day)
+summary(overshoot_dta)
+```
+
+## Construire une ACP
+
+* Quel poids choisir pour les pays ?
+
+<!-- Si on veut faire un bilan à l'échelle de la planete il est pertinent de prendre les poids des pays proportionnels à leur population -->
+
+* Quelle Métrique choisir ?
+
+<!-- On va normaliser puisque espérance de vie n'a pas de lien avec l'empreinte écologique -->
+
+* Quelles variables met-on en variables supplémentaires
+
+<!-- Les variables qauli ici region et income_group. Le nombre de terre est parfaitement corrélée à la production par construction, le nombre de pays est fortement corrélé -->
+
+
+```{r}
+#| label: PCA
+#| include: false
+library(FactoMineR)
+library(explor)
+overshoot_pca <- PCA(overshoot_dta, scale.unit = TRUE, quali.sup = c(4,5), row.w = overshoot_dta[,6], quanti.sup = 6)
+explor(overshoot_pca)
+```
+
+
+
+* Quelle est l'inertie portée par l'axe 1 ?, l'axe 2, l'axe 3 ? 
+
+```{r}
+#| label: inertia
+overshoot_pca$eig[1:3,1]
+```
+
+
+* Commentez la qualité de la représentation sur le plan (1-2), puis (1-3). 
+<!-- Le plan 1-2 représente 86% d'inertie, tandis que le plan 1-3 en représente 74.4%. Le premier axe porte à lui seule 68.7% d'innertie. -->
+<!-- lorsque l'on fait une acp en prenant la pop en compte et sans mettre les poids, on voit que l'axe 3 est la population, c'est aussi un point de vu intéressant au sens au la population est indépendante des 2 premiers axes dans la suite on pourriat déduire qu'il y a de gros pays avec une grosse empreinte carbone mais aussi des gros pays avec une faible empreinte carbone  -->
+
+* De quelles variables nous parle l'axe 1 ? l'axe 2 ?
+pour répondre à cette question on regarde le cercle des corrélations mais aussi les contributions des variable sà la création des axes.
+
+<!-- On peut voir que l'axe 1 est quasi parfaitement anti corrélé avec le jour dudépassement et fortement corrélé au nombre de terres, à la consommation totale, la production totale. Cet axe nous parle donc bien de l'empreinte écologique. Il est aussi très corrélé positivement avec le hdi. Ce qui signifie que plus le hdi est élevé plus le nombre de terre requise est important, donc l'empreinte carbone est plus forte. Ca se confirme en regardant les contributions, les variables qui contribuent le plus sont 	total_cons	number_of_earths_required	 -->
+<!-- overshoot_day	hdi -->
+
+<!-- l'axe 2 nous parle de la biocapacité on le voit sur le cercle et du nombre de pays nécessaire. On en déduite que la biocapacité est indépendante de la consommation et de manière plus surprenante de la production.  -->
+
+<!-- Acvec une ACP sans le spoids on a des choses similaires sauf que la population arrive sur l'axe 3-->
+
+* Que pensez vous du graphe des individus ? Quels sont les individus atypiques ? Quels sont le spays les mieux représentés ?
+
+* Comment l'ACP est-elle modifiée si on retire Singapour de l'analyse ?
+
+
+```{r}
+#| label: PCA_SingapourSup
+#| echo: false
+#| include: false
+library(FactoMineR)
+library(explor)
+overshoot_pca <- PCA(overshoot_dta, scale.unit = TRUE, quali.sup = c(4,5))
+explor(overshoot_pca)
+```
+
+
+De nombreuses variables nous parle de l'empreinte écologique, et les variables nous parlant du développemnt du pays sont moins nombreuses. On peuyt rééquilibrer l'importance des varaibles avec une méthodes vu en cours, la quelle ? 
+
+<!-- C'est l'AFm bien sur -->
+
+* On souhaite identifier deux groupes de variables : les variables concernant l'empreinte carbone et les varaibles portant sur le développement du pays.
+
+* Faites 2 ACP différentes sur chacun de ces deux groupess. Quelle est la première valeur propre dans les deux cas. 
+
+* Rappelez en quoi la méthode mentionné plus haut est une ACP particulière. A partir de la fonction PCA et en utilisant l'option `col.w` mettez en oeuvre cette méthode.
+
+* On peut le faire directement, avec la fonction M̀FA `  de FactoMineR. Reprenez l'analyse précédente avec ce nouvel équilibreentre les différentes variables  équilibrés. Quelles sont les informations que vous pouvez retenir ?
+
+
+
+
+
+
+# Etude de la qualité de vie
+
+
+
+Le fichier \texttt{QteVie.csv} provient de l'OCDE et concerne des indicateurs de qualité de vie en 2015. Pour les 34 pays de l'OCDE à cette date, plus la Russie et le Brésil, on dispose de 22 indicateurs regroupés en cinq thèmes, et d'une variable qualitative correspondant à la région. Les cinq thèmes sont les suivants, on donne entre parenthèses le nombre d'indicateurs par thème: Bien-être matériel (5); Emploi (5); Satisfaction (3); Santé et sécurité (6); Enseignement (3).
+
+On souhaite identifier des similarités entre pays et plus précisément on souhaite entre autre apporter des éléments de réponse aux questions suivantes
+
+* Quels pays se ressemblent du point de vue de l'ensemble des indicateurs tous thèmes confondus ?
+* Certains pays sont-ils particuliers? 
+* Certains pays sont-ils particuliers pour un ou plusieurs thèmes? 
+* La position relative des pays les uns par rapport aux autres est-elle la même d'un groupe d'indicateurs à l'autre?
+
+## Un premier aperçu des données
+
+* Ouvrez le fichier [QteVie.csv](QteVie.csv)  pour identifier le séparateur de champs, le séparateur décimale, la présence éventuelle d'une colonne d’identifiant, la présence éventuelle de noms de colonnes, l'encodage du fichier (pour gérer les accents).
+
+
+* Importer les données sous R sans modifier le fichier csv. On souhaite conserver le nom des variables tel qu'il est dans le fichier de données (argument `check.names` ce qui nécessite de respecter l'encodage `encoding`.
+
+* Avec des statistiques univariées, identifier la présence de pays atypiques.
+* Les variables d'un même thème sont-elles corrélées?
+* Les différents thèmes sont-ils corrélés?
+
+## Choisir une  démarche d'analyse
+
+Vous disposez de différents outils pour aller au delà des analyses uni ou bivariées. Parmi ceux-ci, pouvez-vous faire un bilan rapide de différentes approches possibles et choisir celle  (ou celles) qui vous semble la (les)  plus pertinente(s) ?
+
+## Mise en oeuvre
+
+
+\noindent \textbf{Analyse factorielle multiple}\\
+L'objectif de l'Analyse Factorielle Multiple (AFM) est d'étudier des tableaux de données complexes où un même ensemble d'individus est décrit par des variables structurées en groupes et provenant éventuellement de différentes sources d'information. L'AFM équilibre l'influence de chaque groupe dans l'analyse, les variables pouvant être de nature quantitative dans un groupe et qualitative dans un autre (dans ce cas, cependant, le critère d'inertie associé est mal défini). L'AFM permet, comme l'ACP et l'ACM, d'étudier des similarités entre individus et les liaisons entre variables. Sa spécificité et sa richesse sont de prendre en compte simultanément plusieurs groupes de variables et de comparer l'information apportée par chacun de ces groupes. On utilisera la fonction \texttt{MFA} du package \texttt{FactoMineR}.
+\medskip
+
+Le fichier \texttt{QteVie.csv} provient de l'OCDE et concerne des indicateurs de qualité de vie en 2015. Pour les 34 pays de l'OCDE à cette date, plus la Russie et le Brésil, on dispose de 22 indicateurs regroupés en cinq thèmes, et d'une variable qualitative correspondant à la région. Les cinq thèmes sont les suivants, on donne entre parenthèses le nombre d'indicateurs par thème: Bien-être matériel (5); Emploi (5); Satisfaction (3); Santé et sécurité (6); Enseignement (3).
+
+On souhaite comparer les 36 pays en tenant compte de ces cinq groupes d'indicateurs. 
+
+On souhaite entre autre identifier les liens entre les thèmes, entre les variables au sein des thèmes. On souhaite aussi distinguer les pays qui se distinguent les uns des autres et plus spécifiquement comprendre ce qui les différencie. 
+
+
