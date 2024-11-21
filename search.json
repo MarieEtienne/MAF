@@ -105,32 +105,18 @@
     "text": "Organisation du cours\n\nCes méthodes ont beaucoup de points communs\nComprendre finement l’ACP permet de bien comprendre toutes les extensions suivantes\nLa mise en oeuvre requiert un peu de pratique car il faut faire des choix avisés.\n\nPlan du cours\n\nAnalyse en composante principale\n\nUn exemple d’ACP\n\nComprendre les mécanismes derrière l’ACP (notion d’inertie, distance entre individus, changement de repères, la correlation comme un cosinus)\n\nAnalyse Factorielle multiple AFM : une extension de l’ACP\nAnalyse Factorielle Discriminante : AFD\nAnalyse Factorielle des Correspondances : AFC"
   },
   {
-    "objectID": "references_linear.html",
-    "href": "references_linear.html",
+    "objectID": "references_maf.html",
+    "href": "references_maf.html",
     "title": "References",
     "section": "",
-    "text": "liste &lt;- \n  readLines('MAF.bib') |&gt; \n  as_tibble() |&gt; \n  filter(stringr::str_detect(value, pattern = '@|keywords')) |&gt; \n  rowid_to_column() %&gt;% \n  mutate(int_part = floor((rowid-1)/2), parity = rowid %% 2) %&gt;% \n  select(-rowid) %&gt;% \n  pivot_wider( values_from = value, names_from = parity, names_prefix = \"key\") |&gt; \n  mutate(key1 = stringr::str_remove(key1, pattern = '@[:alnum:]+\\\\{')) |&gt; \n  mutate(key1 = stringr::str_remove(key1, pattern = ',')) \n  \nmaf_liste &lt;- liste %&gt;% \n  filter(str_detect(key0, 'MAF')) %&gt;% \n  select(key1) %&gt;% \n  pull()\n\nlinear_liste &lt;- liste %&gt;% \n  filter(!str_detect(key0, 'MAF')) %&gt;% \n  select(key1) %&gt;% \n  pull()\n  \nNoCite(bib = myBib, linear_liste)"
+    "text": "liste &lt;- \n  readLines('MAF.bib') |&gt; \n  as_tibble() |&gt; \n  filter(stringr::str_detect(value, pattern = '@|keywords')) |&gt; \n  rowid_to_column() %&gt;% \n  mutate(int_part = floor((rowid-1)/2), parity = rowid %% 2) %&gt;% \n  select(-rowid) %&gt;% \n  pivot_wider( values_from = value, names_from = parity, names_prefix = \"key\") |&gt; \n  mutate(key1 = stringr::str_remove(key1, pattern = '@[:alnum:]+\\\\{')) |&gt; \n  mutate(key1 = stringr::str_remove(key1, pattern = ',')) \n  \nmaf_liste &lt;- liste %&gt;% \n  filter(str_detect(key0, 'MAF')) %&gt;% \n  select(key1) %&gt;% \n  pull()\n\nlinear_liste &lt;- liste %&gt;% \n  filter(!str_detect(key0, 'MAF')) %&gt;% \n  select(key1) %&gt;% \n  pull()\n  \nNoCite(bib = myBib, maf_liste)"
   },
   {
-    "objectID": "references_linear.html#pour-mieux-comprendre-lalgèbre-linéaire-utilisé",
-    "href": "references_linear.html#pour-mieux-comprendre-lalgèbre-linéaire-utilisé",
+    "objectID": "references_maf.html#pour-approfondir-ou-compléter-le-cours",
+    "href": "references_maf.html#pour-approfondir-ou-compléter-le-cours",
     "title": "References",
-    "section": "Pour mieux comprendre l’algèbre linéaire utilisé",
-    "text": "Pour mieux comprendre l’algèbre linéaire utilisé\nBrunton, S. (2020). Singular Value Decomposition. URL: https://www.youtube.com/watch?v=gXbThCXjZFM.\nCohen, M. X. (2022). Practical linear algebra for data science. O’Reilly Media, Inc.\nHarville, D. A. (1998). Matrix algebra from a statistician’s perspective.\nYoshida, R. (2021). Linear algebra and its applications with R. Chapman and Hall/CRC. URL: https://shainarace.github.io/LinearAlgebra/."
-  },
-  {
-    "objectID": "proj_sur_SVD.html#la-décomposition-en-valeurs-sigulières",
-    "href": "proj_sur_SVD.html#la-décomposition-en-valeurs-sigulières",
-    "title": "Singular Value Decomposition et ACP",
-    "section": "La décomposition en valeurs sigulières",
-    "text": "La décomposition en valeurs sigulières\n\\[\\boldsymbol{X} = \\boldsymbol{U}\\boldsymbol{D}\\boldsymbol{V^\\intercal},\\]\noù * \\(\\boldsymbol{U}\\) est une matrice \\(n\\times n\\) orthogonale \\(\\boldsymbol{U} \\boldsymbol{U}^\\intercal = \\boldsymbol{I}_n,\\) * \\(\\boldsymbol{V}\\) est une matrice \\(d\\times d\\) orthogonale \\(\\boldsymbol{V} \\boldsymbol{V}^\\intercal = \\boldsymbol{I}_d,\\) * \\(\\boldsymbol{D}\\) est une matrice \\(n \\times d\\), diagonale au sens où seuls les termes \\(D_{ii}\\) sont non nuls.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFigure 1: SVD et Changement de Base"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Méthodes d’Analyse factorielle",
-    "section": "",
-    "text": "Description du cours\nCe cours présente des techniques statistiques pour décire et viusualiser des données multivariés. Il présentera à la fois les fondements mathématiques (géométriques) mais fera surtout la part belle à la mise en oeuvre pratioque de ces outils. A l’issue de ce cours, vous disposerez d’un ensemble de méthodes pour analyser des ensembles de données complexes et créer des représentations visuelles qui révèlent des motifs, des tendances et des relations entre plusieurs variables. Le cours couvre les sujets suivants :\n\n\nContenu\n\nAnalyse en Composantes Principales (ACP) : Un outil puissant de réduction dimensionnelle qui simplifie les grands ensembles de données tout en préservant autant que possible la variation. Les étudiants apprendront à visualiser des données à haute dimension à l’aide de l’ACP, rendant ainsi plus faciles à interpréter les relations complexes. Une extension, l’Analyse Factorielle Multiple (AFM) permet de prendre en compte des variables quantitatives organisées par groupe (on veut distinguer les variables physiques, des variables chimiques par exemple).\nAnalyse Factorielle Discriminante (AFD) : Cette méthode aide à classifier les observations dans des groupes prédéfinis. Le cours se concentrera sur la manière de différencier visuellement les groupes en utilisant plusieurs variables prédictives et d’interpréter les résultats.\nAnalyse Factorielle des Correspondances (AFC) : Il s’agit ici d’étudier la relation entre deux variables catégorielles et de visualiser les individus.\nAnalyse des Correspondances Multiples (ACM) : Cette méthode généralise l’AFC au cas à plus de deux variables qualitatives.\n\nLe cours mettra un accent particulier sur la visualisation des ensembles de données multivariés complexes. Ces outils visuels sont précieux pour communiquer les résultats des analyses multivariées de manière intuitive et accessible.\nÀ la fin du cours, les étudiants seront compétents dans l’application des méthodes multivariées à une variété d’ensembles de données et auront les compétences nécessaires pour créer des visualisations qui transmettent efficacement les intuitions que l’on peut avoir à partir des données et des éléments clés de la modélisation qui peut suivre.\n\n\nOrganisation du cours\n\n12h de cours\n12h de De TD/TP\n\nChaque cours contiendra un exemple détaillé et la mise en oeuvre pratique de la méthode étudiée ainsi que la présentation des concepts mathématiques (essentiellement géométriques) sur lesquels elle repose.\n\n\nPrérequis\nUne connaissance de base des statistiques, de l’algèbre linéaire et une maîtrise des logiciels statistiques (R essentiellement) sont recommandées"
+    "section": "Pour approfondir ou compléter le cours",
+    "text": "Pour approfondir ou compléter le cours\nCornillon, P., A. Guyader, F. Husson, et al. (2013). Statistiques avec R. Rennes (Presses universitaires de).\nEscofier, B. and J. Pagès (1998). “Analyses factorielles simples et multiples”. In: Dunod, Paris 284, pp. 104-107.\nGégout-Petit, A., M. Maumy-Bertrand, G. Saporta, et al. (2022). Données manquantes. Editions Technip.\nHusson, F. (1999a). Chaîne Youtube. URL: https://www.youtube.com/user/HussonFrancois.\nHusson, F. (1999b). MOOC sur l’analyse de données. URL: https://husson.github.io/MOOC_AnaDo/index.html.\nHusson, F., S. Lê, and J. Pagès (2016). Presses universitaires de Rennes."
   },
   {
     "objectID": "01_afd.html#quelques-exemples",
@@ -182,18 +168,81 @@
     "text": "Ce que vous pensez devoir retenir\nA construire ensemble"
   },
   {
-    "objectID": "references_maf.html",
-    "href": "references_maf.html",
-    "title": "References",
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Méthodes d’Analyse factorielle",
     "section": "",
-    "text": "liste &lt;- \n  readLines('MAF.bib') |&gt; \n  as_tibble() |&gt; \n  filter(stringr::str_detect(value, pattern = '@|keywords')) |&gt; \n  rowid_to_column() %&gt;% \n  mutate(int_part = floor((rowid-1)/2), parity = rowid %% 2) %&gt;% \n  select(-rowid) %&gt;% \n  pivot_wider( values_from = value, names_from = parity, names_prefix = \"key\") |&gt; \n  mutate(key1 = stringr::str_remove(key1, pattern = '@[:alnum:]+\\\\{')) |&gt; \n  mutate(key1 = stringr::str_remove(key1, pattern = ',')) \n  \nmaf_liste &lt;- liste %&gt;% \n  filter(str_detect(key0, 'MAF')) %&gt;% \n  select(key1) %&gt;% \n  pull()\n\nlinear_liste &lt;- liste %&gt;% \n  filter(!str_detect(key0, 'MAF')) %&gt;% \n  select(key1) %&gt;% \n  pull()\n  \nNoCite(bib = myBib, maf_liste)"
+    "text": "Description du cours\nCe cours présente des techniques statistiques pour décire et viusualiser des données multivariés. Il présentera à la fois les fondements mathématiques (géométriques) mais fera surtout la part belle à la mise en oeuvre pratioque de ces outils. A l’issue de ce cours, vous disposerez d’un ensemble de méthodes pour analyser des ensembles de données complexes et créer des représentations visuelles qui révèlent des motifs, des tendances et des relations entre plusieurs variables. Le cours couvre les sujets suivants :\n\n\nContenu\n\nAnalyse en Composantes Principales (ACP) : Un outil puissant de réduction dimensionnelle qui simplifie les grands ensembles de données tout en préservant autant que possible la variation. Les étudiants apprendront à visualiser des données à haute dimension à l’aide de l’ACP, rendant ainsi plus faciles à interpréter les relations complexes. Une extension, l’Analyse Factorielle Multiple (AFM) permet de prendre en compte des variables quantitatives organisées par groupe (on veut distinguer les variables physiques, des variables chimiques par exemple).\nAnalyse Factorielle Discriminante (AFD) : Cette méthode aide à classifier les observations dans des groupes prédéfinis. Le cours se concentrera sur la manière de différencier visuellement les groupes en utilisant plusieurs variables prédictives et d’interpréter les résultats.\nAnalyse Factorielle des Correspondances (AFC) : Il s’agit ici d’étudier la relation entre deux variables catégorielles et de visualiser les individus.\nAnalyse des Correspondances Multiples (ACM) : Cette méthode généralise l’AFC au cas à plus de deux variables qualitatives.\n\nLe cours mettra un accent particulier sur la visualisation des ensembles de données multivariés complexes. Ces outils visuels sont précieux pour communiquer les résultats des analyses multivariées de manière intuitive et accessible.\nÀ la fin du cours, les étudiants seront compétents dans l’application des méthodes multivariées à une variété d’ensembles de données et auront les compétences nécessaires pour créer des visualisations qui transmettent efficacement les intuitions que l’on peut avoir à partir des données et des éléments clés de la modélisation qui peut suivre.\n\n\nOrganisation du cours\n\n12h de cours\n12h de De TD/TP\n\nChaque cours contiendra un exemple détaillé et la mise en oeuvre pratique de la méthode étudiée ainsi que la présentation des concepts mathématiques (essentiellement géométriques) sur lesquels elle repose.\n\n\nPrérequis\nUne connaissance de base des statistiques, de l’algèbre linéaire et une maîtrise des logiciels statistiques (R essentiellement) sont recommandées"
   },
   {
-    "objectID": "references_maf.html#pour-approfondir-ou-compléter-le-cours",
-    "href": "references_maf.html#pour-approfondir-ou-compléter-le-cours",
+    "objectID": "proj_sur_SVD.html#la-décomposition-en-valeurs-sigulières",
+    "href": "proj_sur_SVD.html#la-décomposition-en-valeurs-sigulières",
+    "title": "Singular Value Decomposition et ACP",
+    "section": "La décomposition en valeurs sigulières",
+    "text": "La décomposition en valeurs sigulières\n\\[\\boldsymbol{X} = \\boldsymbol{U}\\boldsymbol{D}\\boldsymbol{V^\\intercal},\\]\noù * \\(\\boldsymbol{U}\\) est une matrice \\(n\\times n\\) orthogonale \\(\\boldsymbol{U} \\boldsymbol{U}^\\intercal = \\boldsymbol{I}_n,\\) * \\(\\boldsymbol{V}\\) est une matrice \\(d\\times d\\) orthogonale \\(\\boldsymbol{V} \\boldsymbol{V}^\\intercal = \\boldsymbol{I}_d,\\) * \\(\\boldsymbol{D}\\) est une matrice \\(n \\times d\\), diagonale au sens où seuls les termes \\(D_{ii}\\) sont non nuls.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFigure 1: SVD et Changement de Base"
+  },
+  {
+    "objectID": "references_linear.html",
+    "href": "references_linear.html",
     "title": "References",
-    "section": "Pour approfondir ou compléter le cours",
-    "text": "Pour approfondir ou compléter le cours\nCornillon, P., A. Guyader, F. Husson, et al. (2013). Statistiques avec R. Rennes (Presses universitaires de).\nEscofier, B. and J. Pagès (1998). “Analyses factorielles simples et multiples”. In: Dunod, Paris 284, pp. 104-107.\nGégout-Petit, A., M. Maumy-Bertrand, G. Saporta, et al. (2022). Données manquantes. Editions Technip.\nHusson, F. (1999a). Chaîne Youtube. URL: https://www.youtube.com/user/HussonFrancois.\nHusson, F. (1999b). MOOC sur l’analyse de données. URL: https://husson.github.io/MOOC_AnaDo/index.html.\nHusson, F., S. Lê, and J. Pagès (2016). Presses universitaires de Rennes."
+    "section": "",
+    "text": "liste &lt;- \n  readLines('MAF.bib') |&gt; \n  as_tibble() |&gt; \n  filter(stringr::str_detect(value, pattern = '@|keywords')) |&gt; \n  rowid_to_column() %&gt;% \n  mutate(int_part = floor((rowid-1)/2), parity = rowid %% 2) %&gt;% \n  select(-rowid) %&gt;% \n  pivot_wider( values_from = value, names_from = parity, names_prefix = \"key\") |&gt; \n  mutate(key1 = stringr::str_remove(key1, pattern = '@[:alnum:]+\\\\{')) |&gt; \n  mutate(key1 = stringr::str_remove(key1, pattern = ',')) \n  \nmaf_liste &lt;- liste %&gt;% \n  filter(str_detect(key0, 'MAF')) %&gt;% \n  select(key1) %&gt;% \n  pull()\n\nlinear_liste &lt;- liste %&gt;% \n  filter(!str_detect(key0, 'MAF')) %&gt;% \n  select(key1) %&gt;% \n  pull()\n  \nNoCite(bib = myBib, linear_liste)"
+  },
+  {
+    "objectID": "references_linear.html#pour-mieux-comprendre-lalgèbre-linéaire-utilisé",
+    "href": "references_linear.html#pour-mieux-comprendre-lalgèbre-linéaire-utilisé",
+    "title": "References",
+    "section": "Pour mieux comprendre l’algèbre linéaire utilisé",
+    "text": "Pour mieux comprendre l’algèbre linéaire utilisé\nBrunton, S. (2020). Singular Value Decomposition. URL: https://www.youtube.com/watch?v=gXbThCXjZFM.\nCohen, M. X. (2022). Practical linear algebra for data science. O’Reilly Media, Inc.\nHarville, D. A. (1998). Matrix algebra from a statistician’s perspective.\nYoshida, R. (2021). Linear algebra and its applications with R. Chapman and Hall/CRC. URL: https://shainarace.github.io/LinearAlgebra/."
+  },
+  {
+    "objectID": "TP2.html",
+    "href": "TP2.html",
+    "title": "Labs2 - Analyse en composante Principale et au-delà",
+    "section": "",
+    "text": "$$\n$$"
+  },
+  {
+    "objectID": "TP2.html#description-des-données",
+    "href": "TP2.html#description-des-données",
+    "title": "Labs2 - Analyse en composante Principale et au-delà",
+    "section": "Description des données",
+    "text": "Description des données\nLe jeu de données utilisé dans ce laboratoire provient du site web de Global Footprint Network. Il contient les résultats d’empreinte écologique et de biocapacité pour 184 pays.\n\nQuelques définitions\nLe calcul de l’empreinte écologique et de la biocapacité nous aide à répondre à la question de recherche fondamentale : Quelle est la demande des êtres humains envers les surfaces biologiquement productives (empreinte écologique) par rapport à la quantité que la planète (ou la surface productive d’une région) peut régénérer sur ces surfaces (biocapacité) ?\n\nHectare global (gha) : C’est l’unité choisie pour exprimer toutes les quantités d’intérêt concernant la consommation/émission de carbone. Une unité de surface correspondant à la productivité moyenne d’un hectare de terres mondiales. Un hectare de terres agricoles vaudra plus d’hectares globaux qu’un hectare de désert.\nEmpreinte écologique (en gha par personne) : Le nombre de gha requis pour produire les besoins et absorber les déchets d’un pays.\nBiocapacité (en gha) : La capacité d’un pays à produire ce dont il a besoin et à absorber ses déchets (réserve écologique).\nJour de dépassement : Jour de l’année où la demande d’un pays dépasse sa biocapacité annuelle.\n\nDes détails supplémentaires sont disponibles ici"
+  },
+  {
+    "objectID": "TP2.html#objectifs",
+    "href": "TP2.html#objectifs",
+    "title": "Labs2 - Analyse en composante Principale et au-delà",
+    "section": "Objectifs",
+    "text": "Objectifs\nLes relations entre les différentes mesures de l’empreinte écologique et les caractéristiques des pays.\n\nChargement des Données\n\n\nAnalyse Exploratoire des Données\n\nPouvez vous indiquer le nombre de lignes et de colonnes\n\nL’unité utilisé pour comparer est le Global Hectare (gha): Unité de surface qui correspondrait à la production moyenne d’un hectare du monde. Un hectare de champ vaudra donc plus de global hectare qu’un hectare de desert.\nLe gha par personne correspondant à une production (ou cosommation) globale d’une unité, (ici un pays) divisé par le nombre d’habitants dans cette unité.\nLes Variables disponibles sont\n\nlife_expectancy : Espérance de vie moyenne (années).\nhdi : Indice de développement humain.\nper_capita_gdp : PIB par habitant (USD).\nregion : Région géographique.\nincome_group : Catégorie de revenu (HI : Haut, UM : Moyen supérieur, LM : Moyen inférieur, LI : Faible).\npop : Population (en millions).\ntotal_prod : Production totale (gha par personne) la production du pays par habitant.\ntotal_cons : Consommation totale (gha par personne) la consommation par habitant.\nbiocapacity : La production durable (gha par personne) par habitant, ce que peut fournir le pays ramené par habitant.\nnumber_of_countries_required : Nombre de pays nécessaires pour satisfaire la consommation (total_cons/biocapacity)\nnumber_of_earths_required : Nombre de terres dont on aurait besoin si tout le monde faisait comme dans le pays en question (nb gha par personnes du pays / 1.583 (nb de gha par habitant de la terre, ce chiffre est mis à jour chaque année))\novershoot_day : Jour de dépassement (numéro du jour dans l’année).\n\nPlus de détails peuvent être trouvés ici , mais on peut préciser de la manière suivante\n\n\nStatistiques descriptives :\nProposez des résumés numériques pour chaque variable, ainsi qu’une étude des corrélations.\nPour le moment, on va supprimer les données manquantes (on verra par la suite comment gérer ce problème de manière plus satisfaisante). Pour ceci on peut utiliser drop_nadu package tidyverse ou na.omitde R Base."
+  },
+  {
+    "objectID": "TP2.html#construire-une-acp",
+    "href": "TP2.html#construire-une-acp",
+    "title": "Labs2 - Analyse en composante Principale et au-delà",
+    "section": "Construire une ACP",
+    "text": "Construire une ACP\n\nQuel poids choisir pour les pays ?\n\n\n\nQuelle Métrique choisir ?\n\n\n\nQuelles variables met-on en variables supplémentaires\n\n\n\nQuelle est l’inertie portée par l’axe 1 ?, l’axe 2, l’axe 3 ?\n\n\nCommentez la qualité de la représentation sur le plan (1-2), puis (1-3).  \nDe quelles variables nous parle l’axe 1 ? l’axe 2 ? pour répondre à cette question on regarde le cercle des corrélations mais aussi les contributions des variable sà la création des axes.\n\n\n\n\n\n\nQue pensez vous du graphe des individus ? Quels sont les individus atypiques ? Quels sont le spays les mieux représentés ?\nComment l’ACP est-elle modifiée si on retire Singapour de l’analyse ?\n\nDe nombreuses variables nous parle de l’empreinte écologique, et les variables nous parlant du développemnt du pays sont moins nombreuses. On peuyt rééquilibrer l’importance des varaibles avec une méthodes vu en cours, la quelle ?\n\n\nOn souhaite identifier deux groupes de variables : les variables concernant l’empreinte carbone et les varaibles portant sur le développement du pays.\nFaites 2 ACP différentes sur chacun de ces deux groupess. Quelle est la première valeur propre dans les deux cas.\nRappelez en quoi la méthode mentionné plus haut est une ACP particulière. A partir de la fonction PCA et en utilisant l’option col.w mettez en oeuvre cette méthode.\nOn peut le faire directement, avec la fonction M̀FA ` de FactoMineR. Reprenez l’analyse précédente avec ce nouvel équilibreentre les différentes variables équilibrés. Quelles sont les informations que vous pouvez retenir ?"
+  },
+  {
+    "objectID": "TP2.html#un-premier-aperçu-des-données",
+    "href": "TP2.html#un-premier-aperçu-des-données",
+    "title": "Labs2 - Analyse en composante Principale et au-delà",
+    "section": "Un premier aperçu des données",
+    "text": "Un premier aperçu des données\n\nOuvrez le fichier QteVie.csv pour identifier le séparateur de champs, le séparateur décimale, la présence éventuelle d’une colonne d’identifiant, la présence éventuelle de noms de colonnes, l’encodage du fichier (pour gérer les accents).\nImporter les données sous R sans modifier le fichier csv. On souhaite conserver le nom des variables tel qu’il est dans le fichier de données (argument check.names ce qui nécessite de respecter l’encodage encoding.\nAvec des statistiques univariées, identifier la présence de pays atypiques.\nLes variables d’un même thème sont-elles corrélées?\nLes différents thèmes sont-ils corrélés?"
+  },
+  {
+    "objectID": "TP2.html#choisir-une-démarche-danalyse",
+    "href": "TP2.html#choisir-une-démarche-danalyse",
+    "title": "Labs2 - Analyse en composante Principale et au-delà",
+    "section": "Choisir une démarche d’analyse",
+    "text": "Choisir une démarche d’analyse\nVous disposez de différents outils pour aller au delà des analyses uni ou bivariées. Parmi ceux-ci, pouvez-vous faire un bilan rapide de différentes approches possibles et choisir celle (ou celles) qui vous semble la (les) plus pertinente(s) ?"
+  },
+  {
+    "objectID": "TP2.html#mise-en-oeuvre",
+    "href": "TP2.html#mise-en-oeuvre",
+    "title": "Labs2 - Analyse en composante Principale et au-delà",
+    "section": "Mise en oeuvre",
+    "text": "Mise en oeuvre\n\\ L’objectif de l’Analyse Factorielle Multiple (AFM) est d’étudier des tableaux de données complexes où un même ensemble d’individus est décrit par des variables structurées en groupes et provenant éventuellement de différentes sources d’information. L’AFM équilibre l’influence de chaque groupe dans l’analyse, les variables pouvant être de nature quantitative dans un groupe et qualitative dans un autre (dans ce cas, cependant, le critère d’inertie associé est mal défini). L’AFM permet, comme l’ACP et l’ACM, d’étudier des similarités entre individus et les liaisons entre variables. Sa spécificité et sa richesse sont de prendre en compte simultanément plusieurs groupes de variables et de comparer l’information apportée par chacun de ces groupes. On utilisera la fonction du package . \nLe fichier provient de l’OCDE et concerne des indicateurs de qualité de vie en 2015. Pour les 34 pays de l’OCDE à cette date, plus la Russie et le Brésil, on dispose de 22 indicateurs regroupés en cinq thèmes, et d’une variable qualitative correspondant à la région. Les cinq thèmes sont les suivants, on donne entre parenthèses le nombre d’indicateurs par thème: Bien-être matériel (5); Emploi (5); Satisfaction (3); Santé et sécurité (6); Enseignement (3).\nOn souhaite comparer les 36 pays en tenant compte de ces cinq groupes d’indicateurs.\nOn souhaite entre autre identifier les liens entre les thèmes, entre les variables au sein des thèmes. On souhaite aussi distinguer les pays qui se distinguent les uns des autres et plus spécifiquement comprendre ce qui les différencie."
   },
   {
     "objectID": "01_afm.html#quelques-exemples",
