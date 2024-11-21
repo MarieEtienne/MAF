@@ -242,14 +242,15 @@ ul.task-list li input[type="checkbox"] {
 <p>$$</p>
 <p>$$</p>
 </div>
-<p>Les méthodes d’analyse factorielles sont utiles pour l’exploration de données, soit en tant que telle soit dans une phase préparatoire à un travail de modélisation. Il est utile de disposer à la fois d’outils interractif pour l’exploration, mais également de garder une trace de l’exploration avec un document bilan.</p>
+<p>Les méthodes d’analyse factorielles sont utiles pour l’exploration de données, soit en tant que telle soit dans une phase préparatoire à un travail de modélisation. Il est utile de disposer à la fois d’outils interractifs pour l’exploration, mais également de garder une trace de l’exploration avec un document bilan.</p>
 <p>Nous allons dans ce TP utiliser un fichier <code>TP2.qmd</code> pour garder une trace des analyses faites mais nous pourrons en parallèle utiliser le potentiel d’une exploration plus interactive soit avec <code>Factoshiny</code> soit avec <code>explor</code> selon ce que vous préférez.</p>
-<p>Dans ce TP nous allons explorer un premier détail avec une démarche bien guider tandis que le second exemple se fait plus en autonomie.</p>
+<p>Dans ce TP nous allons explorer un premier exemple en détail avec une démarche bien guidée tandis que le second exemple a pour objectif de vous laisser face aux données en autonomie, pour vérifier que vous voyez comment aborder un jeu de données avec les méthodes d’analyse factorielle.</p>
 <section id="le-jour-du-dépassement" class="level1">
 <h1>Le jour du dépassement</h1>
 <section id="description-des-données" class="level2">
 <h2 class="anchored" data-anchor-id="description-des-données">Description des données</h2>
-<p>Le jeu de données utilisé dans ce laboratoire provient du <a href="https://www.footprintnetwork.org/licenses/public-data-package-free/">site web de Global Footprint Network</a>. Il contient les résultats d’empreinte écologique et de biocapacité pour 184 pays.</p>
+<p>Le jeu de données utilisé dans ce premier cas pratique provient du <a href="https://www.footprintnetwork.org/licenses/public-data-package-free/">site web de Global Footprint Network</a>. Il contient les résultats d’empreinte écologique et de biocapacité pour 184 pays.</p>
+<p>Les données sont [disponibles sur ce lien}(https://marieetienne.github.io/datasets/overshootday_overview.csv).</p>
 <section id="quelques-définitions" class="level3">
 <h3 class="anchored" data-anchor-id="quelques-définitions">Quelques définitions</h3>
 <p>Le calcul de l’empreinte écologique et de la biocapacité nous aide à répondre à la question de recherche fondamentale : Quelle est la demande des êtres humains envers les surfaces biologiquement productives (empreinte écologique) par rapport à la quantité que la planète (ou la surface productive d’une région) peut régénérer sur ces surfaces (biocapacité) ?</p>
@@ -328,7 +329,7 @@ ul.task-list li input[type="checkbox"] {
 <li><p>Comment l’ACP est-elle modifiée si on retire Singapour de l’analyse ?</p></li>
 </ul>
 <p>De nombreuses variables nous parle de l’empreinte écologique, et les variables nous parlant du développemnt du pays sont moins nombreuses. On peuyt rééquilibrer l’importance des varaibles avec une méthodes vu en cours, la quelle ?</p>
-<!-- C'est l'AFm bien sur -->
+<!-- C'est l'AFM bien sur -->
 <ul>
 <li><p>On souhaite identifier deux groupes de variables : les variables concernant l’empreinte carbone et les varaibles portant sur le développement du pays.</p></li>
 <li><p>Faites 2 ACP différentes sur chacun de ces deux groupess. Quelle est la première valeur propre dans les deux cas.</p></li>
@@ -339,7 +340,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="etude-de-la-qualité-de-vie" class="level1">
 <h1>Etude de la qualité de vie</h1>
-<p>Le fichier provient de l’OCDE et concerne des indicateurs de qualité de vie en 2015. Pour les 34 pays de l’OCDE à cette date, plus la Russie et le Brésil, on dispose de 22 indicateurs regroupés en cinq thèmes, et d’une variable qualitative correspondant à la région. Les cinq thèmes sont les suivants, on donne entre parenthèses le nombre d’indicateurs par thème: Bien-être matériel (5); Emploi (5); Satisfaction (3); Santé et sécurité (6); Enseignement (3).</p>
+<p>Le fichier <a href="https://marieetienne.github.io/datasets/QteVie.csv">QteVie.csv</a> provient de l’OCDE et concerne des indicateurs de qualité de vie en 2015. Pour les 34 pays de l’OCDE à cette date, plus la Russie et le Brésil, on dispose de 22 indicateurs regroupés en cinq thèmes, et d’une variable qualitative correspondant à la région. Les cinq thèmes sont les suivants, on donne entre parenthèses le nombre d’indicateurs par thème: Bien-être matériel (5); Emploi (5); Satisfaction (3); Santé et sécurité (6); Enseignement (3).</p>
 <p>On souhaite identifier des similarités entre pays et plus précisément on souhaite entre autre apporter des éléments de réponse aux questions suivantes</p>
 <ul>
 <li>Quels pays se ressemblent du point de vue de l’ensemble des indicateurs tous thèmes confondus ?</li>
@@ -350,8 +351,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="un-premier-aperçu-des-données" class="level2">
 <h2 class="anchored" data-anchor-id="un-premier-aperçu-des-données">Un premier aperçu des données</h2>
 <ul>
-<li><p>Ouvrez le fichier <a href="QteVie.csv">QteVie.csv</a> pour identifier le séparateur de champs, le séparateur décimale, la présence éventuelle d’une colonne d’identifiant, la présence éventuelle de noms de colonnes, l’encodage du fichier (pour gérer les accents).</p></li>
-<li><p>Importer les données sous R sans modifier le fichier csv. On souhaite conserver le nom des variables tel qu’il est dans le fichier de données (argument <code>check.names</code> ce qui nécessite de respecter l’encodage <code>encoding</code>.</p></li>
+<li><p>Ouvrez le fichier <a href="QteVie.csv">QteVie.csv</a> pour identifier le séparateur de champs, le séparateur décimale, la présence éventuelle d’une colonne d’identifiant, la présence éventuelle de noms de colonnes, l’encodage du fichier (pour gérer les accents). On souhaite conserver le nom des variables tel qu’il est dans le fichier de données (argument <code>check.names</code> ce qui nécessite de respecter l’encodage <code>encoding</code>.</p></li>
 <li><p>Avec des statistiques univariées, identifier la présence de pays atypiques.</p></li>
 <li><p>Les variables d’un même thème sont-elles corrélées?</p></li>
 <li><p>Les différents thèmes sont-ils corrélés?</p></li>
@@ -363,10 +363,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="mise-en-oeuvre" class="level2">
 <h2 class="anchored" data-anchor-id="mise-en-oeuvre">Mise en oeuvre</h2>
-<p>\ L’objectif de l’Analyse Factorielle Multiple (AFM) est d’étudier des tableaux de données complexes où un même ensemble d’individus est décrit par des variables structurées en groupes et provenant éventuellement de différentes sources d’information. L’AFM équilibre l’influence de chaque groupe dans l’analyse, les variables pouvant être de nature quantitative dans un groupe et qualitative dans un autre (dans ce cas, cependant, le critère d’inertie associé est mal défini). L’AFM permet, comme l’ACP et l’ACM, d’étudier des similarités entre individus et les liaisons entre variables. Sa spécificité et sa richesse sont de prendre en compte simultanément plusieurs groupes de variables et de comparer l’information apportée par chacun de ces groupes. On utilisera la fonction du package . </p>
-<p>Le fichier provient de l’OCDE et concerne des indicateurs de qualité de vie en 2015. Pour les 34 pays de l’OCDE à cette date, plus la Russie et le Brésil, on dispose de 22 indicateurs regroupés en cinq thèmes, et d’une variable qualitative correspondant à la région. Les cinq thèmes sont les suivants, on donne entre parenthèses le nombre d’indicateurs par thème: Bien-être matériel (5); Emploi (5); Satisfaction (3); Santé et sécurité (6); Enseignement (3).</p>
-<p>On souhaite comparer les 36 pays en tenant compte de ces cinq groupes d’indicateurs.</p>
-<p>On souhaite entre autre identifier les liens entre les thèmes, entre les variables au sein des thèmes. On souhaite aussi distinguer les pays qui se distinguent les uns des autres et plus spécifiquement comprendre ce qui les différencie.</p>
+<p>Résumez dans le compte-rendu du TP les motifs qui vous ont fait choisir une méthode, les résultats principaux et les éléments qui vous permettent d’étayer ces résultats (éléments graphiques ou numériques).</p>
 
 
 </section>
