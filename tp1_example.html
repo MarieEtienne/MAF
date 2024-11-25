@@ -237,23 +237,27 @@ window.Quarto = {
    
   <ul>
   <li><a href="#présentation-de-quarto" id="toc-présentation-de-quarto" class="nav-link active" data-scroll-target="#présentation-de-quarto">Présentation de Quarto</a></li>
-  <li><a href="#présentation-du-contexte" id="toc-présentation-du-contexte" class="nav-link" data-scroll-target="#présentation-du-contexte">Présentation du contexte</a>
+  <li><a href="#analyse-des-caractéristiques-géochimiques-des-sols-en-forêt-de-bornéo" id="toc-analyse-des-caractéristiques-géochimiques-des-sols-en-forêt-de-bornéo" class="nav-link" data-scroll-target="#analyse-des-caractéristiques-géochimiques-des-sols-en-forêt-de-bornéo">Analyse des caractéristiques géochimiques des sols en forêt de Bornéo</a>
   <ul class="collapse">
-  <li><a href="#description-des-données" id="toc-description-des-données" class="nav-link" data-scroll-target="#description-des-données">Description des données</a>
+  <li><a href="#comprendre-les-données" id="toc-comprendre-les-données" class="nav-link" data-scroll-target="#comprendre-les-données">Comprendre les données</a>
   <ul class="collapse">
   <li><a href="#chargement-des-packages" id="toc-chargement-des-packages" class="nav-link" data-scroll-target="#chargement-des-packages">Chargement des packages</a></li>
+  <li><a href="#importation" id="toc-importation" class="nav-link" data-scroll-target="#importation">Importation</a></li>
   <li><a href="#importation-des-données" id="toc-importation-des-données" class="nav-link" data-scroll-target="#importation-des-données">Importation des données</a></li>
-  <li><a href="#description-des-données-1" id="toc-description-des-données-1" class="nav-link" data-scroll-target="#description-des-données-1">Description des données</a></li>
-  <li><a href="#représentation" id="toc-représentation" class="nav-link" data-scroll-target="#représentation">Représentation</a></li>
+  <li><a href="#description-des-données" id="toc-description-des-données" class="nav-link" data-scroll-target="#description-des-données">Description des données</a></li>
+  <li><a href="#représentation-bivariée" id="toc-représentation-bivariée" class="nav-link" data-scroll-target="#représentation-bivariée">Représentation bivariée</a></li>
   </ul></li>
-  <li><a href="#identifier-une-typologie-de-sol" id="toc-identifier-une-typologie-de-sol" class="nav-link" data-scroll-target="#identifier-une-typologie-de-sol">Identifier une typologie de sol</a>
+  <li><a href="#approche-factorielle" id="toc-approche-factorielle" class="nav-link" data-scroll-target="#approche-factorielle">Approche factorielle</a>
   <ul class="collapse">
-  <li><a href="#poids-des-individus" id="toc-poids-des-individus" class="nav-link" data-scroll-target="#poids-des-individus">Poids des individus</a></li>
+  <li><a href="#mise-en-place-de-lapproche-factorielle" id="toc-mise-en-place-de-lapproche-factorielle" class="nav-link" data-scroll-target="#mise-en-place-de-lapproche-factorielle">Mise en place de l’approche factorielle</a></li>
   <li><a href="#distance-à-utiliser-entre-les-individus" id="toc-distance-à-utiliser-entre-les-individus" class="nav-link" data-scroll-target="#distance-à-utiliser-entre-les-individus">Distance à utiliser entre les individus</a></li>
-  </ul></li>
+  <li><a href="#acp-normée" id="toc-acp-normée" class="nav-link" data-scroll-target="#acp-normée">ACP normée</a></li>
+  <li><a href="#variables" id="toc-variables" class="nav-link" data-scroll-target="#variables">Variables</a></li>
+  <li><a href="#individus" id="toc-individus" class="nav-link" data-scroll-target="#individus">Individus</a></li>
   </ul></li>
   <li><a href="#visualiser-la-profondeur-sur-les-différents-plans" id="toc-visualiser-la-profondeur-sur-les-différents-plans" class="nav-link" data-scroll-target="#visualiser-la-profondeur-sur-les-différents-plans">Visualiser la profondeur sur les différents plans</a></li>
   <li><a href="#visualiser-les-types-de-sol" id="toc-visualiser-les-types-de-sol" class="nav-link" data-scroll-target="#visualiser-les-types-de-sol">visualiser les types de sol</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -298,23 +302,70 @@ window.Quarto = {
 <h1>Présentation de Quarto</h1>
 <p>Quarto permet de faire des rapports intégrant du code R, des sorties exécutées à partir de ce code et du texte présentant les analyses.</p>
 <p>Ce document est rédigé avec quarto, le fichier source est disponible sur <a href="https://raw.githubusercontent.com/MarieEtienne/MAF/refs/heads/master/tp1_example.qmd">ce lien</a></p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>La documentation officielle de quarto:</strong></p>
+<p>https://quarto.org/</p>
+<p><strong>Autres docs:</strong></p>
+<p>https://www.youtube.com/watch?v=Cwg7tdSdRvY</p>
+<p>https://delladata.fr/de-r-markdown-a-quarto/</p>
+<p>https://edutechwiki.unige.ch/fr/Quarto</p>
+</div>
+</div>
 </section>
-<section id="présentation-du-contexte" class="level1">
-<h1>Présentation du contexte</h1>
-<p>Les données portent sur des échantillons de sols en différents sites, à différentes profondeurs en forêt de Bornéo. Diférentes variables de composition sont renseignées pour chaque échantillon, ainsi que le type de sol et la profondeur (par classe de profondeur).</p>
-<p>On souhaite visualiser les relations entre les variables et identifier une typologie des sols.</p>
-<section id="description-des-données" class="level2">
-<h2 class="anchored" data-anchor-id="description-des-données">Description des données</h2>
+<section id="analyse-des-caractéristiques-géochimiques-des-sols-en-forêt-de-bornéo" class="level1">
+<h1>Analyse des caractéristiques géochimiques des sols en forêt de Bornéo</h1>
+<p>Il s’agit ici de carcatériser les propriétés physico chimiques des sols. Pour ceci on a prélevé des échantillons dans diffférentes forêts de Borneo et on cherche à mettre en évidence des typologies de sols et à identifier des prélèvements qui se ressemblent. Les données consistent en la mesure de caractéristiques géochimiques de sols dans une forêt pluviale de Bornéo.</p>
+<section id="comprendre-les-données" class="level2">
+<h2 class="anchored" data-anchor-id="comprendre-les-données">Comprendre les données</h2>
 <section id="chargement-des-packages" class="level3">
 <h3 class="anchored" data-anchor-id="chargement-des-packages">Chargement des packages</h3>
+<p>Nous utilisons la suite de packages <code>tidyverse</code> pour la manipulation de données, <code>FactomineR</code> pour la mise en oeuvre des analyses factorielles et éventiuellement <code>factoextra</code> pour des sorties plus jolies. (pour une exploration plus interactive on peut utiliser aussi <code>Factoshiny</code> ou <code>explor</code>).</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Une bonne pratique consiste à ne charger que le nombre minimal de packages nécessaires. Evitez de commencer tous les codes avec la même liste de package, pesez l’intérêt de chacun d’eux.</p>
+</div>
+</div>
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(FactoMineR)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(FactoMineR)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(factoextra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>Pour ajouter un chunk R CTL + Alt + i</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Le raccourci pour ajouter un chunk R CTL + Alt + i</p>
+</div>
+</div>
+</section>
+<section id="importation" class="level3">
+<h3 class="anchored" data-anchor-id="importation">Importation</h3>
 </section>
 <section id="importation-des-données" class="level3">
 <h3 class="anchored" data-anchor-id="importation-des-données">Importation des données</h3>
@@ -325,17 +376,143 @@ window.Quarto = {
 </details>
 </div>
 </section>
-<section id="description-des-données-1" class="level3">
-<h3 class="anchored" data-anchor-id="description-des-données-1">Description des données</h3>
+<section id="description-des-données" class="level3">
+<h3 class="anchored" data-anchor-id="description-des-données">Description des données</h3>
+<p>Proposer des résumés univariés de chaque variable présente dans le jeu de données.</p>
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># str(dta)</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>dta <span class="ot">&lt;-</span> dta <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Sol =</span> <span class="fu">as.factor</span>(Sol),</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">Site =</span> <span class="fu">as.factor</span>(Site),</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">Profondeur =</span> <span class="fu">factor</span>(Profondeur), <span class="fu">levels</span>(<span class="fu">c</span>(<span class="st">'Superficiel'</span>, <span class="st">'Intermediaire'</span>, <span class="st">'Profond'</span>))) <span class="sc">%&gt;%</span> </span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Profondeur =</span> <span class="fu">relevel</span>(Profondeur, <span class="at">ref=</span> <span class="st">"Superficiel"</span>))</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a> <span class="fu">summary</span>(dta)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>dta  <span class="sc">|&gt;</span>    </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>     Sol                Site            Profondeur              pH       
+ Length:539         Length:539         Length:539         Min.   :3.400  
+ Class :character   Class :character   Class :character   1st Qu.:4.400  
+ Mode  :character   Mode  :character   Mode  :character   Median :4.670  
+                                                          Mean   :4.632  
+                                                          3rd Qu.:4.880  
+                                                          Max.   :5.700  
+      Eau             Av.P              C                N          
+ Min.   :0.170   Min.   : 0.380   Min.   :0.1400   Min.   :0.01000  
+ 1st Qu.:1.540   1st Qu.: 1.940   1st Qu.:0.5200   1st Qu.:0.05000  
+ Median :2.490   Median : 3.160   Median :0.8000   Median :0.07000  
+ Mean   :2.698   Mean   : 4.132   Mean   :0.9706   Mean   :0.08056  
+ 3rd Qu.:3.740   3rd Qu.: 5.235   3rd Qu.:1.2800   3rd Qu.:0.10000  
+ Max.   :8.110   Max.   :51.290   Max.   :5.5900   Max.   :0.31000  
+      NO3              NH4             Exc.Ac           Exc.Al     
+ Min.   : 0.000   Min.   : 0.000   Min.   : 0.250   Min.   :0.030  
+ 1st Qu.: 0.400   1st Qu.: 1.655   1st Qu.: 1.990   1st Qu.:1.370  
+ Median : 1.510   Median : 3.190   Median : 3.420   Median :2.720  
+ Mean   : 2.722   Mean   : 5.044   Mean   : 3.781   Mean   :3.151  
+ 3rd Qu.: 2.965   3rd Qu.: 6.920   3rd Qu.: 5.205   3rd Qu.:4.475  
+ Max.   :23.600   Max.   :40.430   Max.   :10.570   Max.   :9.720  
+     Exc.Ca            Exc.Mg           Exc.K            Exc.Na       
+ Min.   : 0.0000   Min.   :0.0000   Min.   :0.0000   Min.   :0.00000  
+ 1st Qu.: 0.0400   1st Qu.:0.0700   1st Qu.:0.0500   1st Qu.:0.03000  
+ Median : 0.0800   Median :0.2100   Median :0.1100   Median :0.05000  
+ Mean   : 0.3029   Mean   :0.6194   Mean   :0.1386   Mean   :0.05237  
+ 3rd Qu.: 0.1900   3rd Qu.:0.8200   3rd Qu.:0.1700   3rd Qu.:0.07000  
+ Max.   :13.4900   Max.   :5.3300   Max.   :1.3000   Max.   :0.27000  
+  Exc.Cations        SatBase          Argile          Limon      
+ Min.   : 0.380   Min.   : 1.80   Min.   : 8.00   Min.   : 0.00  
+ 1st Qu.: 2.405   1st Qu.: 7.95   1st Qu.:16.00   1st Qu.:10.00  
+ Median : 4.030   Median :13.24   Median :21.00   Median :13.00  
+ Mean   : 4.895   Mean   :18.51   Mean   :23.76   Mean   :16.13  
+ 3rd Qu.: 6.765   3rd Qu.:24.67   3rd Qu.:32.00   3rd Qu.:21.50  
+ Max.   :17.300   Max.   :97.54   Max.   :53.00   Max.   :47.00  
+     Sable     
+ Min.   :15.0  
+ 1st Qu.:47.0  
+ Median :67.0  
+ Mean   :60.1  
+ 3rd Qu.:74.0  
+ Max.   :87.0  </code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>On remarque que les facteurs sont importés en caractères. transformation de ces variables (Sol,site et Profondeur) en facteur:</p>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dta <span class="ot">&lt;-</span> dta <span class="sc">|&gt;</span>    </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Sol =</span> <span class="fu">as.factor</span>(Sol),</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">Site =</span> <span class="fu">as.factor</span>(Site), </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">Profondeur =</span> <span class="fu">as.factor</span>(Profondeur))</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>dta <span class="sc">|&gt;</span>    </span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>       Sol            Site             Profondeur        pH       
+ Alluvial:180   292-11_A:  3   Intermediaire:180   Min.   :3.400  
+ Dunaire :180   292-11_B:  3   Profond      :180   1st Qu.:4.400  
+ Grès    :179   292-11_H:  3   Superficiel  :179   Median :4.670  
+                292-11_M:  3                       Mean   :4.632  
+                292-11_N:  3                       3rd Qu.:4.880  
+                292-11_O:  3                       Max.   :5.700  
+                (Other) :521                                      
+      Eau             Av.P              C                N          
+ Min.   :0.170   Min.   : 0.380   Min.   :0.1400   Min.   :0.01000  
+ 1st Qu.:1.540   1st Qu.: 1.940   1st Qu.:0.5200   1st Qu.:0.05000  
+ Median :2.490   Median : 3.160   Median :0.8000   Median :0.07000  
+ Mean   :2.698   Mean   : 4.132   Mean   :0.9706   Mean   :0.08056  
+ 3rd Qu.:3.740   3rd Qu.: 5.235   3rd Qu.:1.2800   3rd Qu.:0.10000  
+ Max.   :8.110   Max.   :51.290   Max.   :5.5900   Max.   :0.31000  
+                                                                    
+      NO3              NH4             Exc.Ac           Exc.Al     
+ Min.   : 0.000   Min.   : 0.000   Min.   : 0.250   Min.   :0.030  
+ 1st Qu.: 0.400   1st Qu.: 1.655   1st Qu.: 1.990   1st Qu.:1.370  
+ Median : 1.510   Median : 3.190   Median : 3.420   Median :2.720  
+ Mean   : 2.722   Mean   : 5.044   Mean   : 3.781   Mean   :3.151  
+ 3rd Qu.: 2.965   3rd Qu.: 6.920   3rd Qu.: 5.205   3rd Qu.:4.475  
+ Max.   :23.600   Max.   :40.430   Max.   :10.570   Max.   :9.720  
+                                                                   
+     Exc.Ca            Exc.Mg           Exc.K            Exc.Na       
+ Min.   : 0.0000   Min.   :0.0000   Min.   :0.0000   Min.   :0.00000  
+ 1st Qu.: 0.0400   1st Qu.:0.0700   1st Qu.:0.0500   1st Qu.:0.03000  
+ Median : 0.0800   Median :0.2100   Median :0.1100   Median :0.05000  
+ Mean   : 0.3029   Mean   :0.6194   Mean   :0.1386   Mean   :0.05237  
+ 3rd Qu.: 0.1900   3rd Qu.:0.8200   3rd Qu.:0.1700   3rd Qu.:0.07000  
+ Max.   :13.4900   Max.   :5.3300   Max.   :1.3000   Max.   :0.27000  
+                                                                      
+  Exc.Cations        SatBase          Argile          Limon      
+ Min.   : 0.380   Min.   : 1.80   Min.   : 8.00   Min.   : 0.00  
+ 1st Qu.: 2.405   1st Qu.: 7.95   1st Qu.:16.00   1st Qu.:10.00  
+ Median : 4.030   Median :13.24   Median :21.00   Median :13.00  
+ Mean   : 4.895   Mean   :18.51   Mean   :23.76   Mean   :16.13  
+ 3rd Qu.: 6.765   3rd Qu.:24.67   3rd Qu.:32.00   3rd Qu.:21.50  
+ Max.   :17.300   Max.   :97.54   Max.   :53.00   Max.   :47.00  
+                                                                 
+     Sable     
+ Min.   :15.0  
+ 1st Qu.:47.0  
+ Median :67.0  
+ Mean   :60.1  
+ 3rd Qu.:74.0  
+ Max.   :87.0  
+               </code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># str(dta)</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>dta <span class="ot">&lt;-</span> dta <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Sol =</span> <span class="fu">as.factor</span>(Sol),</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">Site =</span> <span class="fu">as.factor</span>(Site),</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">Profondeur =</span> <span class="fu">factor</span>(Profondeur), <span class="fu">levels</span>(<span class="fu">c</span>(<span class="st">'Superficiel'</span>, <span class="st">'Intermediaire'</span>, <span class="st">'Profond'</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Profondeur =</span> <span class="fu">relevel</span>(Profondeur, <span class="at">ref=</span> <span class="st">"Superficiel"</span>))</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a> <span class="fu">summary</span>(dta)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>       Sol            Site             Profondeur        pH       
@@ -387,18 +564,80 @@ window.Quarto = {
  Max.   :87.0  
                </code></pre>
 </div>
+</div>
+<ul>
+<li>Combien y a t-il de variables quantitatives / qualitatives?</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Il y a différentes manières d’identifier le nombre de variables et d’individus. A travers la fonction <strong><em>str()</em></strong> ou <strong><em>sapply()</em></strong>, on a 3 variables qualitatives et 18 variables quantitatives On peut aussi demander le nombre de colonnes et de lignes (ncol, nrow)</p>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>nobs <span class="ot">&lt;-</span> <span class="fu">nrow</span>(dta)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ncol</span>(dta)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">any</span>(<span class="fu">is.na</span>(dta))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(dta)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   539 obs. of  21 variables:
+ $ Sol        : Factor w/ 3 levels "Alluvial","Dunaire",..: 3 1 1 1 1 1 1 1 1 1 ...
+ $ Site       : Factor w/ 180 levels "292-11_A","292-11_B",..: 31 1 1 1 2 2 2 3 3 3 ...
+ $ Profondeur : Factor w/ 3 levels "Superficiel",..: 1 1 3 2 1 3 2 1 3 2 ...
+ $ pH         : num  4.72 4.56 4.91 4.6 4.67 4.81 4.63 4.84 4.57 4.74 ...
+ $ Eau        : num  3.49 2.76 3.39 2.84 3.39 4.28 3.77 4.12 4.98 4.58 ...
+ $ Av.P       : num  4.28 7.02 1.75 4.67 4.54 0.7 1.84 4.2 0.88 2.39 ...
+ $ C          : num  1.26 0.91 0.3 0.58 0.96 0.38 0.61 0.96 0.47 0.67 ...
+ $ N          : num  0.11 0.12 0.06 0.09 0.14 0.08 0.1 0.12 0.08 0.11 ...
+ $ NO3        : num  0 10.13 1.84 4.87 1.84 ...
+ $ NH4        : num  6.71 2.43 2.17 2.52 3.39 0.66 0.75 3.21 2 2.16 ...
+ $ Exc.Ac     : num  4.97 3.96 5.8 5.09 4.14 8.25 6.23 5.48 7.84 6.92 ...
+ $ Exc.Al     : num  4.07 3.6 5.33 4.63 3.83 7.65 5.72 4.95 7.68 6.44 ...
+ $ Exc.Ca     : num  0.15 0.32 0.15 0.17 0.91 0.2 0.33 1.42 0.3 0.67 ...
+ $ Exc.Mg     : num  0.25 0.18 0.2 0.21 0.87 1.2 0.86 1.79 1.98 1.49 ...
+ $ Exc.K      : num  0.24 0.21 0.15 0.15 0.16 0.17 0.12 0.22 0.16 0.17 ...
+ $ Exc.Na     : num  0.07 0.06 0.05 0.05 0.06 0.06 0.06 0.07 0.06 0.07 ...
+ $ Exc.Cations: num  5.68 4.73 6.35 5.68 6.14 ...
+ $ SatBase    : num  12.5 16.36 8.69 10.29 32.53 ...
+ $ Argile     : int  27 27 31 27 33 43 33 37 45 37 ...
+ $ Limon      : int  10 19 16 19 24 26 24 32 25 32 ...
+ $ Sable      : int  63 54 52 54 43 31 43 31 30 31 ...</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(dta, class)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>        Sol        Site  Profondeur          pH         Eau        Av.P 
+   "factor"    "factor"    "factor"   "numeric"   "numeric"   "numeric" 
+          C           N         NO3         NH4      Exc.Ac      Exc.Al 
+  "numeric"   "numeric"   "numeric"   "numeric"   "numeric"   "numeric" 
+     Exc.Ca      Exc.Mg       Exc.K      Exc.Na Exc.Cations     SatBase 
+  "numeric"   "numeric"   "numeric"   "numeric"   "numeric"   "numeric" 
+     Argile       Limon       Sable 
+  "integer"   "integer"   "integer" </code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>nobs <span class="ot">&lt;-</span> <span class="fu">nrow</span>(dta)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ncol</span>(dta)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">any</span>(<span class="fu">is.na</span>(dta))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] FALSE</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(dta<span class="sc">$</span>Profondeur)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(dta<span class="sc">$</span>Profondeur)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Superficiel Intermediaire       Profond 
@@ -406,15 +645,247 @@ window.Quarto = {
 </div>
 </div>
 <p>Le fichier de données a 539 lignes et 21colonnes.</p>
-<p>il n’y a pas de données manquantes</p>
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>dta <span class="sc">%&gt;%</span> </span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x=</span> Profondeur, <span class="at">y =</span> Argile) <span class="sc">+</span> </span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">'Classe de Profondeur'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">any</span>(<span class="fu">is.na</span>(dta))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Il n’y a pas de données manquantes.</p>
+</div>
+</div>
+<ul>
+<li>Sont-ils tous prélevés à la même profondeur ?</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Observez le site <strong><em>292-31_D</em></strong></p>
+</div>
+</div>
+<!--  Que se passe avec le site 292-31_D ????  -->
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>dta <span class="sc">|&gt;</span> <span class="fu">group_by</span>(Site, Profondeur) <span class="sc">|&gt;</span> <span class="fu">count</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 539 × 3
+# Groups:   Site, Profondeur [539]
+   Site     Profondeur        n
+   &lt;fct&gt;    &lt;fct&gt;         &lt;int&gt;
+ 1 292-11_A Superficiel       1
+ 2 292-11_A Intermediaire     1
+ 3 292-11_A Profond           1
+ 4 292-11_B Superficiel       1
+ 5 292-11_B Intermediaire     1
+ 6 292-11_B Profond           1
+ 7 292-11_H Superficiel       1
+ 8 292-11_H Intermediaire     1
+ 9 292-11_H Profond           1
+10 292-11_M Superficiel       1
+# ℹ 529 more rows</code></pre>
+</div>
+</div>
+<ul>
+<li>Quel est le pH moyen tout site/Sol et Profondeur confondu ?</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Nous avons le resultat dans le resumé univarié des variables. On peut aussi retrouver via la fonction ci-dessous:</p>
+</div>
+</div>
+<!--  Nous avons le resultat dans le resumé univarié des variables  -->
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>dta <span class="sc">%&gt;%</span> </span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">pH_moyen=</span><span class="fu">mean</span>(pH, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>  pH_moyen
+1  4.63154</code></pre>
+</div>
+</div>
+<ul>
+<li>Quelle la variance de la teneur en Eau ? Quelle est la variance de la teneur en Sodium (Na) ?</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>dta <span class="sc">%&gt;%</span> </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">var_EAU =</span><span class="fu">var</span>(Eau, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">var_Sodium =</span><span class="fu">var</span>(Exc.Na, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>  var_EAU  var_Sodium
+1 2.11306 0.001288402</code></pre>
+</div>
+</div>
+<p>Ou de manière générale</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>dta <span class="sc">|&gt;</span> </span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), <span class="fu">list</span>(<span class="at">moy =</span> mean, <span class="at">var =</span> var))) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   pH_moy    pH_var  Eau_moy Eau_var Av.P_moy Av.P_var     C_moy     C_var
+1 4.63154 0.1419045 2.697607 2.11306 4.131818 12.89734 0.9706122 0.4080084
+       N_moy       N_var  NO3_moy  NO3_var  NH4_moy  NH4_var Exc.Ac_moy
+1 0.08055659 0.002224225 2.722226 14.09726 5.044249 26.91682   3.781039
+  Exc.Ac_var Exc.Al_moy Exc.Al_var Exc.Ca_moy Exc.Ca_var Exc.Mg_moy Exc.Mg_var
+1   5.203768   3.151095   4.813158  0.3028757  0.8644495  0.6193692   0.842742
+  Exc.K_moy  Exc.K_var Exc.Na_moy  Exc.Na_var Exc.Cations_moy Exc.Cations_var
+1 0.1386271 0.01760183 0.05237477 0.001288402        4.894508         10.1526
+  SatBase_moy SatBase_var Argile_moy Argile_var Limon_moy Limon_var Sable_moy
+1    18.50531    238.9387   23.76438   113.4741  16.12987  72.95708  60.10019
+  Sable_var
+1  323.3766</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>La somme des variables Limon, Argile et Sable devrait sommer à 100, mais ce n’est pas le cas à cause des erreurs d’arrondi. Le tableau ci-dessous se lit de la manière suivante. Total représente la somme des proportions exprimée en pourcentage et n le nombre d’observation pour lesquelles la somme des proportion de Limon, Sable et Argil donnent cette valeur.</p>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>count_percent<span class="ot">&lt;-</span> dta <span class="sc">%&gt;%</span> </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Total =</span> Limon <span class="sc">+</span> Argile <span class="sc">+</span> Sable)  <span class="sc">%&gt;%</span> </span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Total) <span class="sc">|&gt;</span> </span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Total) <span class="sc">|&gt;</span> </span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="représentation-bivariée" class="level3">
+<h3 class="anchored" data-anchor-id="représentation-bivariée">Représentation bivariée</h3>
+<p>Pour appréhender le jeu de données, il est utile de commencer par comprendre les relations deux à deux entre les variables. On peut commencer par la corrélation entre celles-ci</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"corrplot"</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>dta_quanti <span class="ot">&lt;-</span> dta <span class="sc">|&gt;</span> </span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(is.numeric))</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>cor.mat <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">cor</span>(dta_quanti),<span class="dv">2</span>)</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="fu">corrplot</span>(cor.mat, <span class="at">type=</span><span class="st">"upper"</span>, <span class="at">order=</span><span class="st">"hclust"</span>, </span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">tl.col=</span><span class="st">"black"</span>, <span class="at">tl.srt=</span><span class="dv">45</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="tp1_example_files/figure-html/correlation-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>cor.mat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>               pH   Eau  Av.P     C     N   NO3   NH4 Exc.Ac Exc.Al Exc.Ca
+pH           1.00 -0.31 -0.45 -0.57 -0.42 -0.17 -0.15  -0.30  -0.19   0.02
+Eau         -0.31  1.00  0.12  0.30  0.72  0.48  0.21   0.84   0.81   0.35
+Av.P        -0.45  0.12  1.00  0.66  0.49  0.30  0.07  -0.12  -0.22   0.20
+C           -0.57  0.30  0.66  1.00  0.72  0.24  0.23  -0.02  -0.13   0.31
+N           -0.42  0.72  0.49  0.72  1.00  0.66  0.22   0.40   0.35   0.53
+NO3         -0.17  0.48  0.30  0.24  0.66  1.00  0.05   0.29   0.31   0.50
+NH4         -0.15  0.21  0.07  0.23  0.22  0.05  1.00   0.11   0.10   0.09
+Exc.Ac      -0.30  0.84 -0.12 -0.02  0.40  0.29  0.11   1.00   0.98  -0.03
+Exc.Al      -0.19  0.81 -0.22 -0.13  0.35  0.31  0.10   0.98   1.00  -0.02
+Exc.Ca       0.02  0.35  0.20  0.31  0.53  0.50  0.09  -0.03  -0.02   1.00
+Exc.Mg      -0.14  0.71  0.22  0.30  0.66  0.48  0.10   0.44   0.43   0.54
+Exc.K       -0.38  0.63  0.61  0.54  0.71  0.46  0.16   0.37   0.31   0.39
+Exc.Na      -0.42  0.55  0.40  0.39  0.46  0.23  0.23   0.43   0.37   0.17
+Exc.Cations -0.27  0.94  0.06  0.19  0.67  0.51  0.14   0.85   0.84   0.44
+SatBase     -0.16  0.35  0.50  0.45  0.60  0.48  0.02  -0.04  -0.07   0.70
+Argile      -0.02  0.83 -0.16 -0.09  0.50  0.51  0.07   0.81   0.85   0.33
+Limon       -0.04  0.72 -0.09 -0.03  0.49  0.52  0.02   0.66   0.69   0.34
+Sable        0.03 -0.84  0.13  0.07 -0.53 -0.55 -0.05  -0.79  -0.83  -0.35
+            Exc.Mg Exc.K Exc.Na Exc.Cations SatBase Argile Limon Sable
+pH           -0.14 -0.38  -0.42       -0.27   -0.16  -0.02 -0.04  0.03
+Eau           0.71  0.63   0.55        0.94    0.35   0.83  0.72 -0.84
+Av.P          0.22  0.61   0.40        0.06    0.50  -0.16 -0.09  0.13
+C             0.30  0.54   0.39        0.19    0.45  -0.09 -0.03  0.07
+N             0.66  0.71   0.46        0.67    0.60   0.50  0.49 -0.53
+NO3           0.48  0.46   0.23        0.51    0.48   0.51  0.52 -0.55
+NH4           0.10  0.16   0.23        0.14    0.02   0.07  0.02 -0.05
+Exc.Ac        0.44  0.37   0.43        0.85   -0.04   0.81  0.66 -0.79
+Exc.Al        0.43  0.31   0.37        0.84   -0.07   0.85  0.69 -0.83
+Exc.Ca        0.54  0.39   0.17        0.44    0.70   0.33  0.34 -0.35
+Exc.Mg        1.00  0.69   0.42        0.79    0.76   0.67  0.62 -0.69
+Exc.K         0.69  1.00   0.61        0.62    0.64   0.43  0.39 -0.44
+Exc.Na        0.42  0.61   1.00        0.52    0.36   0.33  0.30 -0.34
+Exc.Cations   0.79  0.62   0.52        1.00    0.42   0.89  0.77 -0.89
+SatBase       0.76  0.64   0.36        0.42    1.00   0.26  0.31 -0.30
+Argile        0.67  0.43   0.33        0.89    0.26   1.00  0.76 -0.95
+Limon         0.62  0.39   0.30        0.77    0.31   0.76  1.00 -0.92
+Sable        -0.69 -0.44  -0.34       -0.89   -0.30  -0.95 -0.92  1.00</code></pre>
+</div>
+</div>
+<p>En utilisant le package <code>GGally</code>et notamment la fonction ggpairs, proposer une représentation bivariée des différents couples de variables.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GGally)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpairs</span>(dta,  <span class="at">columns =</span> <span class="dv">4</span><span class="sc">:</span><span class="dv">21</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="tp1_example_files/figure-html/graphique-deux-a-deux-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>La visualisation est difficile, d’où l’intérêt d’une approche multivariée.</p>
+<p>Avant celà , on peut essayer de visualiser le lien entre une variable qualitative (Profondeur ou Type de Sol) et variables quantitatives au travers d’une boîte à moustaches. Par exemple</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>dta <span class="sc">%&gt;%</span> </span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x=</span> Profondeur, <span class="at">y =</span> Argile) <span class="sc">+</span> </span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">'Classe de Profondeur'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -425,652 +896,539 @@ window.Quarto = {
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(dta<span class="sc">$</span>Argile<span class="sc">~</span> dta<span class="sc">$</span>Profondeur)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="do">## ou  boxplot(dta$Argile~ dta$Profondeur)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="tp1_example_files/figure-html/boxplot-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
-</figure>
 </div>
-</div>
-</div>
-<p>La somme des variables Limon, Argile et Sable devrait sommer à 100, mais ce n’est pas le cas à cause des erreurs d’arrondi</p>
+</section>
+</section>
+<section id="approche-factorielle" class="level2">
+<h2 class="anchored" data-anchor-id="approche-factorielle">Approche factorielle</h2>
+<p>Le but est de faire émerger des typologies de sol. Pour le moment nous mettons de coté les variables qualitatives. Pour visualiser les données on peut commencer par une ACP. l’ACP ne traite que des variables quantitatives, on va considérer les autres variables comme supllémentaires, autrement, dit l’information qu’elles contiennent ne contribuent pa sà la définition des axes.</p>
+<p>Pour faire le lien avec le cours on va définir les objets du cours dans le cadre de cet exercice. La matrice des données est <span class="math inline">\(X\)</span>.</p>
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>dta <span class="sc">%&gt;%</span> </span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Total =</span> Limon <span class="sc">+</span> Argile <span class="sc">+</span> Sable)  <span class="sc">%&gt;%</span> </span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Total)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>    Total
-1     100
-2     100
-3      99
-4     100
-5     100
-6     100
-7     100
-8     100
-9     100
-10    100
-11    100
-12    101
-13    100
-14    100
-15    100
-16    100
-17    100
-18    100
-19    100
-20     99
-21    100
-22     99
-23    100
-24    100
-25    100
-26     99
-27    100
-28     99
-29    100
-30    101
-31    100
-32    100
-33    100
-34    100
-35    100
-36     99
-37    100
-38    100
-39    100
-40    100
-41    101
-42    100
-43    101
-44    100
-45    101
-46    100
-47    100
-48    100
-49    100
-50    100
-51    100
-52    100
-53    100
-54     99
-55    100
-56    101
-57    100
-58    101
-59    101
-60    100
-61    101
-62    101
-63    101
-64    101
-65    100
-66     99
-67    100
-68    100
-69    101
-70    100
-71    100
-72    100
-73    100
-74    100
-75    100
-76    100
-77    100
-78    100
-79    100
-80    100
-81    100
-82    100
-83    101
-84     99
-85    101
-86    100
-87    100
-88    100
-89    101
-90    100
-91    101
-92     99
-93    100
-94    100
-95    100
-96    100
-97    100
-98    100
-99    100
-100   100
-101   100
-102   100
-103    99
-104   100
-105    99
-106   100
-107    99
-108   100
-109    99
-110   100
-111    99
-112   100
-113   100
-114   100
-115   100
-116   100
-117   100
-118   100
-119    99
-120   100
-121   100
-122   100
-123   100
-124    99
-125    99
-126   100
-127   100
-128   100
-129    99
-130   101
-131    99
-132   100
-133   100
-134   100
-135   100
-136    99
-137   100
-138   100
-139   101
-140   100
-141   100
-142    99
-143   100
-144    99
-145   101
-146    99
-147   100
-148   100
-149   100
-150    99
-151   100
-152    99
-153   100
-154   100
-155   100
-156   100
-157   100
-158   100
-159    99
-160   100
-161    99
-162   100
-163   101
-164   100
-165   100
-166    99
-167   100
-168   101
-169   100
-170   101
-171   100
-172    99
-173   100
-174   101
-175   100
-176   101
-177   100
-178   100
-179   100
-180   100
-181   100
-182   100
-183   100
-184    99
-185   100
-186   100
-187   100
-188   100
-189   100
-190    99
-191   100
-192   101
-193   100
-194   101
-195    99
-196   100
-197    99
-198   100
-199   101
-200   100
-201   100
-202    99
-203   100
-204   100
-205    99
-206   100
-207   101
-208   100
-209   101
-210   100
-211   100
-212   100
-213    99
-214   100
-215    99
-216   100
-217   100
-218   100
-219   100
-220   100
-221   100
-222   100
-223   100
-224   100
-225   100
-226   100
-227   100
-228   100
-229   101
-230   100
-231   100
-232   100
-233   100
-234   100
-235   100
-236   100
-237   100
-238   100
-239   100
-240   100
-241   100
-242   100
-243   101
-244   100
-245   101
-246   100
-247   100
-248   100
-249   100
-250   100
-251   100
-252   100
-253   100
-254   100
-255   100
-256   100
-257   100
-258   100
-259   100
-260   100
-261    99
-262   100
-263    99
-264   100
-265   100
-266   100
-267    99
-268   100
-269    99
-270   100
-271   100
-272   100
-273   100
-274   100
-275   100
-276   100
-277    99
-278   100
-279   100
-280   100
-281   100
-282   100
-283   100
-284   100
-285   100
-286    99
-287   100
-288   100
-289   100
-290   100
-291    99
-292   100
-293    99
-294   101
-295   100
-296   101
-297   100
-298   100
-299   100
-300   101
-301   100
-302   101
-303   100
-304   100
-305   100
-306   100
-307   101
-308   100
-309   100
-310   100
-311   100
-312   100
-313   101
-314   100
-315   101
-316   100
-317   101
-318   100
-319   100
-320   100
-321   100
-322   100
-323   100
-324   100
-325   100
-326   100
-327   100
-328   100
-329   100
-330   100
-331   100
-332   100
-333    99
-334   100
-335    99
-336   100
-337   101
-338   100
-339   100
-340   100
-341   100
-342   100
-343   100
-344   100
-345   100
-346   100
-347   100
-348   100
-349   100
-350   100
-351   101
-352   100
-353   101
-354   100
-355   100
-356   100
-357   100
-358   100
-359   100
-360   100
-361   100
-362   100
-363   100
-364   101
-365   100
-366   100
-367   101
-368   100
-369   100
-370   100
-371   100
-372    99
-373   100
-374    99
-375   100
-376   100
-377   100
-378   101
-379   100
-380   101
-381   100
-382   100
-383   100
-384    99
-385    99
-386    99
-387   100
-388   100
-389   100
-390   100
-391   100
-392   100
-393   100
-394   100
-395   100
-396   100
-397   100
-398   100
-399   100
-400   100
-401   100
-402   100
-403   100
-404   100
-405   100
-406   100
-407   100
-408    99
-409   100
-410    99
-411   100
-412    99
-413   100
-414   100
-415   100
-416   100
-417   100
-418   101
-419   100
-420   100
-421   100
-422   100
-423   100
-424   100
-425   100
-426   100
-427   100
-428   100
-429   100
-430   100
-431   100
-432   100
-433   100
-434   100
-435   100
-436   100
-437   100
-438   100
-439   100
-440   100
-441   100
-442   100
-443   100
-444   100
-445   101
-446   100
-447   100
-448   100
-449   100
-450   101
-451   100
-452   101
-453    99
-454   100
-455    99
-456   100
-457   100
-458   100
-459   101
-460   100
-461   101
-462   100
-463   100
-464   100
-465   101
-466   100
-467   101
-468   100
-469   100
-470   100
-471   100
-472   100
-473   100
-474   101
-475   100
-476   101
-477   100
-478   101
-479   100
-480   100
-481   100
-482   100
-483   100
-484   100
-485   100
-486   100
-487   100
-488   100
-489    99
-490    99
-491    99
-492   100
-493   101
-494   100
-495    99
-496   100
-497    99
-498   100
-499   100
-500   100
-501   100
-502   100
-503   100
-504   100
-505   100
-506   100
-507   100
-508   101
-509   100
-510   100
-511   100
-512   100
-513    99
-514   101
-515    99
-516   100
-517   101
-518   100
-519   100
-520   100
-521   100
-522    99
-523   100
-524    99
-525   100
-526   100
-527   100
-528   100
-529   101
-530   100
-531   101
-532   100
-533   101
-534   100
-535   100
-536   100
-537    99
-538   100
-539    99</code></pre>
-</div>
-</div>
-<p>On peut s’interesser aux corrélations entre les variables</p>
-</section>
-<section id="représentation" class="level3">
-<h3 class="anchored" data-anchor-id="représentation">Représentation</h3>
-</section>
-</section>
-<section id="identifier-une-typologie-de-sol" class="level2">
-<h2 class="anchored" data-anchor-id="identifier-une-typologie-de-sol">Identifier une typologie de sol</h2>
-<p>Pour visualiser les données on peut commencer par une ACP</p>
-<ul>
-<li>sur les variables quantitatives uniquement</li>
-</ul>
-<div class="cell" data-layout-align="center">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> dta <span class="sc">%&gt;%</span> </span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(is.numeric)) <span class="sc">%&gt;%</span> <span class="fu">as.matrix</span>()</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(X)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> dta <span class="sc">%&gt;%</span> </span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(is.numeric)) <span class="sc">%&gt;%</span> <span class="fu">as.matrix</span>()</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(X)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 539  18</code></pre>
 </div>
 </div>
-<section id="poids-des-individus" class="level3">
-<h3 class="anchored" data-anchor-id="poids-des-individus">Poids des individus</h3>
-<p>On va prendre les mêmes poids pour tous les individus soit <span class="math inline">\(1/n\)</span>.</p>
+<section id="mise-en-place-de-lapproche-factorielle" class="level3">
+<h3 class="anchored" data-anchor-id="mise-en-place-de-lapproche-factorielle">Mise en place de l’approche factorielle</h3>
+<ul>
+<li>Comment décider le poids attribuer à chaque individu ?</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Par défaut le poids est 1/n sauf si autre bonne raison</p>
+</div>
+</div>
 <p>Les poids sont stockés dans la matrice <span class="math inline">\(W\)</span></p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>W <span class="ot">&lt;-</span> <span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span>nobs, <span class="at">ncol =</span> nobs, <span class="at">nrow =</span> nobs)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(W)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 539 539</code></pre>
+</div>
+</div>
 </section>
 <section id="distance-à-utiliser-entre-les-individus" class="level3">
 <h3 class="anchored" data-anchor-id="distance-à-utiliser-entre-les-individus">Distance à utiliser entre les individus</h3>
-<p>On commence par une distance euclidienne. La matrice de distance <span class="math inline">\(M\)</span> est l’identité</p>
-<p>Le cours dit</p>
-<ul>
-<li><p>l’inertie vaut <span class="math inline">\(tr(X^\top W X M)\)</span></p></li>
-<li><p>On va chercher les valeurs et vecteurs propres de la matrice <span class="math inline">\(X^\top W X M\)</span></p></li>
-</ul>
-<p>Si on fait une ACP non normée le sable et SatBase contribuent beaucoup plus à la formation des axes que les autres variables.</p>
+<p>Si on considère une distance euclidienne, la matrice de distance <span class="math inline">\(M\)</span> est l’identité.</p>
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>dta_pca <span class="ot">&lt;-</span> <span class="fu">PCA</span>(<span class="at">X =</span> dta, <span class="at">scale.unit =</span> <span class="cn">FALSE</span>, <span class="at">quali.sup =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), <span class="at">ncp =</span> <span class="dv">18</span>)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co">#library(Factoshiny)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<p>Pour rééquilibrer le poids des variables dans la construction des projections, on propose une ACP normée.</p>
-<p>Pour voir comment l’information d’une variable se disperse sur les différentes dimensions on peut regarder la contribution de cette variable à la construction des différents axes.</p>
-<p>Par exemple pour le PH</p>
-<div class="cell" data-layout-align="center">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(dta_pca<span class="sc">$</span>var<span class="sc">$</span>contrib[<span class="dv">1</span>,],<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>p_quanti <span class="ot">&lt;-</span> <span class="fu">ncol</span>(X)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>M <span class="ot">&lt;-</span> <span class="fu">diag</span>(<span class="dv">1</span>, <span class="at">ncol =</span> p_quanti, <span class="at">nrow =</span> p_quanti)</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(M)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code> Dim.1  Dim.2  Dim.3  Dim.4  Dim.5  Dim.6  Dim.7  Dim.8  Dim.9 Dim.10 Dim.11 
-  0.00   0.00   0.02   0.00   0.21   0.25   0.91   0.11   1.13   2.78  26.47 
-Dim.12 Dim.13 Dim.14 Dim.15 Dim.16 Dim.17 Dim.18 
-  0.31  57.55  10.24   0.02   0.00   0.00   0.00 </code></pre>
+<pre><code>[1] 18 18</code></pre>
 </div>
 </div>
-<p>On peut mettre en place une ACP normée en précisant simple <code>scale.unit = TRUE</code>, ce qui est le comportement par défaut de la fonction `PC̀A ̀.</p>
+<p>Le cours dit que si <span class="math inline">\(X\)</span> est cebtrée alors l’inertie vaut <span class="math inline">\(tr(X^\top W X M)\)</span></p>
+<p>Pour vérifier on va définir la matrice <span class="math inline">\(X\)</span> centrée et calculer l’inertie à l’aide de la formule du cours. La fonction <code>tr</code> n’est pas disponible dans <code>R</code> par défaut</p>
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>dta_pca <span class="ot">&lt;-</span> <span class="fu">PCA</span>(<span class="at">X =</span> dta, <span class="at">scale.unit =</span> <span class="cn">TRUE</span>, <span class="at">quali.sup =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), <span class="at">ncp =</span> <span class="dv">18</span>)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co">#library(Factoshiny)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>tr <span class="ot">&lt;-</span> <span class="cf">function</span>(X){</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>(<span class="fu">diag</span>(X))}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>Qualité globale des représentations</p>
-<ul>
-<li><p>sur le plan 1-2 : on représente 66.9241274</p></li>
-<li><p>sur le plan 1-3 : on représente 57.5578374</p></li>
-</ul>
-<p>Avec 3 axes on représente 77.1397764 de l’inertie.</p>
-<p>On peut visualiser le cercle des corrélations</p>
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.PCA</span>(dta_pca,<span class="at">choix=</span><span class="st">'var'</span>,</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">select=</span><span class="st">'cos2  0.7'</span>,</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">unselect=</span><span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>X_center <span class="ot">&lt;-</span> dta <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">where</span>(is.numeric))  <span class="sc">|&gt;</span> <span class="fu">scale</span>(<span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">scale =</span> <span class="cn">FALSE</span>) </span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>inertie <span class="ot">&lt;-</span> <span class="fu">tr</span>(<span class="fu">t</span>(X_center) <span class="sc">%*%</span> W <span class="sc">%*%</span> X_center <span class="sc">%*%</span> M)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>L’inertie vaut 825.6839644.</p>
+<p>Les axes principaux seront les vecteurs propres et l’inertie portée par chaque axe, sera la valeur propre associée</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>VM  <span class="ot">&lt;-</span> <span class="fu">t</span>(X_center) <span class="sc">%*%</span> W <span class="sc">%*%</span> X_center <span class="sc">%*%</span> M</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>inertia_dec <span class="ot">&lt;-</span> <span class="fu">eigen</span>(VM)<span class="sc">$</span>values</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>pour faire une ACP non normée dans <code>R</code>, on utilise la fonction <code>PCA</code>de <code>FactomineR</code>, en précisant l’option <code>scale=FALSE</code> pour indiquer que l’on veut un ACP non normée</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Par défaut la fonction PCA fait une ACP normée !!</p>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>dta_pca <span class="ot">&lt;-</span> <span class="fu">PCA</span>(<span class="at">X =</span> dta, <span class="at">scale.unit =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">quali.sup =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), <span class="at">ncp =</span> <span class="dv">18</span>)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="co">#library(Factoshiny)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Si on fait une ACP non normée, on constate que le Sable et SatBase contribuent beaucoup plus à la formation des axes que les autres variables. EN effet dans une ACP non normée, l’information (= l’inertie) portée par une variable est la variance de cette variable . Les variances des variables (ordonnées par ordre décroissant) sont rappelées ci-dessous :</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>ordered_variance <span class="ot">&lt;-</span> dta <span class="sc">|&gt;</span> </span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), <span class="sc">~</span><span class="fu">var</span>(.x)<span class="sc">*</span>(nobs<span class="dv">-1</span>)<span class="sc">/</span>nobs)) <span class="sc">|&gt;</span> </span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>   <span class="fu">pivot_longer</span>( <span class="at">cols =</span> <span class="fu">everything</span>(), <span class="at">names_to =</span> <span class="st">"Variable"</span>, <span class="at">values_to =</span> <span class="st">"Variance"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Variance =</span> <span class="fu">round</span>(Variance, <span class="dv">2</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="sc">-</span>Variance)</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>ordered_variance </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 18 × 2
+   Variable    Variance
+   &lt;chr&gt;          &lt;dbl&gt;
+ 1 Sable         323.  
+ 2 SatBase       238.  
+ 3 Argile        113.  
+ 4 Limon          72.8 
+ 5 NH4            26.9 
+ 6 NO3            14.1 
+ 7 Av.P           12.9 
+ 8 Exc.Cations    10.1 
+ 9 Exc.Ac          5.19
+10 Exc.Al          4.8 
+11 Eau             2.11
+12 Exc.Ca          0.86
+13 Exc.Mg          0.84
+14 C               0.41
+15 pH              0.14
+16 Exc.K           0.02
+17 N               0   
+18 Exc.Na          0   </code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Ainsi, puisque les variances des variables Sable et SatBase (et dans une moindre mesure Argile et Limon) sont très grandes devant les autres, ces variables contribuent davantage à la formation des premiers axes. Pour bien comprendre, il faut se rendre compte qu’en résumant le jeu de données aux seules variables Sable et SatBase, on représente déjà un pourcentage d’inertie de 67.98.</p>
+</div>
+</div>
+<p>Pour voir comment l’information d’une variable se disperse sur les différentes dimensions on peut regarder la contribution de cette variable à la construction des différents axes.</p>
+<p>Par exemple pour le Sable et le pH.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(dta_pca<span class="sc">$</span>var<span class="sc">$</span>contrib[<span class="fu">c</span>(<span class="st">"Sable"</span>, <span class="st">"pH"</span> ),],<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>      Dim.1 Dim.2 Dim.3 Dim.4 Dim.5 Dim.6 Dim.7 Dim.8 Dim.9 Dim.10 Dim.11
+Sable 56.42  6.92  0.21  0.66  0.09  0.01  2.19  0.01  0.00   0.01   0.09
+pH     0.00  0.00  0.02  0.00  0.21  0.25  0.91  0.11  1.13   2.78  26.47
+      Dim.12 Dim.13 Dim.14 Dim.15 Dim.16 Dim.17 Dim.18
+Sable  33.31   0.02   0.05   0.01      0      0      0
+pH      0.31  57.55  10.24   0.02      0      0      0</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Si vos données sont toutes dans la même unité de mesure et varient dans des gammes de valeurs identiques: <strong>l’ACP non-normée est souvent recommandée</strong>.</p>
+<p>Si vos données sont dans des unités de mesure différentes et varient dans des gammes de valeurs différentes: <strong>l’ACP normée est recommandée</strong></p>
+<p><strong>l’ACP non normée</strong> est basée sur la matrice de covariances, qui se calcule par <span class="math inline">\(VM =t(X) W W M\)</span>, avec <span class="math inline">\(M\)</span> la matrice identité.</p>
+<p><strong>l’ACP normée</strong> est basée sur la matrice de corrélations, qui se calcule par <span class="math inline">\(VM =t(X) W W M\)</span>, mais avec <span class="math inline">\(M\)</span> la matrice diagnonale dont chaque terme diagonale est l’inverse de la variance de la variable concernée</p>
+</div>
+</div>
+<p><strong><em>Ici les variables ont des ordres de grandeur différent, la mesure de pH n’est pas comparable avec la teneur en Sodium par exemple, on va faire une ACP normée, </em></strong> on propose donc d’équilibrer le poids des variables dans la construction des projections en proposant une ACP normée. Mais avant de passer à cette ACP non normée, on peut vérifier que les vecteurs propres obtenus “à la main# coincident avec les vecteurs propres obtenus par la fonction <code>PCA</code>. On le vérifier sur les deux premiers axes. Pour le vérifier on divise terme à terme chaque terme du vecteur propre obtenu avec <code>PCA</code> par le terme correspondant obtenu à la main.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>dta_pca<span class="sc">$</span>svd<span class="sc">$</span>V[,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>] <span class="sc">/</span> <span class="fu">eigen</span>(VM)<span class="sc">$</span>vectors[,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span> ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>      [,1] [,2]
+ [1,]    1   -1
+ [2,]    1   -1
+ [3,]    1   -1
+ [4,]    1   -1
+ [5,]    1   -1
+ [6,]    1   -1
+ [7,]    1   -1
+ [8,]    1   -1
+ [9,]    1   -1
+[10,]    1   -1
+[11,]    1   -1
+[12,]    1   -1
+[13,]    1   -1
+[14,]    1   -1
+[15,]    1   -1
+[16,]    1   -1
+[17,]    1   -1
+[18,]    1   -1</code></pre>
+</div>
+</div>
+</section>
+<section id="acp-normée" class="level3">
+<h3 class="anchored" data-anchor-id="acp-normée">ACP normée</h3>
+<ul>
+<li>Quelles variables choisissez-vous de considérer comme supplémentaires (qualitative et ou quantitative) ?</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Les variables illustratives ou supplémntaires n’interviennent pas pour la construction des composantes ou axes. Elles sont utilisées après coup pour mieux comprendre / commenter les résultats. Des individus peuvent aussi être traités comme illustratifs.</p>
+</div>
+</div>
+<p>Dans notre exemple, seules les variables qualitatives sont choisies en supplémentaires.</p>
+<ul>
+<li>Quelle doit être l’inertie du nuage ?</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Dans une ACP normée, la somme des valeurs propres est égale au nombre de variables.</p>
+</div>
+</div>
+<p>On peut à nouveau le vérifier à la main. Le cours dit que si <span class="math inline">\(X\)</span> est cebtrée alors l’inertie vaut $tr(X^W X M), $ cette fois <span class="math inline">\(M\)</span> est la matrice diagonale contenant l’inverse des variances.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>p_quanti <span class="ot">&lt;-</span> <span class="fu">ncol</span>(X)</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>variance <span class="ot">&lt;-</span> dta_quanti <span class="sc">|&gt;</span> </span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), <span class="sc">~</span><span class="fu">var</span>(.x)<span class="sc">*</span>(nobs<span class="dv">-1</span>)<span class="sc">/</span>nobs)) <span class="sc">|&gt;</span> </span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>   <span class="fu">pivot_longer</span>( <span class="at">cols =</span> <span class="fu">everything</span>(), <span class="at">names_to =</span> <span class="st">"Variable"</span>, <span class="at">values_to =</span> <span class="st">"Variance"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(Variance)</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>M_norm <span class="ot">&lt;-</span> <span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span>variance, <span class="at">ncol =</span> p_quanti, <span class="at">nrow =</span> p_quanti)</span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(M_norm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 18 18</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>VM_norm <span class="ot">&lt;-</span> <span class="fu">t</span>(X_center) <span class="sc">%*%</span> W <span class="sc">%*%</span> X_center <span class="sc">%*%</span> M_norm</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>inertie_norm <span class="ot">&lt;-</span> <span class="fu">tr</span>(VM_norm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>L’inertie dans l’ACP normée vaut 18.</p>
+<p>Pour finir l’ACP “à la main”, on peut voir que l’on pourrait toutes les informations pertinentes à partir de la seule étude de la matrice de la corrélation<br>
+Par exemple, l’éboulis des valeurs propres.</p>
+<ul>
+<li>A l’aide de la fonction <code>eigen</code> représenter la suite décroissante des valeurs propres. A partir de combien de vecteurs de base considérez-vous que l’information apportée devient négligeable?</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Verifier que  Cor(data) = t(X_reduit) %*% W %*% X_reduit</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>X_reduit <span class="ot">&lt;-</span> X_center <span class="sc">%*%</span> <span class="fu">sqrt</span>(M)</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>correlation_mat <span class="ot">&lt;-</span> <span class="fu">t</span>(X_reduit) <span class="sc">%*%</span> W <span class="sc">%*%</span> X_reduit</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a><span class="fu">max</span>(<span class="fu">abs</span>(<span class="fu">cor</span>(dta_quanti)<span class="sc">-</span>correlation_mat))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 321.7766</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>Cor_eigen <span class="ot">&lt;-</span> <span class="fu">eigen</span>(correlation_mat)</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>valeurspropres <span class="ot">&lt;-</span> Cor_eigen<span class="sc">$</span>values</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>vecteurspropres <span class="ot">&lt;-</span> Cor_eigen<span class="sc">$</span>vectors</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>dta.vp <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">index =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(valeurspropres), <span class="at">valeurspropres =</span> valeurspropres, <span class="at">inertiepercent =</span> <span class="fu">cumsum</span>(valeurspropres)<span class="sc">/</span><span class="fu">sum</span>(valeurspropres))</span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>dta.vp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   index valeurspropres inertiepercent
+1      1   5.459321e+02      0.6611877
+2      2   2.093213e+02      0.9147004
+3      3   2.772075e+01      0.9482734
+4      4   2.138866e+01      0.9741776
+5      5   1.070946e+01      0.9871480
+6      6   6.876714e+00      0.9954765
+7      7   2.355919e+00      0.9983298
+8      8   6.460148e-01      0.9991122
+9      9   2.708809e-01      0.9994403
+10    10   1.789621e-01      0.9996570
+11    11   1.128154e-01      0.9997937
+12    12   8.284054e-02      0.9998940
+13    13   5.151668e-02      0.9999564
+14    14   2.953466e-02      0.9999921
+15    15   5.594256e-03      0.9999989
+16    16   6.983405e-04      0.9999998
+17    17   1.825201e-04      1.0000000
+18    18   7.816816e-06      1.0000000</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>dta.vp <span class="sc">|&gt;</span> </span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">diffinertie =</span> valeurspropres<span class="sc">-</span><span class="fu">lead</span>(valeurspropres))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   index valeurspropres inertiepercent  diffinertie
+1      1   5.459321e+02      0.6611877 3.366108e+02
+2      2   2.093213e+02      0.9147004 1.816006e+02
+3      3   2.772075e+01      0.9482734 6.332085e+00
+4      4   2.138866e+01      0.9741776 1.067920e+01
+5      5   1.070946e+01      0.9871480 3.832751e+00
+6      6   6.876714e+00      0.9954765 4.520795e+00
+7      7   2.355919e+00      0.9983298 1.709904e+00
+8      8   6.460148e-01      0.9991122 3.751339e-01
+9      9   2.708809e-01      0.9994403 9.191881e-02
+10    10   1.789621e-01      0.9996570 6.614671e-02
+11    11   1.128154e-01      0.9997937 2.997485e-02
+12    12   8.284054e-02      0.9998940 3.132386e-02
+13    13   5.151668e-02      0.9999564 2.198201e-02
+14    14   2.953466e-02      0.9999921 2.394041e-02
+15    15   5.594256e-03      0.9999989 4.895915e-03
+16    16   6.983405e-04      0.9999998 5.158204e-04
+17    17   1.825201e-04      1.0000000 1.747033e-04
+18    18   7.816816e-06      1.0000000           NA</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co">#lead est une fonction positionnelle. elle</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="co"># permet d'accèder à une valeur stockée dans une ligne inférieure: elle décale d'un rang le vecteur. le 2eme élément devient le 1er et le 3eme devient le 2eme et ainsi de suite </span></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>dta.vp  <span class="sc">|&gt;</span> <span class="fu">ggplot</span>() <span class="sc">+</span>  <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">x=</span>index, <span class="at">y =</span> valeurspropres)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="tp1_example_files/figure-html/visu_var-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+<p><img src="tp1_example_files/figure-html/eigen-decomposition-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>dta.vp  <span class="sc">|&gt;</span> <span class="fu">ggplot</span>() <span class="sc">+</span>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>index, <span class="at">y =</span> inertiepercent)) <span class="sc">+</span> <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Pourcentage d'inertie représentée"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="tp1_example_files/figure-html/eigen-decomposition-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>On peut maintenant mettre en place une ACP normée, avec factomineR et en utilisant et <code>factoextra</code> pour des sorties plus agréables. On précise que l’ACP est normée grace à l’option <code>scale.unit = TRUE</code>.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>dta_pca <span class="ot">&lt;-</span> <span class="fu">PCA</span>(<span class="at">X =</span> dta, <span class="at">scale.unit =</span> <span class="cn">TRUE</span>, <span class="at">quali.sup =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), <span class="at">ncp =</span> <span class="dv">18</span>, <span class="at">graph =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="co">#library(Factoshiny)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>le champs <code>eig</code> de l’objet <code>dta_pca</code>contient les informations sur les valeurs propres</p>
+</div>
+</div>
+<p>On peut notamment s’intéresser à la qualité globale des représentations</p>
+<ul>
+<li><p>sur le plan 1-2 : on représente 66.9241274</p></li>
+<li><p>sur le plan 1-3 : on représente 57.5578374</p></li>
+<li><p>Représentez l’éboulis des valeurs propres à partir de la sortie <code>dta_pca</code> (ce qui a déjà été fait à la main précédemment).</p></li>
+</ul>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>dta_pca<span class="sc">$</span>eig <span class="sc">|&gt;</span> </span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span>  </span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowid_to_column</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">x=</span>rowid, <span class="at">y =</span>eigenvalue)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="tp1_example_files/figure-html/eboulis-facto-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>A partir de combien d’axes factoriels considérez-vous que l’information apportée devient négligeable?</li>
+</ul>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Il existe plusieurs “règles” ce qui est le signe qu’il n’y a pas une seule façon de faire mais des guides</p>
+<p><strong>Règle de l’ébouli des valeurs propres:</strong> garder les axes correspondant aux valeurs propres situées avant le point d’inflexion (cassure, coude) sur le graphes des valeurs propres.</p>
+<p><strong>Règle de Kaiser:</strong> garder les axes correspondant aux valeurs propres supérieures à la moyenne des valeurs propres:</p>
+<ul>
+<li><p>supérieures à 1 en ACP normée</p></li>
+<li><p>supeérieur à Inertie/p en ACP non normée</p></li>
+</ul>
+<p><strong>Règle empirique:</strong> garder les facteurs expliquant un pourcentage de variance cumulée satisfaisant (géneralement 80%)</p>
+</div>
+</div>
+<p>Dans notre exemple, avec 3 axes on représente 77.1397764 de l’inertie, l’axe 4 est proche de la valeur moyenne d’inertie.</p>
+<p>Tout nous incite à regarder les 3 et éventuellement 4 premiers axes.</p>
+</section>
+<section id="variables" class="level3">
+<h3 class="anchored" data-anchor-id="variables">Variables</h3>
+<p>On peut visualiser le cercle des corrélations</p>
+<p>Le package <code>factoextra</code>donne des outils pour produire des sorties les plus lisibles possibles.</p>
+<p>Pour représenter le cercle des corrélations dans un plan principal, on utilise la fonction <code>fviz_pca_var</code>. Sur chaque graphe, qu’est ce qui est représenté?</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_var</span>(dta_pca,</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">axes =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>)) <span class="co"># Numéro des axes à représenter </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="tp1_example_files/figure-html/fviz_pca_var-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_var</span>(dta_pca,</span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">axes =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>)) <span class="co">#</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="tp1_example_files/figure-html/fviz_pca_var-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_var</span>(dta_pca,</span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">axes =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>)) <span class="co"># </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="tp1_example_files/figure-html/fviz_pca_var-3.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Pour plus de lisibilité, refaites le même graphique avec seulement les variables bien représentées (par exemple celles pour lesquelles le cos2 de l’angle entre la variable initiale et la variable projetée dans le plan représenté est supérieure à 0.8 ou 0.6 selon les cas). Jouer sur les différentes repésentations pour bien comprendre quelle information est disponible sur chaque projection, on peut arranger les graphiques les uns à coté des autres pour une visualisation plus commode.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>pplotvar_12 <span class="ot">&lt;-</span> <span class="fu">fviz_pca_var</span>(dta_pca,</span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">axes =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), </span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">select.var =</span> <span class="fu">list</span>(<span class="at">cos2 =</span> <span class="fl">0.8</span>)) <span class="co"># Numéro des axes à représenter </span></span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>pplotvar_13 <span class="ot">&lt;-</span> <span class="fu">fviz_pca_var</span>(dta_pca,</span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">axes =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>), </span>
+<span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">select.var =</span> <span class="fu">list</span>(<span class="at">cos2 =</span> <span class="fl">0.8</span>)) <span class="co">#</span></span>
+<span id="cb67-7"><a href="#cb67-7" aria-hidden="true" tabindex="-1"></a>pplotvar_23 <span class="ot">&lt;-</span> <span class="fu">fviz_pca_var</span>(dta_pca,</span>
+<span id="cb67-8"><a href="#cb67-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">axes =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>), </span>
+<span id="cb67-9"><a href="#cb67-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">select.var =</span> <span class="fu">list</span>(<span class="at">cos2 =</span> <span class="fl">0.6</span>)) <span class="co"># </span></span>
+<span id="cb67-10"><a href="#cb67-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-11"><a href="#cb67-11" aria-hidden="true" tabindex="-1"></a><span class="do">## si on ne veut pas importer tout un package, on peut indiquer qu'on utilise la fonction ggarrange du package ggpur avec la synthaxe suivante</span></span>
+<span id="cb67-12"><a href="#cb67-12" aria-hidden="true" tabindex="-1"></a><span class="do">## on exécute le code uniquement si le package est est installé</span></span>
+<span id="cb67-13"><a href="#cb67-13" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="st">"ggpubr"</span> <span class="sc">%in%</span> <span class="fu">installed.packages</span>()[,<span class="dv">1</span>]){</span>
+<span id="cb67-14"><a href="#cb67-14" aria-hidden="true" tabindex="-1"></a>  ggpubr<span class="sc">::</span><span class="fu">ggarrange</span>( pplotvar_12 <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">caption =</span> <span class="st">'select cos2 &gt; 0.8'</span>), </span>
+<span id="cb67-15"><a href="#cb67-15" aria-hidden="true" tabindex="-1"></a>                     <span class="cn">NULL</span>, </span>
+<span id="cb67-16"><a href="#cb67-16" aria-hidden="true" tabindex="-1"></a>                     pplotvar_13 <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">caption =</span> <span class="st">'select cos2 &gt; 0.8'</span>),  </span>
+<span id="cb67-17"><a href="#cb67-17" aria-hidden="true" tabindex="-1"></a>                     pplotvar_23 <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">caption =</span> <span class="st">'select cos2 &gt; 0.6'</span>),</span>
+<span id="cb67-18"><a href="#cb67-18" aria-hidden="true" tabindex="-1"></a>                     <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">nrow =</span> <span class="dv">2</span>)</span>
+<span id="cb67-19"><a href="#cb67-19" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="tp1_example_files/figure-html/fviz_pca_var_select-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Il est important de noter qu’on peut grâce à <code>dta_acp</code>, tracer ce graphique nous même et donc modifier son apparence à notre guise. Par ailleurs les fonction de factoextra renvoie des objets de type ggplot que l’on peut aisément modifier. (aucune excuse pour les graphiques laids !)</p>
+<p>On se posait la question de l’intérêt d’aller voir l’axe 4, la visualisation ci-dessous nous montre que l’axe 4 porte essentiellement l’information sur NH4.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>pplotvar_14 <span class="ot">&lt;-</span> <span class="fu">fviz_pca_var</span>(dta_pca,</span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">axes =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">4</span>), </span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">select.var =</span> <span class="fu">list</span>(<span class="at">cos2 =</span> <span class="fl">0.8</span>)) <span class="co"># </span></span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>pplotvar_14 </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="tp1_example_files/figure-html/fviz_pca_var_axe4-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1079,7 +1437,7 @@ Dim.12 Dim.13 Dim.14 Dim.15 Dim.16 Dim.17 Dim.18
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>dta_pca<span class="sc">$</span>var<span class="sc">$</span>contrib <span class="sc">|&gt;</span> <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> <span class="fu">arrange</span>(<span class="sc">-</span>Dim<span class="fl">.1</span>) <span class="sc">|&gt;</span> <span class="fu">select</span>(Dim<span class="fl">.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>dta_pca<span class="sc">$</span>var<span class="sc">$</span>contrib <span class="sc">|&gt;</span> <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> <span class="fu">arrange</span>(<span class="sc">-</span>Dim<span class="fl">.1</span>) <span class="sc">|&gt;</span> <span class="fu">select</span>(Dim<span class="fl">.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>                 Dim.1
@@ -1104,7 +1462,7 @@ NH4          0.3756832</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>dta_pca<span class="sc">$</span>var<span class="sc">$</span>contrib <span class="sc">|&gt;</span> <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> <span class="fu">arrange</span>(<span class="sc">-</span>Dim<span class="fl">.2</span>)<span class="sc">|&gt;</span> <span class="fu">select</span>(Dim<span class="fl">.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>dta_pca<span class="sc">$</span>var<span class="sc">$</span>contrib <span class="sc">|&gt;</span> <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> <span class="fu">arrange</span>(<span class="sc">-</span>Dim<span class="fl">.2</span>)<span class="sc">|&gt;</span> <span class="fu">select</span>(Dim<span class="fl">.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>                 Dim.2
@@ -1129,7 +1487,7 @@ Exc.Mg       0.5128816</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>dta_pca<span class="sc">$</span>var<span class="sc">$</span>contrib <span class="sc">|&gt;</span> <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> <span class="fu">arrange</span>(<span class="sc">-</span>Dim<span class="fl">.4</span>) <span class="sc">|&gt;</span> <span class="fu">select</span>(Dim<span class="fl">.4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>dta_pca<span class="sc">$</span>var<span class="sc">$</span>contrib <span class="sc">|&gt;</span> <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> <span class="fu">arrange</span>(<span class="sc">-</span>Dim<span class="fl">.4</span>) <span class="sc">|&gt;</span> <span class="fu">select</span>(Dim<span class="fl">.4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>                  Dim.4
@@ -1153,128 +1511,125 @@ Argile       0.01058951
 Exc.Na       0.00773764</code></pre>
 </div>
 </div>
-<p>La description des axes * l’axe 1 parle de l’eau, des cations, du sable et de l’argile (et du limon) * l’axe 2 du phosphate et du carbone * petite remarque sur l’axe 4 qui est essentiellemnt NH4</p>
+<p>La description des axes</p>
+<ul>
+<li>l’axe 1 parle de l’eau, des cations, du sable et de l’argile (et du limon)</li>
+<li>l’axe 2 du phosphate et du carbone</li>
+<li>petite remarque sur l’axe 4 qui est essentiellemnt NH4</li>
+</ul>
+<p>On peut aussi utiliser uune visualisation plus graphique en utilisant <code>factoextra</code></p>
+<p>contri var axe 1</p>
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>dta_pca<span class="sc">$</span>var<span class="sc">$</span>contrib <span class="sc">|&gt;</span> <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> <span class="fu">arrange</span>(<span class="sc">-</span>Dim<span class="fl">.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>contrib_axe1 <span class="ot">&lt;-</span> <span class="fu">fviz_contrib</span>(dta_pca, <span class="at">choice =</span> <span class="st">'var'</span>, <span class="at">axes =</span> <span class="dv">1</span>)</span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>contrib_axe2 <span class="ot">&lt;-</span> <span class="fu">fviz_contrib</span>(dta_pca, <span class="at">choice =</span> <span class="st">'var'</span>, <span class="at">axes =</span> <span class="dv">2</span>)</span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>contrib_axe3 <span class="ot">&lt;-</span> <span class="fu">fviz_contrib</span>(dta_pca, <span class="at">choice =</span> <span class="st">'var'</span>, <span class="at">axes =</span> <span class="dv">3</span>)</span>
+<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a>contrib_axe4 <span class="ot">&lt;-</span> <span class="fu">fviz_contrib</span>(dta_pca, <span class="at">choice =</span> <span class="st">'var'</span>, <span class="at">axes =</span> <span class="dv">4</span>)</span>
+<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="st">"ggpubr"</span> <span class="sc">%in%</span> <span class="fu">installed.packages</span>()[,<span class="dv">1</span>]){</span>
+<span id="cb75-6"><a href="#cb75-6" aria-hidden="true" tabindex="-1"></a>  ggpubr<span class="sc">::</span><span class="fu">ggarrange</span>( contrib_axe1, </span>
+<span id="cb75-7"><a href="#cb75-7" aria-hidden="true" tabindex="-1"></a>                     contrib_axe2, </span>
+<span id="cb75-8"><a href="#cb75-8" aria-hidden="true" tabindex="-1"></a>                     contrib_axe3,  </span>
+<span id="cb75-9"><a href="#cb75-9" aria-hidden="true" tabindex="-1"></a>                     contrib_axe4,</span>
+<span id="cb75-10"><a href="#cb75-10" aria-hidden="true" tabindex="-1"></a>                     <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">nrow =</span> <span class="dv">2</span>)</span>
+<span id="cb75-11"><a href="#cb75-11" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>                 Dim.1      Dim.2       Dim.3       Dim.4        Dim.5
-Exc.Cations 10.7948976  1.0983771  0.03480337  0.01430037 4.188057e-01
-Eau         10.2869537  0.5672494  1.31525251  0.22252392 1.241612e-03
-Sable        8.9320337  5.1690662  1.34016866  0.02775744 1.475239e-01
-Argile       8.3692915  5.6487034  0.66996148  0.01058951 1.847004e-04
-Exc.Mg       8.0680012  0.5128816  4.45586244  0.03464235 8.364634e+00
-N            7.6257192  4.9797246  0.01069421  0.19798282 9.445310e+00
-Limon        7.2482479  3.3331633  2.05875433  0.22554066 7.133881e-01
-Exc.Ac       6.6410790  7.1350777  8.16655281  0.54618975 4.761044e-02
-Exc.K        6.5019985  5.5144861  0.32713861  1.04204242 7.144207e+00
-Exc.Al       6.3103633  9.8791351  4.68272487  0.22067882 1.511215e-01
-NO3          4.8972792  0.8067869  4.89089787  0.49368347 3.091713e+01
-Exc.Na       4.0962613  1.8388125  8.24800274  0.00773764 2.455226e+01
-SatBase      3.6327958  9.3284152 11.55924831  0.10528835 6.504494e+00
-Exc.Ca       2.8569555  3.4929128 20.07792776  4.76531991 4.503104e-01
-C            1.4042632 17.2698714  3.73651595  0.20730224 4.190173e+00
-pH           1.2715181  4.5458035 21.62566216  3.47674191 6.850679e+00
-Av.P         0.6866580 18.3416002  1.63149855  5.07745293 5.566443e-02
-NH4          0.3756832  0.5379330  5.16833338 83.32422550 4.526169e-02
-                  Dim.6        Dim.7        Dim.8       Dim.9      Dim.10
-Exc.Cations  2.48494588 2.638659e-02 1.717896e-02  3.46887901  0.81909567
-Eau          1.51858452 1.697208e+00 2.648458e+00  0.54809897  0.05804883
-Sable        0.33697321 5.287402e-04 4.659028e-02  4.05712341  1.02529020
-Argile       0.04353745 3.812684e-01 1.129776e-02  7.22184556  0.87015577
-Exc.Mg       4.25793987 3.735044e+00 1.127911e+01  0.63724057 12.11220034
-N            0.65672497 5.566787e+00 6.368322e+00  0.89720121  4.15863023
-Limon        0.83311347 6.416099e-01 1.053778e-01 57.82600449 10.98536861
-Exc.Ac       0.18507327 2.356086e-01 1.488297e-02  2.57408705  0.54611503
-Exc.K        5.01659624 7.486751e+00 1.469425e+00  2.64378882  2.72585996
-Exc.Al       0.02060726 1.597977e-01 5.753269e-04  2.56353316  0.21734094
-NO3         27.46088797 5.130396e+00 3.428301e-01  2.00631146 12.53278132
-Exc.Na       7.15656695 2.682374e+01 1.837668e+01  1.37994935  5.84463872
-SatBase      0.89194522 1.251606e+00 9.536667e+00  0.29851968  2.85607098
-Exc.Ca       7.45715705 1.482961e+01 6.664628e+00  9.27175715 20.94267392
-C           10.61725847 6.385827e+00 1.311118e+01  3.66149337  1.35319338
-pH          11.22388389 2.112981e+01 2.328795e+01  0.03387108  0.27866698
-Av.P        16.00085911 4.473410e+00 8.920512e-01  0.70452160 22.42340546
-NH4          3.83734520 4.460218e-02 5.826795e+00  0.20577409  0.25046365
-                  Dim.11       Dim.12       Dim.13      Dim.14      Dim.15
-Exc.Cations  0.475351285  6.790340716 4.689912e-04  4.19063317  0.38072817
-Eau          1.030075448  2.669876322 8.381966e-01 66.57685395  9.89523952
-Sable        0.001653793 10.720691455 1.904331e+00  0.22389600  2.23094321
-Argile       0.620111480 40.350300972 6.603893e+00  0.86902584  6.36143392
-Exc.Mg       1.952950466 11.389774790 2.535660e+01  1.31465142  0.47047378
-N            0.011537034  7.881749297 6.640709e-01 13.14907175 37.96982697
-Limon        0.713985584  0.935792111 4.431672e-02  0.01823522  0.01585300
-Exc.Ac       1.245609966  3.762674392 6.177288e+00  4.18254684  1.59099171
-Exc.K       59.705766646  0.002482866 2.518258e-01  0.01370607  0.04066413
-Exc.Al       0.653348920  1.472006310 6.624515e+00  6.61560972  0.14611545
-NO3          0.382084218  7.263458776 1.678187e-02  0.87045319  1.95128298
-Exc.Na       0.203088210  0.104957676 9.538177e-01  0.29523508  0.09727814
-SatBase      4.210287564  3.441187546 4.495045e+01  0.29848568  1.13056013
-Exc.Ca       0.437616155  0.745454395 1.234203e+00  0.70536231  0.10403308
-C            0.005393352  0.363276426 4.330111e-03  0.17196912 36.76815480
-pH           1.318673838  1.987303729 1.761950e+00  0.42029513  0.70634400
-Av.P        26.896860661  0.068062495 2.554336e+00  0.06118856  0.04188870
-NH4          0.135605378  0.050609727 5.862521e-02  0.02278094  0.09818830
-                  Dim.16       Dim.17       Dim.18
-Exc.Cations  9.561988769 2.326666e-03 5.942049e+01
-Eau          0.126115816 8.562839e-06 1.501108e-05
-Sable        0.081242444 6.375406e+01 1.220896e-04
-Argile       0.040458768 2.192791e+01 2.731744e-05
-Exc.Mg       1.137262735 6.966794e-04 4.920035e+00
-N            0.415523180 1.120508e-03 3.939651e-06
-Limon        0.001099745 1.430012e+01 2.721474e-05
-Exc.Ac      26.458425159 3.746262e-03 3.048644e+01
-Exc.K        0.008574133 3.151276e-04 1.043719e-01
-Exc.Al      60.275930843 6.586284e-03 9.523289e-06
-NO3          0.036851528 9.848034e-05 8.950844e-07
-Exc.Na       0.013736881 1.187195e-04 7.115574e-03
-SatBase      0.003903661 6.784058e-05 9.750597e-06
-Exc.Ca       0.902323662 4.275538e-04 5.061325e+00
-C            0.747672338 2.121981e-03 5.206150e-08
-pH           0.080776017 6.806645e-05 1.052186e-07
-Av.P         0.090348837 1.920379e-04 1.558006e-06
-NH4          0.017765483 5.781532e-06 2.779483e-06</code></pre>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="tp1_example_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
 </div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>dta_pca<span class="sc">$</span>var<span class="sc">$</span>contrib <span class="sc">|&gt;</span> <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> <span class="fu">arrange</span>(<span class="sc">-</span>Dim<span class="fl">.2</span>) <span class="sc">|&gt;</span> <span class="fu">select</span>(Dim<span class="fl">.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>                 Dim.2
-Av.P        18.3416002
-C           17.2698714
-Exc.Al       9.8791351
-SatBase      9.3284152
-Exc.Ac       7.1350777
-Argile       5.6487034
-Exc.K        5.5144861
-Sable        5.1690662
-N            4.9797246
-pH           4.5458035
-Exc.Ca       3.4929128
-Limon        3.3331633
-Exc.Na       1.8388125
-Exc.Cations  1.0983771
-NO3          0.8067869
-Eau          0.5672494
-NH4          0.5379330
-Exc.Mg       0.5128816</code></pre>
 </div>
 </div>
 </section>
-</section>
-</section>
-<section id="visualiser-la-profondeur-sur-les-différents-plans" class="level1">
-<h1>Visualiser la profondeur sur les différents plans</h1>
-</section>
-<section id="visualiser-les-types-de-sol" class="level1">
-<h1>visualiser les types de sol</h1>
+<section id="individus" class="level3">
+<h3 class="anchored" data-anchor-id="individus">Individus</h3>
+<p>Pour représenter la projection des individus dans un plan principal, on utilise la fonction <code>fviz_pca_ind</code>.</p>
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.PCA</span>(dta_pca, <span class="at">axes=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">4</span>),<span class="at">invisible=</span><span class="fu">c</span>(<span class="st">'quali'</span>,<span class="st">'ind.sup'</span>),<span class="at">habillage=</span><span class="dv">1</span>,<span class="at">label =</span><span class="st">'none'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Représentation dans le premier plan_principal</span></span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_ind</span>(dta_pca,</span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">axes =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>)) <span class="co"># Numéro des axes à représenter </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="tp1_example_files/figure-html/fviz_pca_ind-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="visualiser-la-profondeur-sur-les-différents-plans" class="level2">
+<h2 class="anchored" data-anchor-id="visualiser-la-profondeur-sur-les-différents-plans">Visualiser la profondeur sur les différents plans</h2>
+<ul>
+<li>Dans la fonction <code>fviz_pca_ind</code>, en rajoutant <code>col.ind = donnees_sols$Sol</code>, coloriez les individus selon leur profondeur.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="co"># # Représentation dans le premier plan_principal</span></span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_ind</span>(dta_pca,</span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">axes =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>),</span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">habillage=</span><span class="dv">3</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="tp1_example_files/figure-html/fviz_pca_ind_hab_prof-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="visualiser-les-types-de-sol" class="level2">
+<h2 class="anchored" data-anchor-id="visualiser-les-types-de-sol">visualiser les types de sol</h2>
+<ul>
+<li>Dans la fonction <code>fviz_pca_ind</code>, en rajoutant <code>col.ind = donnees_sols$Sol</code>, coloriez les individus selon leur type de sol.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="co"># # Représentation dans le premier plan_principal</span></span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_ind</span>(dta_pca,</span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">axes =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>),</span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">habillage=</span><span class="dv">1</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="tp1_example_files/figure-html/fviz_pca_ind_hab-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<!-- Elements d'explication pour les TDS -->
+<!--  les 2 premiers axes sont facilement interprétables, et que le 3e est pas si clair (bien que le pH semble assez lié), mais le 4e l'est très bien. -->
+<!-- Et notamment ce qui est cool c'est que le plan (1, 2) permet de bien distinguer la profondeur des échantillons, alors que le plan (1, 4) permet de  bien distinguer les trois grands types de sol. (Axe 1 = Alluvial d'un coté, Grès/ Dunaire de l'autre, Axe 4 permet ensuite de distinguer entre Grès et Dunaire). -->
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Représentation dans le premier plan_principal</span></span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.PCA</span>(dta_pca, </span>
+<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">axes =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">4</span>), <span class="at">invisible=</span><span class="fu">c</span>(<span class="st">'ind.sup'</span>),</span>
+<span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">habillage=</span><span class="dv">1</span>, <span class="do">## numero de la variable quali  à utiliser pour l'habillage</span></span>
+<span id="cb79-5"><a href="#cb79-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">label =</span><span class="st">'none'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="tp1_example_files/figure-html/FactomineR_pca_ind-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.PCA</span>(dta_pca, <span class="at">axes=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">4</span>),<span class="at">invisible=</span><span class="fu">c</span>(<span class="st">'quali'</span>,<span class="st">'ind.sup'</span>),<span class="at">habillage=</span><span class="dv">1</span>,<span class="at">label =</span><span class="st">'none'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -1285,9 +1640,9 @@ Exc.Mg       0.5128816</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.PCA</span>(dta_pca,<span class="at">choix=</span><span class="st">'var'</span>,</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">select=</span><span class="st">'cos2  0.7'</span>, <span class="do">##&nbsp;pour représenter seulement les variables dont le cos2 &gt; 0.7</span></span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">unselect=</span><span class="dv">0</span>, <span class="at">axes =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">4</span>) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.PCA</span>(dta_pca,<span class="at">choix=</span><span class="st">'var'</span>,</span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">select=</span><span class="st">'cos2  0.7'</span>, <span class="do">##&nbsp;pour représenter seulement les variables dont le cos2 &gt; 0.7</span></span>
+<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">unselect=</span><span class="dv">0</span>, <span class="at">axes =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">4</span>) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -1300,6 +1655,7 @@ Exc.Mg       0.5128816</code></pre>
 <p>il fallait chercher l’axe 4 pour bien illustrer les différences entre grès et dunaire, l’axe 4 est presque exclusivement l’information sur le NH4.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
