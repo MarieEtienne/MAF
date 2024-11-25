@@ -6,8 +6,6 @@ format:
     code-fold: true
 ---
 
-
-
 ```{r setup}
 knitr::opts_chunk$set(echo = TRUE, comment = NA, 
                       cache = TRUE, message = FALSE,
@@ -15,22 +13,43 @@ knitr::opts_chunk$set(echo = TRUE, comment = NA,
                       fig.align = "center")
 ```
 
-
 # Présentation de Quarto
 
 Quarto permet de faire des rapports intégrant du code R, des sorties exécutées à partir de ce code et du texte présentant les analyses.
 
 Ce document est rédigé avec quarto, le fichier source est disponible sur [ce lien](https://raw.githubusercontent.com/MarieEtienne/MAF/refs/heads/master/tp1_example.qmd)
 
-# Présentation du contexte
 
-Les données portent sur des échantillons de sols en différents sites, à différentes profondeurs en forêt de Bornéo. Diférentes variables de composition sont renseignées pour chaque échantillon, ainsi que le type de sol et la profondeur (par classe de profondeur).
+::: callout-tip
+**La documentation officielle de quarto:**
 
-On souhaite  visualiser les relations entre les variables et identifier une typologie des sols.
+https://quarto.org/
 
-## Description des données
+**Autres docs:**
+
+https://www.youtube.com/watch?v=Cwg7tdSdRvY
+
+https://delladata.fr/de-r-markdown-a-quarto/
+
+https://edutechwiki.unige.ch/fr/Quarto
+:::
+
+
+# Analyse des caractéristiques géochimiques des sols en forêt de Bornéo
+
+Il s'agit ici de carcatériser les propriétés physico chimiques des sols. Pour ceci on a prélevé des échantillons dans diffférentes forêts de Borneo et on cherche à mettre en évidence des typologies de sols et à identifier des prélèvements qui se ressemblent. Les données consistent en la mesure de caractéristiques géochimiques de sols dans une forêt pluviale de Bornéo.
+
+## Comprendre les données
 
 ### Chargement des packages
+
+Nous utilisons la suite de packages `tidyverse` pour la manipulation de données,  `FactomineR` pour la mise en oeuvre des analyses factorielles et éventiuellement `factoextra` pour des sorties plus jolies. (pour une exploration plus interactive on peut utiliser aussi `Factoshiny` ou `explor`).
+
+
+::: callout-tip
+Une bonne pratique consiste à ne charger que le nombre minimal de packages nécessaires. Evitez de commencer tous les codes avec la même liste de package, pesez l'intérêt de chacun d'eux.
+:::
+
 
 ```{r}
 #| label: package 
@@ -39,9 +58,17 @@ On souhaite  visualiser les relations entre les variables et identifier une typo
 
 library(tidyverse)
 library(FactoMineR)
+library(factoextra)
 ```
 
-Pour ajouter un chunk R CTL + Alt + i
+
+::: callout-tip
+Le raccourci pour ajouter un chunk R CTL + Alt + i
+:::
+
+### Importation 
+
+
 
 ### Importation des données
 
@@ -53,8 +80,33 @@ dta <- read.table(file = "https://marieetienne.github.io/datasets/donnees_sols.t
 
 ### Description des données
 
+
+Proposer des résumés univariés de chaque variable présente dans le jeu de données.
+
+```{r}
+#| label: resume_univarie
+
+dta  |>    
+  summary()
+```
+
+::: callout-note
+On remarque que les facteurs sont importés en caractères. transformation de ces variables (Sol,site et Profondeur) en facteur:
+:::
+
 ```{r}
 #| label: desc
+dta <- dta |>    
+  mutate(Sol = as.factor(Sol),
+         Site = as.factor(Site), 
+         Profondeur = as.factor(Profondeur))
+dta |>    
+  summary()
+
+```
+
+```{r}
+#| label: factor
 #| eval: true
 
 # str(dta)
@@ -63,15 +115,132 @@ dta <- dta %>% mutate(Sol = as.factor(Sol),
                Profondeur = factor(Profondeur), levels(c('Superficiel', 'Intermediaire', 'Profond'))) %>% 
   mutate(Profondeur = relevel(Profondeur, ref= "Superficiel"))
  summary(dta)
+
+```
+-   Combien y a t-il de variables quantitatives / qualitatives?
+
+::: callout-note
+Il y a différentes manières d'identifier le nombre de variables et d'individus. A travers la fonction ***str()*** ou ***sapply()***, on a 3 variables qualitatives et 18 variables quantitatives On peut aussi demander le nombre de colonnes et de lignes (ncol, nrow) 
+
+:::
+
+```{r}
+str(dta)
+sapply(dta, class)
+```
+
+
+```{r}
+#| label: count_var_ind
 nobs <- nrow(dta)
 p <- ncol(dta)
 any(is.na(dta))
 summary(dta$Profondeur)
 ```
 
+
 Le fichier de données a `r nobs` lignes et `r p`colonnes.
 
-il n'y a pas de données manquantes
+```{r}
+#| label: missing_data
+any(is.na(dta))
+```
+
+
+::: callout-note
+Il n'y a pas de données manquantes. 
+
+:::
+
+
+
+-   Sont-ils tous prélevés à la même profondeur ?
+
+::: callout-note
+Observez le site ***292-31_D***
+:::
+
+<!--  Que se passe avec le site 292-31_D ????  -->
+
+```{r}
+dta |> group_by(Site, Profondeur) |> count() 
+```
+
+-   Quel est le pH moyen tout site/Sol et Profondeur confondu ?
+
+::: callout-note
+Nous avons le resultat dans le resumé univarié des variables. On peut aussi retrouver via la fonction ci-dessous:
+:::
+
+<!--  Nous avons le resultat dans le resumé univarié des variables  -->
+
+```{r}
+dta %>% 
+  summarise(pH_moyen=mean(pH, na.rm = TRUE))
+```
+
+-   Quelle la variance de la teneur en Eau ? Quelle est la variance de la teneur en Sodium (Na) ?
+
+```{r}
+dta %>% 
+  summarise(var_EAU =var(Eau, na.rm = TRUE),
+            var_Sodium =var(Exc.Na, na.rm = TRUE))
+
+```
+
+Ou de manière générale
+
+```{r}
+dta |> 
+ summarise(across(where(is.numeric), list(moy = mean, var = var))) 
+```
+
+
+
+::: callout-note
+La somme des variables Limon, Argile et Sable devrait sommer à 100, mais ce n'est pas le cas à cause des erreurs d'arrondi.
+Le tableau ci-dessous se lit de la manière suivante. Total représente la somme des proportions exprimée en pourcentage et n le nombre d'observation pour lesquelles la somme des proportion de Limon, Sable et Argil donnent cette valeur.
+:::
+
+
+```{r}
+#| label: argile
+
+count_percent<- dta %>% 
+  mutate(Total = Limon + Argile + Sable)  %>% 
+  select(Total) |> 
+  group_by(Total) |> 
+  count()
+```
+
+
+### Représentation bivariée
+
+Pour appréhender le jeu de données, il est utile de commencer par comprendre les relations deux à deux entre les variables. On peut commencer par la corrélation entre celles-ci
+
+```{r}
+#| label: correlation
+library("corrplot")
+dta_quanti <- dta |> 
+  select(where(is.numeric))
+cor.mat <- round(cor(dta_quanti),2)
+corrplot(cor.mat, type="upper", order="hclust", 
+         tl.col="black", tl.srt=45)
+cor.mat
+```
+
+En utilisant le package `GGally`et notamment la fonction ggpairs, proposer une représentation bivariée des différents couples de variables.
+
+```{r}
+#| label: graphique-deux-a-deux
+
+library(GGally)
+ggpairs(dta,  columns = 4:21)
+```
+
+La visualisation est difficile, d'où l'intérêt d'une approche multivariée.
+
+Avant celà , on peut essayer de visualiser  le lien entre une variable qualitative (Profondeur ou Type de Sol)  et  variables quantitatives au travers d'une boîte à moustaches. Par exemple
 
 ```{r}
 #| label: boxplot
@@ -81,41 +250,16 @@ dta %>%
   geom_boxplot() +
   xlab('Classe de Profondeur')
 
-boxplot(dta$Argile~ dta$Profondeur)
-```
-
-La somme des variables Limon, Argile et Sable devrait sommer à 100, mais ce n'est pas le cas à cause des erreurs d'arrondi
-
-```{r}
-#| label: argile
-
-dta %>% 
-  mutate(Total = Limon + Argile + Sable)  %>% 
-  select(Total)
-```
-
-On peut s'interesser aux corrélations entre les variables
-
-```{r}
-#| label: correlation
-#| echo: false
-#| include: false
-library("corrplot")
-dta_quanti <- dta |> 
-  select(where(is.numeric))
-cor.mat <- round(cor(dta_quanti),2)
-corrplot(cor.mat, type="upper", order="hclust", 
-         tl.col="black", tl.srt=45)
+## ou  boxplot(dta$Argile~ dta$Profondeur)
 ```
 
 
-### Représentation
+## Approche factorielle
 
-## Identifier une typologie de sol
+Le but est de faire émerger des typologies de sol. Pour le moment nous mettons de coté les variables qualitatives. Pour visualiser les données on peut commencer par une ACP. l'ACP ne traite que des variables quantitatives, on va considérer les autres variables comme supllémentaires, autrement, dit l'information qu'elles contiennent ne contribuent pa sà la définition des axes.
 
-Pour visualiser les données on peut commencer par une ACP
+Pour faire le lien avec  le cours on va définir les objets du cours dans le cadre de cet exercice. La matrice des données est $X$.
 
--   sur les variables quantitatives uniquement
 
 ```{r}
 #| label: Xmatrice
@@ -125,85 +269,399 @@ X <- dta %>%
 dim(X)
 ```
 
-### Poids des individus
+### Mise en place de l'approche factorielle
 
-On va prendre les mêmes poids pour tous les individus soit $1/n$.
+-   Comment décider le poids attribuer à chaque individu ? 
+
+:::{.callout-note} 
+Par défaut le poids est 1/n sauf si autre bonne raison 
+:::
 
 Les poids sont stockés dans la matrice $W$
 
+```{r}
+#| label: Wmatrice
+W <- diag(1/nobs, ncol = nobs, nrow = nobs)
+dim(W)
+```
+
+
 ### Distance à utiliser entre les individus
 
-On commence par une distance euclidienne. La matrice de distance $M$ est l'identité
+Si on considère une distance euclidienne, la matrice de distance $M$ est l'identité. 
 
-Le cours dit
+```{r}
+#| label: Mmatrice
+p_quanti <- ncol(X)
+M <- diag(1, ncol = p_quanti, nrow = p_quanti)
+dim(M)
+```
 
--   l'inertie vaut $tr(X^\top W X M)$
 
--   On va chercher les valeurs et vecteurs propres de la matrice $X^\top W X M$
+Le cours dit que si $X$ est cebtrée alors l'inertie vaut $tr(X^\top W X M)$
 
-Si on fait une ACP non normée le sable et SatBase contribuent beaucoup plus à la formation des axes que les autres variables.
+Pour vérifier on va définir la matrice $X$ centrée et calculer l'inertie à l'aide de la formule du cours. 
+La fonction `tr` n'est pas disponible dans `R` par défaut
+
+```{r}
+#| label: trace_def
+tr <- function(X){
+  sum(diag(X))}
+
+```
+
+```{r}
+#| label: Xcen
+X_center <- dta |> select(where(is.numeric))  |> scale(center = TRUE, scale = FALSE) 
+inertie <- tr(t(X_center) %*% W %*% X_center %*% M)
+```
+L'inertie vaut `r inertie`.
+
+
+Les  axes principaux seront les vecteurs propres et l'inertie portée par chaque axe, sera la valeur propre associée 
+
+```{r}
+#| label: eigen_decomposition
+VM  <- t(X_center) %*% W %*% X_center %*% M
+inertia_dec <- eigen(VM)$values
+```
+
+pour faire une ACP non normée dans `R`, on utilise la fonction `PCA`de `FactomineR`, en précisant l'option `scale=FALSE` pour indiquer que l'on veut un ACP non normée 
+
+:::{.callout-note} 
+Par défaut la fonction PCA fait une ACP normée !!
+:::
+
 
 ```{r}
 #| label: approche_facto_brute
-dta_pca <- PCA(X = dta, scale.unit = FALSE, quali.sup = c(1,2,3), ncp = 18)
+dta_pca <- PCA(X = dta, scale.unit = FALSE, 
+               quali.sup = c(1,2,3), ncp = 18)
 #library(Factoshiny)
 ```
 
-Pour rééquilibrer le poids des variables dans la construction des projections, on propose une ACP normée.
+Si on fait une ACP non normée, on constate que le Sable et SatBase contribuent beaucoup plus à la formation des axes que les autres variables. EN effet dans une ACP non normée, l'information (= l'inertie) portée par une variable est la variance de cette variable . Les variances des variables (ordonnées par ordre décroissant) sont rappelées ci-dessous :
+
+```{r}
+#| label: inertia_var
+ordered_variance <- dta |> 
+  summarise(across(where(is.numeric), ~var(.x)*(nobs-1)/nobs)) |> 
+   pivot_longer( cols = everything(), names_to = "Variable", values_to = "Variance") |> 
+  mutate(Variance = round(Variance, 2)) |> 
+  arrange(-Variance)
+ordered_variance 
+```
+
+
+::: callout-note
+Ainsi, puisque les variances des variables Sable et SatBase (et dans une moindre mesure Argile et Limon) sont très grandes devant les autres, ces variables contribuent davantage  à la formation des premiers axes. Pour bien comprendre, il faut se rendre compte qu'en résumant le jeu de données aux seules variables Sable et SatBase, on représente déjà un pourcentage d'inertie de `r round(sum(ordered_variance$Variance[1:2])/inertie * 100,2)`.
+:::
 
 Pour voir comment l'information d'une variable se disperse sur les différentes dimensions on peut regarder la contribution de cette variable à la construction des différents axes.
 
-Par exemple pour le PH
+Par exemple pour le Sable et le  pH. 
 
 ```{r}
-round(dta_pca$var$contrib[1,],2)
+round(dta_pca$var$contrib[c("Sable", "pH" ),],2)
 ```
 
-On peut mettre en place une ACP normée en précisant simple `scale.unit = TRUE `, ce qui est le comportement par défaut de la fonction `PC̀A ̀. 
+
+
+::: callout-important
+Si vos données sont toutes dans la même unité de mesure et varient dans des gammes de valeurs identiques: **l’ACP non-normée est souvent recommandée**.
+
+Si vos données sont dans des unités de mesure différentes et varient dans des gammes de valeurs différentes: **l’ACP normée est recommandée**
+
+**l’ACP non normée** est basée sur la matrice de covariances, qui se calcule par  $VM =t(X) W W M$, avec $M$ la matrice identité.
+
+**l’ACP normée** est basée sur la matrice de corrélations, qui se calcule par  $VM =t(X) W W M$, mais avec  $M$ la matrice diagnonale dont chaque terme diagonale est l'inverse de la variance de la variable concernée 
+:::
+
+
+***Ici les variables ont des ordres de grandeur différent, la mesure de pH n'est pas comparable avec la teneur en Sodium par exemple, on va faire une ACP normée, ***  on propose donc d'équilibrer le poids des variables dans la construction des projections en proposant une ACP normée. Mais avant de passer à cette ACP non normée, on peut vérifier que les vecteurs propres obtenus "à la main# coincident avec les vecteurs propres obtenus par la fonction `PCA`. On le vérifier sur les deux premiers axes. Pour le vérifier on divise terme à terme chaque terme du vecteur propre obtenu avec `PCA` par le terme correspondant obtenu à la main. 
+
+```{r}
+#| label: compare_vp
+dta_pca$svd$V[,1:2] / eigen(VM)$vectors[,1:2 ]
+
+```
+
+### ACP normée
+
+
+-   Quelles variables choisissez-vous de considérer comme supplémentaires (qualitative et ou quantitative) ?
+
+::: callout-note
+Les variables illustratives ou supplémntaires n'interviennent pas pour la construction des composantes ou axes. Elles sont utilisées après coup pour mieux comprendre / commenter les résultats. Des individus peuvent aussi être traités comme illustratifs.
+:::
+
+
+Dans notre exemple, seules  les variables qualitatives sont  choisies en supplémentaires.
+
+
+-   Quelle doit être l'inertie du nuage ?
+
+::: callout-note
+Dans une ACP normée, la somme des valeurs propres est égale au nombre de variables.
+:::
+
+On peut à nouveau le vérifier à la main.  Le cours dit que si $X$ est cebtrée alors l'inertie vaut $tr(X^\top W X M), $ cette fois $M$ est la matrice diagonale contenant l'inverse des variances. 
+
+
+```{r}
+#| label: Mmatrice_normee
+p_quanti <- ncol(X)
+variance <- dta_quanti |> 
+  summarise(across(where(is.numeric), ~var(.x)*(nobs-1)/nobs)) |> 
+   pivot_longer( cols = everything(), names_to = "Variable", values_to = "Variance") |> 
+  pull(Variance)
+M_norm <- diag(1/variance, ncol = p_quanti, nrow = p_quanti)
+dim(M_norm)
+```
+
+
+```{r}
+#| label: inertie_normee
+VM_norm <- t(X_center) %*% W %*% X_center %*% M_norm
+inertie_norm <- tr(VM_norm)
+```
+
+L'inertie dans l'ACP normée vaut `r inertie_norm`.
+
+Pour finir l'ACP  "à la main", on peut voir que l'on pourrait toutes les informations pertinentes à partir de la seule étude de la matrice de la corrélation  
+Par exemple, l'éboulis des valeurs propres. 
+
+-   A l'aide de la fonction `eigen` représenter la suite décroissante des valeurs propres. A partir de combien de vecteurs de base considérez-vous que l'information apportée devient négligeable?
+
+
+
+```{r}
+#| label: eigen-decomposition
+## Verifier que  Cor(data) = t(X_reduit) %*% W %*% X_reduit
+X_reduit <- X_center %*% sqrt(M)
+correlation_mat <- t(X_reduit) %*% W %*% X_reduit
+max(abs(cor(dta_quanti)-correlation_mat))
+
+Cor_eigen <- eigen(correlation_mat)
+valeurspropres <- Cor_eigen$values
+vecteurspropres <- Cor_eigen$vectors
+dta.vp <- data.frame(index = 1:length(valeurspropres), valeurspropres = valeurspropres, inertiepercent = cumsum(valeurspropres)/sum(valeurspropres))
+dta.vp
+dta.vp |> 
+  mutate(diffinertie = valeurspropres-lead(valeurspropres))
+#lead est une fonction positionnelle. elle
+# permet d'accèder à une valeur stockée dans une ligne inférieure: elle décale d'un rang le vecteur. le 2eme élément devient le 1er et le 3eme devient le 2eme et ainsi de suite 
+dta.vp  |> ggplot() +  geom_col(aes(x=index, y = valeurspropres)) 
+dta.vp  |> ggplot() +  geom_line(aes(x=index, y = inertiepercent)) + ylim(c(0,1)) + ylab("Pourcentage d'inertie représentée")
+```
+
+
+
+On peut maintenant mettre en place une ACP normée, avec factomineR et en utilisant et `factoextra` pour des sorties plus agréables. On précise que l'ACP est normée grace à l'option `scale.unit = TRUE`.
 
 ```{r}
 #| label: approche_facto
-dta_pca <- PCA(X = dta, scale.unit = TRUE, quali.sup = c(1,2,3), ncp = 18)
+dta_pca <- PCA(X = dta, scale.unit = TRUE, quali.sup = c(1,2,3), ncp = 18, graph = FALSE)
 #library(Factoshiny)
 ```
 
-Qualité globale des représentations
+
+::: callout-note
+le champs `eig` de l'objet `dta_pca`contient les informations sur les valeurs propres  
+:::
+
+
+On peut notamment s'intéresser à la qualité  globale des représentations
 
 -   sur le plan 1-2 : on représente `r sum(dta_pca$eig[1:2, 2])`
 
 -   sur le plan 1-3 : on représente `r sum(dta_pca$eig[c(1,3), 2])`
 
-Avec 3 axes on représente `r sum(dta_pca$eig[c(1:3), 2])` de l'inertie.
+
+
+
+-   Représentez l'éboulis des valeurs propres à partir de la sortie `dta_pca` (ce qui a déjà été fait à la main précédemment).
+
+```{r}
+#| label: eboulis-facto
+
+dta_pca$eig |> 
+  as.data.frame() |>  
+  rowid_to_column() |> 
+  ggplot() + geom_col(aes(x=rowid, y =eigenvalue)) 
+```
+
+-   A partir de combien d'axes factoriels considérez-vous que l'information apportée devient négligeable?
+
+::: callout-important
+Il existe plusieurs "règles" ce qui est le signe qu'il n'y a pas une seule façon de faire mais des guides 
+
+**Règle de l'ébouli des valeurs propres:** garder les axes correspondant aux valeurs propres situées avant le point d’inflexion (cassure, coude) sur le graphes des valeurs propres.
+
+**Règle de Kaiser:** garder les axes correspondant aux valeurs propres supérieures à la moyenne des valeurs propres:
+
+-   supérieures à 1 en ACP normée
+
+-   supeérieur à Inertie/p en ACP non normée
+
+**Règle empirique:** garder les facteurs expliquant un pourcentage de variance cumulée satisfaisant (géneralement 80%)
+:::
+
+Dans notre exemple, avec 3 axes on représente `r sum(dta_pca$eig[c(1:3), 2])` de l'inertie, l'axe 4 est proche de la valeur moyenne d'inertie. 
+
+Tout nous incite à regarder les 3 et éventuellement 4 premiers axes.
+
+
+### Variables
+
 
 On peut visualiser le cercle des corrélations
 
+Le package `factoextra`donne des outils pour produire des sorties les plus lisibles possibles.
+
+Pour représenter le cercle des corrélations dans un plan principal, on utilise la fonction `fviz_pca_var`. Sur chaque graphe, qu'est ce qui est représenté?
+
 ```{r}
-#| label: visu_var
-plot.PCA(dta_pca,choix='var',
-         select='cos2  0.7',
-         unselect=0)
+#| label: fviz_pca_var
+fviz_pca_var(dta_pca,
+             axes = c(1, 2)) # Numéro des axes à représenter 
+fviz_pca_var(dta_pca,
+             axes = c(1, 3)) #
+fviz_pca_var(dta_pca,
+             axes = c(2, 3)) # 
 ```
+
+   Pour plus de lisibilité, refaites le même graphique avec seulement les variables bien représentées (par exemple celles pour lesquelles le cos2 de l'angle entre la variable initiale et la variable projetée dans le plan représenté est supérieure à 0.8 ou 0.6 selon les cas). Jouer sur les différentes repésentations pour bien comprendre quelle information est disponible sur chaque projection, on peut arranger les graphiques les uns à coté des autres pour une visualisation plus commode.
+
+```{r}
+#| label: fviz_pca_var_select
+pplotvar_12 <- fviz_pca_var(dta_pca,
+             axes = c(1, 2), 
+             select.var = list(cos2 = 0.8)) # Numéro des axes à représenter 
+pplotvar_13 <- fviz_pca_var(dta_pca,
+             axes = c(1, 3), 
+             select.var = list(cos2 = 0.8)) #
+pplotvar_23 <- fviz_pca_var(dta_pca,
+             axes = c(2, 3), 
+             select.var = list(cos2 = 0.6)) # 
+
+## si on ne veut pas importer tout un package, on peut indiquer qu'on utilise la fonction ggarrange du package ggpur avec la synthaxe suivante
+## on exécute le code uniquement si le package est est installé
+if("ggpubr" %in% installed.packages()[,1]){
+  ggpubr::ggarrange( pplotvar_12 + labs(caption = 'select cos2 > 0.8'), 
+                     NULL, 
+                     pplotvar_13 + labs(caption = 'select cos2 > 0.8'),  
+                     pplotvar_23 + labs(caption = 'select cos2 > 0.6'),
+                     ncol = 2, nrow = 2)
+}
+```
+
+Il est important de noter qu'on peut grâce à `dta_acp`, tracer ce graphique nous même et donc modifier son apparence à notre guise. Par ailleurs les fonction de factoextra renvoie des objets de type ggplot que l'on peut aisément modifier. (aucune excuse pour les graphiques laids !)
+
+On se posait la question de l'intérêt d'aller voir l'axe 4, la visualisation ci-dessous nous montre que l'axe 4 porte essentiellement l'information sur NH4.
+
+
+```{r}
+#| label: fviz_pca_var_axe4
+pplotvar_14 <- fviz_pca_var(dta_pca,
+             axes = c(1, 4), 
+             select.var = list(cos2 = 0.8)) # 
+pplotvar_14 
+```
+
+
 
 A l'aide des contributions des différentes variables à la définition des axes, on peut comprendre l'information résumée par ces axes.
 
-
-
 ```{r}
+#| label: contrib
 dta_pca$var$contrib |> as.data.frame() |> arrange(-Dim.1) |> select(Dim.1)
 dta_pca$var$contrib |> as.data.frame() |> arrange(-Dim.2)|> select(Dim.2)
 dta_pca$var$contrib |> as.data.frame() |> arrange(-Dim.4) |> select(Dim.4)
 ```
 
-La description des axes \* l'axe 1 parle de l'eau, des cations, du sable et de l'argile (et du limon) \* l'axe 2 du phosphate et du carbone \* petite remarque sur l'axe 4 qui est essentiellemnt NH4
+La description des axes 
+
+* l'axe 1 parle de l'eau, des cations, du sable et de l'argile (et du limon) 
+* l'axe 2 du phosphate et du carbone 
+* petite remarque sur l'axe 4 qui est essentiellemnt NH4
+
+On peut aussi utiliser uune visualisation plus graphique en utilisant `factoextra`
+
+
+contri var axe 1
 
 ```{r}
-dta_pca$var$contrib |> as.data.frame() |> arrange(-Dim.1)
-dta_pca$var$contrib |> as.data.frame() |> arrange(-Dim.2) |> select(Dim.2)
+contrib_axe1 <- fviz_contrib(dta_pca, choice = 'var', axes = 1)
+contrib_axe2 <- fviz_contrib(dta_pca, choice = 'var', axes = 2)
+contrib_axe3 <- fviz_contrib(dta_pca, choice = 'var', axes = 3)
+contrib_axe4 <- fviz_contrib(dta_pca, choice = 'var', axes = 4)
+if("ggpubr" %in% installed.packages()[,1]){
+  ggpubr::ggarrange( contrib_axe1, 
+                     contrib_axe2, 
+                     contrib_axe3,  
+                     contrib_axe4,
+                     ncol = 2, nrow = 2)
+}
+
 ```
 
-# Visualiser la profondeur sur les différents plans
+### Individus
 
-# visualiser les types de sol
+Pour représenter la projection des individus dans un plan principal, on utilise la fonction `fviz_pca_ind`.
+
+```{r}
+#| label: fviz_pca_ind
+# Représentation dans le premier plan_principal
+fviz_pca_ind(dta_pca,
+             axes = c(1, 2)) # Numéro des axes à représenter 
+```
+
+
+
+
+## Visualiser la profondeur sur les différents plans
+
+-   Dans la fonction `fviz_pca_ind`, en rajoutant `col.ind = donnees_sols$Sol`, coloriez les individus selon leur profondeur.
+
+```{r}
+#| label: fviz_pca_ind_hab_prof
+# # Représentation dans le premier plan_principal
+fviz_pca_ind(dta_pca,
+              axes = c(1, 2),
+              habillage=3) 
+```
+
+
+## visualiser les types de sol
+
+-   Dans la fonction `fviz_pca_ind`, en rajoutant `col.ind = donnees_sols$Sol`, coloriez les individus selon leur type de sol.
+
+```{r}
+#| label: fviz_pca_ind_hab
+# # Représentation dans le premier plan_principal
+fviz_pca_ind(dta_pca,
+              axes = c(1, 2),
+              habillage=1) 
+```
+
+<!-- Elements d'explication pour les TDS -->
+
+<!--  les 2 premiers axes sont facilement interprétables, et que le 3e est pas si clair (bien que le pH semble assez lié), mais le 4e l'est très bien. -->
+
+<!-- Et notamment ce qui est cool c'est que le plan (1, 2) permet de bien distinguer la profondeur des échantillons, alors que le plan (1, 4) permet de  bien distinguer les trois grands types de sol. (Axe 1 = Alluvial d'un coté, Grès/ Dunaire de l'autre, Axe 4 permet ensuite de distinguer entre Grès et Dunaire). -->
+
+```{r}
+#| label: FactomineR_pca_ind
+# Représentation dans le premier plan_principal
+plot.PCA(dta_pca, 
+         axes = c(1,4), invisible=c('ind.sup'),
+         habillage=1, ## numero de la variable quali  à utiliser pour l'habillage
+         label ='none')
+
+```
+
+
 
 ```{r}
 #| label: type_sol
@@ -215,7 +673,4 @@ plot.PCA(dta_pca,choix='var',
          unselect=0, axes = c(1,4) )
 ```
 
-
- il fallait chercher l'axe 4 pour bien illustrer les différences entre grès et dunaire, l'axe 4 est presque exclusivement l'information sur le NH4.
-
-
+il fallait chercher l'axe 4 pour bien illustrer les différences entre grès et dunaire, l'axe 4 est presque exclusivement l'information sur le NH4.
