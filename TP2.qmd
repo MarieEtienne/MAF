@@ -188,11 +188,11 @@ summary(overshoot_dta)
 
 <!-- Si on veut faire un bilan à l'échelle de la planete il est pertinent de prendre les poids des pays proportionnels à leur population -->
 
--   Quelle Métrique choisir ?
+-   Quelle métrique choisir ?
 
 <!-- On va normaliser puisque espérance de vie n'a pas de lien avec l'empreinte écologique -->
 
--   Quelles variables met-on en variables supplémentaires
+-   Quelles variables met-on en variables supplémentaires ?
 
 <!-- Les variables qauli ici region et income_group. Le nombre de terre est parfaitement corrélée à la production par construction, le nombre de pays est fortement corrélé -->
 
@@ -217,11 +217,11 @@ overshoot_pca$eig[1:3,1]
     <!-- Le plan 1-2 représente 86% d'inertie, tandis que le plan 1-3 en représente 74.4%. Le premier axe porte à lui seule 68.7% d'innertie. -->
     <!-- lorsque l'on fait une acp en prenant la pop en compte et sans mettre les poids, on voit que l'axe 3 est la population, c'est aussi un point de vu intéressant au sens au la population est indépendante des 2 premiers axes dans la suite on pourriat déduire qu'il y a de gros pays avec une grosse empreinte carbone mais aussi des gros pays avec une faible empreinte carbone  -->
 
--   De quelles variables nous parle l'axe 1 ? l'axe 2 ? pour répondre à
-    cette question on regarde le cercle des corrélations mais aussi les
+-   De quelles variables nous parle l'axe 1 ? l'axe 2 ? Pour répondre à
+    cette question on regardera le cercle des corrélations mais aussi les
     contributions des variable sà la création des axes.
 
-<!-- On peut voir que l'axe 1 est quasi parfaitement anti corrélé avec le jour dudépassement et fortement corrélé au nombre de terres, à la consommation totale, la production totale. Cet axe nous parle donc bien de l'empreinte écologique. Il est aussi très corrélé positivement avec le hdi. Ce qui signifie que plus le hdi est élevé plus le nombre de terre requise est important, donc l'empreinte carbone est plus forte. Ca se confirme en regardant les contributions, les variables qui contribuent le plus sont  total_cons  number_of_earths_required    -->
+<!-- On peut voir que l'axe 1 est quasi parfaitement anti corrélé avec le jour du dépassement et fortement corrélé au nombre de terres, à la consommation totale, la production totale. Cet axe nous parle donc bien de l'empreinte écologique. Il est aussi très corrélé positivement avec le hdi. Ce qui signifie que plus le hdi est élevé plus le nombre de terre requise est important, donc l'empreinte carbone est plus forte. Ca se confirme en regardant les contributions, les variables qui contribuent le plus sont  total_cons  number_of_earths_required    -->
 
 <!-- overshoot_day  hdi -->
 
@@ -256,16 +256,16 @@ cours, la quelle ?
     concernant l'empreinte carbone et les varaibles portant sur le
     développement du pays.
 
--   Faites 2 ACP différentes sur chacun de ces deux groupess. Quelle est
+-   Faites 2 ACP différentes sur chacun de ces deux groupes. Quelle est
     la première valeur propre dans les deux cas.
 
--   Rappelez en quoi la méthode mentionné plus haut est une ACP
+-   Rappelez en quoi la méthode mentionnée plus haut est une ACP
     particulière. A partir de la fonction PCA et en utilisant l'option
     `col.w` mettez en oeuvre cette méthode.
 
--   On peut le faire directement, avec la fonction M̀FA \` de FactoMineR.
-    Reprenez l'analyse précédente avec ce nouvel équilibreentre les
-    différentes variables équilibrés. Quelles sont les informations que
+-   On peut le faire directement, avec la fonction `̀MFA` de FactoMineR.
+    Reprenez l'analyse précédente avec ce nouvel équilibre entre les
+    différentes variables équilibrées. Quelles sont les informations que
     vous pouvez retenir ?
 
 # Etude de la qualité de vie
@@ -280,7 +280,7 @@ Satisfaction (3); Santé et sécurité (6); Enseignement (3).
 
 On souhaite identifier des similarités entre pays et plus précisément on
 souhaite entre autre apporter des éléments de réponse aux questions
-suivantes
+suivantes :
 
 -   Quels pays se ressemblent du point de vue de l'ensemble des
     indicateurs tous thèmes confondus ?
