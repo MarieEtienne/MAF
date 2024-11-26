@@ -66,7 +66,7 @@ Network](https://www.footprintnetwork.org/licenses/public-data-package-free/).
 Il contient les résultats d'empreinte écologique et de biocapacité pour
 184 pays.
 
-Les données sont [disponibles sur ce lien}(https://marieetienne.github.io/datasets/overshootday_overview.csv).
+Les données sont [disponibles sur ce lien](https://marieetienne.github.io/datasets/overshootday_overview.csv).
 
 ### Quelques définitions
 
