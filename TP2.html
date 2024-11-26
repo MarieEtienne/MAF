@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Marie-Pierre Etienne">
-<meta name="dcterms.date" content="2024-11-25">
+<meta name="dcterms.date" content="2024-11-26">
 
 <title>Labs2 - Analyse en composante Principale et au-delà – Méthodes d’analyse factorielle</title>
 <style>
@@ -230,7 +230,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">November 25, 2024</p>
+      <p class="date">November 26, 2024</p>
     </div>
   </div>
   
@@ -310,11 +310,11 @@ ul.task-list li input[type="checkbox"] {
 </ul>
 <!-- Si on veut faire un bilan à l'échelle de la planete il est pertinent de prendre les poids des pays proportionnels à leur population -->
 <ul>
-<li>Quelle Métrique choisir ?</li>
+<li>Quelle métrique choisir ?</li>
 </ul>
 <!-- On va normaliser puisque espérance de vie n'a pas de lien avec l'empreinte écologique -->
 <ul>
-<li>Quelles variables met-on en variables supplémentaires</li>
+<li>Quelles variables met-on en variables supplémentaires ?</li>
 </ul>
 <!-- Les variables qauli ici region et income_group. Le nombre de terre est parfaitement corrélée à la production par construction, le nombre de pays est fortement corrélé -->
 <ul>
@@ -322,9 +322,9 @@ ul.task-list li input[type="checkbox"] {
 </ul>
 <ul>
 <li><p>Commentez la qualité de la représentation sur le plan (1-2), puis (1-3). <!-- Le plan 1-2 représente 86% d'inertie, tandis que le plan 1-3 en représente 74.4%. Le premier axe porte à lui seule 68.7% d'innertie. --> <!-- lorsque l'on fait une acp en prenant la pop en compte et sans mettre les poids, on voit que l'axe 3 est la population, c'est aussi un point de vu intéressant au sens au la population est indépendante des 2 premiers axes dans la suite on pourriat déduire qu'il y a de gros pays avec une grosse empreinte carbone mais aussi des gros pays avec une faible empreinte carbone  --></p></li>
-<li><p>De quelles variables nous parle l’axe 1 ? l’axe 2 ? pour répondre à cette question on regarde le cercle des corrélations mais aussi les contributions des variable sà la création des axes.</p></li>
+<li><p>De quelles variables nous parle l’axe 1 ? l’axe 2 ? Pour répondre à cette question on regardera le cercle des corrélations mais aussi les contributions des variable sà la création des axes.</p></li>
 </ul>
-<!-- On peut voir que l'axe 1 est quasi parfaitement anti corrélé avec le jour dudépassement et fortement corrélé au nombre de terres, à la consommation totale, la production totale. Cet axe nous parle donc bien de l'empreinte écologique. Il est aussi très corrélé positivement avec le hdi. Ce qui signifie que plus le hdi est élevé plus le nombre de terre requise est important, donc l'empreinte carbone est plus forte. Ca se confirme en regardant les contributions, les variables qui contribuent le plus sont  total_cons  number_of_earths_required    -->
+<!-- On peut voir que l'axe 1 est quasi parfaitement anti corrélé avec le jour du dépassement et fortement corrélé au nombre de terres, à la consommation totale, la production totale. Cet axe nous parle donc bien de l'empreinte écologique. Il est aussi très corrélé positivement avec le hdi. Ce qui signifie que plus le hdi est élevé plus le nombre de terre requise est important, donc l'empreinte carbone est plus forte. Ca se confirme en regardant les contributions, les variables qui contribuent le plus sont  total_cons  number_of_earths_required    -->
 <!-- overshoot_day  hdi -->
 <!-- l'axe 2 nous parle de la biocapacité on le voit sur le cercle et du nombre de pays nécessaire. On en déduite que la biocapacité est indépendante de la consommation et de manière plus surprenante de la production.  -->
 <!-- Acvec une ACP sans le spoids on a des choses similaires sauf que la population arrive sur l'axe 3-->
@@ -336,16 +336,16 @@ ul.task-list li input[type="checkbox"] {
 <!-- C'est l'AFM bien sur -->
 <ul>
 <li><p>On souhaite identifier deux groupes de variables : les variables concernant l’empreinte carbone et les varaibles portant sur le développement du pays.</p></li>
-<li><p>Faites 2 ACP différentes sur chacun de ces deux groupess. Quelle est la première valeur propre dans les deux cas.</p></li>
-<li><p>Rappelez en quoi la méthode mentionné plus haut est une ACP particulière. A partir de la fonction PCA et en utilisant l’option <code>col.w</code> mettez en oeuvre cette méthode.</p></li>
-<li><p>On peut le faire directement, avec la fonction M̀FA ` de FactoMineR. Reprenez l’analyse précédente avec ce nouvel équilibreentre les différentes variables équilibrés. Quelles sont les informations que vous pouvez retenir ?</p></li>
+<li><p>Faites 2 ACP différentes sur chacun de ces deux groupes. Quelle est la première valeur propre dans les deux cas.</p></li>
+<li><p>Rappelez en quoi la méthode mentionnée plus haut est une ACP particulière. A partir de la fonction PCA et en utilisant l’option <code>col.w</code> mettez en oeuvre cette méthode.</p></li>
+<li><p>On peut le faire directement, avec la fonction <code>̀MFA</code> de FactoMineR. Reprenez l’analyse précédente avec ce nouvel équilibre entre les différentes variables équilibrées. Quelles sont les informations que vous pouvez retenir ?</p></li>
 </ul>
 </section>
 </section>
 <section id="etude-de-la-qualité-de-vie" class="level1">
 <h1>Etude de la qualité de vie</h1>
 <p>Le fichier <a href="https://marieetienne.github.io/datasets/QteVie.csv">QteVie.csv</a> provient de l’OCDE et concerne des indicateurs de qualité de vie en 2015. Pour les 34 pays de l’OCDE à cette date, plus la Russie et le Brésil, on dispose de 22 indicateurs regroupés en cinq thèmes, et d’une variable qualitative correspondant à la région. Les cinq thèmes sont les suivants, on donne entre parenthèses le nombre d’indicateurs par thème: Bien-être matériel (5); Emploi (5); Satisfaction (3); Santé et sécurité (6); Enseignement (3).</p>
-<p>On souhaite identifier des similarités entre pays et plus précisément on souhaite entre autre apporter des éléments de réponse aux questions suivantes</p>
+<p>On souhaite identifier des similarités entre pays et plus précisément on souhaite entre autre apporter des éléments de réponse aux questions suivantes :</p>
 <ul>
 <li>Quels pays se ressemblent du point de vue de l’ensemble des indicateurs tous thèmes confondus ?</li>
 <li>Certains pays sont-ils particuliers?</li>
