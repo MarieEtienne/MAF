@@ -234,7 +234,7 @@ head(X_acm)
 $$\Xbf = \begin{pmatrix}
 \class{bleu}{a_1} & \class{orange}{b_1} \\
 \class{bleu}{\vdots} &\class{orange}{\vdots} \\
-\class{bleue}{a_n} & \class{orange}{b_n} \\
+\class{bleu}{a_n} & \class{orange}{b_n} \\
 \end{pmatrix}, \quad a_{i}\in \mathcal{A}, \ \#\mathcal{A}= p,\quad   b_{i}\in \mathcal{B}, \ \#\mathcal{B}= q.  
 $$
 
