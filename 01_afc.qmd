@@ -1,0 +1,677 @@
+---
+title: "Analyse Factorielle des Correspondances"
+author:
+  - name: Marie-Pierre Etienne
+    affiliation: 
+      - ENSAI - CREST
+    email: marie-pierre.etienne@ensai.fr
+date: "Last updated on `r format(Sys.time(), '%d %B, %Y')`"
+institute: https://marieetienne.github.io/MAF/
+execute: 
+  freeze: true
+editor: 
+  markdown: 
+    wrap: 72
+css: mpe_pres_revealjs.css
+format:
+  revealjs: 
+    theme: [default, custom.scss]
+    width: 1050
+    margin: 0.05
+    slide-number: true
+    slide-level: 2
+    show-slide-number: print
+    menu:
+      useTextContentForMissingTitles: false
+    mathjax: true  # Active MathJax
+    self-contained: true
+---
+
+```{r setup, include=FALSE, eval = TRUE, message=FALSE}
+library(RefManageR)
+library(tidyverse) ## to benefit from the tidyverse coding system
+library(wesanderson)
+library(FactoMineR)
+library(flextable)
+```
+
+```{r reference,  include=FALSE, cache=FALSE, eval = TRUE}
+BibOptions(check.entries = FALSE,
+           bib.style = "authoryear",
+           cite.style = "alphabetic",
+           style = "markdown",
+           hyperlink = FALSE,
+           dashed = FALSE)
+myBib <- ReadBib("./MAF.bib", check = FALSE)
+theme_set(theme_minimal())
+options(ggplot2.discrete.colour=   scale_color_manual(values = wesanderson::wes_palette(name = "Darjeeling1")) )
+couleur <-  wesanderson::wes_palette(name = "Darjeeling1")
+scale2 <- function(x, na.rm = FALSE) (x - mean(x, na.rm = na.rm)) / ( sqrt((length(x)-1) / length(x)) *sd(x, na.rm) )
+
+```
+
+::: hidden
+\$\$
+
+\newcommand\R{{\mathbb{R}}}
+\newcommand\Xbf{{\boldsymbol{X}}}
+\newcommand\norm[1]{\lVert#1\rVert}
+\newcommand\xcol[1]{\boldsymbol{x}^{#1}}
+\newcommand\xrow[1]{\boldsymbol{x}_{#1}}
+\newcommand\xbf{\boldsymbol{x}}
+\newcommand\ybf{\boldsymbol{y}}
+
+\$\$
+:::
+
+```{r datapackage, eval = TRUE, echo = FALSE, warning = FALSE}
+library(plotly)
+library(factoextra)
+ggplot <- function(...) ggplot2::ggplot(...) + scale_fill_manual(values = wesanderson::wes_palette(name = "Darjeeling1")) + scale_color_manual(values = wes_palette(name = "Darjeeling1")) + theme_minimal()
+#remotes::install_github('MarieEtienne/coursesdata', force = TRUE)
+doubs.env <- read.csv ('https://raw.githubusercontent.com/zdealveindy/anadat-r/master/data/DoubsEnv.csv', row.names = 1) %>% as_tibble()
+
+data(penguins, package = 'palmerpenguins')
+penguins <- penguins %>% na.omit() %>% 
+  mutate(year = as.factor(year))
+
+```
+
+# Introduction
+
+## Les manchots comme exemple introductif
+
+L'étude sur les manchots de Palmer s'intéresse à diverses espèces de
+manchots sur diverses îles.
+
+[Question : est ce que les différentes espèces sont présentes de la même
+naière sur les difféérentes îles ?]{.rouge}
+
+```{r}
+#| echo: false
+#| label: penguins
+
+penguin_cont <- penguins |> 
+  group_by(species, island) |> 
+  count() |> 
+  pivot_wider(names_from = species, values_from = n, values_fill = 0) |> 
+  column_to_rownames(var = "island")
+  
+penguin_cont |> rownames_to_column(var = 'island') |> 
+  flextable()
+```
+
+Avec peu d'espèces, et peu d'îles, il est facile de constater que les
+espèces ne sont pas présentes de la même manière sur toutes les îles.
+
+[Conclusion : Il y a un lien entre espèce et île où le manchot est
+observé.]{.rouge}
+
+## Exemple causes de décès en France
+
+Le [fichier des décès en France]("http://factominer.free.fr/livreV2/deces.csv") contient pour 65 causes de décès le nombre cumulés de morts en 1979 et 2006 par tranche d'age, puis dans Les 65 lignes suivantes uniquement ce cumul pour 1979, puis pour 2006 et enfin pour chaque année le nombre de décès par tranche d'ages, toutes causes confondues.  
+
+
+
+```{r}
+#| echo: false
+#| label: deces
+deces_dta <- read.table("http://factominer.free.fr/livreV2/deces.csv", header = TRUE, sep = ";",  check.names = TRUE, fileEncoding = "latin1") |> 
+  rename(Cause = X)
+head(deces_dta) |> flextable()
+```
+
+
+[Objectif : Etude de la liaison entre age et cause de décès.]{.rouge}
+
+Les tranches d'âge sont définies a priori pour représenter des causes de décès similaires, 
+
+
+## Cadre général
+
+L'analyse factorielle des correspondances (AFC) est une méthode
+factorielle pour l'exploration statistique d'une [table de contingence]{.rouge} définie par [deux]{.rouge} variables
+[qualitatives]{.rouge}.
+
+[Objectif : Le but est d'étudier la liaison entre ces deux
+variables qualitatives ]{.rouge .large}(notamment quelles associations de modalités sont
+sur-représentées).
+
+::: callout-note
+
+La  terminologie analyse des correspondances vient du fait que l'on analyse un tableau mettant en correspondance deux ensembles, 
+* L'ensemble des lignes du tableau
+* L'ensemble des colonnes du tableau
+
+:::
+
+## Les données
+
+:::::: panel-tabset
+
+### Les données brutes 
+
+On considère deux variables qualitatives $A$ et $B$ ayant respectivement $I$ ( $a_1, \ldots, a_I$) et $J$ ( $b_1, \ldots, b_J$) modalités.  Ces variables sont observées simultanément sur $n$ individus affectés de poids identiques $1/n$. 
+
+::::: columns
+
+::: {.column width="45%"}
+
+Les données se présentent initialement sous la forme d'un tableau à $n$ lignes et 2 (ou 3 colonnes si on ajoute un identifiant).  
+
+:::
+
+::: {.column width="45%"}
+
+**Exemple de table de données**
+
+
+| ID   |     A      |      B     |
+|------|------------|------------|
+| 001  | $a_1$      |  $b_2$     |
+| 002  | $a_1$      |  $b_2$     |
+| 003  | $a_2$      |  $b_2$     |
+| 004  | $a_2$      |  $b_1$     |
+| 005  | $a_1$      |  $b_1$     |
+| 005  | $a_1$      |  $b_3$     |
+
+
+:::
+
+:::::
+
+
+### Le tableau disjonctif complet
+
+::::: columns
+
+::: {.column width="45%"}
+
+Il est fréquent de recoder (ou même de récolter) les variables sous la forme d'un tableau disjoinctif complet. A chaque variable $\ell$, on associe une table $X^{\ell},$   à $n$ et autant de colonnes que la variable $\ell$, qui contient pour chaque individu $k,$ à la colonne $m$ un $1$ si l'individu $k$ possède la modalité $m$ et un $0$ sinon. 
+
+
+
+:::
+
+::: {.column width="45%"}
+
+
+**Sur l'exemple précédent**
+
+$$\bf{X} =\begin{pmatrix} \class{orange}{X^{1}} & \class{rouge}{X^{2}} \end{pmatrix}$$
+$$\bf{X} = \overset{{\begin{matrix} \class{orange}{a_1} & \class{orange}{a_2} & \class{rouge}{b_1} & \class{rouge}{b_2} & \class{rouge}{b_3}\end{matrix}}}{
+\begin{pmatrix}
+\class{orange}{1} & \class{orange}{0} &  \class{rouge}{0} & \class{rouge}{1} & \class{rouge}{0}\\
+\class{orange}{1} & \class{orange}{0} &  \class{rouge}{0} & \class{rouge}{1} & \class{rouge}{0}\\
+\class{orange}{0} & \class{orange}{1} &  \class{rouge}{0} & \class{rouge}{1} & \class{rouge}{0}\\
+\class{orange}{0} & \class{orange}{1} &  \class{rouge}{1} & \class{rouge}{0} & \class{rouge}{0}\\
+\class{orange}{1} & \class{orange}{0} &  \class{rouge}{1} & \class{rouge}{0} & \class{rouge}{0}\\
+\class{orange}{1} & \class{orange}{0} &  \class{rouge}{0} & \class{rouge}{0} & \class{rouge}{1}\\
+\end{pmatrix}}$$
+
+
+:::
+
+:::::
+
+### La table de contingence
+
+::::: columns
+
+::: {.column width="45%"}
+
+Il s'agit de la matrice $K$ à $I$ lignes et $J$ colonnes,  dont le terme général $k_{ij}$ compte le nombre d'individus possédant simultanément les carcatéristiques $a_i$ et $b_j$. 
+
+$$\class{vert}{K}=\begin{bmatrix}
+\class{vert}{k_{ij}}
+\end{bmatrix}_{\begin{array}{r}
+i=1,\ldots,I\\
+j=1,\ldots,J
+\end{array}}.$$
+
+
+::: {.callout-note appearance="simple" icon=false}
+
+## Remarque 1
+
+$$\class{vert}{K} = (\class{orange}{X^1})^\top  \class{rouge}{X^2}$$
+:::
+
+
+::: {.callout-note appearance="simple" icon=false}
+
+## Remarque 2
+
+$$\Xbf^\top \Xbf = \begin{pmatrix} \class{orange}{C_1} & \class{vert}{K} \\ \class{vert}{K^\top} & \class{rouge}{C_2}\end{pmatrix},$$
+$C_{\ell}$ une matrice diagonale, dont la diagonale est le nombre d'observations dans chaque modalité.
+
+:::
+
+
+:::
+
+::: {.column width="45%"}
+
+**Sur l'exemple précédent**
+
+$$\class{vert}{K}  = \begin{pmatrix} 
+\class{vert}{1} & \class{vert}{2} &  \class{vert}{1} \\
+\class{vert}{1} & \class{vert}{1} & \class{vert}{0} \\
+\end{pmatrix}$$
+
+
+$$\Xbf^\top \Xbf = 
+\begin{pmatrix}
+\class{orange}{4} & 0 & \class{vert}{1} & \class{vert}{2} & \class{vert}{1} \\
+0 & \class{orange}{2} & \class{vert}{1} & \class{vert}{1} & \class{vert}{0} \\
+\class{vert}{1} & \class{vert}{1} & \class{rouge}{2} & 0 & 0 \\
+\class{vert}{2} & \class{vert}{1} & 0 & \class{rouge}{3} & 0 \\
+\class{vert}{1} & \class{vert}{0} & 0 & 0 & \class{rouge}{1} \\
+\end{pmatrix}$$
+:::
+
+::::: 
+
+::::::
+
+
+
+## Quelques notations
+
+::::: columns
+
+::: {.column width="45%"}
+
+### Formellement
+
+On note les effectifs 
+
+* $k_{\class{orange}{i+}} = \sum_{\class{rouge}{j=1}}^{\class{rouge}{J}} k_{ij}$  le nombre total d'individus ayant la modalité $\class{orange}{i}$
+* $k_{\class{rouge}{+j}} =  \sum_{\class{orange}{i=1}}^{\class{orange}{I}}  k_{ij}$  le nombre total d'individus ayant la modalité $\class{rouge}{j}$
+* $n = \sum_{\class{orange}{i=1}}^{\class{orange}{I}}\sum_{\class{rouge}{j=1}}^{\class{rouge}{J}}  k_{ij}$
+
+les proportions 
+
+* $f_{ij} = k_{ij}/n,$
+
+Et les proportions marginales 
+
+* $f_{\class{orange}{i+}} = \sum_{\class{rouge}{j=1}}^{\class{rouge}{J}} f_{ij}$  la proportion  d'individus ayant la modalité $\class{orange}{i}$
+* $f_{\class{rouge}{+j}} =  \sum_{\class{orange}{i=1}}^{\class{orange}{I}}  f_{ij}$ la proportion  d'individus ayant la modalité  $\class{rouge}{j}$
+* $f_{++}= 1$
+
+::: 
+
+::: {.column width="45%"}
+### Sur l'exemple 
+
+
+$$\class{vert}{K}  = \begin{array}{ccc||c}
+&& & Eff. marg\\
+\class{vert}{1=k_{11}} & \class{vert}{2=k_{12}} &  \class{vert}{1=k_{13}} & 4 = k_{1+}\\
+\class{vert}{1=k_{21}} & \class{vert}{1=k_{22}} & \class{vert}{0=k_{23}} & 2 =  k_{2+}\\ \hline
+2 =  k_{+1} & 3 =  k_{+2} & 1 =  k_{+3} & 6 = n\\
+\end{array}$$
+
+
+:::
+
+::::: 
+## Modèle d'indépendance
+
+
+On dit que deux variables $A$ et $B$ sont [non liées]{.rouge}  si et seulement si 
+$$\forall (i,j)\in\{1,\ldots,I\}\times\{1,\ldots,J\}: \; k_{ij}=\frac{k_{i +} k_{+ j}}{n}$$
+
+Cette notion est bien sûr liée  à l'indépendance en probabilité. En
+effet, deux variables aléatoires $A$ et $B$ sont indépendantes ssi 
+
+\begin{align*} \underbrace{\mathbb{P}(A=i  \cap B=j)}_{\text{estimée par } \frac{k_{ij}}{n}= f_{ij}} = \underbrace{\mathbb{P}(A=i)}_{\text{estimée par} \frac{k_{i +}}{k} = f_{i +}} \times \underbrace{\mathbb{P}(B=j)}_{\text{estimée par} \frac{k_{+ j}}{k}=f_{+j}}, \forall (i,j)\;
+\end{align*}
+
+
+
+On souhaite étudier la liaison entre $A$ et $B$ à partir de nos
+observations.
+
+La représentation graphique des profils-lignes ou des profils-colonnes,
+au moyen de diagrammes en barres parallèles, ainsi que le calcul de
+coefficients de liaison (Cramer) donnent une première idée de la
+variation conjointe des deux variables. 
+
+Le test du $\chi^2$ permet de plus de s'assurer du caractère
+significatif de cette liaison.
+
+## Test d'indépendance du $\chi^2$
+
+*(cf cours sur les tests du 2d semestre)*
+
+* l'hypothèse nulle est $H_0$: $A$ et $B$ sont indépendantes,
+* l'hypothèse alternative est $H_1$: $A$ et $B$ ne sont pas indépendantes.
+
+La statistique de test est 
+$$T = \sum_{i=1}^{I} \sum_{j=1}^{J}  \frac{\left(\text{Effectif observé}_{ij} - \text{Effectif ettendu}_{ij} \right)^2}{\text{Effectif attendu}_{ij} } =  \sum_{i=1}^{I} \sum_{j=1}^{J} \frac{( n f_{ij} - n f_{i+ } f_{ +j})^2}{n f_{i+} f_{+j}}= n \class{bleu}{\sum_{i=1}^{I} \sum_{j=1}^{J} \frac{(  f_{ij} -  f_{i+ } f_{ +j})^2}{f_{i+} f_{+j}}} = n \class{bleu}{\Phi^2} .$$ 
+
+Pour des grandes valeurs de $n$, et si $H_0$ est vraie,
+$$T \sim \chi^2_{(I-1)(J-1)}.$$
+
+[Si $T$ est grand, on rejette $H_0$.]{.rouge}
+
+La force de la dépendance est capturée par $\class{bleu}{\Phi^2}$
+
+## Probabilité conditionnelle
+
+### Rappel 
+$$P(A=i\vert B= j) = \frac{P(A=i,  B= j)}{P(B= j)}$$ 
+
+### Déclinaison sur les fréquences
+
+ * $\frac{f_{ij}}{f_{i+}}$ est la fréquence d'apparition de la modalité $j$ sachant qu'on s"intéresse à la population $A=i$. Si  $A$ et $B$ sont indépendantes, alors $\frac{f_{ij}}{f_{i+}}= f_{+j}$
+
+ * $\frac{f_{ij}}{f_{+j}}$ est la fréquence d'apparition de la modalité $i$ sachant qu'on s"intéresse à la population $B=j$. Si  $A$ et $B$ sont indépendantes, alors $\frac{f_{ij}}{f_{+j}}= f_{i+}$
+
+
+# Profils-lignes et profils-colonnes
+
+## Profils-lignes $N_I$
+
+Le tableau des profils-lignes $X$ est le tableau des fréquences
+conditionnelles de la modalité $j$ de $B$ sachant la modalité $i$ de
+$A$: 
+
+:::::: panel-tabset
+
+### Les points 
+
+$$X=\begin{pmatrix}
+\frac{f_{ij}}{f_{i+}}
+\end{pmatrix}_{\begin{array}{r}
+i=1,\ldots,I\\
+j=1,\ldots,J
+\end{array}}$$ 
+
+Ainsi avec les notations du cours d'ACP $$
+X = \begin{pmatrix}
+x_1^\top\\
+\vdots\\
+x_i^\top\\
+\vdots\\
+x_I^\top\\
+\end{pmatrix}
+\text{ avec }
+x_i = \begin{pmatrix}
+f_{i1}/f_{i+}\\
+\vdots\\
+f_{ij}/f_{i+}\\
+\vdots\\
+f_{iJ}/f_{i+}\\
+\end{pmatrix}\in\mathbb{R}^J.$$
+
+::: {.callout-note appearance="simple" icon=false}
+A chaque ligne $i$, on fait correspondre un point  dans $\R^J$ dont la j$^\text{ème}$ coordonnée vaut $f_{ij}/f_{i+}$.
+
+:::
+
+### Les poids 
+
+Chaque point $i$ est affecté du poids $f_{i+}.$
+
+Le point moyen $G_I$ est défini par 
+
+$$G_I = \sum_{i=1}^I f_{i+} x_i = (f_{+1}, \ldots, f_{+J})$$
+On a le nuage de points $X$, complété par les poids $f_{i+}.$
+
+
+### La métrique 
+
+La distance dont on munit l'espace $\R^J$ consiste à donner un poids $1/f_{+j}$ à la  j$^\text{ème}$ dimension, la distance au carré  (dite distance du $\chi^2$) entre les points $i_1$ et $i_2$ est définie par
+
+$$ d_{\chi^2}^2(x_{i_1}, x_{i_2}) = \sum_{j=1}^J \frac{1}{f_{+j}}\left (\frac{f_{i_1j}}{f_{i_1+}} -\frac{f_{i_2j}}{f_{i_2+}} \right)^2$$
+
+
+Ce choix est motivé par l'inertie du point $x_i$ par rapport au centre de garivité $G_I$, en effet 
+
+$$Inertie_{G_I}(x_i) = f_{i+} d_{\chi^2}^2(x_{i}, G_I) =  f_{i+}  \sum_{j=1}^J \frac{1}{f_{+j}}\left (\frac{f_{ij}}{f_{i+}} -f_{+j} \right)^2=  \sum_{j=1}^J \frac{\left ( f_{ij} - f_{i+}f_{+j} \right)^2 }{f_{i+} f_{+j}}.$$
+
+
+Ainsi l'inertie totale du nuage par rapport à $G_I$ vaut 
+
+$$I_{G_I} = \sum_{i=1}^I  \sum_{j=1}^J \frac{\left ( f_{ij} - f_{i+}f_{+j} \right)^2 }{f_{i+} f_{+j}} = \Phi^2$$
+L'inertie mesure l'écart à l'indépendance. L'étude du nuage $N_I$ rend compte de la structure des données.
+:::::: 
+
+## Profils-colonnes
+
+Dans le tableau de contingence, lignes et colonnes jouent des rôles symétriques
+
+
+Le tableau des profils-colonnes $X$ est le tableau des fréquences
+conditionnelles de la modalité $i$ de $A$ sachant la modalité $j$ de
+$B$: 
+
+:::::: panel-tabset
+
+### Les points 
+
+$$X=\begin{pmatrix}
+\frac{f_{ij}}{f_{j+}}
+\end{pmatrix}_{\begin{array}{r}
+i=1,\ldots,I\\
+j=1,\ldots,J
+\end{array}}$$ 
+
+Ainsi avec les notations du cours d'ACP $$
+X = \begin{pmatrix}
+x^1  & \ldots & x^j & \ldots & x^J
+\end{pmatrix}
+\text{ avec }
+x^j = \begin{pmatrix}
+f_{1j}/f_{+j}\\
+\vdots\\
+f_{ij}/f_{+j}\\
+\vdots\\
+f_{Ij}/f_{+j}\\
+\end{pmatrix}\in\mathbb{R}^I.$$
+
+::: {.callout-note appearance="simple" icon=false}
+A chaque colonne $j$, on fait correspondre un point  dans $\R^I$ dont la i$^\text{ème}$ coordonnée vaut $f_{ij}/f_{+j}$.
+
+:::
+
+### Les poids 
+
+Chaque point $j$ est affecté du poids $f_{+j}.$
+
+Le point moyen $G_J$ est défini par 
+
+$$G_J = \sum_{j=1}^J f_{+j}\, x^j = (f_{1+}, \ldots, f_{I+})$$
+On a le nuage de points $X$, complété par les poids $f_{+j}.$
+
+
+### La métrique 
+
+La distance dont on munit l'espace $\R^I$ consiste à donner un poids $1/f_{i+}$ à la  i$^\text{ème}$ dimension, la distance au carré  (dite distance du $\chi^2$) entre les points $j_1$ et $j_2$ est définie par
+
+$$I_{G_J}(x^j) = f_{+j} d_{\chi^2}^2(x^{j}, G_J) =  f_{+j}  \sum_{i=1}^I \frac{1}{f_{i+}}\left (\frac{f_{ij}}{f_{+j}} -f_{i+} \right)^2=  \sum_{i=1}^I \frac{\left ( f_{ij} - f_{i+}f_{+j} \right)^2 }{f_{i+} f_{+j}}.$$
+
+
+Ainsi l'inertie totale du nuage par rapport à $G_I$ vaut 
+
+$$I_{G_J} = \sum_{i=1}^I  \sum_{j=1}^J \frac{\left ( f_{ij} - f_{i+}f_{+j} \right)^2 }{f_{i+} f_{+j}} = \Phi^2$$
+
+L'inertie mesure l'écart à l'indépendance. L'étude du nuage $N_J$ rend compte de la structure des données.
+
+:::::: 
+
+
+
+
+## ACP des nuages lignes et colonnes
+
+:::::: panel-tabset
+
+### ACP de $N_I$
+
+Réalisé une l'ACP profils lignes. 
+
+* L'origine des axes est placée au centre $G_I$ du nuage $N_I$
+
+* On recherche une suite d'axes othogonaux d'inertie maximale
+
+* Le nuage est projeté sur ces axes et on représente ces projections en associant deux axes pour créer un plan.
+
+* la proximité entre deux profils lignes, s'exprime par la même manière de s'écarter de l'indépendance.
+
+
+### ACP de $N_J$
+
+Réalisé une l'ACP profils colonnes 
+
+* L'origine des axes est placée au centre $G_J$ du nuage $N_J$
+
+* On recherche une suite d'axes othogonaux d'inertie maximale
+
+* Le nuage est projeté sur ces axes et on représente ces projections en associant deux axes pour créer un plan.
+
+* la proximité entre deux profiils colonne, s'exprime par la même manière de s'écarter de l'indépendance.
+
+### Nombre d'axes
+
+Puisque le nuage $N_I$ se place dans l'espace $\R^J$, on peut penser qu'il faut $J$ axes pour tout représenter. Mais
+
+* La somme des coordonnées d'un profil vaut 1, on est donc dans un espace de dimension $\R^{J-1}$
+
+* Le nuage $N_I$ centré comporte  $I$, il est possible de les représenter tous avec $I-1$ dimensions
+
+On représente donc toute l'information avec $\min(I-1, J-1)$ axes.
+
+:::::: 
+
+
+## Représentation
+
+:::::: panel-tabset
+
+### Représentation des profils lignes
+
+```{r}
+#| echo: true
+#| label: CA_row
+#| eval: true
+#| output-location: column
+#| results: hold
+#| message: false
+penguins.CA <- CA(penguin_cont, graph = FALSE)
+plot(penguins.CA, invisible = "col" )
+```
+
+
+### Représentation des profils colonnes
+
+```{r}
+#| echo: true
+#| label: CA_col
+#| eval: true
+#| output-location: column
+#| results: hold
+#| message: false
+plot(penguins.CA, invisible = "row" )
+```
+
+
+::::::
+
+## Représentation jointe lignes et colonnes
+
+:::::: panel-tabset
+
+### Remarques
+
+* Les deux nuages $N_I$ et $N_J$ ont la m$eme inertie
+
+* L'inertie projetée sur l'axe $\ell$ est données par l'inertie du nuage projeté sur cet axe.
+  * concernant les profils lignes
+  $\sum_{i}^I f_{i+} \norm{OH_i^{\ell}}^2 = \lambda_{\ell}$
+  * concernant les profils colonnes
+  $\sum_{j}^J f_{+j} \norm{OH_j^{\ell}}^2 = \lambda_{\ell}$
+Ainsi les deeux nuages ont la même inertie projetée sur chaque axe.
+
+* Lien entre coordonnées des lignes et des colonnes : relations pseudo-barycentriques suivantes pour $\ell=1,\ldots,min(I-1, J-I)$
+
+$F_{\ell}(i) =\frac{1}{\sqrt{\lambda_{\ell}}} \sum_{j=1}^J \frac{f_{ij}}{f_{i+}} G_{\ell(j)}$
+$G_{\ell}(j) =\frac{1}{\sqrt{\lambda_{\ell}}} \sum_{i=1}^I \frac{f_{ij}}{f_{+j}} F_{\ell(i)}$
+
+où $F_{\ell}(i)$ désigne la coordonnée de la ligne $i$ sur l'axe $\ell$, tandis que $G_{\ell}(j)$ désigne la coordonnée de la colonne $j$ sur l'axe $\ell$.
+
+### Visualisation
+On peut donc représenter lignes et colonnes sur la même projection. 
+
+```{r}
+#| echo: true
+#| label: CA_collignes
+#| eval: true
+#| output-location: column
+#| results: hold
+#| message: false
+fviz_ca(penguins.CA)
+penguin_cont |> rownames_to_column(var = 'island') |> 
+  flextable()
+
+```
+:::::: 
+
+## Interprétation jointe lignes et colonnes
+
+Puisque l'origine du repère est confondu avec le barycentre des nuages.
+
+* Si un profil ligne a une coordonnée positive sur un axe, il s'associe 
+  * plus que dans le modèle d'indépendance aux modalités $j$ ayant  une coordonnées positive
+  * moins que dans le modèle d'indépendance aux modalités $j$ ayant  une coordonnées négative
+
+
+## Inerties associés aux axes
+
+En AFC, l'inertie a un sens particulier.
+
+En effet, si on considère la projection de $N_I$ sur l'axe $\ell$. 
+
+* Si on place chaque profil colonne $G_{\ell}(j)$ à l'exact barycentre, alors $N_J$ est au centre du nuage $N_I$ et donc $N_I$ ne peut-être un nuage de barucentre de $N_J$. 
+* C'est la valeur $\lambda_{\ell}$ qui dilate les barucentres de $1/\sqrt{\lambda_{\ell}}$ et donc $\lambda_{\ell}\leq 1$.
+
+La valeur propre $1$ signifique donc une association parfaite entre ligne et colonnes.
+
+Même si en pratique les valeurs propres ne valent quasimment jamais $1$, on peut retenir qu'une valeur propre élevé est le signe d'une très forte association entre lignes et colonnes.
+
+```{r}
+#| echo: true
+#| label: CA_eigen
+#| eval: true
+#| output-location: column
+#| results: hold
+#| message: false
+penguins.CA$eig[,1]
+```
+
+## Qualité de la représentation
+
+::::: columns
+
+::: {.column width="45%"}
+### Qualité de la représentation d'un profil ligne $i$ 
+
+La qualité de la réprésentation de l'individu $i$ sur l'axe $\ell$ est donné par 
+$$Qual_{\ell}(i) = \frac{\text{inertie de }i\text{ projeté sur }\ell}{\text{inertie de } i}= \frac{(OH_i^{\ell)^2}}{(Oi)^2}$$
+\text{inertie de $i$ projeté sur $\ell$}
+
+::: 
+
+::: {.column width="45%"}
+### Contribution d'un profil $i$ à l'inertie d'un axe
+
+$$Cont_{\ell}(i) = \frac{\text{inertie de }i\text{ projeté sur }\ell}{\text{inertie de } N_{I}\text{ projeté sur }\ell }= \frac{f_{i+}(OH_i^{\ell)^2}}{\lambda_{\ell}}$$
+
+
+
+::: 
+
+:::::
