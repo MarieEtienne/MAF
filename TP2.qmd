@@ -107,7 +107,8 @@ les caractéristiques des pays.
 # Chargement des données
 overshoot_dta <- read.table("https://marieetienne.github.io/datasets/overshootday_overview.csv", 
                             sep = ",",
-                            header = TRUE, row.names = 1) 
+                            header = TRUE, 
+                            row.names = 1) 
 
 head(overshoot_dta)
 ```
@@ -178,7 +179,7 @@ Base.
 #| echo: false
 #| include: false
 
-overshoot_dta <- overshoot_dta |> drop_na(overshoot_day)
+overshoot_dta <- overshoot_dta |> drop_na()
 summary(overshoot_dta)
 ```
 
@@ -201,9 +202,26 @@ summary(overshoot_dta)
 #| include: false
 library(FactoMineR)
 library(explor)
-overshoot_pca <- PCA(overshoot_dta, scale.unit = TRUE, quali.sup = c(4,5), row.w = overshoot_dta[,6], quanti.sup = 6)
+library(factoextra)
+
+overshoot_pca <- PCA(overshoot_dta, 
+                     scale.unit = TRUE, 
+                     quali.sup = c(4,5), 
+                     ind.sup = c(1,2),
+                     row.w = overshoot_dta[,6],
+                     quanti.sup = c(6, 11)) 
 explor(overshoot_pca)
+
+
+
+
+plot(overshoot_pca, axes = c(1,2), choix = "var")
+plot(overshoot_pca, axes = c(1,2), choix = "ind", habillage = 4)
+fviz_pca_ind(overshoot_pca, 
+             select.ind =  list(cos2 = 0.9),
+             col.ind = )
 ```
+
 
 -   Quelle est l'inertie portée par l'axe 1 ?, l'axe 2, l'axe 3 ?
 
@@ -317,4 +335,20 @@ semble la (les) plus pertinente(s) ?
 
 Résumez dans le compte-rendu du TP  les motifs qui vous ont fait choisir une méthode, les résultats principaux et les éléments qui vous permettent d'étayer ces résultats (éléments graphiques ou numériques).
 
+
+Attention on ne peut pas indiquer de variables quali supplémentraire dans MFA
+
+```{r}
+overshoot_quanti <-  overshoot_dta |>  
+  select(where(is.numeric)) 
+```
+
+
+```{r}
+
+overshoot_mfa <- MFA(overshoot_quanti, 
+    group = c(4, 6), ## 4 variables dans le premier groupe, les 6 suivantes dans le groupe 2
+    type = rep("s", 2) ## le groupe est de type quanti qu'on veut normaliser par l'eacrt type, meme chose pour le groupe 2
+)
+```
 
