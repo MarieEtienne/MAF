@@ -676,6 +676,270 @@ $$Cont_{\ell}(i) = \frac{\text{inertie de }i\text{ projeté sur }\ell}{\text{ine
 
 :::::
 
+# Etude des décès en France 
+
+## Statistiques descriptives
+
+Le fichier présente pour chaque tranche d'âge
+
+* 65 lignes présentant le cumul de décès par cause en 1979 et 2006
+* 65 lignes présentant le cumul de décès par cause en  2006
+* 64 lignes présentant le cumul de décès par cause en  1979 (le SIDA n'est pas pris en compte)
+* 28 lignes présentant le cumul de décès  toutes causes confondues cause en  1979 à 2006.
+
+
+
+
+```{r}
+#| echo: true
+#| label: deces_desc
+#| eval: true
+#| output-location: column
+#| results: hold
+#| message: false
+
+deces_dta <- read.table("http://factominer.free.fr/livreV2/deces.csv", header = TRUE, sep = ";",  
+                        check.names = TRUE, fileEncoding = "latin1") |> 
+  rename(Cause = X) |> 
+  column_to_rownames(var = "Cause")
+
+dim(deces_dta)
+rowSums(deces_dta)
+colSums(deces_dta)
+sum(deces_dta)
+```
+
+
+## Test d'indépendance
+
+### Test sur toutes les données
+
+```{r}
+#| echo: true
+#| label: deces_chi2
+#| eval: true
+#| output-location: column
+#| results: hold
+#| message: false
+chisq.test(deces_dta)
+```
+
+### Test sur les données actives
+
+```{r}
+#| echo: true
+#| label: deces_chi2_actives
+#| eval: true
+#| output-location: column
+#| results: hold
+#| message: false
+chisq.test(deces_dta[1:65, ])
+```
+## Inertie
+
+
+
+```{r}
+#| echo: true
+#| label: deces_inertie_ligne
+#| eval: true
+#| output-location: column
+#| results: hold
+#| message: false
+```
+
+
+## Analyse factorielle des correspondances (AFC)
+
+### Calcul et résumé de l'AFC
+
+```{r}
+#| echo: true
+#| label: deces_afc
+#| eval: true
+#| output-location: column
+#| results: hold
+#| message: false
+res.ca <- CA(deces_dta, row.sup = 66:nrow(deces_dta), graph = FALSE)
+summary(res.ca, nb.dec = 4)
+```
+
+## AFC - Marges
+
+### Marges des colonnes et lignes
+
+```{r}
+#| echo: true
+#| label: deces_marges
+#| eval: true
+#| output-location: column
+#| results: hold
+#| message: false
+round(res.ca$call$marge.col, 3)
+round(res.ca$call$marge.row[order(res.ca$call$marge.row)], 3)
+
+tibble(marge_col = res.ca$call$marge.col, Age = colnames(deces_dta))  |> ggplot() +  aes(x=Age, y =marge_col ) +
+  geom_bar(stat="identity") + ylab("Marge sur les colonnes")
+
+tibble(marge_row = res.ca$call$marge.row, Cause = row.names(deces_dta[1:65,]))  |> ggplot() +  aes(x=Cause, y =marge_row ) +
+  geom_bar(stat="identity") + ylab("Marge sur les lignes") +
+  coord_flip()
+
+
+```
+
+
+
+## AFC - Valeurs propres
+
+```{r}
+#| echo: true
+#| label: deces_vp
+#| eval: true
+#| output-location: column
+#| results: hold
+#| message: false
+
+tibble(eigen = res.ca$eig[,1], Rank = 1:length(res.ca$eig[,1]))  |> ggplot() +  aes(x=Rank, y =eigen ) +
+  geom_bar(stat="identity") + ylab("Valeurs propres") 
+
+
+```
+
+
+
+## Inertie par colonnes et lignes
+
+
+```{r}
+#| echo: true
+#| label: deces_inertia
+#| eval: true
+#| output-location: column
+#| results: hold
+#| message: false
+inertia.col <- tibble(Age= colnames(deces_dta),
+                      poids = res.ca$call$marge.col, 
+                  inertie = res.ca$col$inertia,
+                  percent.inertie = res.ca$col$inertia / sum(res.ca$col$inertia), 
+                  contrib_Dim1 = round(res.ca$col$contrib[,1],2),
+                  contrib_Dim2 = round(res.ca$col$contrib[,2]),
+                  contrib_Dim3 = round(res.ca$col$contrib[,3]))
+inertia.col |>  arrange(-inertie) |> flextable()
+
+inertia.row <- tibble(Cause= row.names(deces_dta[1:65,]),
+                      poids = res.ca$call$marge.row, 
+                  inertie = res.ca$row$inertia,
+                  percent.inertie = res.ca$row$inertia / sum(res.ca$row$inertia),
+                  contrib_Dim1 = round(res.ca$row$contrib[,1],2),
+                  contrib_Dim2 = round(res.ca$row$contrib[,2],2),
+                  contrib_Dim3 = round(res.ca$row$contrib[,3],2))
+inertia.row |>  arrange(-inertie)|> flextable()
+```
+
+
+## Visualisation des résultats :  axes 1 et 2
+
+
+```{r}
+#| echo: true
+#| label: deces_axes1-2
+#| eval: true
+#| output-location: column
+#| results: hold
+#| message: false
+fviz_ca(res.ca, axes = 1:2, invisible = c("row", "row.sup"))
+fviz_ca(res.ca, axes = 1:2, invisible = c("row.sup"), select.row =  list(contrib = 10))
+```
+
+
+
+## Visualisation des résultats :  axes 2 et 3
+
+```{r}
+#| echo: true
+#| label: deces_axes2-3
+#| eval: true
+#| output-location: column
+#| results: hold
+#| message: false
+fviz_ca(res.ca, axes = 2:3, invisible = c("row.sup"), select.row =  list(contrib = 10))
+```
+
+
+## Distance et résumé des contributions
+
+### Distances entre colonnes
+
+```{r}
+#| echo: true
+#| label: deces_distance_co
+#| eval: true
+#| output-location: column
+#| results: hold
+#| message: false
+round(dist(res.ca$col$coord), 3)
+```
+
+#### Distances entre lignes
+
+```{r}
+#| echo: true
+#| label: deces_distance_ligne
+#| eval: false
+#| output-location: column
+#| results: hold
+#| message: false
+round(dist(res.ca$row$coord), 3)
+```
+
+## Résumé des contributions (axes 2 à 5)
+
+
+```{r}
+#| echo: true
+#| label: deces_distance_resumecontrib
+#| eval: true
+#| output-location: column
+#| results: hold
+#| message: false
+
+round(data.frame(CTR = res.ca$col$contrib[,2:5], 
+                 CO2 = res.ca$col$cos2[,2:5]), 3)
+```
+
+
+
+## Résultats supplémentaires
+
+### Suppression et ajustement des éléments supplémentaires
+
+
+```{r}
+#| echo: true
+#| label: deces_supp
+#| eval: true
+#| output-location: column
+#| results: hold
+#| message: false
+#| 
+
+row_sup =  res.ca$row.sup$coord[, 1:3] |> as.data.frame() |> rownames_to_column()
+
+row_annee <- row_sup |> filter(str_detect(rowname, pattern = "^[12]"))
+
+annees = deces_dta |> rownames_to_column("Cause") |> filter(str_detect(Cause, pattern = "^[12]")) |> pull(Cause) |> as.list()
+
+# fviz_ca(res.ca, invisible = c( "col"), select.row=  list(contrib = 10),  axes = 2:3) +
+# geom_point(data = row_annee, aes(x=`Dim 2`, y = `Dim 3`)) +
+# geom_text(data = row_annee, aes(x=`Dim 2`, y = `Dim 3`, label = rowname)) 
+
+fviz_ca(res.ca, invisible = c( "col"), axes = 2:3) +
+geom_point(data = row_annee, aes(x=`Dim 2`, y = `Dim 3`)) +
+geom_text(data = row_annee, aes(x=`Dim 2`, y = `Dim 3`, label = rowname)) 
+
+```
+
 
 # Bilan
 
