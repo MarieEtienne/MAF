@@ -675,3 +675,8 @@ $$Cont_{\ell}(i) = \frac{\text{inertie de }i\text{ projeté sur }\ell}{\text{ine
 ::: 
 
 :::::
+
+
+# Bilan
+
+## Ce que vous pensez devoir retenir
