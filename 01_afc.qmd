@@ -326,7 +326,7 @@ $$\forall (i,j)\in\{1,\ldots,I\}\times\{1,\ldots,J\}: \; k_{ij}=\frac{k_{i +} k_
 Cette notion est bien sûr liée  à l'indépendance en probabilité. En
 effet, deux variables aléatoires $A$ et $B$ sont indépendantes ssi 
 
-\begin{align*} \underbrace{\mathbb{P}(A=i  \cap B=j)}_{\text{estimée par } \frac{k_{ij}}{n}= f_{ij}} = \underbrace{\mathbb{P}(A=i)}_{\text{estimée par} \frac{k_{i +}}{k} = f_{i +}} \times \underbrace{\mathbb{P}(B=j)}_{\text{estimée par} \frac{k_{+ j}}{k}=f_{+j}}, \forall (i,j)\;
+\begin{align*} \underbrace{\mathbb{P}(A=i  \cap B=j)}_{\text{estimée par } \frac{k_{ij}}{n}= f_{ij}} = \underbrace{\mathbb{P}(A=i)}_{\text{estimée par} \frac{k_{i +}}{n} = f_{i +}} \times \underbrace{\mathbb{P}(B=j)}_{\text{estimée par} \frac{k_{+ j}}{n}=f_{+j}}, \forall (i,j)\;
 \end{align*}
 
 
@@ -454,7 +454,7 @@ $B$:
 ### Les points 
 
 $$X=\begin{pmatrix}
-\frac{f_{ij}}{f_{j+}}
+\frac{f_{ij}}{f_{+j}}
 \end{pmatrix}_{\begin{array}{r}
 i=1,\ldots,I\\
 j=1,\ldots,J
@@ -541,7 +541,7 @@ Puisque le nuage $N_I$ se place dans l'espace $\R^J$, on peut penser qu'il faut 
 
 * La somme des coordonnées d'un profil vaut 1, on est donc dans un espace de dimension $\R^{J-1}$
 
-* Le nuage $N_I$ centré comporte  $I$, il est possible de les représenter tous avec $I-1$ dimensions
+* Le nuage $N_I$ centré comporte  $I$ lignes, il est possible de les représenter tous avec $I-1$ dimensions
 
 On représente donc toute l'information avec $\min(I-1, J-1)$ axes.
 
@@ -587,19 +587,19 @@ plot(penguins.CA, invisible = "row" )
 
 ### Remarques
 
-* Les deux nuages $N_I$ et $N_J$ ont la m$eme inertie
+* Les deux nuages $N_I$ et $N_J$ ont la même inertie
 
 * L'inertie projetée sur l'axe $\ell$ est données par l'inertie du nuage projeté sur cet axe.
   * concernant les profils lignes
   $\sum_{i}^I f_{i+} \norm{OH_i^{\ell}}^2 = \lambda_{\ell}$
   * concernant les profils colonnes
   $\sum_{j}^J f_{+j} \norm{OH_j^{\ell}}^2 = \lambda_{\ell}$
-Ainsi les deeux nuages ont la même inertie projetée sur chaque axe.
+Ainsi les deux nuages ont la même inertie projetée sur chaque axe.
 
 * Lien entre coordonnées des lignes et des colonnes : relations pseudo-barycentriques suivantes pour $\ell=1,\ldots,min(I-1, J-I)$
 
-$F_{\ell}(i) =\frac{1}{\sqrt{\lambda_{\ell}}} \sum_{j=1}^J \frac{f_{ij}}{f_{i+}} G_{\ell(j)}$
-$G_{\ell}(j) =\frac{1}{\sqrt{\lambda_{\ell}}} \sum_{i=1}^I \frac{f_{ij}}{f_{+j}} F_{\ell(i)}$
+$$F_{\ell}(i) =\frac{1}{\sqrt{\lambda_{\ell}}} \sum_{j=1}^J \frac{f_{ij}}{f_{i+}} G_{\ell(j)},$$
+$$G_{\ell}(j) =\frac{1}{\sqrt{\lambda_{\ell}}} \sum_{i=1}^I \frac{f_{ij}}{f_{+j}} F_{\ell(i)},$$
 
 où $F_{\ell}(i)$ désigne la coordonnée de la ligne $i$ sur l'axe $\ell$, tandis que $G_{\ell}(j)$ désigne la coordonnée de la colonne $j$ sur l'axe $\ell$.
 
@@ -622,7 +622,7 @@ penguin_cont |> rownames_to_column(var = 'island') |>
 
 ## Interprétation jointe lignes et colonnes
 
-Puisque l'origine du repère est confondu avec le barycentre des nuages.
+Puisque l'origine du repère est confondue avec le barycentre des nuages.
 
 * Si un profil ligne a une coordonnée positive sur un axe, il s'associe 
   * plus que dans le modèle d'indépendance aux modalités $j$ ayant  une coordonnées positive
@@ -635,12 +635,11 @@ En AFC, l'inertie a un sens particulier.
 
 En effet, si on considère la projection de $N_I$ sur l'axe $\ell$. 
 
-* Si on place chaque profil colonne $G_{\ell}(j)$ à l'exact barycentre, alors $N_J$ est au centre du nuage $N_I$ et donc $N_I$ ne peut-être un nuage de barucentre de $N_J$. 
-* C'est la valeur $\lambda_{\ell}$ qui dilate les barucentres de $1/\sqrt{\lambda_{\ell}}$ et donc $\lambda_{\ell}\leq 1$.
+* Si on place chaque profil colonne $G_{\ell}(j)$ à l'exact barycentre, alors $N_J$ est au centre du nuage $N_I$ et donc $N_I$ ne peut-être un nuage de barycentre de $N_J$. 
+* C'est la valeur $\lambda_{\ell}$ qui dilate les barycentres de $1/\sqrt{\lambda_{\ell}}$ et donc $\lambda_{\ell}\leq 1$.
 
-La valeur propre $1$ signifique donc une association parfaite entre ligne et colonnes.
+La valeur propre $1$ signifie que donc une association parfaite entre ligne et colonnes.
 
-Même si en pratique les valeurs propres ne valent quasimment jamais $1$, on peut retenir qu'une valeur propre élevé est le signe d'une très forte association entre lignes et colonnes.
 
 ```{r}
 #| echo: true
@@ -702,11 +701,31 @@ deces_dta <- read.table("http://factominer.free.fr/livreV2/deces.csv", header = 
                         check.names = TRUE, fileEncoding = "latin1") |> 
   rename(Cause = X) |> 
   column_to_rownames(var = "Cause")
+deces_dta <- deces_dta |> rownames_to_column("Cause") |> 
+  mutate(Periode = case_when(
+    str_detect(Cause, pattern = "^[70][0-9]_") ~ str_extract(Cause, pattern = "^[70][0-9]"),
+    str_detect(Cause, pattern = "^[12]+") ~ "Deces_annuel",
+    str_detect(Cause, pattern = "^[0-9]+", negate = TRUE) ~ "Deces_1979et2006",
+    TRUE ~ NA_character_ # valeur par defaut
+  ))
 
+deces_dta |> 
+  group_by(Periode) |> 
+  count()
 dim(deces_dta)
-rowSums(deces_dta)
-colSums(deces_dta)
-sum(deces_dta)
+
+# effectifs lignes
+deces_dta |> 
+  filter(Periode == "Deces_1979et2006") |> 
+  mutate(k_i_plus = rowSums(across(where(is.numeric))) ) |> 
+  select(k_i_plus) |> print(n= 5)
+# effectifs colonnes
+deces_dta |> 
+  filter(Periode == "Deces_1979et2006") |> 
+  select(-Periode) |> 
+  column_to_rownames("Cause") |> 
+  summarise_all(sum)
+
 ```
 
 
@@ -735,19 +754,6 @@ chisq.test(deces_dta)
 #| message: false
 chisq.test(deces_dta[1:65, ])
 ```
-## Inertie
-
-
-
-```{r}
-#| echo: true
-#| label: deces_inertie_ligne
-#| eval: true
-#| output-location: column
-#| results: hold
-#| message: false
-```
-
 
 ## Analyse factorielle des correspondances (AFC)
 
@@ -760,7 +766,12 @@ chisq.test(deces_dta[1:65, ])
 #| output-location: column
 #| results: hold
 #| message: false
-res.ca <- CA(deces_dta, row.sup = 66:nrow(deces_dta), graph = FALSE)
+
+deces_dta <- deces_dta |> 
+  column_to_rownames("Cause") |> 
+  select(-Periode)
+res.ca <- CA(deces_dta, row.sup = 66:nrow(deces_dta), ncp = 25, 
+             graph = FALSE)
 summary(res.ca, nb.dec = 4)
 ```
 
@@ -781,8 +792,7 @@ round(res.ca$call$marge.row[order(res.ca$call$marge.row)], 3)
 tibble(marge_col = res.ca$call$marge.col, Age = colnames(deces_dta))  |> ggplot() +  aes(x=Age, y =marge_col ) +
   geom_bar(stat="identity") + ylab("Marge sur les colonnes")
 
-tibble(marge_row = res.ca$call$marge.row, Cause = row.names(deces_dta[1:65,]))  |> ggplot() +  aes(x=Cause, y =marge_row ) +
-  geom_bar(stat="identity") + ylab("Marge sur les lignes") +
+tibble(marge_row = res.ca$call$marge.row, Cause = row.names(deces_dta[1:65,]))  |> ggplot() +  aes(x=Cause, y =marge_row ) + geom_bar(stat="identity") + ylab("Marge sur les lignes") +
   coord_flip()
 
 
@@ -849,7 +859,12 @@ inertia.row |>  arrange(-inertie)|> flextable()
 #| results: hold
 #| message: false
 fviz_ca(res.ca, axes = 1:2, invisible = c("row", "row.sup"))
+fviz_ca(res.ca, axes = 2:3, invisible = c("row", "row.sup"))
+
+fviz_ca(res.ca, axes = 1:2, invisible = c("row.sup"))
+
 fviz_ca(res.ca, axes = 1:2, invisible = c("row.sup"), select.row =  list(contrib = 10))
+fviz_ca(res.ca, axes = 2:3, invisible = c("row.sup"), select.row =  list(contrib = 10))
 ```
 
 
@@ -944,3 +959,27 @@ geom_text(data = row_annee, aes(x=`Dim 2`, y = `Dim 3`, label = rowname))
 # Bilan
 
 ## Ce que vous pensez devoir retenir
+
+
+pour des données qualitatives, avec seulement deux variables qualitatives
+
+Le tableau de contingence est à la base de la méthode
+
+On commence par un test du chi2 qui teste l'independance
+
+Les notions de profils lignes et profils colonnes
+
+On fait deux ACPS : 
+ * une ACP sur les profils lignes affcetés du poids de sa marge avec la métrique 1/ marge de la colonne
+ * une ACP sur les profils colonnes affcetés du poids de leur marge avec la métrique 1/ marge de la ligne
+
+la métrique est choisi pour que l'inertie totale soit le coefficient phi du test de chi2 (chi2/n)
+
+C'est une mesure d'écart à l'independance
+
+Une des forces de l'ACP est la représentation jointe de slignes et des colonnes grâce aux relations barycenytriques
+
+les profils lignes ayant de svaleur positives sur un axe sont associés préférentiellement aux colonnes ayant des valeurs, tandis qu'ils s'associent moins qu'attendu avec les colonnes qui ont des valeurs négatives
+
+Les contributions, des lignes/ et des colonnes ssont intéressantes.
+Il faut vérifier la qualité d ela représentaion
