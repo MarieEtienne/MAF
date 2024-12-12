@@ -33,7 +33,8 @@ website:
         menu: 
           - href: TP1.qmd
           - href: tp1_example.qmd
-          - href: TP2.qmd
+          - href: TP2.qmd          
+          - href: TP3.qmd
 
        
 
