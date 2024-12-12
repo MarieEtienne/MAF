@@ -718,7 +718,7 @@ dim(deces_dta)
 deces_dta |> 
   filter(Periode == "Deces_1979et2006") |> 
   mutate(k_i_plus = rowSums(across(where(is.numeric))) ) |> 
-  select(k_i_plus) |> print(n= 5)
+  select(k_i_plus) |> head()
 # effectifs colonnes
 deces_dta |> 
   filter(Periode == "Deces_1979et2006") |> 
@@ -740,7 +740,9 @@ deces_dta |>
 #| output-location: column
 #| results: hold
 #| message: false
-chisq.test(deces_dta)
+
+deces_dta |> select(-Periode) |> 
+  column_to_rownames("Cause") |> chisq.test()
 ```
 
 ### Test sur les données actives
@@ -752,7 +754,12 @@ chisq.test(deces_dta)
 #| output-location: column
 #| results: hold
 #| message: false
-chisq.test(deces_dta[1:65, ])
+
+deces_dta |> 
+  filter(Periode == "Deces_1979et2006") |> 
+  select(-Periode) |> 
+  column_to_rownames("Cause") |> chisq.test()
+
 ```
 
 ## Analyse factorielle des correspondances (AFC)
