@@ -9,7 +9,7 @@
 <meta name="author" content="Marie-Pierre Etienne">
 <meta name="dcterms.date" content="2024-12-12">
 
-<title>Labs2 - Analyse en composante Principale et au-delà – Méthodes d’analyse factorielle</title>
+<title>Lab3 - AFC et ACM – Méthodes d’analyse factorielle</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -69,6 +69,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="mpe_pres_revealjs.css">
@@ -183,25 +212,16 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#le-jour-du-dépassement" id="toc-le-jour-du-dépassement" class="nav-link active" data-scroll-target="#le-jour-du-dépassement">Le jour du dépassement</a>
+  <li><a href="#objectifs-de-la-séance" id="toc-objectifs-de-la-séance" class="nav-link active" data-scroll-target="#objectifs-de-la-séance">Objectifs de la séance</a></li>
+  <li><a href="#analyse-factorielle-des-correspondances-afc" id="toc-analyse-factorielle-des-correspondances-afc" class="nav-link" data-scroll-target="#analyse-factorielle-des-correspondances-afc">Analyse factorielle des correspondances (AFC)</a>
   <ul class="collapse">
-  <li><a href="#description-des-données" id="toc-description-des-données" class="nav-link" data-scroll-target="#description-des-données">Description des données</a>
-  <ul class="collapse">
-  <li><a href="#quelques-définitions" id="toc-quelques-définitions" class="nav-link" data-scroll-target="#quelques-définitions">Quelques définitions</a></li>
+  <li><a href="#contexte" id="toc-contexte" class="nav-link" data-scroll-target="#contexte">Contexte</a></li>
+  <li><a href="#étapes-de-lanalyse" id="toc-étapes-de-lanalyse" class="nav-link" data-scroll-target="#étapes-de-lanalyse">Étapes de l’analyse</a></li>
   </ul></li>
-  <li><a href="#objectifs" id="toc-objectifs" class="nav-link" data-scroll-target="#objectifs">Objectifs</a>
+  <li><a href="#analyse-des-correspondances-multiples-acm" id="toc-analyse-des-correspondances-multiples-acm" class="nav-link" data-scroll-target="#analyse-des-correspondances-multiples-acm">Analyse des correspondances multiples (ACM)</a>
   <ul class="collapse">
-  <li><a href="#chargement-des-données" id="toc-chargement-des-données" class="nav-link" data-scroll-target="#chargement-des-données">Chargement des Données</a></li>
-  <li><a href="#analyse-exploratoire-des-données" id="toc-analyse-exploratoire-des-données" class="nav-link" data-scroll-target="#analyse-exploratoire-des-données">Analyse Exploratoire des Données</a></li>
-  <li><a href="#statistiques-descriptives" id="toc-statistiques-descriptives" class="nav-link" data-scroll-target="#statistiques-descriptives">Statistiques descriptives :</a></li>
-  </ul></li>
-  <li><a href="#construire-une-acp" id="toc-construire-une-acp" class="nav-link" data-scroll-target="#construire-une-acp">Construire une ACP</a></li>
-  </ul></li>
-  <li><a href="#etude-de-la-qualité-de-vie" id="toc-etude-de-la-qualité-de-vie" class="nav-link" data-scroll-target="#etude-de-la-qualité-de-vie">Etude de la qualité de vie</a>
-  <ul class="collapse">
-  <li><a href="#un-premier-aperçu-des-données" id="toc-un-premier-aperçu-des-données" class="nav-link" data-scroll-target="#un-premier-aperçu-des-données">Un premier aperçu des données</a></li>
-  <li><a href="#choisir-une-démarche-danalyse" id="toc-choisir-une-démarche-danalyse" class="nav-link" data-scroll-target="#choisir-une-démarche-danalyse">Choisir une démarche d’analyse</a></li>
-  <li><a href="#mise-en-oeuvre" id="toc-mise-en-oeuvre" class="nav-link" data-scroll-target="#mise-en-oeuvre">Mise en oeuvre</a></li>
+  <li><a href="#contexte-1" id="toc-contexte-1" class="nav-link" data-scroll-target="#contexte-1">Contexte</a></li>
+  <li><a href="#étapes-de-lanalyse-1" id="toc-étapes-de-lanalyse-1" class="nav-link" data-scroll-target="#étapes-de-lanalyse-1">Étapes de l’analyse</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -211,7 +231,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Labs2 - Analyse en composante Principale et au-delà</h1>
+<h1 class="title">Lab3 - AFC et ACM</h1>
 </div>
 
 
@@ -254,129 +274,102 @@ ul.task-list li input[type="checkbox"] {
 <p>$$</p>
 <p>$$</p>
 </div>
-<p>Les méthodes d’analyse factorielles sont utiles pour l’exploration de données, soit en tant que telle soit dans une phase préparatoire à un travail de modélisation. Il est utile de disposer à la fois d’outils interractifs pour l’exploration, mais également de garder une trace de l’exploration avec un document bilan.</p>
-<p>Nous allons dans ce TP utiliser un fichier <code>TP2.qmd</code> pour garder une trace des analyses faites mais nous pourrons en parallèle utiliser le potentiel d’une exploration plus interactive soit avec <code>Factoshiny</code> soit avec <code>explor</code> selon ce que vous préférez.</p>
-<p>Dans ce TP nous allons explorer un premier exemple en détail avec une démarche bien guidée tandis que le second exemple a pour objectif de vous laisser face aux données en autonomie, pour vérifier que vous voyez comment aborder un jeu de données avec les méthodes d’analyse factorielle.</p>
-<section id="le-jour-du-dépassement" class="level1">
-<h1>Le jour du dépassement</h1>
-<section id="description-des-données" class="level2">
-<h2 class="anchored" data-anchor-id="description-des-données">Description des données</h2>
-<p>Le jeu de données utilisé dans ce premier cas pratique provient du <a href="https://www.footprintnetwork.org/licenses/public-data-package-free/">site web de Global Footprint Network</a>. Il contient les résultats d’empreinte écologique et de biocapacité pour 184 pays.</p>
-<p>Les données sont <a href="https://marieetienne.github.io/datasets/overshootday_overview.csv">disponibles sur ce lien</a>.</p>
-<section id="quelques-définitions" class="level3">
-<h3 class="anchored" data-anchor-id="quelques-définitions">Quelques définitions</h3>
-<p>Le calcul de l’empreinte écologique et de la biocapacité nous aide à répondre à la question de recherche fondamentale : Quelle est la demande des êtres humains envers les surfaces biologiquement productives (empreinte écologique) par rapport à la quantité que la planète (ou la surface productive d’une région) peut régénérer sur ces surfaces (biocapacité) ?</p>
+<hr>
+<section id="objectifs-de-la-séance" class="level2">
+<h2 class="anchored" data-anchor-id="objectifs-de-la-séance">Objectifs de la séance</h2>
+<p>Le but de la séance est d’utiliser l’AFC et l’ACM sur deux problématiques réelles.</p>
+<hr>
+</section>
+<section id="analyse-factorielle-des-correspondances-afc" class="level2">
+<h2 class="anchored" data-anchor-id="analyse-factorielle-des-correspondances-afc">Analyse factorielle des correspondances (AFC)</h2>
+<section id="contexte" class="level3">
+<h3 class="anchored" data-anchor-id="contexte">Contexte</h3>
+<p>Le but de cette étude est d’étudier le lien entre domaine d’étude, niveau d’étude et genre à l’université :</p>
 <ul>
-<li>Hectare global (gha) : C’est l’unité choisie pour exprimer toutes les quantités d’intérêt concernant la consommation/émission de carbone. Une unité de surface correspondant à la productivité moyenne d’un hectare de terres mondiales. Un hectare de terres agricoles vaudra plus d’hectares globaux qu’un hectare de désert.</li>
-<li>Empreinte écologique (en gha par personne) : Le nombre de gha requis pour produire les besoins et absorber les déchets d’un pays.</li>
-<li>Biocapacité (en gha) : La capacité d’un pays à produire ce dont il a besoin et à absorber ses déchets (réserve écologique).</li>
-<li>Jour de dépassement : Jour de l’année où la demande d’un pays dépasse sa biocapacité annuelle.</li>
+<li>Quelles sont les disciplines pour lesquelles le profil des étudiants est le même ?</li>
+<li>Quelles sont les disciplines privilégiées par les femmes (resp. par les hommes) ?</li>
+<li>Quelles sont les disciplines pour lesquelles les études sont plus longues ?</li>
 </ul>
-<p>Des détails supplémentaires sont disponibles <a href="https://data.footprintnetwork.org/?_ga=2.237587203.280109455.1689844989-712229654.1682588383#/abouttheData">ici</a></p>
-</section>
-</section>
-<section id="objectifs" class="level2">
-<h2 class="anchored" data-anchor-id="objectifs">Objectifs</h2>
-<p>Les relations entre les différentes mesures de l’empreinte écologique et les caractéristiques des pays.</p>
-<section id="chargement-des-données" class="level3">
-<h3 class="anchored" data-anchor-id="chargement-des-données">Chargement des Données</h3>
-</section>
-<section id="analyse-exploratoire-des-données" class="level3">
-<h3 class="anchored" data-anchor-id="analyse-exploratoire-des-données">Analyse Exploratoire des Données</h3>
+<p>Données :</p>
 <ul>
-<li>Pouvez vous indiquer le nombre de lignes et de colonnes</li>
+<li>Fichier : <a href="https://husson.github.io/img/universite.csv">universite.csv</a></li>
+<li>Variables qualitatives croisées : <code>Discipline</code> et <code>Niveau-sexe</code></li>
+<li>Dimensions : 10 disciplines et croisements de <code>niveau</code> (licence, master, doctorat) avec <code>sexe</code> (homme, femme).</li>
 </ul>
-<p>L’unité utilisé pour comparer est le Global Hectare (gha): Unité de surface qui correspondrait à la production moyenne d’un hectare du monde. Un hectare de champ vaudra donc plus de global hectare qu’un hectare de desert.</p>
-<p>Le gha par personne correspondant à une production (ou cosommation) globale d’une unité, (ici un pays) divisé par le nombre d’habitants dans cette unité.</p>
-<p>Les <strong>Variables disponibles</strong> sont</p>
+</section>
+<section id="étapes-de-lanalyse" class="level3">
+<h3 class="anchored" data-anchor-id="étapes-de-lanalyse">Étapes de l’analyse</h3>
 <ol type="1">
-<li><strong>life_expectancy</strong> : Espérance de vie moyenne (années).</li>
-<li><strong>hdi</strong> : Indice de développement humain.</li>
-<li><strong>per_capita_gdp</strong> : PIB par habitant (USD).</li>
-<li><strong>region</strong> : Région géographique.</li>
-<li><strong>income_group</strong> : Catégorie de revenu (HI : Haut, UM : Moyen supérieur, LM : Moyen inférieur, LI : Faible).</li>
-<li><strong>pop</strong> : Population (en millions).</li>
-<li><strong>total_prod</strong> : Production totale (gha par personne) la production du pays par habitant.</li>
-<li><strong>total_cons</strong> : Consommation totale (gha par personne) la consommation par habitant.</li>
-<li><strong>biocapacity</strong> : La production durable (gha par personne) par habitant, ce que peut fournir le pays ramené par habitant.</li>
-<li><strong>number_of_countries_required</strong> : Nombre de pays nécessaires pour satisfaire la consommation (total_cons/biocapacity)</li>
-<li><strong>number_of_earths_required</strong> : Nombre de terres dont on aurait besoin si tout le monde faisait comme dans le pays en question (nb gha par personnes du pays / 1.583 (nb de gha par habitant de la terre, ce chiffre est mis à jour chaque année))</li>
-<li><strong>overshoot_day</strong> : Jour de dépassement (numéro du jour dans l’année).</li>
+<li><strong>Importer le jeu de données</strong>
+<ul>
+<li>Identifier le format (éditeur de texte).</li>
+<li>Importer sous R.</li>
+</ul></li>
+<li><strong>Statistiques descriptives</strong>
+<ul>
+<li>Indépendance entre <code>Discipline</code> et <code>sexe</code> ?</li>
+<li>Indépendance entre <code>Discipline</code> et <code>niveau</code> ?</li>
+<li>Indépendance entre <code>niveau</code> et <code>sexe</code> ?</li>
+</ul></li>
+<li><strong>Mise en œuvre de l’AFC</strong>
+<ul>
+<li>Choisir les lignes et colonnes actives.</li>
+<li>Utiliser la fonction <code>CA</code>.</li>
+</ul></li>
+<li><strong>Interprétation des résultats</strong>
+<ul>
+<li>Interpréter le test du <span class="math inline">\(χ^2\)</span>.</li>
+<li>Choisir le nombre d’axes.</li>
+<li>Visualiser et interpréter.</li>
+</ul></li>
 </ol>
-<p>Plus de détails peuvent être trouvés ici , mais on peut préciser de la manière suivante</p>
-</section>
-<section id="statistiques-descriptives" class="level3">
-<h3 class="anchored" data-anchor-id="statistiques-descriptives">Statistiques descriptives :</h3>
-<p>Proposez des résumés numériques pour chaque variable, ainsi qu’une étude des corrélations.</p>
-<p>Pour le moment, on va supprimer les données manquantes (on verra par la suite comment gérer ce problème de manière plus satisfaisante). Pour ceci on peut utiliser <code>drop_na</code>du package tidyverse ou <code>na.omit</code>de R Base.</p>
 </section>
 </section>
-<section id="construire-une-acp" class="level2">
-<h2 class="anchored" data-anchor-id="construire-une-acp">Construire une ACP</h2>
+<section id="analyse-des-correspondances-multiples-acm" class="level2">
+<h2 class="anchored" data-anchor-id="analyse-des-correspondances-multiples-acm">Analyse des correspondances multiples (ACM)</h2>
+<section id="contexte-1" class="level3">
+<h3 class="anchored" data-anchor-id="contexte-1">Contexte</h3>
+<p>Objectif : Caractériser la clientèle d’un organisme de crédit.</p>
+<p>Données :</p>
 <ul>
-<li>Quel poids choisir pour les pays ?</li>
-</ul>
-<!-- Si on veut faire un bilan à l'échelle de la planete il est pertinent de prendre les poids des pays proportionnels à leur population -->
+<li>Fichier : <a href="https://husson.github.io/img/universite.csv">credit.csv</a></li>
+<li>66 clients ayant souscrit un crédit à la consommation.</li>
+<li>11 variables qualitatives :
 <ul>
-<li>Quelle métrique choisir ?</li>
-</ul>
-<!-- On va normaliser puisque espérance de vie n'a pas de lien avec l'empreinte écologique -->
-<ul>
-<li>Quelles variables met-on en variables supplémentaires ?</li>
-</ul>
-<!-- Les variables qauli ici region et income_group. Le nombre de terre est parfaitement corrélée à la production par construction, le nombre de pays est fortement corrélé -->
-<ul>
-<li>Quelle est l’inertie portée par l’axe 1 ?, l’axe 2, l’axe 3 ?</li>
-</ul>
-<ul>
-<li><p>Commentez la qualité de la représentation sur le plan (1-2), puis (1-3). <!-- Le plan 1-2 représente 86% d'inertie, tandis que le plan 1-3 en représente 74.4%. Le premier axe porte à lui seule 68.7% d'innertie. --> <!-- lorsque l'on fait une acp en prenant la pop en compte et sans mettre les poids, on voit que l'axe 3 est la population, c'est aussi un point de vu intéressant au sens au la population est indépendante des 2 premiers axes dans la suite on pourriat déduire qu'il y a de gros pays avec une grosse empreinte carbone mais aussi des gros pays avec une faible empreinte carbone  --></p></li>
-<li><p>De quelles variables nous parle l’axe 1 ? l’axe 2 ? Pour répondre à cette question on regardera le cercle des corrélations mais aussi les contributions des variable sà la création des axes.</p></li>
-</ul>
-<!-- On peut voir que l'axe 1 est quasi parfaitement anti corrélé avec le jour du dépassement et fortement corrélé au nombre de terres, à la consommation totale, la production totale. Cet axe nous parle donc bien de l'empreinte écologique. Il est aussi très corrélé positivement avec le hdi. Ce qui signifie que plus le hdi est élevé plus le nombre de terre requise est important, donc l'empreinte carbone est plus forte. Ca se confirme en regardant les contributions, les variables qui contribuent le plus sont  total_cons  number_of_earths_required    -->
-<!-- overshoot_day  hdi -->
-<!-- l'axe 2 nous parle de la biocapacité on le voit sur le cercle et du nombre de pays nécessaire. On en déduite que la biocapacité est indépendante de la consommation et de manière plus surprenante de la production.  -->
-<!-- Acvec une ACP sans le spoids on a des choses similaires sauf que la population arrive sur l'axe 3-->
-<ul>
-<li><p>Que pensez vous du graphe des individus ? Quels sont les individus atypiques ? Quels sont le spays les mieux représentés ?</p></li>
-<li><p>Comment l’ACP est-elle modifiée si on retire Singapour de l’analyse ?</p></li>
-</ul>
-<p>De nombreuses variables nous parle de l’empreinte écologique, et les variables nous parlant du développemnt du pays sont moins nombreuses. On peuyt rééquilibrer l’importance des varaibles avec une méthodes vu en cours, la quelle ?</p>
-<!-- C'est l'AFM bien sur -->
-<ul>
-<li><p>On souhaite identifier deux groupes de variables : les variables concernant l’empreinte carbone et les varaibles portant sur le développement du pays.</p></li>
-<li><p>Faites 2 ACP différentes sur chacun de ces deux groupes. Quelle est la première valeur propre dans les deux cas.</p></li>
-<li><p>Rappelez en quoi la méthode mentionnée plus haut est une ACP particulière. A partir de la fonction PCA et en utilisant l’option <code>col.w</code> mettez en oeuvre cette méthode.</p></li>
-<li><p>On peut le faire directement, avec la fonction <code>̀MFA</code> de FactoMineR. Reprenez l’analyse précédente avec ce nouvel équilibre entre les différentes variables équilibrées. Quelles sont les informations que vous pouvez retenir ?</p></li>
+<li>Exemple : <code>Marché</code>, <code>Apport</code>, <code>Impayé</code>, <code>Taux d'endettement</code>, etc.</li>
+</ul></li>
 </ul>
 </section>
-</section>
-<section id="etude-de-la-qualité-de-vie" class="level1">
-<h1>Etude de la qualité de vie</h1>
-<p>Le fichier <a href="https://marieetienne.github.io/datasets/QteVie.csv">QteVie.csv</a> provient de l’OCDE et concerne des indicateurs de qualité de vie en 2015. Pour les 34 pays de l’OCDE à cette date, plus la Russie et le Brésil, on dispose de 22 indicateurs regroupés en cinq thèmes, et d’une variable qualitative correspondant à la région. Les cinq thèmes sont les suivants, on donne entre parenthèses le nombre d’indicateurs par thème: Bien-être matériel (5); Emploi (5); Satisfaction (3); Santé et sécurité (6); Enseignement (3).</p>
-<p>On souhaite identifier des similarités entre pays et plus précisément on souhaite entre autre apporter des éléments de réponse aux questions suivantes :</p>
+<section id="étapes-de-lanalyse-1" class="level3">
+<h3 class="anchored" data-anchor-id="étapes-de-lanalyse-1">Étapes de l’analyse</h3>
+<ol type="1">
+<li><strong>Importer le jeu de données</strong>
 <ul>
-<li>Quels pays se ressemblent du point de vue de l’ensemble des indicateurs tous thèmes confondus ?</li>
-<li>Certains pays sont-ils particuliers?</li>
-<li>Certains pays sont-ils particuliers pour un ou plusieurs thèmes?</li>
-<li>La position relative des pays les uns par rapport aux autres est-elle la même d’un groupe d’indicateurs à l’autre?</li>
-</ul>
-<section id="un-premier-aperçu-des-données" class="level2">
-<h2 class="anchored" data-anchor-id="un-premier-aperçu-des-données">Un premier aperçu des données</h2>
+<li>Identifier le format (éditeur de texte).</li>
+<li>Importer sous R.</li>
+<li>Vérifier le type des variables.</li>
+</ul></li>
+<li><strong>Statistiques descriptives</strong>
 <ul>
-<li><p>Ouvrez le fichier <a href="QteVie.csv">QteVie.csv</a> pour identifier le séparateur de champs, le séparateur décimale, la présence éventuelle d’une colonne d’identifiant, la présence éventuelle de noms de colonnes, l’encodage du fichier (pour gérer les accents). On souhaite conserver le nom des variables tel qu’il est dans le fichier de données (argument <code>check.names</code> ce qui nécessite de respecter l’encodage <code>encoding</code>.</p></li>
-<li><p>Avec des statistiques univariées, identifier la présence de pays atypiques.</p></li>
-<li><p>Les variables d’un même thème sont-elles corrélées?</p></li>
-<li><p>Les différents thèmes sont-ils corrélés?</p></li>
-</ul>
-</section>
-<section id="choisir-une-démarche-danalyse" class="level2">
-<h2 class="anchored" data-anchor-id="choisir-une-démarche-danalyse">Choisir une démarche d’analyse</h2>
-<p>Vous disposez de différents outils pour aller au delà des analyses uni ou bivariées. Parmi ceux-ci, pouvez-vous faire un bilan rapide de différentes approches possibles et choisir celle (ou celles) qui vous semble la (les) plus pertinente(s) ?</p>
-</section>
-<section id="mise-en-oeuvre" class="level2">
-<h2 class="anchored" data-anchor-id="mise-en-oeuvre">Mise en oeuvre</h2>
-<p>Résumez dans le compte-rendu du TP les motifs qui vous ont fait choisir une méthode, les résultats principaux et les éléments qui vous permettent d’étayer ces résultats (éléments graphiques ou numériques).</p>
-<p>Attention on ne peut pas indiquer de variables quali supplémentraire dans MFA</p>
+<li>Identifier les modalités rares.</li>
+<li>Regrouper les modalités si nécessaire.</li>
+<li>Identifier les variables liées.</li>
+</ul></li>
+<li><strong>Mise en œuvre de l’ACM</strong>
+<ul>
+<li>Choisir les éléments actifs et supplémentaires.</li>
+<li>Utiliser la fonction <code>MCA</code>.</li>
+</ul></li>
+<li><strong>Interprétation des résultats</strong>
+<ul>
+<li>Choisir le nombre d’axes.</li>
+<li>Visualiser et interpréter les axes factoriels.</li>
+</ul></li>
+<li><strong>Synthèse des résultats</strong>
+<ul>
+<li>Rédiger un rapport de l’analyse : 2 pages, 3 graphiques, 5 statistiques numériques maximum.</li>
+</ul></li>
+</ol>
 
 
 </section>
