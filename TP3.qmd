@@ -1,0 +1,126 @@
+---
+title: "Lab3 - AFC et ACM"
+author:
+  - name: Marie-Pierre Etienne
+    affiliation: 
+      - ENSAI - CREST
+    email: marie-pierre.etienne@ensai.fr
+date: last-modified
+institute: https://marieetienne.github.io/MAF/
+bibliography: TPs.bib
+execute: 
+  freeze: true
+editor: 
+  markdown: 
+    wrap: 72
+css: mpe_pres_revealjs.css
+---
+
+```{r setup, include=FALSE, eval = TRUE}
+library(tidyverse)
+knitr::opts_chunk$set(echo = FALSE, comment = NA, cache = TRUE, message = FALSE,
+                      warning = FALSE, eval = FALSE,
+                      fig.align = "center")
+theme_set(theme_minimal())
+options(ggplot2.discrete.colour=   scale_color_manual(values = wesanderson::wes_palette(name = "Darjeeling1")) )
+couleur <-  wesanderson::wes_palette(name = "Darjeeling1")
+scale2 <- function(x, na.rm = FALSE) (x - mean(x, na.rm = na.rm)) / ( sqrt((length(x)-1) / length(x)) *sd(x, na.rm) )
+
+```
+
+::: hidden
+\$\$
+
+\newcommand\R{{\mathbb{R}}}
+\newcommand\Xbf{{\boldsymbol{X}}}
+\newcommand\norm[1]{\lVert#1\rVert}
+\newcommand\xcol[1]{\boldsymbol{x}^{#1}}
+\newcommand\xrow[1]{\boldsymbol{x}_{#1}}
+\newcommand\xbf{\boldsymbol{x}}
+\newcommand\ybf{\boldsymbol{y}}
+
+\$\$
+:::
+
+---
+
+## Objectifs de la séance
+
+Le but de la séance est d'utiliser l'AFC et l'ACM sur deux problématiques réelles.
+
+---
+
+## Analyse factorielle des correspondances (AFC)
+
+### Contexte
+Le but de cette étude est d'étudier le lien entre domaine d'étude, niveau d'étude et genre à l'université :
+
+- Quelles sont les disciplines pour lesquelles le profil des étudiants est le même ?
+- Quelles sont les disciplines privilégiées par les femmes (resp. par les hommes) ?
+- Quelles sont les disciplines pour lesquelles les études sont plus longues ?
+
+Données :
+
+- Fichier : [universite.csv](https://husson.github.io/img/universite.csv)
+- Variables qualitatives croisées : `Discipline` et `Niveau-sexe`
+- Dimensions : 10 disciplines et croisements de `niveau` (licence, master, doctorat) avec `sexe` (homme, femme).
+
+### Étapes de l'analyse
+
+1. **Importer le jeu de données**
+   - Identifier le format (éditeur de texte).
+   - Importer sous R.
+
+2. **Statistiques descriptives**
+   - Indépendance entre `Discipline` et `sexe` ?
+   - Indépendance entre `Discipline` et `niveau` ?
+   - Indépendance entre `niveau` et `sexe` ?
+
+3. **Mise en œuvre de l'AFC**
+   - Choisir les lignes et colonnes actives.
+   - Utiliser la fonction `CA`.
+
+4. **Interprétation des résultats**
+   - Interpréter le test du $χ^2$.
+   - Choisir le nombre d'axes.
+   - Visualiser et interpréter.
+
+
+
+## Analyse des correspondances multiples (ACM)
+
+### Contexte
+Objectif : Caractériser la clientèle d'un organisme de crédit.
+
+Données :
+
+- Fichier : [credit.csv](https://husson.github.io/img/universite.csv)
+- 66 clients ayant souscrit un crédit à la consommation.
+- 11 variables qualitatives :
+  - Exemple : `Marché`, `Apport`, `Impayé`, `Taux d'endettement`, etc.
+
+### Étapes de l'analyse
+
+1. **Importer le jeu de données**
+   - Identifier le format (éditeur de texte).
+   - Importer sous R.
+   - Vérifier le type des variables.
+
+2. **Statistiques descriptives**
+   - Identifier les modalités rares.
+   - Regrouper les modalités si nécessaire.
+   - Identifier les variables liées.
+
+3. **Mise en œuvre de l'ACM**
+   - Choisir les éléments actifs et supplémentaires.
+   - Utiliser la fonction `MCA`.
+
+4. **Interprétation des résultats**
+   - Choisir le nombre d'axes.
+   - Visualiser et interpréter les axes factoriels.
+
+5. **Synthèse des résultats**
+   - Rédiger un rapport de l'analyse : 2 pages, 3 graphiques, 5 statistiques numériques maximum.
+
+
+
