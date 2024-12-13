@@ -1,0 +1,232 @@
+---
+title: "Analyse Correspondances Multiples"
+author:
+  - name: Marie-Pierre Etienne
+    affiliation: 
+      - ENSAI - CREST
+    email: marie-pierre.etienne@ensai.fr
+date: last-updated
+institute: https://marieetienne.github.io/MAF/
+execute: 
+  freeze: true
+editor: 
+  markdown: 
+    wrap: 72
+css: mpe_pres_revealjs.css
+format:
+  revealjs: 
+    theme: [default, custom.scss]
+    width: 1050
+    margin: 0.05
+    slide-number: true
+    slide-level: 2
+    show-slide-number: print
+    menu:
+      useTextContentForMissingTitles: false
+    mathjax: true  # Active MathJax
+    self-contained: true
+---
+
+```{r setup, include=FALSE, eval = TRUE, message=FALSE}
+library(RefManageR)
+library(tidyverse) ## to benefit from the tidyverse coding system
+library(wesanderson)
+library(FactoMineR)
+library(flextable)
+```
+
+```{r reference,  include=FALSE, cache=FALSE, eval = TRUE}
+BibOptions(check.entries = FALSE,
+           bib.style = "authoryear",
+           cite.style = "alphabetic",
+           style = "markdown",
+           hyperlink = FALSE,
+           dashed = FALSE)
+myBib <- ReadBib("./MAF.bib", check = FALSE)
+theme_set(theme_minimal())
+options(ggplot2.discrete.colour=   scale_color_manual(values = wesanderson::wes_palette(name = "Darjeeling1")) )
+couleur <-  wesanderson::wes_palette(name = "Darjeeling1")
+scale2 <- function(x, na.rm = FALSE) (x - mean(x, na.rm = na.rm)) / ( sqrt((length(x)-1) / length(x)) *sd(x, na.rm) )
+
+```
+
+::: hidden
+\$\$
+
+\newcommand\R{{\mathbb{R}}}
+\newcommand\Xbf{{\boldsymbol{X}}}
+\newcommand\norm[1]{\lVert#1\rVert}
+\newcommand\xcol[1]{\boldsymbol{x}^{#1}}
+\newcommand\xrow[1]{\boldsymbol{x}_{#1}}
+\newcommand\xbf{\boldsymbol{x}}
+\newcommand\ybf{\boldsymbol{y}}
+
+\$\$
+:::
+
+```{r datapackage, eval = TRUE, echo = FALSE, warning = FALSE}
+library(plotly)
+library(factoextra)
+ggplot <- function(...) ggplot2::ggplot(...) + scale_fill_manual(values = wesanderson::wes_palette(name = "Darjeeling1")) + scale_color_manual(values = wes_palette(name = "Darjeeling1")) + theme_minimal()
+#remotes::install_github('MarieEtienne/coursesdata', force = TRUE)
+doubs.env <- read.csv ('https://raw.githubusercontent.com/zdealveindy/anadat-r/master/data/DoubsEnv.csv', row.names = 1) %>% as_tibble()
+
+data(penguins, package = 'palmerpenguins')
+penguins <- penguins %>% na.omit() %>% 
+  mutate(year = as.factor(year))
+
+```
+
+
+# Introduction
+
+## Objectif
+
+Le but de l'analyse des correspondances multiples (ACM) est de généraliser l'AFC en étudiant les liaisons entre plusieurs variables qualitatives. 
+
+- C'est l'équivalent de l'ACP pour des variables qualitatives.
+
+Les données décrivent $n$ individus par $p$ variables qualitatives ayant respectivement $m_1, \ldots, m_p$ modalités. On note $m$ le nombre total de modalités de sorte que :
+
+$$
+m=\sum_{j=1}^p m_j.
+$$
+
+---
+
+## Codages
+
+Les variables qualitatives peuvent être codées avec :
+
+- **Codage condensé** : Numérotation arbitraire des modalités.
+- **Codage disjonctif complet** : Composé uniquement de 0 et 1.
+
+### Notation :
+
+- $J$: Tableau de données obtenu avec le codage condensé.
+- $Z$: Tableau obtenu avec le codage disjonctif complet.
+
+$$
+Z = \begin{bmatrix}Z_1 \ldots Z_p\end{bmatrix} \text{ où } Z_j = \begin{bmatrix}Z_{ji\ell}\end{bmatrix},
+$$
+
+---
+
+## Tableau de Burt
+
+On définit le tableau de Burt $B$ par :
+
+$$
+B = Z^\top Z = \begin{bmatrix}
+B_1 & B_{12}& \ldots &B_{1p} \\
+B_{21} & B_{2}& \ldots & \vdots \\
+\vdots & & \ddots & \vdots \\
+B_{p1} & \ldots & & B_p
+\end{bmatrix},
+$$
+
+- Les blocs diagonaux $B_1, \ldots, B_p$ représentent les effectifs de chaque modalité.
+- Les blocs non diagonaux $B_{j\ell}$ comptent les individus croisant les modalités des variables $j$ et $\ell$.
+
+---
+
+## Propriétés du tableau de Burt
+
+- **Blocs diagonaux** ($B_j$) : Matrices diagonales contenant les effectifs des modalités de chaque variable.
+- **Blocs non diagonaux** ($B_{j\ell}$) : Nombre d'individus croisant les modalités des variables $j$ et $\ell$.
+
+La somme des valeurs dans chaque ligne ou colonne correspond à l'effectif total des individus.
+
+---
+
+# AFC du tableau de Burt
+
+## Triplet $(X, D, M)$
+
+### Matrices :
+
+- $X = \frac{1}{p} \Delta^{-1}B$ : Données issues des profils-lignes.
+- $D_{f_{i\bullet}} = \frac{1}{np} \Delta$: Poids des profils-lignes.
+- $M = D_{1/f_{\bullet j}} = np\Delta^{-1}$ : Métrique $\mathcal{X}^2$.
+
+---
+
+## Inertie
+
+L'inertie du nuage des profils-lignes est donnée par :
+
+$$
+I = \frac{m-p}{p^2} + \frac{n}{p^2} \sum_{j_1=1}^p \sum_{j_2 \neq j_1} \mathcal{X}^2_{j_1,j_2},
+$$
+
+où $\mathcal{X}^2_{j_1,j_2}$ est le coefficient de liaison entre les variables $j_1$ et $j_2$.
+
+---
+
+# AFC du tableau disjonctif complet
+
+## Définition
+
+On effectue l'AFC du tableau $Z$, qui conserve toutes les informations relatives à chaque individu.
+
+### Matrices :
+
+- $X = \frac{1}{p} Z$: Données issues des profils-lignes.
+- $D_{f_{i\bullet}} = \frac{1}{n} I_n$: Poids des profils-lignes.
+- $M = D_{1/f_{\bullet j}} = np\Delta^{-1}$ : Métrique $\mathcal{X}^2$.
+
+---
+
+## Résultats
+
+En utilisant les profils-lignes de $Z$, les inerties et les axes factoriels sont calculés pour représenter les individus et les modalités des variables qualitatives.
+
+- Les axes sont ordonnés par l'inertie décroissante.
+- La contribution des axes est évaluée en fonction de l'inertie totale.
+
+---
+
+# Relation entre AFC de $B$ et $Z$
+
+## Valeurs propres
+
+- $\rho_1, \ldots, \rho_q$ : Valeurs propres non triviales de $(\frac{B\Delta^{-1}}{p})^2$ (AFC de $B$).
+- $\lambda_1, \ldots, \lambda_q$ : Valeurs propres non triviales de $(\frac{B\Delta^{-1}}{p})$ (AFC de $Z$).
+
+### Propriété :
+
+$$
+\rho_k = \lambda_k^2,
+$$
+
+Les mêmes valeurs propres sont obtenues pour $B$ et $Z$, à des puissances différentes.
+
+
+### Critère de sélection -Relation entre les AFC de $B$ et de $Z$
+De plus, on peut  interpréter les valeurs propres $\lambda_k$. En effet, lorsque les variables sont indépendantes, on a 
+$$
+\sum_{k}\rho_k = \frac{m-p}{p^2} = \frac{q}{p^2} \Leftrightarrow \frac{1}{q}\sum_{k}\lambda_k^2=\frac{1}{p^2}.
+$$
+Par ailleurs on a $$\frac{1}{q} \sum_{k}\lambda_k = \frac{1}{p},$$
+car $I=\sum_k\lambda_k=\frac{q}{p}$. 
+
+Ainsi, lorsque les variables sont indépendantes on a $\lambda_k=\frac{1}{p}$. On peut donc en déduire un critère pour choisir le nombre d'axes factoriels. On conservera les axes dont l'inertie est supérieure à $1/p$. 
+
+
+- On conserve les axes dont l'inertie est supérieure à $1/p$.
+
+---
+
+# Conclusion
+
+## Synthèse
+
+- L'AFC du tableau de Burt permet d'évaluer les liaisons globales entre les variables qualitatives.
+- L'AFC du tableau disjonctif complet permet de représenter les individus et modalités dans le même espace factoriel.
+
+## Applications
+
+- Études exploratoires pour des données qualitatives complexes.
+- Analyse de dépendances entre plusieurs variables qualitatives.
+
+
