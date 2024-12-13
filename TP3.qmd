@@ -50,7 +50,101 @@ Le but de la séance est d'utiliser l'AFC et l'ACM sur deux problématiques rée
 
 ---
 
-## Analyse factorielle des correspondances (AFC)
+## Analyse factorielle des correspondances - Exemple
+
+Les données sont extraites des résultats de la plateforme [Parcoursup ](https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-parcoursup/information/).
+
+### Contexte
+Le but de l'étude menée ici etcette étude est d'étudier le lien entre type de formation et département. 
+
+- Quels sont les départements ayant des offres de formation similaire ?
+- Quels sont les types de formations présents préférentiellement dans certains département  ?
+
+
+Données :
+
+- Fichier : [parcoursup2023.csv](https://marieetienne.github.io/datasets/parcoursup2023.csv)
+- Variables qualitatives d'intérêts : `Dept` le département de la formation concernée, 'Formation`le type de formation.
+- Variables additionnelles : `Selection` vaut sélective si la formation est sélective,  `Parite` est une variable pouvant prendre trois modalités : `feminine`si la formation comporte plus de 65% de femmes, `paritaire si la formation compte entre 35 et 65% de femmes, masculine sinon, `Detail`précise le type de formation. 
+
+- Dimensions : 11 formations disciplines et  97 départements (les départements hors france métropolitaines et l'étranger sont rassemble dans un  département fictif 99)
+
+### Exemple de code à commenter et discuter
+
+Identifier ce que fait le code ci-dessous et comment il peut être mobilisé pour aborder la question de la typologie des départements selon leur offre de formation.
+
+```{r}
+#| label: afc_dep_filiere
+#| message: false
+#| echo: true
+#| eval: false
+psup_dta <- read.csv("https://marieetienne.github.io/datasets/parcoursup2023.csv",fileEncoding = "UTF-8") 
+
+head(psup_dta)
+
+dta_dep_form <- psup_dta |> 
+  group_by(Dept, Formation) |> 
+  count() |> 
+  pivot_wider(names_from = Formation, values_from = n, values_fill = 0) 
+
+dta_dep_selection <- psup_dta |> 
+  group_by(Dept, Selection) |> 
+  count() |> 
+  pivot_wider(names_from = Selection, values_from = n, values_fill = 0) 
+
+dta_dep_parite <- psup_dta |> 
+  group_by(Dept, Parite) |> 
+  count() |> 
+  pivot_wider(names_from = Parite, values_from = n, values_fill = 0) 
+
+dta_dep_detail <- psup_dta |> 
+  group_by(Dept, Detail) |> 
+  count() |> 
+  pivot_wider(names_from = Detail, values_from = n, values_fill = 0) 
+
+
+dta_dep_filiere <- dta_dep_form |> inner_join(dta_dep_parite) |> inner_join(dta_dep_selection) |>  column_to_rownames('Dept')
+
+
+dep_filiere.ca <-  CA(dta_dep_filiere , col.sup = 12:ncol(dta_dep_filiere))
+
+fviz_eig(dep_filiere.ca, choice = "eigenvalue")
+
+inertia.row <- tibble(Dept= row.names(dta_dep_filiere),
+                      poids = dep_filiere.ca$call$marge.row, 
+                  inertie = dep_filiere.ca$row$inertia,
+                  percent.inertie = dep_filiere.ca$row$inertia / sum(dep_filiere.ca$row$inertia),
+                  contrib_Dim1 = round(dep_filiere.ca$row$contrib[,1],2),
+                  contrib_Dim2 = round(dep_filiere.ca$row$contrib[,2],2),
+                  contrib_Dim3 = round(dep_filiere.ca$row$contrib[,3],2))
+inertia.row |>  arrange(-inertie)|> flextable()
+
+
+inertia.col <- tibble(Formation= colnames(dta_dep_filiere[1:11]),
+                      poids = dep_filiere.ca$call$marge.col, 
+                  inertie = dep_filiere.ca$col$inertia,
+                  percent.inertie = dep_filiere.ca$col$inertia / sum(dep_filiere.ca$col$inertia), 
+                  contrib_Dim1 = round(dep_filiere.ca$col$contrib[,1],2),
+                  contrib_Dim2 = round(dep_filiere.ca$col$contrib[,2]),
+                  contrib_Dim3 = round(dep_filiere.ca$col$contrib[,3]))
+inertia.col |>  arrange(-inertie) |> flextable()
+
+
+fviz_ca_row(dep_filiere.ca, axes = 1:2)
+
+fviz_ca_col(dep_filiere.ca, axes = 1:2, invisible = c("col.sup")) ## bug montre encore les colonnes supplémenatiares
+fviz_ca_col(dep_filiere.ca, axes = 1:2, invisible = c("col.sup"), select.col = list(contrib = 11)) ## trick
+
+
+fviz_ca(dep_filiere.ca, axes = 1:2)
+fviz_ca(dep_filiere.ca, axes = 1:2, select.col =  list(cos2 = 20),  alpha.col="cos2", select.row= list(contrib = 15))
+
+```
+
+
+
+
+## Analyse factorielle des correspondances (AFC) - A vous de jouer
 
 ### Contexte
 Le but de cette étude est d'étudier le lien entre domaine d'étude, niveau d'étude et genre à l'université :
