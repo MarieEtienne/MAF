@@ -343,53 +343,165 @@
     "text": "Pour approfondir ou compléter le cours\nCornillon, P., A. Guyader, F. Husson, et al. (2013). Statistiques avec R. Rennes (Presses universitaires de).\nEscofier, B. and J. Pagès (1998). “Analyses factorielles simples et multiples”. In: Dunod, Paris 284, pp. 104-107.\nGégout-Petit, A., M. Maumy-Bertrand, G. Saporta, et al. (2022). Données manquantes. Editions Technip.\nHusson, F. (1999a). Chaîne Youtube. URL: https://www.youtube.com/user/HussonFrancois.\nHusson, F. (1999b). MOOC sur l’analyse de données. URL: https://husson.github.io/MOOC_AnaDo/index.html.\nHusson, F., S. Lê, and J. Pagès (2016). Presses universitaires de Rennes."
   },
   {
-    "objectID": "TP3.html",
-    "href": "TP3.html",
-    "title": "Lab3 - AFC et ACM",
-    "section": "",
-    "text": "$$\n$$"
+    "objectID": "01_acm.html#objectif",
+    "href": "01_acm.html#objectif",
+    "title": "Analyse Correspondances Multiples",
+    "section": "Objectif",
+    "text": "Objectif\nLe but de l’analyse des correspondances multiples (ACM) est de généraliser l’AFC en étudiant les liaisons entre plusieurs variables qualitatives.\n\nC’est l’équivalent de l’ACP pour des variables qualitatives.\n\nLes données décrivent\n\n\\(n\\) individus\nau travers de \\(p\\) variables qualitatives\nayant respectivement \\(m_1, \\ldots, m_p\\) modalités.\n\nOn note \\(m\\) le nombre total de modalités de sorte que :\n\\[\nm=\\sum_{j=1}^p m_j.\n\\]"
   },
   {
-    "objectID": "TP3.html#objectifs-de-la-séance",
-    "href": "TP3.html#objectifs-de-la-séance",
-    "title": "Lab3 - AFC et ACM",
-    "section": "Objectifs de la séance",
-    "text": "Objectifs de la séance\nLe but de la séance est d’utiliser l’AFC et l’ACM sur deux problématiques réelles."
+    "objectID": "01_acm.html#exemple-position-sur-les-ogm",
+    "href": "01_acm.html#exemple-position-sur-les-ogm",
+    "title": "Analyse Correspondances Multiples",
+    "section": "Exemple : Position sur les OGM",
+    "text": "Exemple : Position sur les OGM\n\n\nogm_dta &lt;- read_delim(\"http://factominer.free.fr/livre/ogm.csv\", delim = \";\", \n                  escape_double = FALSE, locale = locale(encoding = \"WINDOWS-1252\"), \n                  trim_ws = TRUE)\nogm_dta &lt;- ogm_dta |&gt; mutate(across(where(is.character), as.factor))\nsummary(ogm_dta[,1:15]) \nsummary(ogm_dta[,16:21]) \n\n\n        Concerné               Position Culture               Position Al H\n Beaucoup   :36   Favorable            :45      Favorable            :37   \n Moyen      :53   Pas Favorable du Tout:33      Pas Favorable du Tout:50   \n Pas du Tout:15   Plutôt Défavorable   :54      Plutôt Défavorable   :47   \n Un Peu     :31   Très Favorable       : 3      Très Favorable       : 1   \n               Position Al A Manif     Media Actif Info Active\n Favorable            :44    Non:122   Non:78      Non:82     \n Pas Favorable du Tout:44    Oui: 13   Oui:57      Oui:53     \n Plutôt Défavorable   :39                                     \n Très Favorable       : 8                                     \n Produits Phytosanitaires Famine   Amélioration Agr Futur Progrès Danger  \n Non:56                   Non:67   Non:93           Non:54        Non:39  \n Oui:79                   Oui:68   Oui:42           Oui:81        Oui:96  \n                                                                          \n                                                                          \n Menace   Risque Eco Procédé Inutile\n Non:48   Non:67     Non:123        \n Oui:87   Oui:68     Oui: 12        \n                                    \n                                    \n Grds Parents Sexe         Age                    CSP     Relation\n Non:49       F:71   [26; 40]:24   Etudiant         :69   Non:79  \n Oui:86       H:64   [41; 60]:24   Cadre            :17   Oui:56  \n                     &lt; 25    :73   Retraité         :14           \n                     &gt; 60    :14   Autre            : 9           \n                                   Fonction Publique: 9           \n                                   Technicien       : 6           \n                                   (Other)          :11           \n       Parti Politique\n Centre        :32    \n Extrême gauche: 9    \n PS            :47    \n UMP           :40    \n Verts         : 7"
   },
   {
-    "objectID": "TP3.html#analyse-factorielle-des-correspondances---exemple",
-    "href": "TP3.html#analyse-factorielle-des-correspondances---exemple",
-    "title": "Lab3 - AFC et ACM",
-    "section": "Analyse factorielle des correspondances - Exemple",
-    "text": "Analyse factorielle des correspondances - Exemple\nLes données sont extraites des résultats de la plateforme Parcoursup.\n\nContexte\nLe but de l’étude menée ici etcette étude est d’étudier le lien entre type de formation et département.\n\nQuels sont les départements ayant des offres de formation similaire ?\nQuels sont les types de formations présents préférentiellement dans certains département ?\n\nDonnées :\n\nFichier : parcoursup2023.csv\nVariables qualitatives d’intérêts : Dept le département de la formation concernée, ’Formation`le type de formation.\nVariables additionnelles : Selection vaut sélective si la formation est sélective, Parite est une variable pouvant prendre trois modalités : femininesi la formation comporte plus de 65% de femmes, paritaire si la formation compte entre 35 et 65% de femmes, masculine sinon,Detail`précise le type de formation.\nDimensions : 11 formations disciplines et 97 départements (les départements hors france métropolitaines et l’étranger sont rassemble dans un département fictif 99)\n\n\n\nExemple de code à commenter et discuter\nIdentifier ce que fait le code ci-dessous et comment il peut être mobilisé pour aborder la question de la typologie des départements selon leur offre de formation.\n\npsup_dta &lt;- read.csv(\"https://marieetienne.github.io/datasets/parcoursup2023.csv\",fileEncoding = \"UTF-8\") \n\nhead(psup_dta)\n\ndta_dep_form &lt;- psup_dta |&gt; \n  group_by(Dept, Formation) |&gt; \n  count() |&gt; \n  pivot_wider(names_from = Formation, values_from = n, values_fill = 0) \n\ndta_dep_selection &lt;- psup_dta |&gt; \n  group_by(Dept, Selection) |&gt; \n  count() |&gt; \n  pivot_wider(names_from = Selection, values_from = n, values_fill = 0) \n\ndta_dep_parite &lt;- psup_dta |&gt; \n  group_by(Dept, Parite) |&gt; \n  count() |&gt; \n  pivot_wider(names_from = Parite, values_from = n, values_fill = 0) \n\ndta_dep_detail &lt;- psup_dta |&gt; \n  group_by(Dept, Detail) |&gt; \n  count() |&gt; \n  pivot_wider(names_from = Detail, values_from = n, values_fill = 0) \n\n\ndta_dep_filiere &lt;- dta_dep_form |&gt; inner_join(dta_dep_parite) |&gt; inner_join(dta_dep_selection) |&gt;  column_to_rownames('Dept')\n\n\ndep_filiere.ca &lt;-  CA(dta_dep_filiere , col.sup = 12:ncol(dta_dep_filiere))\n\nfviz_eig(dep_filiere.ca, choice = \"eigenvalue\")\n\ninertia.row &lt;- tibble(Dept= row.names(dta_dep_filiere),\n                      poids = dep_filiere.ca$call$marge.row, \n                  inertie = dep_filiere.ca$row$inertia,\n                  percent.inertie = dep_filiere.ca$row$inertia / sum(dep_filiere.ca$row$inertia),\n                  contrib_Dim1 = round(dep_filiere.ca$row$contrib[,1],2),\n                  contrib_Dim2 = round(dep_filiere.ca$row$contrib[,2],2),\n                  contrib_Dim3 = round(dep_filiere.ca$row$contrib[,3],2))\ninertia.row |&gt;  arrange(-inertie)|&gt; flextable()\n\n\ninertia.col &lt;- tibble(Formation= colnames(dta_dep_filiere[1:11]),\n                      poids = dep_filiere.ca$call$marge.col, \n                  inertie = dep_filiere.ca$col$inertia,\n                  percent.inertie = dep_filiere.ca$col$inertia / sum(dep_filiere.ca$col$inertia), \n                  contrib_Dim1 = round(dep_filiere.ca$col$contrib[,1],2),\n                  contrib_Dim2 = round(dep_filiere.ca$col$contrib[,2]),\n                  contrib_Dim3 = round(dep_filiere.ca$col$contrib[,3]))\ninertia.col |&gt;  arrange(-inertie) |&gt; flextable()\n\n\nfviz_ca_row(dep_filiere.ca, axes = 1:2)\n\nfviz_ca_col(dep_filiere.ca, axes = 1:2, invisible = c(\"col.sup\")) ## bug montre encore les colonnes supplémenatiares\nfviz_ca_col(dep_filiere.ca, axes = 1:2, invisible = c(\"col.sup\"), select.col = list(contrib = 11)) ## trick\n\n\nfviz_ca(dep_filiere.ca, axes = 1:2)\nfviz_ca(dep_filiere.ca, axes = 1:2, select.col =  list(cos2 = 20),  alpha.col=\"cos2\", select.row= list(contrib = 15))"
+    "objectID": "01_acm.html#lien-avec-lafc",
+    "href": "01_acm.html#lien-avec-lafc",
+    "title": "Analyse Correspondances Multiples",
+    "section": "Lien avec l’AFC",
+    "text": "Lien avec l’AFC\n\n\n\nL’AFC fait le lien entre les modalités de deux variables qualitatives.\nDans l’AFC, on ne prête plus attention aux individus (ici un répondant) et on s’intéresse au tableau de contingence uniquement (défini à partir du tableau disjonctif complet)\nLa distance entre deux profils est mesurée à l’aide de la distance du \\(\\chi^2\\)."
   },
   {
-    "objectID": "TP3.html#analyse-factorielle-des-correspondances-afc---a-vous-de-jouer",
-    "href": "TP3.html#analyse-factorielle-des-correspondances-afc---a-vous-de-jouer",
-    "title": "Lab3 - AFC et ACM",
-    "section": "Analyse factorielle des correspondances (AFC) - A vous de jouer",
-    "text": "Analyse factorielle des correspondances (AFC) - A vous de jouer\n\nContexte\nLe but de cette étude est d’étudier le lien entre domaine d’étude, niveau d’étude et genre à l’université :\n\nQuelles sont les disciplines pour lesquelles le profil des étudiants est le même ?\nQuelles sont les disciplines privilégiées par les femmes (resp. par les hommes) ?\nQuelles sont les disciplines pour lesquelles les études sont plus longues ?\n\nDonnées :\n\nFichier : universite.csv\nVariables qualitatives croisées : Discipline et Niveau-sexe\nDimensions : 10 disciplines et croisements de niveau (licence, master, doctorat) avec sexe (homme, femme).\n\n\n\nÉtapes de l’analyse\n\nImporter le jeu de données\n\nIdentifier le format (éditeur de texte).\nImporter sous R.\n\nStatistiques descriptives\n\nIndépendance entre Discipline et sexe ?\nIndépendance entre Discipline et niveau ?\nIndépendance entre niveau et sexe ?\n\nMise en œuvre de l’AFC\n\nChoisir les lignes et colonnes actives.\nUtiliser la fonction CA.\n\nInterprétation des résultats\n\nInterpréter le test du \\(χ^2\\).\nChoisir le nombre d’axes.\nVisualiser et interpréter."
+    "objectID": "01_acm.html#représentation-des-variables-qualitatives",
+    "href": "01_acm.html#représentation-des-variables-qualitatives",
+    "title": "Analyse Correspondances Multiples",
+    "section": "Représentation des variables qualitatives",
+    "text": "Représentation des variables qualitatives\nDans les données initiales, pour chaquae individu, et pour chaque variable qualitative, on note la modalité observée.\nPour manipuler les données, on recode souvent ces données initiales sous forme du tableau disjonctif complet \\(Z\\).\nDans ce tableau, une colonne représente une modalité, pour une des variables et on note \\(1\\) si l’individu possède cette variable \\(0\\) sinon\nQuestions :\n\nQuelles sont les dimensions de \\(Z\\) ?\n$ {k=1}^m Z{ik} = ??$\n\\(\\sum_{i=1}^n Z_{ik} = ??\\)\n\n\nNotation :\n\\[\nZ = \\begin{pmatrix}Z_1 \\ldots Z_p\\end{pmatrix}\n\\] \\(Z_j\\) est donc un tableau à \\(n\\) lignes et \\(m_j\\) colonnes."
   },
   {
-    "objectID": "TP3.html#analyse-des-correspondances-multiples-acm",
-    "href": "TP3.html#analyse-des-correspondances-multiples-acm",
-    "title": "Lab3 - AFC et ACM",
-    "section": "Analyse des correspondances multiples (ACM)",
-    "text": "Analyse des correspondances multiples (ACM)\n\nContexte\nObjectif : Caractériser la clientèle d’un organisme de crédit.\nDonnées :\n\nFichier : credit.csv\n66 clients ayant souscrit un crédit à la consommation.\n11 variables qualitatives :\n\nExemple : Marché, Apport, Impayé, Taux d'endettement, etc.\n\n\n\n\nÉtapes de l’analyse\n\nImporter le jeu de données\n\nIdentifier le format (éditeur de texte).\nImporter sous R.\nVérifier le type des variables.\n\nStatistiques descriptives\n\nIdentifier les modalités rares.\nRegrouper les modalités si nécessaire.\nIdentifier les variables liées.\n\nMise en œuvre de l’ACM\n\nChoisir les éléments actifs et supplémentaires.\nUtiliser la fonction MCA.\n\nInterprétation des résultats\n\nChoisir le nombre d’axes.\nVisualiser et interpréter les axes factoriels.\n\nSynthèse des résultats\n\nRédiger un rapport de l’analyse : 2 pages, 3 graphiques, 5 statistiques numériques maximum."
+    "objectID": "01_acm.html#tableau-de-burt",
+    "href": "01_acm.html#tableau-de-burt",
+    "title": "Analyse Correspondances Multiples",
+    "section": "Tableau de Burt",
+    "text": "Tableau de Burt\n\nDefinitionExemple avec trois variables qualitatives\n\n\nOn définit le tableau de Burt \\(B\\) par :\n\\[\nB = Z^\\top Z = \\begin{pmatrix}\nB_1 & B_{12}& \\ldots &B_{1p} \\\\\nB_{21} & B_{2}& \\ldots & \\vdots \\\\\n\\vdots & & \\ddots & \\vdots \\\\\nB_{p1} & \\ldots & & B_p\n\\end{pmatrix},\n\\]\nComme vu pour l’AFC sur l’onglet Table de contingence\n\nLes blocs diagonaux \\(B_j\\) représentent les effectifs de chaque modalité de la variable \\(j\\) (\\(j=1, \\ldots,p\\)).\nLes blocs non diagonaux \\(B_{j\\ell}\\) comptent les individus croisant les modalités des variables \\(j\\) et \\(\\ell\\).\n\nLa somme des valeurs dans chaque ligne ou colonne correspond à l’effectif total des individus.\nQuestions :\n\nQuelles sont les dimensions de \\(B\\) ?\n\\(\\sum_{k=1}^K B_{ik} = ??\\)\n\\(\\sum_{i=1}^I B_{ik} = ??\\)\n\n\n\n\n\n\\[\\bf{Z} = \\overset{{\\begin{matrix} \\class{orange}{a_1} & \\class{orange}{a_2} & \\class{rouge}{b_1} & \\class{rouge}{b_2} & \\class{rouge}{b_3}& \\class{vert}{c_1} & \\class{vert}{c_2} & \\class{vert}{c_3}\\end{matrix}}}{\n\\begin{pmatrix}\n\\class{orange}{1} & \\class{orange}{0} &  \\class{rouge}{0} & \\class{rouge}{1} & \\class{rouge}{0} &  \\class{vert}{0} & \\class{vert}{0} & \\class{vert}{1}\\\\\n\\class{orange}{1} & \\class{orange}{0} &  \\class{rouge}{0} & \\class{rouge}{1} & \\class{rouge}{0}&  \\class{vert}{0} & \\class{vert}{1} & \\class{vert}{0}\\\\\n\\class{orange}{0} & \\class{orange}{1} &  \\class{rouge}{0} & \\class{rouge}{1} & \\class{rouge}{0} & \\class{vert}{0} & \\class{vert}{1} & \\class{vert}{0}\\\\\n\\class{orange}{0} & \\class{orange}{1} &  \\class{rouge}{1} & \\class{rouge}{0} & \\class{rouge}{0} &  \\class{vert}{1} & \\class{vert}{0} & \\class{vert}{0}\\\\\n\\class{orange}{1} & \\class{orange}{0} &  \\class{rouge}{1} & \\class{rouge}{0} & \\class{rouge}{0}&  \\class{vert}{0} & \\class{vert}{0} & \\class{vert}{1}\\\\\n\\class{orange}{1} & \\class{orange}{0} &  \\class{rouge}{0} & \\class{rouge}{0} & \\class{rouge}{1}&  \\class{vert}{1} & \\class{vert}{0} & \\class{vert}{0}\\\\\n\\end{pmatrix}}\\]\n\n\\[\\bf{B} =  ??\\]\n\n\\[\\bf{B} = \\begin{pmatrix}\n\\class{orange}{4} & \\class{orange}{0} & {1} & {2}& {1} & {1} & {1}& {2}\\\\\n\\class{orange}{0} & \\class{orange}{2} & {1} & {1}& {0} & {1} & {1}& {0}\\\\\n{1} &  {1} &  \\class{rouge}{2}  & \\class{rouge}{0}& \\class{rouge}{0} & {1} & {0}& {1}\\\\\n{2} &  {1} &  \\class{rouge}{0}  & \\class{rouge}{3}& \\class{rouge}{0} & {0} & {2}& {1}\\\\\n{1} &  {0} &  \\class{rouge}{0}  & \\class{rouge}{0}& \\class{rouge}{1} & {1} & {0}& {0}\\\\\n{1} &  {1} &  {1}  & {0}& {1} & \\class{vert}{2} & \\class{vert}{0}& \\class{vert}{0}\\\\\n{1} &  {1} &  {0}  & {2}& {0} & \\class{vert}{0} & \\class{vert}{2}& \\class{vert}{0}\\\\\n{2} &  {0} &  {1}  & {1}& {0} & \\class{vert}{0} & \\class{vert}{0}& \\class{vert}{2}\\\\\n\\end{pmatrix}\n\\]"
   },
   {
-    "objectID": "proj_sur_SVD.html#la-décomposition-en-valeurs-sigulières",
-    "href": "proj_sur_SVD.html#la-décomposition-en-valeurs-sigulières",
-    "title": "Singular Value Decomposition et ACP",
-    "section": "La décomposition en valeurs sigulières",
-    "text": "La décomposition en valeurs sigulières\n\\[\\boldsymbol{X} = \\boldsymbol{U}\\boldsymbol{D}\\boldsymbol{V^\\intercal},\\]\noù * \\(\\boldsymbol{U}\\) est une matrice \\(n\\times n\\) orthogonale \\(\\boldsymbol{U} \\boldsymbol{U}^\\intercal = \\boldsymbol{I}_n,\\) * \\(\\boldsymbol{V}\\) est une matrice \\(d\\times d\\) orthogonale \\(\\boldsymbol{V} \\boldsymbol{V}^\\intercal = \\boldsymbol{I}_d,\\) * \\(\\boldsymbol{D}\\) est une matrice \\(n \\times d\\), diagonale au sens où seuls les termes \\(D_{ii}\\) sont non nuls.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFigure 1: SVD et Changement de Base"
+    "objectID": "01_acm.html#intuition",
+    "href": "01_acm.html#intuition",
+    "title": "Analyse Correspondances Multiples",
+    "section": "Intuition",
+    "text": "Intuition\nOn veut généraliser ce qu’on a fait dans l’AFC, c’est à dire\n\ndéfinir des distances entre des profils lignes (remarque ici profil ligne et profil colonne sont identiques)\nfaire abstraction des individus, pour ne regarder que les liens entre les différentes modalités.\n\nOn a besoin de définir une “AFC” sur le tableau de Burt\n\nle poids associé à chaque ligne sera la fréquence de la modalité considérée\nla distance pondère les colonnes, avec \\(1/f_{+j}\\)"
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Méthodes d’Analyse factorielle",
-    "section": "",
-    "text": "Description du cours\nCe cours présente des techniques statistiques pour décire et viusualiser des données multivariés. Il présentera à la fois les fondements mathématiques (géométriques) mais fera surtout la part belle à la mise en oeuvre pratioque de ces outils. A l’issue de ce cours, vous disposerez d’un ensemble de méthodes pour analyser des ensembles de données complexes et créer des représentations visuelles qui révèlent des motifs, des tendances et des relations entre plusieurs variables. Le cours couvre les sujets suivants :\n\n\nContenu\n\nAnalyse en Composantes Principales (ACP) : Un outil puissant de réduction dimensionnelle qui simplifie les grands ensembles de données tout en préservant autant que possible la variation. Les étudiants apprendront à visualiser des données à haute dimension à l’aide de l’ACP, rendant ainsi plus faciles à interpréter les relations complexes. Une extension, l’Analyse Factorielle Multiple (AFM) permet de prendre en compte des variables quantitatives organisées par groupe (on veut distinguer les variables physiques, des variables chimiques par exemple).\nAnalyse Factorielle Discriminante (AFD) : Cette méthode aide à classifier les observations dans des groupes prédéfinis. Le cours se concentrera sur la manière de différencier visuellement les groupes en utilisant plusieurs variables prédictives et d’interpréter les résultats.\nAnalyse Factorielle des Correspondances (AFC) : Il s’agit ici d’étudier la relation entre deux variables catégorielles et de visualiser les individus.\nAnalyse des Correspondances Multiples (ACM) : Cette méthode généralise l’AFC au cas à plus de deux variables qualitatives.\n\nLe cours mettra un accent particulier sur la visualisation des ensembles de données multivariés complexes. Ces outils visuels sont précieux pour communiquer les résultats des analyses multivariées de manière intuitive et accessible.\nÀ la fin du cours, les étudiants seront compétents dans l’application des méthodes multivariées à une variété d’ensembles de données et auront les compétences nécessaires pour créer des visualisations qui transmettent efficacement les intuitions que l’on peut avoir à partir des données et des éléments clés de la modélisation qui peut suivre.\n\n\nOrganisation du cours\n\n12h de cours\n12h de De TD/TP\n\nChaque cours contiendra un exemple détaillé et la mise en oeuvre pratique de la méthode étudiée ainsi que la présentation des concepts mathématiques (essentiellement géométriques) sur lesquels elle repose.\n\n\nPrérequis\nUne connaissance de base des statistiques, de l’algèbre linéaire et une maîtrise des logiciels statistiques (R essentiellement) sont recommandées"
+    "objectID": "01_acm.html#les-points",
+    "href": "01_acm.html#les-points",
+    "title": "Analyse Correspondances Multiples",
+    "section": "Les points",
+    "text": "Les points\n\nQue vaut la matrice \\(X\\) ?Exemple avec trois variables qualitatives\n\n\n\nOn considère \\(X = \\frac{1}{p} \\Delta^{-1} B\\), où \\(\\Delta\\) est une matrice diagonale qui contient les effectifs de chaque modalité, c’est c’est-à -dire \\[Diag(\\Delta)= Diag (B).\\]\nCeci revient à diviser chaque ligne \\(i\\) par l’effectif dans la modalité \\(i\\).\n\\(X_{ij} = \\frac{k_{ik}}{k_{i+}}.\\)\n\n\n\n\n\n\\[\\bf{\\Delta^{-1}} = \\frac{1}{3} \\begin{pmatrix}\n\\class{orange}{1/4} & \\class{orange}{0} & {0} & {0}& {0} & {0} & {0}& {0}\\\\\n\\class{orange}{0} & \\class{orange}{1/2} & {0} & {0}& {0} & {0} & {0}& {0}\\\\\n{0} &  {0} &  \\class{rouge}{1/2}  & \\class{rouge}{0}& \\class{rouge}{0} & {0}& {0}& {0}\\\\\n{0} &  {0} &  \\class{rouge}{0}  & \\class{rouge}{1/3}& \\class{rouge}{0} & {0} & {0}& {0}\\\\\n{0} &  {0} &  \\class{rouge}{0}  & \\class{rouge}{0}& \\class{rouge}{1} &{0} & {0}& {0}\\\\\n{0} &  {0} &  {0}  & {0}& {0} & \\class{vert}{1/2} & \\class{vert}{0}& \\class{vert}{0}\\\\\n{0} &  {0} &  {0}  & {0}& {0} & \\class{vert}{0} & \\class{vert}{1/2}& \\class{vert}{0}\\\\\n{0} &  {0} &  {0}  &{0}& {0} & \\class{vert}{0} & \\class{vert}{0}& \\class{vert}{1/2}\\\\\n\\end{pmatrix}\n\\] \\[\\bf{B} = \\begin{pmatrix}\n\\class{orange}{4} & \\class{orange}{0} & {1} & {2}& {1} & {1} & {1}& {2}\\\\\n\\class{orange}{0} & \\class{orange}{2} & {1} & {1}& {0} & {1} & {1}& {0}\\\\\n{1} &  {1} &  \\class{rouge}{2}  & \\class{rouge}{0}& \\class{rouge}{0} & {1} & {0}& {1}\\\\\n{2} &  {1} &  \\class{rouge}{0}  & \\class{rouge}{3}& \\class{rouge}{0} & {0} & {2}& {1}\\\\\n{1} &  {0} &  \\class{rouge}{0}  & \\class{rouge}{0}& \\class{rouge}{1} & {1} & {0}& {0}\\\\\n{1} &  {1} &  {1}  & {0}& {1} & \\class{vert}{2} & \\class{vert}{0}& \\class{vert}{0}\\\\\n{1} &  {1} &  {0}  & {2}& {0} & \\class{vert}{0} & \\class{vert}{2}& \\class{vert}{0}\\\\\n{2} &  {0} &  {1}  & {1}& {0} & \\class{vert}{0} & \\class{vert}{0}& \\class{vert}{2}\\\\\n\\end{pmatrix}\n\\]\n\n\n\\[\\bf{\\frac{1}{p} \\Delta^{-1} B} = \\bf{X} =   \\frac{1}{3} \\begin{pmatrix}\n1& 0& 1/4 & 1/2 & 1/4 & 1/4 & 1/4 & 1/2  \\\\\n0 & 1 & 1/2  & 0.5 & 0& 1/2  & 1/2 & 0 \\\\\n1/2 & 1/2 & 1   & 0.0 & 0& 1/2  & 0 & 1/2 \\\\\n2/3  & 1/3  & 0& 1 & 0& 0& 2/3  & 1/3 \\\\\n1 & 0 & 0& 0.0 & 1   & 1   & 0 & 0 \\\\\n1/2 & 1/2 & 1/2  & 0.0 & 1/2  & 1   & 0 & 0 \\\\\n1/2 & 1/2 & 0& 1 & 0& 0& 1 & 0 \\\\\n1 & 0 & 1/2  & 1/2 & 0& 0& 0 & 1 \\\\\n\\end{pmatrix}\\]"
+  },
+  {
+    "objectID": "01_acm.html#poids-de-chaque-ligne-ici-un-profil-ligne",
+    "href": "01_acm.html#poids-de-chaque-ligne-ici-un-profil-ligne",
+    "title": "Analyse Correspondances Multiples",
+    "section": "Poids de chaque ligne (ici un profil ligne)",
+    "text": "Poids de chaque ligne (ici un profil ligne)\n\nOn associe à chaque profil ligne le poids \\({f_{i+}}\\),\n\nDans le formalisme vu en ACP, ceci correspond à la matrice \\(W = \\frac{1}{np} \\Delta\\)"
+  },
+  {
+    "objectID": "01_acm.html#metrique",
+    "href": "01_acm.html#metrique",
+    "title": "Analyse Correspondances Multiples",
+    "section": "Metrique",
+    "text": "Metrique\n\nOn veut utiliser la métrique du \\(\\chi^2\\), telle que la distance entre deux profils \\(i_1\\) et \\(i_2\\)\n\n\\[d(x_{i_1}, x_{i_2})^2 =\\sum_{k=1}^{m}  \\frac{1}{f_{+k}} \\left(\\frac{f_{i_1k}}{f_{i_1+}} -\\frac{f_{i_2k}}{f_{i_2+}}\\right)^2\\]\nDans le formalisme matriciel de l’ACP ceci revient à définir la métrique\n\\(M = D_{1/f_{+ j}} = np\\Delta^{-1}\\)"
+  },
+  {
+    "objectID": "01_acm.html#inertie",
+    "href": "01_acm.html#inertie",
+    "title": "Analyse Correspondances Multiples",
+    "section": "Inertie",
+    "text": "Inertie\nOn est conduit à trouver les valeurs propres de\n\\[(X M^{1/2})^\\top W (X M^{1/2})\\]\nou de manière équivalente la matrice\n\\[VM = X^\\top W X M =  \\Delta^{-1} \\frac{1}{p}  B^\\top \\frac{1}{np} \\Delta \\Delta^{-1} \\frac{1}{p}  B np  \\Delta^{-1} = \\left ( \\frac{1}{p} \\Delta^{-1}   B \\right )^2\\]\nOn peut montrer que l’inertie du nuage des profils-lignes est donnée par :\n\\[\nI = \\frac{m-p}{p^2} + \\frac{n}{p^2} \\sum_{j_1=1}^p \\sum_{j_2 \\neq j_1} \\mathcal{X}^2_{j_1,j_2},\n\\]\noù \\(\\mathcal{\\chi}^2_{j_1,j_2}\\) est le coefficient de liaison entre les variables \\(j_1\\) et \\(j_2\\).\nInterprétation de l’inertie\nL’inertie I obtenue par l’AFC de \\(B\\) mesure la liaison globale entre tous les couples de variables. Cette interprétation de l’inertie justifie de faire l’AFC sur le tableau B.\nLorsque els variables sont strictement indépendantes \\[I = \\frac{m-p}{p^2}\\]"
+  },
+  {
+    "objectID": "01_acm.html#bilan-de-lafc-sur-le-tableau-de-burt",
+    "href": "01_acm.html#bilan-de-lafc-sur-le-tableau-de-burt",
+    "title": "Analyse Correspondances Multiples",
+    "section": "Bilan de l’AFC sur le tableau de Burt",
+    "text": "Bilan de l’AFC sur le tableau de Burt\n\nComme en ACP, on a le triplet \\((X, W, M)\\)\npermet de généraliser l’AFC à plus que 2 modalités\nMAIS Perte de l’information sur les individus"
+  },
+  {
+    "objectID": "01_acm.html#intuition-1",
+    "href": "01_acm.html#intuition-1",
+    "title": "Analyse Correspondances Multiples",
+    "section": "Intuition",
+    "text": "Intuition\nOn veut garder l’information sur les individus\n\non va travailler à partir du tableau sijonctf complet \\(Z\\)\non veut garder la même métrique pour les variables que lors de l’AFC sur le tableau de Burt"
+  },
+  {
+    "objectID": "01_acm.html#les-points-1",
+    "href": "01_acm.html#les-points-1",
+    "title": "Analyse Correspondances Multiples",
+    "section": "Les points",
+    "text": "Les points\nOn effectue l’AFC à partir du tableau \\(Z\\), qui conserve toutes les informations relatives à chaque individu.\n\nQue vaut la matrice \\(X\\) ?Exemple avec trois variables qualitatives\n\n\n\nOn considère \\(X =  \\frac{1}{p} Z\\).\n\n\n\n\\[\\bf{X} = \\frac{1}{p}\\bf{Z} = \\frac{1}{3} \\overset{{\\begin{matrix} \\class{orange}{a_1} & \\class{orange}{a_2} & \\class{rouge}{b_1} & \\class{rouge}{b_2} & \\class{rouge}{b_3}& \\class{vert}{c_1} & \\class{vert}{c_2} & \\class{vert}{c_3}\\end{matrix}}}{\n\\begin{pmatrix}\n\\class{orange}{1} & \\class{orange}{0} &  \\class{rouge}{0} & \\class{rouge}{1} & \\class{rouge}{0} &  \\class{vert}{0} & \\class{vert}{0} & \\class{vert}{1}\\\\\n\\class{orange}{1} & \\class{orange}{0} &  \\class{rouge}{0} & \\class{rouge}{1} & \\class{rouge}{0}&  \\class{vert}{0} & \\class{vert}{1} & \\class{vert}{0}\\\\\n\\class{orange}{0} & \\class{orange}{1} &  \\class{rouge}{0} & \\class{rouge}{1} & \\class{rouge}{0} & \\class{vert}{0} & \\class{vert}{1} & \\class{vert}{0}\\\\\n\\class{orange}{0} & \\class{orange}{1} &  \\class{rouge}{1} & \\class{rouge}{0} & \\class{rouge}{0} &  \\class{vert}{1} & \\class{vert}{0} & \\class{vert}{0}\\\\\n\\class{orange}{1} & \\class{orange}{0} &  \\class{rouge}{1} & \\class{rouge}{0} & \\class{rouge}{0}&  \\class{vert}{0} & \\class{vert}{0} & \\class{vert}{1}\\\\\n\\class{orange}{1} & \\class{orange}{0} &  \\class{rouge}{0} & \\class{rouge}{0} & \\class{rouge}{1}&  \\class{vert}{1} & \\class{vert}{0} & \\class{vert}{0}\\\\\n\\end{pmatrix}}\\]"
+  },
+  {
+    "objectID": "01_acm.html#poids-de-chaque-ligne",
+    "href": "01_acm.html#poids-de-chaque-ligne",
+    "title": "Analyse Correspondances Multiples",
+    "section": "Poids de chaque ligne",
+    "text": "Poids de chaque ligne\n\nOn associe à chaque “profil ligne” le poids \\({f_{i+}} =1/n\\),\n\nDans le formalisme vu en ACP, ceci correspond à la matrice \\(W = \\frac{1}{n} I_n\\)"
+  },
+  {
+    "objectID": "01_acm.html#metrique-1",
+    "href": "01_acm.html#metrique-1",
+    "title": "Analyse Correspondances Multiples",
+    "section": "Metrique",
+    "text": "Metrique\n\nOn utilise la métrique de l’AFC\n\n\\[d(x_{i_1}, x_{i_2})^2 =\\sum_{k=1}^{m}  \\frac{1}{f_{+k}} \\left(x_{i_1k} - x_{i_2k} \\right)^2 =\\sum_{k=1}^{m}  \\frac{1}{p^2f_{+k}} \\left(z_{i_1k} - z_{i_2k} \\right)^2 \\]\nDans le formalisme matriciel de l’ACP ceci revient à définir la métrique\n\\(M = D_{1/f_{+ j}} = np\\Delta^{-1}\\)"
+  },
+  {
+    "objectID": "01_acm.html#inertie-1",
+    "href": "01_acm.html#inertie-1",
+    "title": "Analyse Correspondances Multiples",
+    "section": "Inertie",
+    "text": "Inertie\nOn est conduit à diagonaliser\n\\[(X M^{1/2})^\\top W (X M^{1/2})\\]\nou de manière équivalente la matrice\n\\[VM = X^\\top W X M =   \\frac{1}{p}  Z^\\top \\frac{1}{n} I_n \\frac{1}{p} Z  np\\Delta^{-1} = \\left ( \\frac{1}{p} \\Delta^{-1}   B \\right )\\]\nComme dans le cas de l’ACP, L’inertie n’a pas d’intérêt en soi, elle vaut toutefois :\n\\[ I = \\frac{m-p}{p} \\]"
+  },
+  {
+    "objectID": "01_acm.html#valeurs-propres",
+    "href": "01_acm.html#valeurs-propres",
+    "title": "Analyse Correspondances Multiples",
+    "section": "Valeurs propres",
+    "text": "Valeurs propres\n\nNotons \\(\\rho_1, \\ldots, \\rho_q\\) : Valeurs propres non triviales (i.e différentes de \\(0\\) ou \\(1\\)) de \\((\\frac{B\\Delta^{-1}}{p})^2\\) (AFC de \\(B\\)).\net \\(\\lambda_1, \\ldots, \\lambda_q\\) : Valeurs propres non triviales de \\((\\frac{B\\Delta^{-1}}{p})\\) (AFC de \\(Z\\)).\n\nPropriété :\n\\[\n\\rho_k = \\lambda_k^2,\n\\]\net les valeurs propres sont les mêmes.\nAinsi les axes construits par les deux AFC sont les mêmes, et à un changement d’échelle près on peut représenter individus et modalités sur le même graphique."
+  },
+  {
+    "objectID": "01_acm.html#relation-de-transition",
+    "href": "01_acm.html#relation-de-transition",
+    "title": "Analyse Correspondances Multiples",
+    "section": "Relation de transition",
+    "text": "Relation de transition\nOn note\n\n\\(F_s(i)\\) les coordonnées de l’individu \\(i\\) (tableau disjonctif complet) sur l’axe \\(s\\)\n\\(G_s(j)\\) les coordonnées de la modalité \\(j\\) (tableaude Burt) sur l’axe \\(s\\)\n\nAlors\n\\[F_s(i) = \\frac{1}{\\lambda_s} \\sum_{j=1}^m \\frac{x_{ij}}{p} G_s(j)\\] \\[G_s(j) = \\frac{1}{\\lambda_s} \\sum_{i=1}^n \\frac{x_{ij}}{k_{+j}} F_s(j)\\]"
+  },
+  {
+    "objectID": "01_acm.html#règles-pour-linterprétation",
+    "href": "01_acm.html#règles-pour-linterprétation",
+    "title": "Analyse Correspondances Multiples",
+    "section": "Règles pour l’interprétation",
+    "text": "Règles pour l’interprétation\n\nOn regarde l’éboulis des valaurs propres pour identifier le nombre d’axes pertinents.\n\nComme pour toutes les analyses factorielles, on interprète en\n\nregardant les individus/variables qui contribuent le plus aux axes\nlorsque l’on veut discuter de la position d’une variable ou d’un individu, on vérifie qu’il est bien représenté"
+  },
+  {
+    "objectID": "01_acm.html#démarche-danalyse",
+    "href": "01_acm.html#démarche-danalyse",
+    "title": "Analyse Correspondances Multiples",
+    "section": "Démarche d’analyse",
+    "text": "Démarche d’analyse\n\nQuelles Variables considérées pour la construction des axes\nQuels sont les axes pertinents à regarder\nComprendre les axes par les contributions\nInterpréter les positions des variables / des individus\nCreuser le lien entre deux types de variables avec une AFC (comme un zoom sur la relation entre deux variables)\nReprésenter les modalités supplémentaires\nDiscuter Ellipse de confiance (revu dans le dernier TD)"
+  },
+  {
+    "objectID": "01_acm.html#a-nous-de-jouer",
+    "href": "01_acm.html#a-nous-de-jouer",
+    "title": "Analyse Correspondances Multiples",
+    "section": "A nous de jouer",
+    "text": "A nous de jouer"
+  },
+  {
+    "objectID": "01_acm.html#synthèse",
+    "href": "01_acm.html#synthèse",
+    "title": "Analyse Correspondances Multiples",
+    "section": "Synthèse",
+    "text": "Synthèse\n\nL’AFC du tableau de Burt permet d’évaluer les liaisons globales entre les variables qualitatives.\nL’AFC du tableau disjonctif complet permet de représenter les individus et modalités dans le même espace factoriel."
+  },
+  {
+    "objectID": "01_acm.html#applications",
+    "href": "01_acm.html#applications",
+    "title": "Analyse Correspondances Multiples",
+    "section": "Applications",
+    "text": "Applications\n\nÉtudes exploratoires pour des données qualitatives complexes.\nAnalyse de dépendances entre plusieurs variables qualitatives."
   },
   {
     "objectID": "01_afd.html#quelques-exemples",
@@ -439,6 +551,55 @@
     "title": "Analyse Factorielle Discrimante",
     "section": "Ce que vous pensez devoir retenir",
     "text": "Ce que vous pensez devoir retenir\nA construire ensemble"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Méthodes d’Analyse factorielle",
+    "section": "",
+    "text": "Description du cours\nCe cours présente des techniques statistiques pour décire et viusualiser des données multivariés. Il présentera à la fois les fondements mathématiques (géométriques) mais fera surtout la part belle à la mise en oeuvre pratioque de ces outils. A l’issue de ce cours, vous disposerez d’un ensemble de méthodes pour analyser des ensembles de données complexes et créer des représentations visuelles qui révèlent des motifs, des tendances et des relations entre plusieurs variables. Le cours couvre les sujets suivants :\n\n\nContenu\n\nAnalyse en Composantes Principales (ACP) : Un outil puissant de réduction dimensionnelle qui simplifie les grands ensembles de données tout en préservant autant que possible la variation. Les étudiants apprendront à visualiser des données à haute dimension à l’aide de l’ACP, rendant ainsi plus faciles à interpréter les relations complexes. Une extension, l’Analyse Factorielle Multiple (AFM) permet de prendre en compte des variables quantitatives organisées par groupe (on veut distinguer les variables physiques, des variables chimiques par exemple).\nAnalyse Factorielle Discriminante (AFD) : Cette méthode aide à classifier les observations dans des groupes prédéfinis. Le cours se concentrera sur la manière de différencier visuellement les groupes en utilisant plusieurs variables prédictives et d’interpréter les résultats.\nAnalyse Factorielle des Correspondances (AFC) : Il s’agit ici d’étudier la relation entre deux variables catégorielles et de visualiser les individus.\nAnalyse des Correspondances Multiples (ACM) : Cette méthode généralise l’AFC au cas à plus de deux variables qualitatives.\n\nLe cours mettra un accent particulier sur la visualisation des ensembles de données multivariés complexes. Ces outils visuels sont précieux pour communiquer les résultats des analyses multivariées de manière intuitive et accessible.\nÀ la fin du cours, les étudiants seront compétents dans l’application des méthodes multivariées à une variété d’ensembles de données et auront les compétences nécessaires pour créer des visualisations qui transmettent efficacement les intuitions que l’on peut avoir à partir des données et des éléments clés de la modélisation qui peut suivre.\n\n\nOrganisation du cours\n\n12h de cours\n12h de De TD/TP\n\nChaque cours contiendra un exemple détaillé et la mise en oeuvre pratique de la méthode étudiée ainsi que la présentation des concepts mathématiques (essentiellement géométriques) sur lesquels elle repose.\n\n\nPrérequis\nUne connaissance de base des statistiques, de l’algèbre linéaire et une maîtrise des logiciels statistiques (R essentiellement) sont recommandées"
+  },
+  {
+    "objectID": "proj_sur_SVD.html#la-décomposition-en-valeurs-sigulières",
+    "href": "proj_sur_SVD.html#la-décomposition-en-valeurs-sigulières",
+    "title": "Singular Value Decomposition et ACP",
+    "section": "La décomposition en valeurs sigulières",
+    "text": "La décomposition en valeurs sigulières\n\\[\\boldsymbol{X} = \\boldsymbol{U}\\boldsymbol{D}\\boldsymbol{V^\\intercal},\\]\noù * \\(\\boldsymbol{U}\\) est une matrice \\(n\\times n\\) orthogonale \\(\\boldsymbol{U} \\boldsymbol{U}^\\intercal = \\boldsymbol{I}_n,\\) * \\(\\boldsymbol{V}\\) est une matrice \\(d\\times d\\) orthogonale \\(\\boldsymbol{V} \\boldsymbol{V}^\\intercal = \\boldsymbol{I}_d,\\) * \\(\\boldsymbol{D}\\) est une matrice \\(n \\times d\\), diagonale au sens où seuls les termes \\(D_{ii}\\) sont non nuls.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFigure 1: SVD et Changement de Base"
+  },
+  {
+    "objectID": "TP3.html",
+    "href": "TP3.html",
+    "title": "Lab3 - AFC et ACM",
+    "section": "",
+    "text": "$$\n$$"
+  },
+  {
+    "objectID": "TP3.html#objectifs-de-la-séance",
+    "href": "TP3.html#objectifs-de-la-séance",
+    "title": "Lab3 - AFC et ACM",
+    "section": "Objectifs de la séance",
+    "text": "Objectifs de la séance\nLe but de la séance est d’utiliser l’AFC et l’ACM sur deux problématiques réelles."
+  },
+  {
+    "objectID": "TP3.html#analyse-factorielle-des-correspondances---exemple",
+    "href": "TP3.html#analyse-factorielle-des-correspondances---exemple",
+    "title": "Lab3 - AFC et ACM",
+    "section": "Analyse factorielle des correspondances - Exemple",
+    "text": "Analyse factorielle des correspondances - Exemple\nLes données sont extraites des résultats de la plateforme Parcoursup.\n\nContexte\nLe but de l’étude menée ici etcette étude est d’étudier le lien entre type de formation et département.\n\nQuels sont les départements ayant des offres de formation similaire ?\nQuels sont les types de formations présents préférentiellement dans certains département ?\n\nDonnées :\n\nFichier : parcoursup2023.csv\nVariables qualitatives d’intérêts : Dept le département de la formation concernée, ’Formation`le type de formation.\nVariables additionnelles : Selection vaut sélective si la formation est sélective, Parite est une variable pouvant prendre trois modalités : femininesi la formation comporte plus de 65% de femmes, paritaire si la formation compte entre 35 et 65% de femmes, masculine sinon,Detail`précise le type de formation.\nDimensions : 11 formations disciplines et 97 départements (les départements hors france métropolitaines et l’étranger sont rassemble dans un département fictif 99)\n\n\n\nExemple de code à commenter et discuter\nIdentifier ce que fait le code ci-dessous et comment il peut être mobilisé pour aborder la question de la typologie des départements selon leur offre de formation.\n\npsup_dta &lt;- read.csv(\"https://marieetienne.github.io/datasets/parcoursup2023.csv\",fileEncoding = \"UTF-8\") \n\nhead(psup_dta)\n\ndta_dep_form &lt;- psup_dta |&gt; \n  group_by(Dept, Formation) |&gt; \n  count() |&gt; \n  pivot_wider(names_from = Formation, values_from = n, values_fill = 0) \n\ndta_dep_selection &lt;- psup_dta |&gt; \n  group_by(Dept, Selection) |&gt; \n  count() |&gt; \n  pivot_wider(names_from = Selection, values_from = n, values_fill = 0) \n\ndta_dep_parite &lt;- psup_dta |&gt; \n  group_by(Dept, Parite) |&gt; \n  count() |&gt; \n  pivot_wider(names_from = Parite, values_from = n, values_fill = 0) \n\ndta_dep_detail &lt;- psup_dta |&gt; \n  group_by(Dept, Detail) |&gt; \n  count() |&gt; \n  pivot_wider(names_from = Detail, values_from = n, values_fill = 0) \n\n\ndta_dep_filiere &lt;- dta_dep_form |&gt; inner_join(dta_dep_parite) |&gt; inner_join(dta_dep_selection) |&gt;  column_to_rownames('Dept')\n\n\ndep_filiere.ca &lt;-  CA(dta_dep_filiere , col.sup = 12:ncol(dta_dep_filiere))\n\nfviz_eig(dep_filiere.ca, choice = \"eigenvalue\")\n\ninertia.row &lt;- tibble(Dept= row.names(dta_dep_filiere),\n                      poids = dep_filiere.ca$call$marge.row, \n                  inertie = dep_filiere.ca$row$inertia,\n                  percent.inertie = dep_filiere.ca$row$inertia / sum(dep_filiere.ca$row$inertia),\n                  contrib_Dim1 = round(dep_filiere.ca$row$contrib[,1],2),\n                  contrib_Dim2 = round(dep_filiere.ca$row$contrib[,2],2),\n                  contrib_Dim3 = round(dep_filiere.ca$row$contrib[,3],2))\ninertia.row |&gt;  arrange(-inertie)|&gt; flextable()\n\n\ninertia.col &lt;- tibble(Formation= colnames(dta_dep_filiere[1:11]),\n                      poids = dep_filiere.ca$call$marge.col, \n                  inertie = dep_filiere.ca$col$inertia,\n                  percent.inertie = dep_filiere.ca$col$inertia / sum(dep_filiere.ca$col$inertia), \n                  contrib_Dim1 = round(dep_filiere.ca$col$contrib[,1],2),\n                  contrib_Dim2 = round(dep_filiere.ca$col$contrib[,2]),\n                  contrib_Dim3 = round(dep_filiere.ca$col$contrib[,3]))\ninertia.col |&gt;  arrange(-inertie) |&gt; flextable()\n\n\nfviz_ca_row(dep_filiere.ca, axes = 1:2)\n\nfviz_ca_col(dep_filiere.ca, axes = 1:2, invisible = c(\"col.sup\")) ## bug montre encore les colonnes supplémenatiares\nfviz_ca_col(dep_filiere.ca, axes = 1:2, invisible = c(\"col.sup\"), select.col = list(contrib = 11)) ## trick\n\n\nfviz_ca(dep_filiere.ca, axes = 1:2)\nfviz_ca(dep_filiere.ca, axes = 1:2, select.col =  list(cos2 = 20),  alpha.col=\"cos2\", select.row= list(contrib = 15))"
+  },
+  {
+    "objectID": "TP3.html#analyse-factorielle-des-correspondances-afc---a-vous-de-jouer",
+    "href": "TP3.html#analyse-factorielle-des-correspondances-afc---a-vous-de-jouer",
+    "title": "Lab3 - AFC et ACM",
+    "section": "Analyse factorielle des correspondances (AFC) - A vous de jouer",
+    "text": "Analyse factorielle des correspondances (AFC) - A vous de jouer\n\nContexte\nLe but de cette étude est d’étudier le lien entre domaine d’étude, niveau d’étude et genre à l’université :\n\nQuelles sont les disciplines pour lesquelles le profil des étudiants est le même ?\nQuelles sont les disciplines privilégiées par les femmes (resp. par les hommes) ?\nQuelles sont les disciplines pour lesquelles les études sont plus longues ?\n\nDonnées :\n\nFichier : universite.csv\nVariables qualitatives croisées : Discipline et Niveau-sexe\nDimensions : 10 disciplines et croisements de niveau (licence, master, doctorat) avec sexe (homme, femme).\n\n\n\nÉtapes de l’analyse\n\nImporter le jeu de données\n\nIdentifier le format (éditeur de texte).\nImporter sous R.\n\nStatistiques descriptives\n\nIndépendance entre Discipline et sexe ?\nIndépendance entre Discipline et niveau ?\nIndépendance entre niveau et sexe ?\n\nMise en œuvre de l’AFC\n\nChoisir les lignes et colonnes actives.\nUtiliser la fonction CA.\n\nInterprétation des résultats\n\nInterpréter le test du \\(χ^2\\).\nChoisir le nombre d’axes.\nVisualiser et interpréter."
+  },
+  {
+    "objectID": "TP3.html#analyse-des-correspondances-multiples-acm",
+    "href": "TP3.html#analyse-des-correspondances-multiples-acm",
+    "title": "Lab3 - AFC et ACM",
+    "section": "Analyse des correspondances multiples (ACM)",
+    "text": "Analyse des correspondances multiples (ACM)\n\nContexte\nObjectif : Caractériser la clientèle d’un organisme de crédit.\nDonnées :\n\nFichier : credit.csv\n66 clients ayant souscrit un crédit à la consommation.\n11 variables qualitatives :\n\nExemple : Marché, Apport, Impayé, Taux d'endettement, etc.\n\n\n\n\nÉtapes de l’analyse\n\nImporter le jeu de données\n\nIdentifier le format (éditeur de texte).\nImporter sous R.\nVérifier le type des variables.\n\nStatistiques descriptives\n\nIdentifier les modalités rares.\nRegrouper les modalités si nécessaire.\nIdentifier les variables liées.\n\nMise en œuvre de l’ACM\n\nChoisir les éléments actifs et supplémentaires.\nUtiliser la fonction MCA.\n\nInterprétation des résultats\n\nChoisir le nombre d’axes.\nVisualiser et interpréter les axes factoriels.\n\nSynthèse des résultats\n\nRédiger un rapport de l’analyse : 2 pages, 3 graphiques, 5 statistiques numériques maximum."
   },
   {
     "objectID": "references_linear.html",
