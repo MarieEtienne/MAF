@@ -15,6 +15,8 @@ summary(ogm_dta)
 summary(ogm_dta[,1:15])
 # On regroupe des modalités très peu observées
 
+## tableau disjoinctif 
+dta_disjonct <- tab.disjonctif(ogm_dta[, 1:15])
 
 ogm_dta <- ogm_dta %>%
   mutate(`Position Al H`= recode(`Position Al H`, 'Très Favorable'='Favorable')) |> 

@@ -510,6 +510,7 @@ Comme pour toutes les analyses factorielles, on interprète en
 * Représenter les modalités supplémentaires -- quel procédé ?
 * Discuter Ellipse de confiance (revu dans le dernier TD)
 
+[Lien vers le Script R](ACM_ogm.R)
 
 ## A nous de jouer
 ## Synthèse
