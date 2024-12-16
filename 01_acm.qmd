@@ -129,7 +129,7 @@ Dans ce tableau, une colonne représente **une modalité**, pour **une des varia
 Questions : 
 
 * Quelles sont les dimensions de $Z$ ?
-*  $ \sum_{k=1}^m Z_{ik} = ??$
+*  $\sum_{k=1}^m Z_{ik} = ??$
 *  $\sum_{i=1}^n Z_{ik} = ??$
 
 . . .
@@ -250,7 +250,7 @@ On a besoin de définir une ["AFC" sur le tableau de Burt ](https://marieetienne
 * On considère $X = \frac{1}{p} \Delta^{-1} B$, où $\Delta$ est une matrice diagonale qui contient les effectifs de chaque modalité, c'est c'est-à -dire 
 $$Diag(\Delta)= Diag (B).$$
 
-* Ceci revient à diviser chaque ligne $i$ par l'effectif dans la modalité $i$. 
+* Ceci revient à diviser chaque ligne $i$ par l'effectif dans la modalité $j$. 
 
 * $X_{ij} = \frac{k_{ik}}{k_{i+}}.$ 
 
@@ -336,7 +336,7 @@ On est conduit à trouver les valeurs propres de
 
 $$(X M^{1/2})^\top W (X M^{1/2})$$
 
-ou de manière équivalente la matrice 
+ou de manière équivalente celles de la matrice 
 
 $$VM = X^\top W X M =  \Delta^{-1} \frac{1}{p}  B^\top \frac{1}{np} \Delta \Delta^{-1} \frac{1}{p}  B np  \Delta^{-1} = \left ( \frac{1}{p} \Delta^{-1}   B \right )^2$$ 
 
@@ -363,7 +363,6 @@ $$I = \frac{m-p}{p^2}$$
 * Comme en ACP, on a le triplet $(X, W, M)$
 * permet de généraliser l'AFC à plus que 2 modalités
 * MAIS Perte de l'information sur les individus
-* 
 
 
 ---
@@ -375,7 +374,7 @@ $$I = \frac{m-p}{p^2}$$
 
 On veut garder l'information sur les individus
 
-* on va travailler à partir du tableau sijonctf complet $Z$
+* on va travailler à partir du tableau disjonctif complet $Z$
 
 * on veut garder la même métrique pour les variables que lors de l'AFC sur le tableau de Burt
 
@@ -412,7 +411,7 @@ $$\bf{X} = \frac{1}{p}\bf{Z} = \frac{1}{3} \overset{{\begin{matrix} \class{orang
 
 ## Poids de chaque ligne 
 
-* On associe à chaque "profil ligne" le poids ${f_{i+}} =1/n$, 
+* On associe à chaque "profil ligne" le poids $1/n$, 
 
 Dans le formalisme vu en ACP, ceci correspond à la matrice $W = \frac{1}{n} I_n$
 
@@ -433,11 +432,11 @@ $M = D_{1/f_{+ j}} = np\Delta^{-1}$
 
 ## Inertie
 
-On est conduit à diagonaliser 
+On est conduit à trouver les valeurs propres de  
 
 $$(X M^{1/2})^\top W (X M^{1/2})$$
 
-ou de manière équivalente la matrice 
+ou de manière équivalente celles de la matrice 
 
 $$VM = X^\top W X M =   \frac{1}{p}  Z^\top \frac{1}{n} I_n \frac{1}{p} Z  np\Delta^{-1} = \left ( \frac{1}{p} \Delta^{-1}   B \right )$$ 
 
