@@ -430,6 +430,7 @@ $M = D_{1/f_{+ j}} = np\Delta^{-1}$
 
 
 
+
 ## Inertie
 
 On est conduit à diagonaliser 
@@ -441,9 +442,11 @@ ou de manière équivalente la matrice
 $$VM = X^\top W X M =   \frac{1}{p}  Z^\top \frac{1}{n} I_n \frac{1}{p} Z  np\Delta^{-1} = \left ( \frac{1}{p} \Delta^{-1}   B \right )$$ 
 
 
-Comme dans le cas de l'ACP, L'inertie n'a pas d'intérêt en soi, elle vaut toutefois :
+Comme dans le cas de l'ACP, L'inertie n'a pas d'intérêt en soi, on peut montrer qu'elle vaut toutefois :
 
 $$ I = \frac{m-p}{p} $$
+
+Coordonnées du centre de gravité : $$x_{\bullet j} = \sum_{i=1}^n w_i x_{ij} = \frac{1}{n} \sum_{i=1}^n \frac{z_{ij}}{p}= \frac{1}{n}  \frac{k_{+j}}{p}$$
 
 
 
@@ -465,6 +468,7 @@ et les valeurs propres sont les mêmes.
 Ainsi les axes construits par les deux AFC sont les mêmes, et à un changement d'échelle près on peut représenter individus et modalités sur le même graphique.
 
 
+Dans les sorties de `R`ce sont les valeurs propres $\lambda_k$ qui sont fournies.
 
 
 ## Relation de transition
@@ -489,6 +493,8 @@ Comme pour toutes les analyses factorielles, on interprète en
 
 * regardant les individus/variables qui contribuent le plus aux axes
 * lorsque l'on veut discuter de la position d'une variable ou d'un individu, on vérifie qu'il est bien représenté
+* poids des variables (en fonction du nombre de modalités)
+* Approche de test sur les différences entre modalités (`dimdesc`)
 
 
 
@@ -501,7 +507,7 @@ Comme pour toutes les analyses factorielles, on interprète en
 * Comprendre les axes par les contributions
 * Interpréter les positions des variables / des individus
 * Creuser le lien entre deux types de variables avec une AFC (comme un zoom sur la relation entre deux variables)
-* Représenter les modalités supplémentaires 
+* Représenter les modalités supplémentaires -- quel procédé ?
 * Discuter Ellipse de confiance (revu dans le dernier TD)
 
 
