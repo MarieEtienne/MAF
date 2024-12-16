@@ -368,7 +368,7 @@
     "href": "01_acm.html#représentation-des-variables-qualitatives",
     "title": "Analyse Correspondances Multiples",
     "section": "Représentation des variables qualitatives",
-    "text": "Représentation des variables qualitatives\nDans les données initiales, pour chaquae individu, et pour chaque variable qualitative, on note la modalité observée.\nPour manipuler les données, on recode souvent ces données initiales sous forme du tableau disjonctif complet \\(Z\\).\nDans ce tableau, une colonne représente une modalité, pour une des variables et on note \\(1\\) si l’individu possède cette variable \\(0\\) sinon\nQuestions :\n\nQuelles sont les dimensions de \\(Z\\) ?\n$ {k=1}^m Z{ik} = ??$\n\\(\\sum_{i=1}^n Z_{ik} = ??\\)\n\n\nNotation :\n\\[\nZ = \\begin{pmatrix}Z_1 \\ldots Z_p\\end{pmatrix}\n\\] \\(Z_j\\) est donc un tableau à \\(n\\) lignes et \\(m_j\\) colonnes."
+    "text": "Représentation des variables qualitatives\nDans les données initiales, pour chaquae individu, et pour chaque variable qualitative, on note la modalité observée.\nPour manipuler les données, on recode souvent ces données initiales sous forme du tableau disjonctif complet \\(Z\\).\nDans ce tableau, une colonne représente une modalité, pour une des variables et on note \\(1\\) si l’individu possède cette variable \\(0\\) sinon\nQuestions :\n\nQuelles sont les dimensions de \\(Z\\) ?\n\\(\\sum_{k=1}^m Z_{ik} = ??\\)\n\\(\\sum_{i=1}^n Z_{ik} = ??\\)\n\n\nNotation :\n\\[\nZ = \\begin{pmatrix}Z_1 \\ldots Z_p\\end{pmatrix}\n\\] \\(Z_j\\) est donc un tableau à \\(n\\) lignes et \\(m_j\\) colonnes."
   },
   {
     "objectID": "01_acm.html#tableau-de-burt",
@@ -389,7 +389,7 @@
     "href": "01_acm.html#les-points",
     "title": "Analyse Correspondances Multiples",
     "section": "Les points",
-    "text": "Les points\n\nQue vaut la matrice \\(X\\) ?Exemple avec trois variables qualitatives\n\n\n\nOn considère \\(X = \\frac{1}{p} \\Delta^{-1} B\\), où \\(\\Delta\\) est une matrice diagonale qui contient les effectifs de chaque modalité, c’est c’est-à -dire \\[Diag(\\Delta)= Diag (B).\\]\nCeci revient à diviser chaque ligne \\(i\\) par l’effectif dans la modalité \\(i\\).\n\\(X_{ij} = \\frac{k_{ik}}{k_{i+}}.\\)\n\n\n\n\n\n\\[\\bf{\\Delta^{-1}} = \\frac{1}{3} \\begin{pmatrix}\n\\class{orange}{1/4} & \\class{orange}{0} & {0} & {0}& {0} & {0} & {0}& {0}\\\\\n\\class{orange}{0} & \\class{orange}{1/2} & {0} & {0}& {0} & {0} & {0}& {0}\\\\\n{0} &  {0} &  \\class{rouge}{1/2}  & \\class{rouge}{0}& \\class{rouge}{0} & {0}& {0}& {0}\\\\\n{0} &  {0} &  \\class{rouge}{0}  & \\class{rouge}{1/3}& \\class{rouge}{0} & {0} & {0}& {0}\\\\\n{0} &  {0} &  \\class{rouge}{0}  & \\class{rouge}{0}& \\class{rouge}{1} &{0} & {0}& {0}\\\\\n{0} &  {0} &  {0}  & {0}& {0} & \\class{vert}{1/2} & \\class{vert}{0}& \\class{vert}{0}\\\\\n{0} &  {0} &  {0}  & {0}& {0} & \\class{vert}{0} & \\class{vert}{1/2}& \\class{vert}{0}\\\\\n{0} &  {0} &  {0}  &{0}& {0} & \\class{vert}{0} & \\class{vert}{0}& \\class{vert}{1/2}\\\\\n\\end{pmatrix}\n\\] \\[\\bf{B} = \\begin{pmatrix}\n\\class{orange}{4} & \\class{orange}{0} & {1} & {2}& {1} & {1} & {1}& {2}\\\\\n\\class{orange}{0} & \\class{orange}{2} & {1} & {1}& {0} & {1} & {1}& {0}\\\\\n{1} &  {1} &  \\class{rouge}{2}  & \\class{rouge}{0}& \\class{rouge}{0} & {1} & {0}& {1}\\\\\n{2} &  {1} &  \\class{rouge}{0}  & \\class{rouge}{3}& \\class{rouge}{0} & {0} & {2}& {1}\\\\\n{1} &  {0} &  \\class{rouge}{0}  & \\class{rouge}{0}& \\class{rouge}{1} & {1} & {0}& {0}\\\\\n{1} &  {1} &  {1}  & {0}& {1} & \\class{vert}{2} & \\class{vert}{0}& \\class{vert}{0}\\\\\n{1} &  {1} &  {0}  & {2}& {0} & \\class{vert}{0} & \\class{vert}{2}& \\class{vert}{0}\\\\\n{2} &  {0} &  {1}  & {1}& {0} & \\class{vert}{0} & \\class{vert}{0}& \\class{vert}{2}\\\\\n\\end{pmatrix}\n\\]\n\n\n\\[\\bf{\\frac{1}{p} \\Delta^{-1} B} = \\bf{X} =   \\frac{1}{3} \\begin{pmatrix}\n1& 0& 1/4 & 1/2 & 1/4 & 1/4 & 1/4 & 1/2  \\\\\n0 & 1 & 1/2  & 0.5 & 0& 1/2  & 1/2 & 0 \\\\\n1/2 & 1/2 & 1   & 0.0 & 0& 1/2  & 0 & 1/2 \\\\\n2/3  & 1/3  & 0& 1 & 0& 0& 2/3  & 1/3 \\\\\n1 & 0 & 0& 0.0 & 1   & 1   & 0 & 0 \\\\\n1/2 & 1/2 & 1/2  & 0.0 & 1/2  & 1   & 0 & 0 \\\\\n1/2 & 1/2 & 0& 1 & 0& 0& 1 & 0 \\\\\n1 & 0 & 1/2  & 1/2 & 0& 0& 0 & 1 \\\\\n\\end{pmatrix}\\]"
+    "text": "Les points\n\nQue vaut la matrice \\(X\\) ?Exemple avec trois variables qualitatives\n\n\n\nOn considère \\(X = \\frac{1}{p} \\Delta^{-1} B\\), où \\(\\Delta\\) est une matrice diagonale qui contient les effectifs de chaque modalité, c’est c’est-à -dire \\[Diag(\\Delta)= Diag (B).\\]\nCeci revient à diviser chaque ligne \\(i\\) par l’effectif dans la modalité \\(j\\).\n\\(X_{ij} = \\frac{k_{ik}}{k_{i+}}.\\)\n\n\n\n\n\n\\[\\bf{\\Delta^{-1}} = \\frac{1}{3} \\begin{pmatrix}\n\\class{orange}{1/4} & \\class{orange}{0} & {0} & {0}& {0} & {0} & {0}& {0}\\\\\n\\class{orange}{0} & \\class{orange}{1/2} & {0} & {0}& {0} & {0} & {0}& {0}\\\\\n{0} &  {0} &  \\class{rouge}{1/2}  & \\class{rouge}{0}& \\class{rouge}{0} & {0}& {0}& {0}\\\\\n{0} &  {0} &  \\class{rouge}{0}  & \\class{rouge}{1/3}& \\class{rouge}{0} & {0} & {0}& {0}\\\\\n{0} &  {0} &  \\class{rouge}{0}  & \\class{rouge}{0}& \\class{rouge}{1} &{0} & {0}& {0}\\\\\n{0} &  {0} &  {0}  & {0}& {0} & \\class{vert}{1/2} & \\class{vert}{0}& \\class{vert}{0}\\\\\n{0} &  {0} &  {0}  & {0}& {0} & \\class{vert}{0} & \\class{vert}{1/2}& \\class{vert}{0}\\\\\n{0} &  {0} &  {0}  &{0}& {0} & \\class{vert}{0} & \\class{vert}{0}& \\class{vert}{1/2}\\\\\n\\end{pmatrix}\n\\] \\[\\bf{B} = \\begin{pmatrix}\n\\class{orange}{4} & \\class{orange}{0} & {1} & {2}& {1} & {1} & {1}& {2}\\\\\n\\class{orange}{0} & \\class{orange}{2} & {1} & {1}& {0} & {1} & {1}& {0}\\\\\n{1} &  {1} &  \\class{rouge}{2}  & \\class{rouge}{0}& \\class{rouge}{0} & {1} & {0}& {1}\\\\\n{2} &  {1} &  \\class{rouge}{0}  & \\class{rouge}{3}& \\class{rouge}{0} & {0} & {2}& {1}\\\\\n{1} &  {0} &  \\class{rouge}{0}  & \\class{rouge}{0}& \\class{rouge}{1} & {1} & {0}& {0}\\\\\n{1} &  {1} &  {1}  & {0}& {1} & \\class{vert}{2} & \\class{vert}{0}& \\class{vert}{0}\\\\\n{1} &  {1} &  {0}  & {2}& {0} & \\class{vert}{0} & \\class{vert}{2}& \\class{vert}{0}\\\\\n{2} &  {0} &  {1}  & {1}& {0} & \\class{vert}{0} & \\class{vert}{0}& \\class{vert}{2}\\\\\n\\end{pmatrix}\n\\]\n\n\n\\[\\bf{\\frac{1}{p} \\Delta^{-1} B} = \\bf{X} =   \\frac{1}{3} \\begin{pmatrix}\n1& 0& 1/4 & 1/2 & 1/4 & 1/4 & 1/4 & 1/2  \\\\\n0 & 1 & 1/2  & 0.5 & 0& 1/2  & 1/2 & 0 \\\\\n1/2 & 1/2 & 1   & 0.0 & 0& 1/2  & 0 & 1/2 \\\\\n2/3  & 1/3  & 0& 1 & 0& 0& 2/3  & 1/3 \\\\\n1 & 0 & 0& 0.0 & 1   & 1   & 0 & 0 \\\\\n1/2 & 1/2 & 1/2  & 0.0 & 1/2  & 1   & 0 & 0 \\\\\n1/2 & 1/2 & 0& 1 & 0& 0& 1 & 0 \\\\\n1 & 0 & 1/2  & 1/2 & 0& 0& 0 & 1 \\\\\n\\end{pmatrix}\\]"
   },
   {
     "objectID": "01_acm.html#poids-de-chaque-ligne-ici-un-profil-ligne",
@@ -410,7 +410,7 @@
     "href": "01_acm.html#inertie",
     "title": "Analyse Correspondances Multiples",
     "section": "Inertie",
-    "text": "Inertie\nOn est conduit à trouver les valeurs propres de\n\\[(X M^{1/2})^\\top W (X M^{1/2})\\]\nou de manière équivalente la matrice\n\\[VM = X^\\top W X M =  \\Delta^{-1} \\frac{1}{p}  B^\\top \\frac{1}{np} \\Delta \\Delta^{-1} \\frac{1}{p}  B np  \\Delta^{-1} = \\left ( \\frac{1}{p} \\Delta^{-1}   B \\right )^2\\]\nOn peut montrer que l’inertie du nuage des profils-lignes est donnée par :\n\\[\nI = \\frac{m-p}{p^2} + \\frac{n}{p^2} \\sum_{j_1=1}^p \\sum_{j_2 \\neq j_1} \\mathcal{X}^2_{j_1,j_2},\n\\]\noù \\(\\mathcal{\\chi}^2_{j_1,j_2}\\) est le coefficient de liaison entre les variables \\(j_1\\) et \\(j_2\\).\nInterprétation de l’inertie\nL’inertie I obtenue par l’AFC de \\(B\\) mesure la liaison globale entre tous les couples de variables. Cette interprétation de l’inertie justifie de faire l’AFC sur le tableau B.\nLorsque els variables sont strictement indépendantes \\[I = \\frac{m-p}{p^2}\\]"
+    "text": "Inertie\nOn est conduit à trouver les valeurs propres de\n\\[(X M^{1/2})^\\top W (X M^{1/2})\\]\nou de manière équivalente celles de la matrice\n\\[VM = X^\\top W X M =  \\Delta^{-1} \\frac{1}{p}  B^\\top \\frac{1}{np} \\Delta \\Delta^{-1} \\frac{1}{p}  B np  \\Delta^{-1} = \\left ( \\frac{1}{p} \\Delta^{-1}   B \\right )^2\\]\nOn peut montrer que l’inertie du nuage des profils-lignes est donnée par :\n\\[\nI = \\frac{m-p}{p^2} + \\frac{n}{p^2} \\sum_{j_1=1}^p \\sum_{j_2 \\neq j_1} \\mathcal{X}^2_{j_1,j_2},\n\\]\noù \\(\\mathcal{\\chi}^2_{j_1,j_2}\\) est le coefficient de liaison entre les variables \\(j_1\\) et \\(j_2\\).\nInterprétation de l’inertie\nL’inertie I obtenue par l’AFC de \\(B\\) mesure la liaison globale entre tous les couples de variables. Cette interprétation de l’inertie justifie de faire l’AFC sur le tableau B.\nLorsque els variables sont strictement indépendantes \\[I = \\frac{m-p}{p^2}\\]"
   },
   {
     "objectID": "01_acm.html#bilan-de-lafc-sur-le-tableau-de-burt",
@@ -424,7 +424,7 @@
     "href": "01_acm.html#intuition-1",
     "title": "Analyse Correspondances Multiples",
     "section": "Intuition",
-    "text": "Intuition\nOn veut garder l’information sur les individus\n\non va travailler à partir du tableau sijonctf complet \\(Z\\)\non veut garder la même métrique pour les variables que lors de l’AFC sur le tableau de Burt"
+    "text": "Intuition\nOn veut garder l’information sur les individus\n\non va travailler à partir du tableau disjonctif complet \\(Z\\)\non veut garder la même métrique pour les variables que lors de l’AFC sur le tableau de Burt"
   },
   {
     "objectID": "01_acm.html#les-points-1",
@@ -438,7 +438,7 @@
     "href": "01_acm.html#poids-de-chaque-ligne",
     "title": "Analyse Correspondances Multiples",
     "section": "Poids de chaque ligne",
-    "text": "Poids de chaque ligne\n\nOn associe à chaque “profil ligne” le poids \\({f_{i+}} =1/n\\),\n\nDans le formalisme vu en ACP, ceci correspond à la matrice \\(W = \\frac{1}{n} I_n\\)"
+    "text": "Poids de chaque ligne\n\nOn associe à chaque “profil ligne” le poids \\(1/n\\),\n\nDans le formalisme vu en ACP, ceci correspond à la matrice \\(W = \\frac{1}{n} I_n\\)"
   },
   {
     "objectID": "01_acm.html#metrique-1",
@@ -452,14 +452,14 @@
     "href": "01_acm.html#inertie-1",
     "title": "Analyse Correspondances Multiples",
     "section": "Inertie",
-    "text": "Inertie\nOn est conduit à diagonaliser\n\\[(X M^{1/2})^\\top W (X M^{1/2})\\]\nou de manière équivalente la matrice\n\\[VM = X^\\top W X M =   \\frac{1}{p}  Z^\\top \\frac{1}{n} I_n \\frac{1}{p} Z  np\\Delta^{-1} = \\left ( \\frac{1}{p} \\Delta^{-1}   B \\right )\\]\nComme dans le cas de l’ACP, L’inertie n’a pas d’intérêt en soi, elle vaut toutefois :\n\\[ I = \\frac{m-p}{p} \\]"
+    "text": "Inertie\nOn est conduit à trouver les valeurs propres de\n\\[(X M^{1/2})^\\top W (X M^{1/2})\\]\nou de manière équivalente celles de la matrice\n\\[VM = X^\\top W X M =   \\frac{1}{p}  Z^\\top \\frac{1}{n} I_n \\frac{1}{p} Z  np\\Delta^{-1} = \\left ( \\frac{1}{p} \\Delta^{-1}   B \\right )\\]\nComme dans le cas de l’ACP, L’inertie n’a pas d’intérêt en soi, on peut montrer qu’elle vaut toutefois :\n\\[ I = \\frac{m-p}{p} \\]\nCoordonnées du centre de gravité : \\[x_{\\bullet j} = \\sum_{i=1}^n w_i x_{ij} = \\frac{1}{n} \\sum_{i=1}^n \\frac{z_{ij}}{p}= \\frac{1}{n}  \\frac{k_{+j}}{p}\\]"
   },
   {
     "objectID": "01_acm.html#valeurs-propres",
     "href": "01_acm.html#valeurs-propres",
     "title": "Analyse Correspondances Multiples",
     "section": "Valeurs propres",
-    "text": "Valeurs propres\n\nNotons \\(\\rho_1, \\ldots, \\rho_q\\) : Valeurs propres non triviales (i.e différentes de \\(0\\) ou \\(1\\)) de \\((\\frac{B\\Delta^{-1}}{p})^2\\) (AFC de \\(B\\)).\net \\(\\lambda_1, \\ldots, \\lambda_q\\) : Valeurs propres non triviales de \\((\\frac{B\\Delta^{-1}}{p})\\) (AFC de \\(Z\\)).\n\nPropriété :\n\\[\n\\rho_k = \\lambda_k^2,\n\\]\net les valeurs propres sont les mêmes.\nAinsi les axes construits par les deux AFC sont les mêmes, et à un changement d’échelle près on peut représenter individus et modalités sur le même graphique."
+    "text": "Valeurs propres\n\nNotons \\(\\rho_1, \\ldots, \\rho_q\\) : Valeurs propres non triviales (i.e différentes de \\(0\\) ou \\(1\\)) de \\((\\frac{B\\Delta^{-1}}{p})^2\\) (AFC de \\(B\\)).\net \\(\\lambda_1, \\ldots, \\lambda_q\\) : Valeurs propres non triviales de \\((\\frac{B\\Delta^{-1}}{p})\\) (AFC de \\(Z\\)).\n\nPropriété :\n\\[\n\\rho_k = \\lambda_k^2,\n\\]\net les valeurs propres sont les mêmes.\nAinsi les axes construits par les deux AFC sont les mêmes, et à un changement d’échelle près on peut représenter individus et modalités sur le même graphique.\nDans les sorties de Rce sont les valeurs propres \\(\\lambda_k\\) qui sont fournies."
   },
   {
     "objectID": "01_acm.html#relation-de-transition",
@@ -473,14 +473,14 @@
     "href": "01_acm.html#règles-pour-linterprétation",
     "title": "Analyse Correspondances Multiples",
     "section": "Règles pour l’interprétation",
-    "text": "Règles pour l’interprétation\n\nOn regarde l’éboulis des valaurs propres pour identifier le nombre d’axes pertinents.\n\nComme pour toutes les analyses factorielles, on interprète en\n\nregardant les individus/variables qui contribuent le plus aux axes\nlorsque l’on veut discuter de la position d’une variable ou d’un individu, on vérifie qu’il est bien représenté"
+    "text": "Règles pour l’interprétation\n\nOn regarde l’éboulis des valaurs propres pour identifier le nombre d’axes pertinents.\n\nComme pour toutes les analyses factorielles, on interprète en\n\nregardant les individus/variables qui contribuent le plus aux axes\nlorsque l’on veut discuter de la position d’une variable ou d’un individu, on vérifie qu’il est bien représenté\npoids des variables (en fonction du nombre de modalités)\nApproche de test sur les différences entre modalités (dimdesc)"
   },
   {
     "objectID": "01_acm.html#démarche-danalyse",
     "href": "01_acm.html#démarche-danalyse",
     "title": "Analyse Correspondances Multiples",
     "section": "Démarche d’analyse",
-    "text": "Démarche d’analyse\n\nQuelles Variables considérées pour la construction des axes\nQuels sont les axes pertinents à regarder\nComprendre les axes par les contributions\nInterpréter les positions des variables / des individus\nCreuser le lien entre deux types de variables avec une AFC (comme un zoom sur la relation entre deux variables)\nReprésenter les modalités supplémentaires\nDiscuter Ellipse de confiance (revu dans le dernier TD)"
+    "text": "Démarche d’analyse\n\nQuelles Variables considérées pour la construction des axes\nQuels sont les axes pertinents à regarder\nComprendre les axes par les contributions\nInterpréter les positions des variables / des individus\nCreuser le lien entre deux types de variables avec une AFC (comme un zoom sur la relation entre deux variables)\nReprésenter les modalités supplémentaires – quel procédé ?\nDiscuter Ellipse de confiance (revu dans le dernier TD)\n\nLien vers le Script R"
   },
   {
     "objectID": "01_acm.html#a-nous-de-jouer",
