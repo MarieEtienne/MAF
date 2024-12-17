@@ -188,7 +188,7 @@ Objectif : Caractériser la clientèle d'un organisme de crédit.
 
 Données :
 
-- Fichier : [credit.csv](https://husson.github.io/img/universite.csv)
+- Fichier : [credit.csv](https://husson.github.io/img/credit.csv)
 - 66 clients ayant souscrit un crédit à la consommation.
 - 11 variables qualitatives :
   - Exemple : `Marché`, `Apport`, `Impayé`, `Taux d'endettement`, etc.
