@@ -1007,7 +1007,7 @@ $X^\top W X$.
     $$\lambda_{k_1} +\lambda_{k_2}$$
 
 -   La part d'information portée par le plan $k_1, k_2$ est donnée par
-    $$\frac{\lambda_k}{\sum_{k=1}^p\lambda_{k_1} +\lambda_{k_2}}$$
+    $$\frac{\lambda_{k_1} +\lambda_{k_2}}{\sum_{k=1}^p\lambda_k}$$
 
 ## Attention aux unités - Illustration sur les données de manchots
 
