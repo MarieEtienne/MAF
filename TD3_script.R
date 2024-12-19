@@ -31,8 +31,17 @@ univ_dta |>
 chisq.test(univ_dta[,1:6])
 
 
-chisq.test(univ_dta[,9:11])
+chisq.test(univ_dta[,9:11]) ##y a-t-il independance entre niveau et discipline
 
+# 
+# univ_dta |> select(Licence.F, Licence.H, Master.F, Master.H, Doctorat.F, Doctorat.H) |> 
+#   pivot_longer(cols = everything()) |> 
+#   rename(Effectif = value) |> 
+#   mutate(Niveau = str_extract(name, pattern = "[a-zA-Z]+")) |> 
+#   mutate(Sexe = str_extract(name, pattern = "[FH]"))  |> 
+#   select(-name) |> ungroup() |> 
+#   pivot_wider(names_from = Sexe, values_from = Effectif)
+#   
 ## AFC sur le croisement Discipline x (Niveau-Genre)
 univ_ca <- CA(univ_dta, col.sup=7:12, graph = FALSE)
 summary(univ_ca, nb.dec = 2, nbelements=2)
@@ -40,12 +49,14 @@ summary(univ_ca, nb.dec = 2, nbelements=2)
 ## Visualisation des valeurs propres
 ### Est ce normal qu'il n'y ait que 5 dimensions ? --> nombre max dimension = min(I-1, J-1)
 fviz_eig(univ_ca, addlabels=FALSE,  choice = "variance")
+fviz_eig(univ_ca, addlabels=FALSE,  choice = "eigenvalue")
+
 ### essentiellement un axe important
 
 
 ## Visualisation des profils lignes
 fviz_ca_row(univ_ca)
-fviz_ca_row(univ_ca, select.row = list(cos2 = 0.6),axes = c(2,3))
+fviz_ca_row(univ_ca, select.row = list(contrib = 10),axes = c(1,2), alpha.row = "contrib")
 
 
 
@@ -62,10 +73,11 @@ inertia.row |>  arrange(-contrib_Dim2)
 fviz_ca_row(univ_ca, select.row = list(cos2 = 5)) 
 
 ## Visualisation des profils col
-fviz_ca(univ_ca) 
+fviz_ca(univ_ca, select.row = list(cos2 = 0.6), select.col = list(cos2 = 0.6) ) 
 
-## Visualisation jointe
-fviz_ca_col(univ_ca, select.row = list(cos2 = 5)) 
+
+ 
+
 
 
 ## ---------------------------
@@ -80,7 +92,11 @@ summary(credit)
 
 # Conversion de "Age" en variable qualitative
 credit <- credit |> 
-  mutate(across(where(is.character), as.factor))
+  mutate(across(where(is.character), as.factor)) |> 
+  mutate(Age = as.factor(Age))
+
+summary(credit)
+
 
 # Graphiques univariés pour détecter les modalités rares
 credit |> 
@@ -96,7 +112,8 @@ credit |>
 
 # Regroupement d'une modalité rare dans "Marche"
 credit <- credit |> 
-  mutate(Marche = fct_recode(Marche, Moto = "Side-car"))
+  mutate(Marche = fct_recode(Marche, Moto = "Side-car"))|> 
+  mutate(Intitule = fct_recode(Intitule, MME = "MLLE"))
 
 # Analyse des correspondances multiples (MCA)
 res.mca <- MCA(credit, quali.sup = 6:11, graph = FALSE)
