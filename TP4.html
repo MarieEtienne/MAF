@@ -6,9 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="MP Etienne">
+<meta name="author" content="Marie-Pierre Etienne">
+<meta name="dcterms.date" content="2024-12-19">
 
-<title>Méthodes d’Analyse factorielle – Méthodes d'analyse factorielle</title>
+<title>Lab4 - Explorer un jeu de données complexes – Méthodes d’analyse factorielle</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -171,7 +172,7 @@ ul.task-list li input[type="checkbox"] {
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="./index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
 </ul>
@@ -190,10 +191,16 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#description-du-cours" id="toc-description-du-cours" class="nav-link active" data-scroll-target="#description-du-cours">Description du cours</a></li>
-  <li><a href="#contenu" id="toc-contenu" class="nav-link" data-scroll-target="#contenu">Contenu</a></li>
-  <li><a href="#organisation-du-cours" id="toc-organisation-du-cours" class="nav-link" data-scroll-target="#organisation-du-cours">Organisation du cours</a></li>
-  <li><a href="#prérequis" id="toc-prérequis" class="nav-link" data-scroll-target="#prérequis">Prérequis</a></li>
+  <li><a href="#objectifs-de-la-séance" id="toc-objectifs-de-la-séance" class="nav-link active" data-scroll-target="#objectifs-de-la-séance">Objectifs de la séance</a>
+  <ul class="collapse">
+  <li><a href="#identification-et-informations-géographiques" id="toc-identification-et-informations-géographiques" class="nav-link" data-scroll-target="#identification-et-informations-géographiques">Identification et informations géographiques</a></li>
+  <li><a href="#consommation-énergétique" id="toc-consommation-énergétique" class="nav-link" data-scroll-target="#consommation-énergétique">Consommation énergétique</a></li>
+  <li><a href="#caractéristiques-socio-démographiques-et-du-logement" id="toc-caractéristiques-socio-démographiques-et-du-logement" class="nav-link" data-scroll-target="#caractéristiques-socio-démographiques-et-du-logement">Caractéristiques socio-démographiques et du logement</a></li>
+  <li><a href="#année-de-construction-des-résidences-principales" id="toc-année-de-construction-des-résidences-principales" class="nav-link" data-scroll-target="#année-de-construction-des-résidences-principales">Année de construction des résidences principales</a></li>
+  <li><a href="#modes-de-chauffage" id="toc-modes-de-chauffage" class="nav-link" data-scroll-target="#modes-de-chauffage">Modes de chauffage</a></li>
+  </ul></li>
+  <li><a href="#quelques-remarques-préalables" id="toc-quelques-remarques-préalables" class="nav-link" data-scroll-target="#quelques-remarques-préalables">Quelques remarques préalables</a></li>
+  <li><a href="#quelques-pistes" id="toc-quelques-pistes" class="nav-link" data-scroll-target="#quelques-pistes">Quelques pistes</a></li>
   </ul>
 </nav>
     </div>
@@ -202,24 +209,34 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Méthodes d’Analyse factorielle</h1>
+<h1 class="title">Lab4 - Explorer un jeu de données complexes</h1>
 </div>
 
 
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Author</div>
+  <div class="quarto-title-meta-heading">Affiliations</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">Marie-Pierre Etienne <a href="mailto:marie-pierre.etienne@ensai.fr" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            ENSAI - CREST
+          </p>
+        <p class="affiliation">
+            https://marieetienne.github.io/MAF/
+          </p>
+      </div>
+  </div>
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>MP Etienne </p>
-          </div>
-  </div>
-    
+      
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">Dernière Mise à jour Octobre 2024</p>
+      <p class="date">December 19, 2024</p>
     </div>
   </div>
   
@@ -231,32 +248,94 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="description-du-cours" class="level1">
-<h1>Description du cours</h1>
-<p>Ce cours présente des techniques statistiques pour décire et viusualiser des données multivariés. Il présentera à la fois les fondements mathématiques (géométriques) mais fera surtout la part belle à la mise en oeuvre pratioque de ces outils. A l’issue de ce cours, vous disposerez d’un ensemble de méthodes pour analyser des ensembles de données complexes et créer des représentations visuelles qui révèlent des motifs, des tendances et des relations entre plusieurs variables. Le cours couvre les sujets suivants :</p>
+<div class="hidden">
+<p>$$</p>
+<p>$$</p>
+</div>
+<hr>
+<section id="objectifs-de-la-séance" class="level2">
+<h2 class="anchored" data-anchor-id="objectifs-de-la-séance">Objectifs de la séance</h2>
+<p>Le but de la séance est d’identifier les méthodes adéquates pour appréhender et visualiser un heu de données complexes. Vous pourrez puiser dans le panel des méthodes vues en cours pour extraire des information pertinentes du jeu de données sur la consommation énergétiques des EPCI ( <a href="https://www.insee.fr/fr/metadonnees/definition/c1160">Etablissements Publics de Coopération Intercommunale</a> ) sur le territoire métropolitain en 2023.</p>
+<p>Les données sont disponibles sur <a href="https://raw.githubusercontent.com/MarieEtienne/MAF/refs/heads/master/logement_conso2023.csv">ce lien</a> Les variables disponibles dans ce jeu de données sont</p>
+<p>Voici une description concise des variables de la base <strong><code>conso2023_metro_dta</code></strong> :</p>
+<section id="identification-et-informations-géographiques" class="level3">
+<h3 class="anchored" data-anchor-id="identification-et-informations-géographiques">Identification et informations géographiques</h3>
+<ol type="1">
+<li><strong>Id</strong> : Identifiant unique pour chaque observation.</li>
+<li><strong>OPERATEUR</strong> : Nom ou code de l’opérateur énergétique responsable.</li>
+<li><strong>Code.EPCI</strong> : Code officiel de l’Établissement Public de Coopération Intercommunale (EPCI).</li>
+<li><strong>Nom.EPCI</strong> : Nom de l’Établissement Public de Coopération Intercommunale.</li>
+<li><strong>Code.Département</strong> : Code officiel du département.</li>
+<li><strong>Nom.Département</strong> : Nom du département.</li>
+<li><strong>Code.Région</strong> : Code officiel de la région.</li>
+<li><strong>Nom.Région</strong> : Nom de la région.</li>
+</ol>
 </section>
-<section id="contenu" class="level1">
-<h1>Contenu</h1>
+<section id="consommation-énergétique" class="level3">
+<h3 class="anchored" data-anchor-id="consommation-énergétique">Consommation énergétique</h3>
+<ol start="9" type="1">
+<li><strong>Nb.sites</strong> : Nombre total de sites ou de compteurs pris en compte dans l’analyse.</li>
+<li><strong>Conso.totale..MWh.</strong> : Consommation totale d’énergie, exprimée en mégawattheures (MWh), incluant tous les usages résidentiels.</li>
+<li><strong>Conso.moyenne..MWh.</strong> : Consommation moyenne d’énergie par site ou unité (exprimée en MWh) (Conso.totale..MWh./ Nb.sites).</li>
+<li><strong>Part.thermosensible….</strong> : Proportion (%) de la consommation totale attribuée à des usages thermosensibles (chauffage, climatisation).</li>
+<li><strong>Conso.totale.à.usages.thermosensibles..MWh.</strong> : Consommation totale spécifique aux usages thermosensibles (en MWh).</li>
+<li><strong>Conso.totale.corrigée.de.l.aléa.climatique.à.usages.thermose</strong> : Consommation totale pour des usages thermosensibles corrigée des aléas climatiques (en MWh).</li>
+<li><strong>Conso.moyenne.à.usages.thermosensibles..MWh.</strong> : Consommation moyenne pour des usages thermosensibles (en MWh).</li>
+<li><strong>Conso.moyenne.corrigée.de.l.aléa.climatique.à.usages.thermos</strong> : Consommation moyenne pour des usages thermosensibles, corrigée des variations climatiques (en MWh), la consommation attendue si les températures avaient été les températeures moyennes attendues.</li>
+</ol>
+</section>
+<section id="caractéristiques-socio-démographiques-et-du-logement" class="level3">
+<h3 class="anchored" data-anchor-id="caractéristiques-socio-démographiques-et-du-logement">Caractéristiques socio-démographiques et du logement</h3>
+<ol start="17" type="1">
+<li><strong>Nombre.d.habitants</strong> : Nombre total d’habitants dans la région ou le territoire.</li>
+<li><strong>Taux.de.logements.collectifs</strong> : Proportion (%) de logements collectifs.</li>
+<li><strong>Taux.de.résidences.principales</strong> : Proportion (%) de résidences principales parmi tous les logements.</li>
+<li><strong>Superficie.des.logements..30.m2</strong> : Nombre de logements de moins de 30 m².</li>
+<li><strong>Superficie.des.logements.30.à.40.m2</strong> : Nombre de logements entre 30 et 40 m².</li>
+<li><strong>Superficie.des.logements.40.à.60.m2</strong> : Nombre de logements entre 40 et 60 m².</li>
+<li><strong>Superficie.des.logements.60.à.80.m2</strong> : Nombre de logements entre 60 et 80 m².</li>
+<li><strong>Superficie.des.logements.80.à.100.m2</strong> : Nombre de logements entre 80 et 100 m².</li>
+<li><strong>Superficie.des.logements..100.m2</strong> : Nombre de logements de plus de 100 m².</li>
+</ol>
+</section>
+<section id="année-de-construction-des-résidences-principales" class="level3">
+<h3 class="anchored" data-anchor-id="année-de-construction-des-résidences-principales">Année de construction des résidences principales</h3>
+<ol start="26" type="1">
+<li><strong>Résidences.principales.avant.1919</strong> : Nombre de résidences principales construites avant 1919.</li>
+<li><strong>Résidences.principales.de.1919.à.1945</strong> : Nombre de résidences principales construites entre 1919 et 1945.</li>
+<li><strong>Résidences.principales.de.1946.à.1970</strong> : Nombre de résidences principales construites entre 1946 et 1970.</li>
+<li><strong>Résidences.principales.de.1971.à.1990</strong> : Nombre de résidences principales construites entre 1971 et 1990.</li>
+<li><strong>Résidences.principales.de.1991.à.2005</strong> : Nombre de résidences principales construites entre 1991 et 2005.</li>
+<li><strong>Résidences.principales.de.2006.à.2015</strong> : Nombre de résidences principales construites entre 2006 et 2015.</li>
+<li><strong>Résidences.principales.après.2016</strong> : Nombre de résidences principales construites après 2016.</li>
+</ol>
+</section>
+<section id="modes-de-chauffage" class="level3">
+<h3 class="anchored" data-anchor-id="modes-de-chauffage">Modes de chauffage</h3>
+<ol start="33" type="1">
+<li><strong>Taux.de.chauffage.électrique</strong> : Proportion (%) de logements utilisant le chauffage électrique.</li>
+</ol>
+<p>Sur une maille géographique donnée (EPCI), l’énergie annuelle totale correspond au volume d’électricité consommée sur une année par l’ensemble des sites (compteurs) pour le secteur résidentiel; l’énergie annuelle moyenne correspond au volume d’électricité consommée sur une année par l’ensemble des sites divisée par le nombre de sites.</p>
+<p>Les données sont assemblées à partir du site <a href="https://www.data.gouv.fr/fr/datasets/consommation-annuelle-delectricite-et-gaz-par-epci/#/resources">data.gouv.fr</a> et <a href="https://www.observatoire-des-territoires.gouv.fr/nombre-de-residences-principales">l’Observatoire des territoires</a>.</p>
+<p>Les définitions des modes de calcul sont disponibles sur le site <a href="https://data.enedis.fr/api/v2/catalog/datasets/consommation-electrique-par-secteur-dactivite-epci/attachments/description_du_jeu_de_donnees_consommation_et_thermosensibilite_electriques_annuelles_pdf">d’ENEDIS</a></p>
+</section>
+</section>
+<section id="quelques-remarques-préalables" class="level2">
+<h2 class="anchored" data-anchor-id="quelques-remarques-préalables">Quelques remarques préalables</h2>
 <ul>
-<li><p><strong>Analyse en Composantes Principales (ACP)</strong> : Un outil puissant de réduction dimensionnelle qui simplifie les grands ensembles de données tout en préservant autant que possible la variation. Les étudiants apprendront à visualiser des données à haute dimension à l’aide de l’ACP, rendant ainsi plus faciles à interpréter les relations complexes. Une extension, l’Analyse Factorielle Multiple (AFM) permet de prendre en compte des variables quantitatives organisées par groupe (on veut distinguer les variables physiques, des variables chimiques par exemple).</p></li>
-<li><p><strong>Analyse Factorielle Discriminante (AFD)</strong> : Cette méthode aide à classifier les observations dans des groupes prédéfinis. Le cours se concentrera sur la manière de différencier visuellement les groupes en utilisant plusieurs variables prédictives et d’interpréter les résultats.</p></li>
-<li><p><strong>Analyse Factorielle des Correspondances (AFC)</strong> : Il s’agit ici d’étudier la relation entre deux variables catégorielles et de visualiser les individus.</p></li>
-<li><p><strong>Analyse des Correspondances Multiples (ACM)</strong> : Cette méthode généralise l’AFC au cas à plus de deux variables qualitatives.</p></li>
+<li><p>Les variables 20 à 25, donnent des effectifs par EPCI, ceci peut constituer une table de contingence, mais elles peuvent aussi être aggrégées à l’échelle du département pour construire des profils de département.</p></li>
+<li><p>la même remarque peut être faite pour les variables 26 à 32.</p></li>
 </ul>
-<p>Le cours mettra un accent particulier sur la visualisation des ensembles de données multivariés complexes. Ces outils visuels sont précieux pour communiquer les résultats des analyses multivariées de manière intuitive et accessible.</p>
-<p>À la fin du cours, les étudiants seront compétents dans l’application des méthodes multivariées à une variété d’ensembles de données et auront les compétences nécessaires pour créer des visualisations qui transmettent efficacement les intuitions que l’on peut avoir à partir des données et des éléments clés de la modélisation qui peut suivre.</p>
 </section>
-<section id="organisation-du-cours" class="level1">
-<h1>Organisation du cours</h1>
+<section id="quelques-pistes" class="level2">
+<h2 class="anchored" data-anchor-id="quelques-pistes">Quelques pistes</h2>
+<p>Ces données permmettent d’extraire des informations en rapport avec différente question.</p>
 <ul>
-<li>12h de cours</li>
-<li>12h de De TD/TP</li>
+<li>Peut on faire des typologies de département en terme d’habitat ?</li>
+<li>Ces données permettent-elles de faire des hypothèses sur le lien entre type d’habitat et consommation ? ou entre vétusté du parc immobilier et consommation ?</li>
 </ul>
-<p>Chaque cours contiendra un exemple détaillé et la mise en oeuvre pratique de la méthode étudiée ainsi que la présentation des concepts mathématiques (essentiellement géométriques) sur lesquels elle repose.</p>
-</section>
-<section id="prérequis" class="level1">
-<h1>Prérequis</h1>
-<p>Une connaissance de base des statistiques, de l’algèbre linéaire et une maîtrise des logiciels statistiques (R essentiellement) sont recommandées</p>
+<p>Plusieurs pistes d’utilisation des méthodes factorielles sont envisageables, elles vont permettre de mettre en lumière différents aspects.</p>
+<p>Dans le cas ou vous décideriez de faire une ACP, la question du poids des individus se posent. Selon que l’on pondère les données d’un EPCI par le nombre d’habitants ou non, la vision que l’on a de la consommation énergétique n’est pas la même. Discuter de l’intérêt de l’un ou de l’autre.</p>
 
 
 </section>
