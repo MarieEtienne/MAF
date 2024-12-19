@@ -1,0 +1,133 @@
+---
+title: "Lab4 - Explorer un jeu de données complexes"
+author:
+  - name: Marie-Pierre Etienne
+    affiliation: 
+      - ENSAI - CREST
+    email: marie-pierre.etienne@ensai.fr
+date: last-modified
+institute: https://marieetienne.github.io/MAF/
+bibliography: TPs.bib
+execute: 
+  freeze: true
+editor: 
+  markdown: 
+    wrap: 72
+css: mpe_pres_revealjs.css
+---
+
+```{r setup, include=FALSE, eval = TRUE}
+library(tidyverse)
+knitr::opts_chunk$set(echo = FALSE, comment = NA, cache = TRUE, message = FALSE,
+                      warning = FALSE, eval = FALSE,
+                      fig.align = "center")
+theme_set(theme_minimal())
+```
+
+::: hidden
+\$\$
+
+\newcommand\R{{\mathbb{R}}}
+\newcommand\Xbf{{\boldsymbol{X}}}
+\newcommand\norm[1]{\lVert#1\rVert}
+\newcommand\xcol[1]{\boldsymbol{x}^{#1}}
+\newcommand\xrow[1]{\boldsymbol{x}_{#1}}
+\newcommand\xbf{\boldsymbol{x}}
+\newcommand\ybf{\boldsymbol{y}}
+
+\$\$
+:::
+
+---
+
+## Objectifs de la séance
+
+Le but de la séance est d'identifier les méthodes adéquates pour appréhender et visualiser un heu de données complexes. Vous pourrez puiser dans le panel des méthodes vues en cours pour extraire des information pertinentes du jeu de données sur la consommation énergétiques des EPCI ( [Etablissements Publics de Coopération Intercommunale](https://www.insee.fr/fr/metadonnees/definition/c1160) ) sur le territoire métropolitain  en 2023. 
+
+Les données sont disponibles sur [ce lien](https://raw.githubusercontent.com/MarieEtienne/MAF/refs/heads/master/logement_conso2023.csv)
+Les variables disponibles dans ce jeu de données sont 
+
+
+```{r}
+dta_logement_conso <- read.csv(file = "logement_conso2023.csv", header = TRUE)
+
+```
+
+
+Voici une description concise des variables de la base **`conso2023_metro_dta`** :
+
+### Identification et informations géographiques
+1. **Id** : Identifiant unique pour chaque observation.
+2. **OPERATEUR** : Nom ou code de l'opérateur énergétique responsable.
+3. **Code.EPCI** : Code officiel de l'Établissement Public de Coopération Intercommunale (EPCI).
+4. **Nom.EPCI** : Nom de l'Établissement Public de Coopération Intercommunale.
+5. **Code.Département** : Code officiel du département.
+6. **Nom.Département** : Nom du département.
+7. **Code.Région** : Code officiel de la région.
+8. **Nom.Région** : Nom de la région.
+
+### Consommation énergétique
+9. **Nb.sites** : Nombre total de sites ou de compteurs pris en compte dans l'analyse.
+10. **Conso.totale..MWh.** : Consommation totale d'énergie, exprimée en mégawattheures (MWh), incluant tous les usages résidentiels.
+11. **Conso.moyenne..MWh.** : Consommation moyenne d'énergie par site ou unité (exprimée en MWh) (Conso.totale..MWh./ Nb.sites).
+12. **Part.thermosensible....** : Proportion (%) de la consommation totale attribuée à des usages thermosensibles (chauffage, climatisation).
+13. **Conso.totale.à.usages.thermosensibles..MWh.** : Consommation totale spécifique aux usages thermosensibles (en MWh).
+14. **Conso.totale.corrigée.de.l.aléa.climatique.à.usages.thermose** : Consommation totale pour des usages thermosensibles corrigée des aléas climatiques (en MWh).
+15. **Conso.moyenne.à.usages.thermosensibles..MWh.** : Consommation moyenne pour des usages thermosensibles (en MWh).
+16. **Conso.moyenne.corrigée.de.l.aléa.climatique.à.usages.thermos** : Consommation moyenne pour des usages thermosensibles, corrigée des variations climatiques (en MWh), la consommation attendue si les températures avaient été les températeures moyennes attendues.
+
+### Caractéristiques socio-démographiques et du logement
+17. **Nombre.d.habitants** : Nombre total d'habitants dans la région ou le territoire.
+18. **Taux.de.logements.collectifs** : Proportion (%) de logements collectifs.
+19. **Taux.de.résidences.principales** : Proportion (%) de résidences principales parmi tous les logements.
+20. **Superficie.des.logements..30.m2** : Nombre de logements de moins de 30 m².
+21. **Superficie.des.logements.30.à.40.m2** : Nombre de logements entre 30 et 40 m².
+22. **Superficie.des.logements.40.à.60.m2** : Nombre de logements entre 40 et 60 m².
+23. **Superficie.des.logements.60.à.80.m2** : Nombre de logements entre 60 et 80 m².
+24. **Superficie.des.logements.80.à.100.m2** : Nombre de logements entre 80 et 100 m².
+25. **Superficie.des.logements..100.m2** : Nombre de logements de plus de 100 m².
+
+### Année de construction des résidences principales
+26. **Résidences.principales.avant.1919** : Nombre de résidences principales construites avant 1919.
+27. **Résidences.principales.de.1919.à.1945** : Nombre de résidences principales construites entre 1919 et 1945.
+28. **Résidences.principales.de.1946.à.1970** : Nombre de résidences principales construites entre 1946 et 1970.
+29. **Résidences.principales.de.1971.à.1990** : Nombre de résidences principales construites entre 1971 et 1990.
+30. **Résidences.principales.de.1991.à.2005** : Nombre de résidences principales construites entre 1991 et 2005.
+31. **Résidences.principales.de.2006.à.2015** : Nombre de résidences principales construites entre 2006 et 2015.
+32. **Résidences.principales.après.2016** : Nombre de résidences principales construites après 2016.
+
+### Modes de chauffage
+33. **Taux.de.chauffage.électrique** : Proportion (%) de logements utilisant le chauffage électrique.
+
+
+
+Sur une maille géographique donnée (EPCI), l’énergie annuelle totale correspond au volume d’électricité consommée sur une année par l’ensemble des sites (compteurs) pour le secteur résidentiel; l’énergie annuelle moyenne correspond au volume d’électricité consommée sur une année par l’ensemble des sites divisée par le nombre de sites.
+
+Les données sont assemblées à partir du site [data.gouv.fr](https://www.data.gouv.fr/fr/datasets/consommation-annuelle-delectricite-et-gaz-par-epci/#/resources) et [l'Observatoire des territoires](https://www.observatoire-des-territoires.gouv.fr/nombre-de-residences-principales).
+
+Les définitions des modes de calcul sont disponibles sur le site [d'ENEDIS](https://data.enedis.fr/api/v2/catalog/datasets/consommation-electrique-par-secteur-dactivite-epci/attachments/description_du_jeu_de_donnees_consommation_et_thermosensibilite_electriques_annuelles_pdf)
+
+
+
+## Quelques remarques préalables 
+
+* Les variables 20 à 25, donnent des effectifs par EPCI,  ceci peut constituer une table de contingence, mais elles peuvent aussi être aggrégées à l'échelle du département pour construire des profils de département.
+
+* la même remarque peut être faite pour les variables 26 à 32. 
+
+
+## Quelques pistes
+
+Ces données permmettent d'extraire des informations en rapport avec différente question.
+
+* Peut on faire des typologies de département en terme d'habitat ?
+* Ces données permettent-elles de faire des hypothèses sur le lien entre type d'habitat et consommation ? ou entre vétusté du parc immobilier et consommation ?
+
+Plusieurs pistes d'utilisation des méthodes factorielles sont envisageables, elles vont permettre de mettre en lumière différents aspects. 
+
+Dans le cas ou vous décideriez de faire une ACP, la question du poids des individus se posent. Selon que l'on pondère les données d'un EPCI par le nombre d'habitants ou non, la vision que l'on a de la consommation énergétique n'est pas la même. Discuter de l'intérêt de l'un ou de l'autre.
+
+
+
+
+
