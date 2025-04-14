@@ -435,7 +435,7 @@ ggplot() +
 ::: {.callout-note icon="false" appearance="minimal"}
 ### Definition 1
 
-L'inertie (terme hérité de la physique) *par rapport à un point*
+L'inertie *par rapport à un point*
 $a \in {\mathbb{R}}^{p}$ est définie par\
 $$I_{\boldsymbol{a}} = \frac{1}{n} \sum_{i=1}^n \lVert\boldsymbol{x}_{i} - \boldsymbol{a}\rVert^2 = \frac{1}{n} \sum_{i=1}^n\sum_{k=1}^p  (x_i^k -a^k)^2$$
 :::
