@@ -1414,7 +1414,7 @@ $$\cos(\theta_{jk}) = \frac{n \lambda_k \boldsymbol{u_k^j}}{\sqrt{\lVert X^j\rVe
 
 Il est possible d'ajouter des informations supplémentaires
 
-### Des individus supplémentaires qui ne seront pas utiliser pour cuitruire les axes
+### Des individus supplémentaires qui ne seront pas utilisés pour construire les axes
 
 Si on veut ajouter un nouvel individu $x_{new}$
 
