@@ -213,7 +213,7 @@ $$
 
 
 
-### ACM
+### AFC
 On souhaite étudier les liens entre deux variables qualitatives.
 
 
