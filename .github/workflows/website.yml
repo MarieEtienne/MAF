@@ -1,41 +1,38 @@
-name: website
-on:
-  push:
-    branches:
-      - master
-  pull_request:
+name: Build website
 
+on:
+  workflow_dispatch:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+  workflow_run:
+    workflows:
+      - "Build and Push Docker image"
+    types: ["completed"]
 
 jobs:
   build:
     name: Build website with quarto
     runs-on: ubuntu-latest
-    container: mpetienne/maf:0.1
-
+    container: mpetienne/maf:latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
-      - name: Install R packages
+        uses: actions/checkout@v5
+      - name: Additional R packages
         run: |
-          Rscript -e "install.packages(c('palmerpenguins','GGally', 'ggforce', 'factoextra', 'flextable'))"
+          Rscript -e "install.packages(c('palmerpenguins'))"
+          Rscript -e "install.packages(c('factoextra','flextable'))"
       - name: Generate slides
         run: "quarto render"
       - name: GitHub Pages action
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./_site
-
-    # A essayer pour le cache    
-    # - name: Cache R packages
-    #   uses: actions/cache@v3
-    #   with:
-    #     path: ~/.R/library
-    #     key: ${{ runner.os }}-r-packages-${{ hashFiles('r-packages.txt') }}
-    #     restore-keys: |
-    #       ${{ runner.os }}-r-packages-
-    # 
-    # - name: Install R packages
-    #   run: |
-    #     Rscript -e 'packages <- scan("r-packages.txt", what = character()); install.packages(packages, repos = "https://cran.rstudio.com")'
-
+          
+          
+  
