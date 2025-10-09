@@ -427,7 +427,7 @@ ggplot() +
   
   # Ajouter des labels mathématiques pour les distances
   # geom_text(aes(x = 2.5, y = 0.2), label = expression(x[ik] - bar(x)[k]), size = 5) +
-  geom_text(aes(x = 2.5, y = 0.2), label = expression(x[i]^k), size = 5, col = "#F7A913") +
+  geom_text(aes(x = 2.5, y = 0.2), label = as.character(expression(x[i]^k)), size = 5, col = "#F7A913") +
   geom_segment(aes(x = 0, y = 0, xend = 1.5, yend = 1), col = "#F7A913", 
                arrow = arrow(length = unit(0.5, "cm")), size = 0.7)  + 
   # seconde variable
@@ -435,13 +435,13 @@ ggplot() +
                arrow = arrow(length = unit(0.5, "cm")), size = 0.7)  +
   
   # Ajouter des labels mathématiques pour l'es distances l'espace
-  geom_text(aes(x = 0.3, y = 2), label = expression(R^n),col="#398d55", size = 5) +
+  geom_text(aes(x = 0.3, y = 2), label = as.character(expression(R^n)),col="#398d55", size = 5) +
   
   # Ajouter l'origine O = G
   geom_text(data = origins, aes(x = x, y = y, label = label), vjust = -0.8, size = 5) +
   
   # Ajouter variable k 
-  geom_text(data = vark, aes(x = x, y = y), label = expression(ind[i]), col="#398d55", vjust = -0.8, size = 5) +
+  geom_text(data = vark, aes(x = x, y = y), label = as.character(expression(ind[i])), col="#398d55", vjust = -0.8, size = 5) +
   
   # Ajuster le thème
   theme_minimal()  +

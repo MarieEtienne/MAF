@@ -316,17 +316,17 @@ ggplot() +
   geom_segment(aes(x = 1.5, y = -1, xend = 2.5, yend = 0), linetype = "dashed") +
   
   # Ajouter des labels mathématiques pour les distances
-  # geom_text(aes(x = 2.5, y = 0.2), label = expression(x[ik] - bar(x)[k]), size = 5) +
-  geom_text(aes(x = 2.5, y = 0.2), label = expression(x[i]^k), size = 5, col = "#398d55") +
+  # geom_text(aes(x = 2.5, y = 0.2), label = as.character(expression(x[ik] - bar(x)[k])), size = 5) +
+  geom_text(aes(x = 2.5, y = 0.2), label = as.character(expression(x[i]^k)), size = 5, col = "#398d55") +
   
   # Ajouter des labels mathématiques pour l'espace
-  geom_text(aes(x = 0.3, y = 2), label = expression(R^p),col="#F7A913", size = 5) +
+  geom_text(aes(x = 0.3, y = 2), label = as.character(expression(R^p)),col="#F7A913", size = 5) +
   
   # Ajouter l'origine O = G
   geom_text(data = origins, aes(x = x, y = y, label = label), vjust = -0.8, size = 5) +
   
   # Ajouter variable k 
-  geom_text(data = vark, aes(x = x, y = y), label = expression(var[k]), col="#F7A913", vjust = -0.8, size = 5) +
+  geom_text(data = vark, aes(x = x, y = y), label = as.character(expression(var[k])), col="#F7A913", vjust = -0.8, size = 5) +
   
   # Ajuster le thème
   theme_minimal()  +
@@ -390,8 +390,8 @@ ggplot() +
   geom_segment(aes(x = 1.5, y = -1, xend = 2.5, yend = 0), linetype = "dashed") +
   
   # Ajouter des labels mathématiques pour les distances
-  # geom_text(aes(x = 2.5, y = 0.2), label = expression(x[ik] - bar(x)[k]), size = 5) +
-  geom_text(aes(x = 2.5, y = 0.2), label = expression(x[i]^k), size = 5, col = "#F7A913") +
+  # geom_text(aes(x = 2.5, y = 0.2), label = as.character(expression(x[ik] - bar(x)[k])), size = 5) +
+  geom_text(aes(x = 2.5, y = 0.2), label = as.character(expression(x[i]^k)), size = 5, col = "#F7A913") +
   geom_segment(aes(x = 0, y = 0, xend = 1.5, yend = 1), col = "#F7A913", 
                arrow = arrow(length = unit(0.5, "cm")), size = 0.7)  + 
   # seconde variable
@@ -399,13 +399,13 @@ ggplot() +
                arrow = arrow(length = unit(0.5, "cm")), size = 0.7)  +
   
   # Ajouter des labels mathématiques pour l'es distances l'espace
-  geom_text(aes(x = 0.3, y = 2), label = expression(R^n),col="#398d55", size = 5) +
+  geom_text(aes(x = 0.3, y = 2), label = as.character(expression(R^n)),col="#398d55", size = 5) +
   
   # Ajouter l'origine O = G
   geom_text(data = origins, aes(x = x, y = y, label = label), vjust = -0.8, size = 5) +
   
   # Ajouter variable k 
-  geom_text(data = vark, aes(x = x, y = y), label = expression(ind[i]), col="#398d55", vjust = -0.8, size = 5) +
+  geom_text(data = vark, aes(x = x, y = y), label = as.character(expression(ind[i])), col="#398d55", vjust = -0.8, size = 5) +
   
   # Ajuster le thème
   theme_minimal()  +
@@ -530,10 +530,10 @@ ggplot() +
   geom_segment(data = individus_dessin, aes(x = x, y = y, xend = xend, yend = yend), linetype = "dashed") +
   
   # Ajouter des labels mathématiques pour l'es distances l'espace
-  geom_text(aes(x = 0.3, y = 2), label = expression(R^p),col="#F7A913", size = 5) +
+  geom_text(aes(x = 0.3, y = 2), label = as.character(expression(R^p)),col="#F7A913", size = 5) +
   
   # Ajouter le nom de l'axe
-  geom_text(aes(x = -1.2, y = -2), label = expression(Delta), vjust = -0.8, size = 5) +
+  geom_text(aes(x = -1.2, y = -2), label = as.character(expression(Delta)), vjust = -0.8, size = 5) +
 
   # Ajouter le nom des individus
   geom_text(data= individus_dessin, aes(x = xend, y =yend),  label = paste0("p[", 1:3, "]^Delta"), parse = TRUE, vjust = -0.8, size = 5) +
@@ -598,7 +598,7 @@ a_proj <- sum(point_a*u)*u
 data <- data.frame(
   x = c(0,  point_a[1], a_proj[1]),
   y = c(0,  point_a[2], a_proj[2]))
-label_dta = c(expression(O), expression(a), expression(a[u]))
+label_dta = as.character(c(expression(O), expression(a), expression(a[u])))
 
 
 scale_f = max(point_a/u) +1
@@ -761,11 +761,11 @@ ggplot() +
   
   
   # Ajouter des labels mathématiques pour l'es distances l'espace
-  geom_text(aes(x = 0.3, y = 2), label = expression(R^p),col="#F7A913", size = 5) +
+  geom_text(aes(x = 0.3, y = 2), label = as.character(expression(R^p)),col="#F7A913", size = 5) +
   
   # Ajouter le nom de l'axe
   geom_text(aes(x = -1.2, y = -2), label = "E", vjust = -0.8, col = "#33658A", size = 5) +
-  geom_text(aes(x = -v[1], y = -v[2]), label = expression(E^"\u22A5"), vjust = -0.8, col = "#C94326", size = 5) +
+  geom_text(aes(x = -v[1], y = -v[2]), label = as.character(expression(E^"\u22A5")), vjust = -0.8, col = "#C94326", size = 5) +
   
   # Ajouter l'origine O = G
   geom_text(aes(x = 0.15, y = -0.1), label = "O", vjust = -0.8, size = 5) +
@@ -1246,8 +1246,8 @@ ggplot() +
   geom_segment(data = individus_dessin, aes(x = x, y = y, xend = xend, yend = yend), linetype = "dashed", alpha = 0.2) +
   geom_segment(data = individus_dessin, aes(x = x, y = y, xend = 0, yend = 0), linetype = "dotted") +
   
-  geom_text(aes(x = 0.3, y = 2), label = expression(R^p),col="#F7A913", size = 5) +
-  geom_text(aes(x = -1.2, y = -2), label = expression(Delta), vjust = -0.8, size = 5) +
+  geom_text(aes(x = 0.3, y = 2), label = as.character(expression(R^p)),col="#F7A913", size = 5) +
+  geom_text(aes(x = -1.2, y = -2), label = as.character(expression(Delta)), vjust = -0.8, size = 5) +
   geom_text(data= individus_dessin, aes(x = xend, y =yend),  label = paste0("p[", 1:2, "]^Delta"), parse = TRUE, vjust = -0.8, size = 5) +
   geom_text(data= individus_dessin, aes(x = x, y =y),  label = paste0("x[", 1:2, "]"), parse = TRUE, vjust = -0.8, size = 5, col = "#398d55") +
   geom_text(data= individus_dessin, x=c(0.5, -0.4), y =c(0.3, -0.5),  label = paste0("theta[", 1:2, "]"), parse = TRUE, vjust = -0.8, size = 5, col = "#398d55") +
@@ -1305,7 +1305,7 @@ norme_u = sum(u^2)
 ggplot() +
   #geom_segment(aes(x = -2*u[1], y = -2*u[2], xend = 2*u[1], yend = 2*u[2]), linewidth = 0.5) +  # Axe vertical
   geom_point(data = individus, aes(x = x, y = y), size = 3, col= "#398d55") +
-  # geom_text(aes(x = -1.2, y = -2), label = expression(Delta), vjust = -0.8, size = 5) +
+  # geom_text(aes(x = -1.2, y = -2), label = as.character(expression(Delta)), vjust = -0.8, size = 5) +
   geom_text(data= individus, aes(x = x, y =y),  label = paste0("x[", 1:6, "]"), parse = TRUE, vjust = -0.8, size = 5, col = "#398d55") +
   geom_text(aes(x = 0.15, y = -0.1), label = "G", vjust = -0.8, size = 5) +
   geom_point(aes(x = 0, y = 0),  size = 2) +
@@ -1368,11 +1368,11 @@ ggplot() +
   #geom_segment(aes(x = -2*u[1], y = -2*u[2], xend = 2*u[1], yend = 2*u[2]), linewidth = 0.5) +  # Axe vertical
   geom_segment(data = variables, aes(xend = xend, yend = yend, x= x0, y = y0), arrow = arrow(length = unit(0.3, "cm")),   col= c("#F7A913", "#d61d09","#F7A913","#d61d09")) +
   geom_segment(aes(xend = lambda1 * variables$xend[2], yend = lambda1 * variables$yend[2], x= 0, y = 0), arrow = arrow(length = unit(0.3, "cm")),   col= "#d61d09", alpha = 0.5) +
-  geom_text(aes(x = lambda1 * variables$xend[2], y = lambda1 * variables$yend[2]), label = expression(C^k == lambda[k]~u^k),   col= "#d61d09", alpha = 0.5) +
-  # geom_text(aes(x = -1.2, y = -2), label = expression(Delta), vjust = -0.8, size = 5) +
+  geom_text(aes(x = lambda1 * variables$xend[2], y = lambda1 * variables$yend[2]), label = as.character(expression(C^k == lambda[k]~u^k)),   col= "#d61d09", alpha = 0.5) +
+  # geom_text(aes(x = -1.2, y = -2), label = as.character(expression(Delta)), vjust = -0.8, size = 5) +
   geom_text(data= variables, aes(x = xend, y =yend),  label = c("X^j", "u^k", "X^i", "u^l"), parse = TRUE, vjust = -0.1, hjust =  -0.5,  size = 5,   col= c("#F7A913", "#d61d09", "#F7A913", "#d61d09"))  +
-  geom_text(data = pos, aes(x = x, y = y), label = expression(theta["j,k"]), size = 5) +
-  geom_text(data = pos, aes(x = x/3, y = 3*y), label = expression(theta["i,k"]), size = 5) +
+  geom_text(data = pos, aes(x = x, y = y), label = as.character(expression(theta["j,k"])), size = 5) +
+  geom_text(data = pos, aes(x = x/3, y = 3*y), label = as.character(expression(theta["i,k"])), size = 5) +
   theme_minimal()  +
   coord_fixed() +  # Conserver un rapport d'aspect fixe pour les axes
   theme (axis.title=element_blank(),
