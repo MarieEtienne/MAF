@@ -23,6 +23,7 @@ website:
       - text: "Cours"
         menu: 
           - href: 01_intro.qmd
+          - href: 01_inertie.qmd
           - href: 01_acp.qmd
           - href: 01_afm.qmd
           - href: 01_afd.qmd

@@ -54,7 +54,7 @@ $$ \definecolor{wongBlue}{RGB}{0, 114, 178}
 :::
 
 
-
+# Un exemple pour commencer
 
 ## Où l'on commence par parler de manchots 
 
@@ -82,8 +82,10 @@ Artwork by @allison_horst
 
 [Point de vue science des données]{.orange}
 
-* Comment représenter ces données en perdant le moins d'information ? [Visualisation]{.bleu}
+* Comment représenter ces données en perdant le moins d'information possible? [Visualisation]{.bleu}
 * Toutes les variables sont-elles utiles ? [Compression]{.bleu}
+* Peut-on mettre en évidence des liens entre variables ? [Compression]{.bleu}
+* Peut-on mettre en évidence des liens entre individus ? [Compression]{.bleu}
 
 
 [Point de vue biologique]{.rouge}
@@ -135,28 +137,334 @@ fig <- plot_ly(penguins, x = ~ bill_depth_mm, y = ~ -body_mass_g, z = ~flipper_l
 fig
 ```
 
+### Et si on essayait de faire mieux ?
+
+En 
+* Trouvant une (ou plusieurs) représentations en 2 dimensions la plus fidèle possible,
+* Faisant apparaître les liens plus complexes entre variables ($X_3 = X_1 + X_2$)
+* étant capable d'identifier les individus qui se ressemblent globalement
+
 :::
 
-## Objectifs de ce cours
+# Les données
 
-Découvrir des méthodes permettant de 
+## Mise en forme des données
 
-* Trouver une (ou plusieurs) représentations en 2 dimensions la plus fidèle possible,
-* Faire apparaître les liens entre les différentes variables,
-* Identifier les individus qui se ressemblent.
+Toutes les méthodes d'analyse factorielle organisent les données dans un tableau  composé de [n individus]{.alea} (lignes) et de [p
+colonnes]{.orange} (colonnes).
 
-### Les ingrédients
+Une ligne regroupe toutes les caractéristiques d'un individu.
 
-* un peu de géométrie et d'algèbre linéaire,
-* mesurer la quantité d'information présente dans un jeu de données,
-* un bon esprit pratique pour bien poser le problème au départ
-* des données bien rangées dans un tableau $\Xbf$ où
-  * une ligne $i$ correspond à un individu 
-  * une colonne $j$ à une variable
-  $X_{ij}$ la valeur de la variable $j$ mesurée sur l'individu $i$.
+
+:::::: panel-tabset
+
+### Comment représenter les différentes variables 
+
+* Si une caractéristique est quantitative, alors on note dans une colonne la valeur mesurée sur l'individu.
+* Si une caractéristique est qualitative, alors on utilise classiquement la représentation *one hot encoding*, qui consiste à représenter cette caractéristique qualitative sur autant de colonnes que de modalités et attribuer un $1$ dans la colonne correspondant à la modalité de l'individu et 0 aux autres.
+
+### Rappel des données sur les manchots
+
+Données disponibles dans le package `palmerpenguins` mises à disposition
+par le Dr. Kristen Gorman et the Palmer Station, Antarctica LTER.
+
+On a mesuré les caractéristiques morphologiques de divers manchots :
+
+::::: columns
+::: {.column width="48%"}
+Les 3 premières lignes (parmi 333 )
+
+```{r penguins_13, echo = FALSE, eval = TRUE}
   
+ penguins |>  slice(1:3)
+```
+:::
+
+::: {.column width="48%"}
+
+- species : 3 espèces possibles (Adelie, Chinstrap, Gentoo)
+
+- island : l'île sur laquelle le mancho a été observé (Biscoe, Dream, Torgersen)
+
+- bill_length_mm : la longueur du bec,
+
+- bill_depth_mm : l'épaisseur du bec,
+
+- flipper_length_mm : la longueur de la nageoire,
+
+- body_mass_g : le poids du corps.
+
+- sex : le sexe du manchot (male,female)
+
+- year : l'année de l'observation
  
- 
+:::
+:::::
+
+::::::
+
+
+
+
+## Mise en forme des données
+
+
+:::::: panel-tabset
+
+### Notation
+
+Dans la suite on va noter ${\boldsymbol{X}}$ la matrice des données,
+${\boldsymbol{X}}\in {\mathbb{R}}^{n\times p}$.
+
+$x_{\class{alea}{i}\class{orange}{j}}$ est la valeur de la variable
+$\class{orange}{j}$ mesurée pour l'individu $\class{alea}{i}.$
+
+$${\boldsymbol{X}}= \overset{\color{orange}{\begin{matrix}var_1& \ldots \ &  \ \ldots \ &\  \ldots\  & \  var_p \end{matrix}}}{\begin{pmatrix}
+x_{\class{alea}{1}}^{\class{orange}{1}} &  \ldots &  \ldots &\ldots &  x_{\class{alea}{1}}^{\class{orange}{p}}\\
+\vdots & & &  &\vdots \\
+ & &  x_{\class{alea}{i}}^{\class{orange}{j}} & & \\
+\vdots & & & & \vdots \\
+x_{\class{alea}{n}}^{\class{orange}{1}} & & & & \ldots x_{\class{alea}{n}}^{\class{orange}{p}}\\
+ \end{pmatrix}}$$
+
+
+### Exemple
+
+Ecrire les 2 premières lignes de $\Xbf$ pour l'exemple des manchots 
+
+::::::
+
+[Comment visualiser au mieux ces données pour faire apparaître les liens
+entre variables et identifier des resemblances entre individus
+?]{.rouge}
+
+
+
+
+## Voir c'est comprendre : comment représenter l'information contenue dans ce tableau ?
+
+### Idée 1 : on représente les liens des variables 2 à 2 -- Focus sur les données quantitatives
+
+```{r ggpairs, eval = TRUE, echo = FALSE, fig.show='asis', out.height = "80%", out.width = "80%"}
+penguins |>  drop_na()   |> GGally::ggpairs( columns = c(1:6)) 
+```
+
+## Voir c'est comprendre : comment représenter l'information contenue dans ce tableau ?
+
+### Idée 1 : dangereuse
+
+```{r gen_data2,eval = TRUE, out.width = "100%"}
+scene = list(camera = list(eye = list(x = -2, y = 0, z = 0)),
+             center = list(x= mean(penguins$bill_depth_mm, y = mean(penguins$body_mass_g), z = mean(penguins$flipper_length_mm) )))
+fig <- plot_ly(penguins, x = ~ bill_depth_mm, y = ~ -body_mass_g, z = ~flipper_length_mm, width = 500, height = 500) %>% 
+  add_markers(size = 12)  %>% 
+  layout(title = "3D Scatter plot", scene = scene)
+fig
+```
+
+## Voir c'est comprendre : comment représenter l'information contenue dans ce tableau ?
+
+### Objectifs
+
+-   Quantifier la quantité d'information disponible ou perdue par une représentation :
+(01_inertie.html)[Cours sur l'inertie]
+
+
+Pour ensuite
+
+-   Représenter sans perdre trop d'information,
+-   Comprendre quelles sont les informations redondantes (variables
+    liées),
+-   Idéalement des individus éloignés dans le nuage initial, restent
+    éloignés dans la représentation
+
+
+## Deux points de vue complémentaires
+
+::::: columns
+::: {.column width="48%"}
+
+### Le nuage des individus $C^n$
+
+On peut considérer qu'un [individu]{.alea} $i$ est un vecteur
+$\class{alea}{\boldsymbol{x}_{i}}$ dans un espace de dimension $p$. Par
+convention tous les vecteurs sont des vecteurs colonnes, donc on peut
+écrire
+
+$${\boldsymbol{X}}=\begin{pmatrix}
+\class{alea}{\boldsymbol{x}_{1}}^\top\\
+\vdots \\
+\class{alea}{\boldsymbol{x}_{n}}^\top\\
+\end{pmatrix},$$
+
+L'ensemble des $n$ vecteurs forme le [nuage des individus]{.alea} (ce
+qu'on représente classiquement).
+
+```{r nuage_ind}
+#! message: false
+# Installer les packages si nécessaire
+# install.packages("ggplot2")
+# install.packages("ggforce")
+
+library(ggplot2)
+library(ggforce)
+
+# Créer une base de données pour les points et les annotations
+individus <- data.frame(
+  x = c(1.5, 0.5, -0.5, -1),   # Coordonnées des points individuels
+  y = c(1.0, -0.5, 0.2, -0.5),   # Coordonnées des points individuels
+  label = c("i", "", "", "")    # Nom de l'individu i
+)
+
+# Points pour O = G et l'origine des axes
+origins <- data.frame(
+  x = c(0.2, 1.5),
+  y = c(-0.3, 0),
+  label = c("O", "")
+)
+
+# Points var_k
+vark <- data.frame(
+  x = c(3),
+  y = c(-0.3)
+)
+
+
+
+# Schéma avec ggplot
+ggplot() +
+  # Tracer une ellipse représentant le nuage de points
+  geom_ellipse(aes(x0 = 0, y0 = 0, a = 2.5, b = 0.8, angle = 3.14159/6), fill = NA, color = "black") +
+  
+  # Ajouter les points des individus dans l'espace
+  geom_point(data = individus, aes(x = x, y = y), size = 3) +
+  
+  # Ajouter les labels des individus (point i)
+  geom_text(data = individus, aes(x = x, y = y, label = label), vjust = -1.5, hjust = -0.5, size = 5) +
+  
+  # Tracer les axes
+  geom_segment(aes(x = 0, y = 0, xend = 3, yend = 0), arrow = arrow(length = unit(0.3, "cm")), size = 0.5) +  # Axe des variables (horizontal)
+  geom_segment(aes(x = 0, y = 0, xend = 0, yend = 2), arrow = arrow(length = unit(0.3, "cm")), size = 0.5) +  # Axe vertical
+  geom_segment(aes(x = 0, y = 0, xend = -2, yend = -2), arrow = arrow(length = unit(0.3, "cm")), size = 0.5) +  # Axe vertical
+  
+  # Ajouter des lignes en pointillés (projection du point i)
+  geom_segment(aes(x = 1.5, y = 1, xend = 1.5, yend = -1), linetype = "dashed") +
+  geom_segment(aes(x = 1.5, y = -1, xend = 2.5, yend = 0), linetype = "dashed") +
+  
+  # Ajouter des labels mathématiques pour les distances
+  # geom_text(aes(x = 2.5, y = 0.2), label = expression(x[ik] - bar(x)[k]), size = 5) +
+  geom_text(aes(x = 2.5, y = 0.2), label = "x[i]^k", parse = TRUE, size = 5, col = "#398d55") +
+  
+  # Ajouter des labels mathématiques pour l'espace
+  geom_text(aes(x = 0.3, y = 2), label = "R^p", parse = TRUE,col="#F7A913", size = 5) +
+  
+  # Ajouter l'origine O = G
+  geom_text(data = origins, aes(x = x, y = y, label = label), vjust = -0.8, size = 5) +
+  
+  # Ajouter variable k 
+  geom_text(data = vark, aes(x = x, y = y), label = "var[k]", parse = TRUE, col="#F7A913", vjust = -0.8, size = 5) +
+  
+  # Ajuster le thème
+  theme_minimal()  +
+  
+  coord_fixed() +  # Conserver un rapport d'aspect fixe pour les axes
+  ggtitle("Représentation  du nuage des individus") +
+  
+  # Ajuster le thème
+  theme (axis.title=element_blank(),
+   axis.text=element_blank(),
+   axis.ticks=element_blank(),
+   panel.grid = element_blank())
+
+```
+:::
+
+::: {.column width="48%"}
+### Le nuage des variables $C^p$
+
+On peut considérer qu'une [variable]{.orange} $j$ est un vecteur
+$\class{orange}{\boldsymbol{x}^{j}}$ dans un espace de dimension $n$ et
+on peut écrire
+
+$${\boldsymbol{X}}=\begin{pmatrix}
+\class{orange}{\boldsymbol{x}^{1}} & \ldots & \class{orange}{\boldsymbol{x}^{p}}
+\end{pmatrix},$$
+
+L'ensemble des $p$ vecteurs forme le [nuage des variables]{.orange}.
+
+```{r nuage_var}
+#! message: false
+# Installer les packages si nécessaire
+# install.packages("ggplot2")
+# install.packages("ggforce")
+
+# Créer une base de données pour les points et les annotations
+individus <- data.frame(
+  x = c(1.5, 1.2, -0.5, -1),   # Coordonnées des points individuels
+  y = c(0.9, 1, 0.2, -0.5),   # Coordonnées des points individuels
+  label = c("k", "j", "", "")    # Nom de l'individu i
+)
+
+
+# Schéma avec ggplot
+ggplot() +
+  # Tracer une ellipse représentant le nuage de points
+  geom_ellipse(aes(x0 = 0, y0 = 0, a = 2, b = 2, angle = 3.14159/6), fill = NA, color = "black") +
+  geom_ellipse(aes(x0 = 0, y0 = 0, a = 1, b = 2, angle = 3.14159/2), fill = NA, color = "black") +
+  
+  
+  # Ajouter les labels des individus (point i)
+  geom_text(data = individus, aes(x = x, y = y, label = label),  col = "#F7A913", vjust = -1.5, hjust = -0.5, size = 5) +
+  
+  # Tracer les axes
+  geom_segment(aes(x = 0, y = 0, xend = 3, yend = 0), arrow = arrow(length = unit(0.3, "cm")), size = 0.5) +  # Axe des variables (horizontal)
+  geom_segment(aes(x = 0, y = 0, xend = 0, yend = 2), arrow = arrow(length = unit(0.3, "cm")), size = 0.5) +  # Axe vertical
+  geom_segment(aes(x = 0, y = 0, xend = -2, yend = -2), arrow = arrow(length = unit(0.3, "cm")), size = 0.5) +  # Axe vertical
+  
+  # Ajouter des lignes en pointillés (projection du point i)
+  geom_segment(aes(x = 1.5, y = 1, xend = 1.5, yend = -1), linetype = "dashed") +
+  geom_segment(aes(x = 1.5, y = -1, xend = 2.5, yend = 0), linetype = "dashed") +
+  
+  # Ajouter des labels mathématiques pour les distances
+  # geom_text(aes(x = 2.5, y = 0.2), label = expression(x[ik] - bar(x)[k]), size = 5) +
+  geom_text(aes(x = 2.5, y = 0.2), label = expression(x[i]^k), size = 5, col = "#F7A913") +
+  geom_segment(aes(x = 0, y = 0, xend = 1.5, yend = 1), col = "#F7A913", 
+               arrow = arrow(length = unit(0.5, "cm")), size = 0.7)  + 
+  # seconde variable
+  geom_segment(aes(x = 0, y = 0, xend = 1.1, yend = 1.2), col = "#F7A913", 
+               arrow = arrow(length = unit(0.5, "cm")), size = 0.7)  +
+  
+  # Ajouter des labels mathématiques pour l'es distances l'espace
+  geom_text(aes(x = 0.3, y = 2), label = expression(R^n),col="#398d55", size = 5) +
+  
+  # Ajouter l'origine O = G
+  geom_text(data = origins, aes(x = x, y = y, label = label), vjust = -0.8, size = 5) +
+  
+  # Ajouter variable k 
+  geom_text(data = vark, aes(x = x, y = y), label = expression(ind[i]), col="#398d55", vjust = -0.8, size = 5) +
+  
+  # Ajuster le thème
+  theme_minimal()  +
+  
+  coord_fixed() +  # Conserver un rapport d'aspect fixe pour les axes
+  ggtitle("Représentation  du nuage des variables") +
+  
+  # Ajuster le thème
+  theme (axis.title=element_blank(),
+         axis.text=element_blank(),
+         axis.ticks=element_blank(),
+         panel.grid = element_blank())
+
+
+```
+:::
+:::::
+
+. . .
+
+[Bien sûr les deux nuages sont intimement liés]{.question}
+
+
 ## Un aperçu du type de données
 
 ::: {.panel-tabset} 
@@ -168,7 +476,7 @@ Comprendre les relations entre des variables toutes quantitatives.
 
 [Example]{.rouge}
 
-Quels sont lens entre les différentes variables morphométriques ?
+Quels sont les liens entre les différentes variables morphométriques ?
 
 ```{r x_pca}
 #| echo: true
@@ -249,15 +557,36 @@ $$
 * Comprendre finement l'ACP permet de bien comprendre toutes les extensions suivantes
 * La mise en oeuvre requiert un peu de pratique car il faut faire des choix avisés.
 
+
+## Pour finir 
+
+
+## Objectifs de ce cours
+
+Découvrir des méthodes permettant de 
+
+* Trouver une (ou plusieurs) représentations en 2 dimensions la plus fidèle possible,
+* Faire apparaître les liens entre les différentes variables,
+* Identifier les individus qui se ressemblent.
+
+### Les ingrédients
+
+* un peu de géométrie et d'algèbre linéaire,
+* une mesure de  la quantité d'information présente dans un jeu de données,
+* un bon esprit pratique pour bien poser le problème au départ
+* des données bien rangées dans un tableau $\Xbf$ où
+  * une ligne $i$ correspond à un individu 
+  * une colonne $j$ à une variable
+  $X_{ij}$ la valeur de la variable $j$ mesurée sur l'individu $i$.
+  
 ### Plan du cours
 
-* Analyse en composante principale
+* Quantifier l'information
+* Analyse en composantes principales
   * Un exemple d'ACP    
   * Comprendre les mécanismes derrière l'ACP (notion d'inertie, distance entre individus, changement de repères, la correlation comme un cosinus)
 * Analyse Factorielle multiple AFM : une extension de l'ACP
 * Analyse Factorielle Discriminante : AFD
 * Analyse Factorielle des Correspondances : AFC
-
-
-
+* Analyse des Correspondances multiples : ACM
 
