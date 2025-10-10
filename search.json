@@ -917,86 +917,44 @@
     "text": "Ce que vous pensez devoir retenir\nA construire ensemble"
   },
   {
-    "objectID": "01_inertie.html#mise-en-forme-des-données",
-    "href": "01_inertie.html#mise-en-forme-des-données",
-    "title": "Organiser les données et mesurer la quantité d’information",
-    "section": "Mise en forme des données",
-    "text": "Mise en forme des données\nToutes les méthodes d’analyse factorielle organise les données dans un tableau composé de n individus (lignes) et de p colonnes (colonnes).\nUne ligne regroupe toutes les caractéristiques d’un individu.\n\nComment représenter les différentes variablesRappel des données sur les manchots\n\n\n\nSi une caractéristique est quantitative, alors on note dans une colonne la valeur mesurée sur l’individu.\nSi une caractéristique est qualitative, alors on utilise classiquement la représentation one hot encoding, qui consiste à représenter cette caractéristique qualitative sur autant de colonnes que de modalités et attribuer un \\(1\\) dans la colonne correspondant à la modalité de l’individu et 0 aux autres.\n\n\n\nDonnées disponibles dans le package palmerpenguins mises à disposition par le Dr. Kristen Gorman et the Palmer Station, Antarctica LTER.\nOn a mesuré les caractéristiques morphologiques de divers manchots :\n\n\nLes 3 premières lignes (parmi 333 )\n\n\n# A tibble: 3 × 8\n  species island    bill_length_mm bill_depth_mm flipper_length_mm body_mass_g\n  &lt;fct&gt;   &lt;fct&gt;              &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;\n1 Adelie  Torgersen           39.1          18.7               181        3750\n2 Adelie  Torgersen           39.5          17.4               186        3800\n3 Adelie  Torgersen           40.3          18                 195        3250\n# ℹ 2 more variables: sex &lt;fct&gt;, year &lt;fct&gt;\n\n\n\n\nspecies : 3 espèces possibles (Adelie, Chinstrap, Gentoo)\nisland : l’île sur laquelle le mancho a été observé (Biscoe, Dream, Torgersen)\nbill_length_mm : la longueur du bec,\nbill_depth_mm : l’épaisseur du bec,\nflipper_length_mm : la longueur de la nageoire,\nbody_mass_g : le poids du corps.\nsex : le sexe du manchot (male,female)\nyear : l’année de l’observation"
-  },
-  {
-    "objectID": "01_inertie.html#mise-en-forme-des-données-1",
-    "href": "01_inertie.html#mise-en-forme-des-données-1",
-    "title": "Organiser les données et mesurer la quantité d’information",
-    "section": "Mise en forme des données",
-    "text": "Mise en forme des données\n\nNotationExemple\n\n\nDans la suite on va noter \\({\\boldsymbol{X}}\\) la matrice des données, \\({\\boldsymbol{X}}\\in {\\mathbb{R}}^{n\\times p}\\).\n\\(x_{\\class{alea}{i}\\class{orange}{j}}\\) est la valeur de la variable \\(\\class{orange}{j}\\) mesurée pour l’individu \\(\\class{alea}{i}.\\)\n\\[{\\boldsymbol{X}}= \\overset{\\color{orange}{\\begin{matrix}var_1& \\ldots \\ &  \\ \\ldots \\ &\\  \\ldots\\  & \\  var_p \\end{matrix}}}{\\begin{pmatrix}\nx_{\\class{alea}{1}}^{\\class{orange}{1}} &  \\ldots &  \\ldots &\\ldots &  x_{\\class{alea}{1}}^{\\class{orange}{p}}\\\\\n\\vdots & & &  &\\vdots \\\\\n& &  x_{\\class{alea}{i}}^{\\class{orange}{j}} & & \\\\\n\\vdots & & & & \\vdots \\\\\nx_{\\class{alea}{n}}^{\\class{orange}{1}} & & & & \\ldots x_{\\class{alea}{n}}^{\\class{orange}{p}}\\\\\n\\end{pmatrix}}\\]\n\n\nEcrire les 2 premières lignes de \\({\\boldsymbol{X}}\\) pour l’exemple des manchots\n\n\n\nComment visualiser au mieux ces données pour faire apparaître les liens entre variables et identifier des resemblances entre individus ?"
-  },
-  {
-    "objectID": "01_inertie.html#voir-cest-comprendre-comment-représenter-linformation-contenue-dans-ce-tableau",
-    "href": "01_inertie.html#voir-cest-comprendre-comment-représenter-linformation-contenue-dans-ce-tableau",
-    "title": "Organiser les données et mesurer la quantité d’information",
-    "section": "Voir c’est comprendre : comment représenter l’information contenue dans ce tableau ?",
-    "text": "Voir c’est comprendre : comment représenter l’information contenue dans ce tableau ?\nIdée 1 : on représente les liens des variables 2 à 2 – Focus sur les données quantitatives"
-  },
-  {
-    "objectID": "01_inertie.html#voir-cest-comprendre-comment-représenter-linformation-contenue-dans-ce-tableau-1",
-    "href": "01_inertie.html#voir-cest-comprendre-comment-représenter-linformation-contenue-dans-ce-tableau-1",
-    "title": "Organiser les données et mesurer la quantité d’information",
-    "section": "Voir c’est comprendre : comment représenter l’information contenue dans ce tableau ?",
-    "text": "Voir c’est comprendre : comment représenter l’information contenue dans ce tableau ?\nIdée 1 : dangereuse"
-  },
-  {
-    "objectID": "01_inertie.html#voir-cest-comprendre-comment-représenter-linformation-contenue-dans-ce-tableau-2",
-    "href": "01_inertie.html#voir-cest-comprendre-comment-représenter-linformation-contenue-dans-ce-tableau-2",
-    "title": "Organiser les données et mesurer la quantité d’information",
-    "section": "Voir c’est comprendre : comment représenter l’information contenue dans ce tableau ?",
-    "text": "Voir c’est comprendre : comment représenter l’information contenue dans ce tableau ?\nObjectifs\n\nQuantifier la perte d’information,\n\nPour ensuite\n\nReprésenter sans perdre trop d’information,\nComprendre quelles sont les informations redondantes (variables liées),\nIdéalement des individus éloignés dans le nuage initial, restent éloignés dans la représentation\n\nContexte\nOn commence par le cas où toutes les variables sont quantitatives"
-  },
-  {
-    "objectID": "01_inertie.html#deux-points-de-vue-complémentaires",
-    "href": "01_inertie.html#deux-points-de-vue-complémentaires",
-    "title": "Organiser les données et mesurer la quantité d’information",
-    "section": "Deux points de vue complémentaires",
-    "text": "Deux points de vue complémentaires\n\n\nLe nuage des individus \\(C^n\\)\nOn peut considérer qu’un individu \\(i\\) est un vecteur \\(\\class{alea}{\\boldsymbol{x}_{i}}\\) dans un espace de dimension \\(p\\). Par convention tous les vecteurs sont des vecteurs colonnes, donc on peut écrire\n\\[{\\boldsymbol{X}}=\\begin{pmatrix}\n\\class{alea}{\\boldsymbol{x}_{1}}^\\top\\\\\n\\vdots \\\\\n\\class{alea}{\\boldsymbol{x}_{n}}^\\top\\\\\n\\end{pmatrix},\\]\nL’ensemble des \\(n\\) vecteurs forme le nuage des individus (ce qu’on représente classiquement).\n\n\n\n\n\n\n\n\n\n\nLe nuage des variables \\(C^p\\)\nOn peut considérer qu’une variable \\(j\\) est un vecteur \\(\\class{orange}{\\boldsymbol{x}^{j}}\\) dans un espace de dimension \\(n\\) et on peut écrire\n\\[{\\boldsymbol{X}}=\\begin{pmatrix}\n\\class{orange}{\\boldsymbol{x}^{1}} & \\ldots & \\class{orange}{\\boldsymbol{x}^{p}}\n\\end{pmatrix},\\]\nL’ensemble des \\(p\\) vecteurs forme le nuage des variables.\n\n\n\n\n\n\n\n\n\n\n\nBien sûr les deux nuages sont intimement liés"
-  },
-  {
     "objectID": "01_inertie.html#linertie-par-rapport-à-un-point",
     "href": "01_inertie.html#linertie-par-rapport-à-un-point",
-    "title": "Organiser les données et mesurer la quantité d’information",
+    "title": "Mesurer la quantité d’information",
     "section": "L’inertie par rapport à un point",
     "text": "L’inertie par rapport à un point\n\n\n\nDefinition 1\n\n\nL’inertie par rapport à un point \\(a \\in {\\mathbb{R}}^{p}\\) est définie par\n\\[I_{\\boldsymbol{a}} = \\frac{1}{n} \\sum_{i=1}^n \\lVert\\boldsymbol{x}_{i} - \\boldsymbol{a}\\rVert^2 = \\frac{1}{n} \\sum_{i=1}^n\\sum_{k=1}^p  (x_i^k -a^k)^2\\]\n\n\n\n\nIntuitivementRéponseThéorème de Huyghens\n\n\nL’inertie par rapport à un point quantifie l’information perdue lorsque le jeu de données est résumé par ce point.\nQuel est selon vous le point \\(\\boldsymbol{a}\\) qui minimise l’inertie ?\n\\[argmin_{\\boldsymbol{a}} I_{\\boldsymbol{a}} = ??\\]\n\n\nBINGO !!!\nIl s’agit du point \\(\\boldsymbol{g}=\\boldsymbol{x_{\\bullet}}=({x}_{\\bullet}^1, \\ldots, {x}_{\\bullet}^p )^\\top,\\) avec \\({x}_{\\bullet}^k=\\frac{1}{n} \\sum_{i=1}^n x_{i}^k\\), la valeur moyenne de la variable \\(k\\) sur l’ensemble des individus.\nPuisque nous avons supposé que nos variables étaient centrées, \\(G=O\\) l’origine sur repère.\n\n\n\\[\\forall \\boldsymbol{a}\\in\\mathbb{R}^p,\\; I_\\boldsymbol{a}=I_\\boldsymbol{g} + \\lVert\\boldsymbol{a}- \\boldsymbol{g}\\rVert^2.\\]"
   },
   {
     "objectID": "01_inertie.html#linertie-par-rapport-à-un-point-1",
     "href": "01_inertie.html#linertie-par-rapport-à-un-point-1",
-    "title": "Organiser les données et mesurer la quantité d’information",
+    "title": "Mesurer la quantité d’information",
     "section": "L’inertie par rapport à un point",
     "text": "L’inertie par rapport à un point\n\n\n\nDefinition 2\n\n\nL’inertie du nuage de points représentés par \\({\\boldsymbol{X}}\\) est l’inertie par rapport à son baycentre \\[I = \\frac{1}{n} \\sum_{i=1}^n \\lVert\\boldsymbol{x}_{i} - {g}\\rVert^2 = \\frac{1}{n} \\sum_{i=1}^n\\sum_{k=1}^p  (x_i^k -\\bar{x}^k)^2\\]\n\n\n\nConséquence\nLe meilleur résumé du nuage de points à un unique point est le barycentre du nuage de points, c’est à dire la moyenne sur chacune des dimensions.\nLa quantité d’information perdue lors de ce résumé est \\(I\\)\nRemarque\n\\[ I = \\frac{1}{n}  \\sum_{i=1}^n     \\left( \\sum_{k=1}^p \\left( x_{i}^k - x_{\\bullet}^k  \\right)^2 \\right)  = \\sum_{k=1}^p  \\left( \\frac{1}{n}  \\sum_{i=1}^n  \\left( x_{i}^k - x_{\\bullet}^k  \\right)^2 \\right)  = \\sum_{k=1}^p  Var(\\boldsymbol{x}^{k})\\] Si les variables sont réduites, i.e de norme 1\n\\[I = p\\]"
   },
   {
     "objectID": "01_inertie.html#linertie-par-rapport-à-un-axe",
     "href": "01_inertie.html#linertie-par-rapport-à-un-axe",
-    "title": "Organiser les données et mesurer la quantité d’information",
+    "title": "Mesurer la quantité d’information",
     "section": "L’inertie par rapport à un axe",
     "text": "L’inertie par rapport à un axe\n\n\n\nDefinition 2\n\n\nL’inertie par rapport à l’axe \\(\\Delta\\) est définie par\n\\[I_{\\boldsymbol{\\Delta}} = \\frac{1}{n} \\sum_{i=1}^n \\lVert\\boldsymbol{x}_{i} - \\boldsymbol{p_i}^{\\Delta}\\rVert^2 = \\frac{1}{n} \\sum_{i=1}^n\\sum_{k=1}^p  (x_i^k -p^{k,\\Delta}_i)^2, \\quad \\mbox{où }\\  \\boldsymbol{p_i}^{\\Delta} \\mbox{projeté orthogonal de } \\boldsymbol{x_i} \\mbox{ sur }\\Delta.\\]\n\n\n\n{Rajouter un exemple avec des projections sur les axes de départ}[.rouge]\n\nIntuitivementPour perdre le moins d’information possibleRappel projection orthogonale\n\n\n\n\nL’inertie par rapport à l’axe \\(\\Delta\\) quantifie l’information perdue lorsque l’on résume le nuage de points à son projeté sur \\(\\Delta\\).\n\n\n\n\n\n\n\n\n\n\n\n\n\nIdentifier \\(\\Delta\\) tel que \\(I_{\\Delta}\\) soit minimale\nCe qui revient à l’axe \\(\\Delta\\) qui assure que la projection sur \\(\\Delta\\) déforme le moins possible le nuage de points.\nDans le cadre de l’ACP, on veut construire une ensemble d’axes orthogonaux (une nouvelle base de \\({\\mathbb{R}}^p\\)), de façon à ce que\n\nla projection sur le premier axe, soit le meilleur résumé du nuage de points en une dimension,\nle deuxième axe est orthogonal au premier et représente “le deuxième meileur choix” …. dans un sens que l’on va définir\nle troisième …\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nProduit scalaire : Soient deux élements \\(\\boldsymbol{x}\\) et \\(\\boldsymbol{y}\\) de \\(\\mathbb{R}^p\\), le produit scalaire est noté \\(&lt;\\boldsymbol{x},\\boldsymbol{y}&gt;\\) et \\(&lt;\\boldsymbol{x},\\boldsymbol{y}&gt;=\\sum_{i=1}^p x_i y_i = \\boldsymbol{x}^\\top \\boldsymbol{y}.\\)\nOrthogonalité Soient deux élements \\(\\boldsymbol{x}\\) et \\(\\boldsymbol{y}\\) de \\(\\mathbb{R}^p\\), on dit que \\(\\boldsymbol{x}\\) et \\(\\boldsymbol{y}\\) sont orthogonaux (noté \\(\\boldsymbol{x}\\perp \\boldsymbol{y}\\)) si \\(&lt;\\boldsymbol{x},\\boldsymbol{y}&gt; = \\boldsymbol{x}^\\top  \\boldsymbol{y}=0\\).\nProjection orthogonale On note \\(\\boldsymbol{a}_u\\) le projeté de \\(\\boldsymbol{a}\\) sur la droite \\(\\Delta\\) définit par son vecteur directeur unitaire \\(\\boldsymbol{u}\\) et passant par l’origine \\[\\boldsymbol{a}_u = &lt; \\boldsymbol{a}, \\boldsymbol{u} &gt; \\boldsymbol{u} = (\\boldsymbol{a}^\\top \\boldsymbol{u})\\,  \\boldsymbol{u}.\\] Le vecteur \\(\\boldsymbol{a_u}\\) est orthogonal à \\(\\boldsymbol{a}-\\boldsymbol{a_u}\\): \\[&lt; \\boldsymbol{a_u}, \\boldsymbol{a}-\\boldsymbol{a_u}&gt; = \\left ((\\boldsymbol{a}^\\top \\boldsymbol{u}) \\boldsymbol{u}\\right)^\\top \\left ( \\boldsymbol{a} -  (\\boldsymbol{a}^\\top \\boldsymbol{u})\\,  \\boldsymbol{u} \\right)=(\\boldsymbol{a}^\\top \\boldsymbol{u}) (\\boldsymbol{u}^\\top \\boldsymbol{a}) - (\\boldsymbol{a}^\\top \\boldsymbol{u})^2 \\boldsymbol{u}^\\top \\boldsymbol{u} =0  \\]"
   },
   {
     "objectID": "01_inertie.html#linertie-par-rapport-à-un-sous-espace-affine",
     "href": "01_inertie.html#linertie-par-rapport-à-un-sous-espace-affine",
-    "title": "Organiser les données et mesurer la quantité d’information",
+    "title": "Mesurer la quantité d’information",
     "section": "L’inertie par rapport à un sous espace affine",
     "text": "L’inertie par rapport à un sous espace affine\n\nEspace orthogonal Soit \\(E\\) un sous-espace vectoriel de \\(\\mathbb{R}^p\\). On definit \\(E^\\perp=\\{\\boldsymbol{x}\\in \\mathbb{R}^p:\\; \\forall \\boldsymbol{y}\\in E,\\; \\boldsymbol{x}\\perp \\boldsymbol{y}\\}\\).\n\n\nExempleSolution\n\n\nDans \\({\\mathbb{R}}^2\\), on considère le sous espace vectoriel \\(E\\), tel que \\[ E =\\left \\lbrace  \\boldsymbol{x}=\\begin{pmatrix} x_1 &  x_2 \\end{pmatrix}^\\top \\in {\\mathbb{R}}^2 : x_1 = x_2  \\right \\rbrace \\] \\(E\\) est la droite d’équation \\(y=x\\).\nQui est \\(E^\\perp\\) ?\n\n\nSoit \\(\\boldsymbol{y}\\in E^\\perp,\\) alors\n\\[\\begin{align}\n0 & = \\boldsymbol{x}^\\top \\boldsymbol{y}\\\\\n  & = \\begin{pmatrix} x_1 &  x_2 \\end{pmatrix} \\begin{pmatrix} y_1 \\\\  y_2 \\end{pmatrix}\\\\\n  & = x_1 y_1 + x_2 y_2 \\\\\n  & = x_1 (y_1 + y_2) \\quad (\\boldsymbol{x}\\in E \\Rightarrow x_1 =x_2) \\\\\n\\end{align}\\]\n\\[E^\\perp =  \\left \\lbrace  \\boldsymbol{y}=\\begin{pmatrix} y_1 &  y_2 \\end{pmatrix}^\\top \\in {\\mathbb{R}}^2 : y_1 + y_2 = 0 \\right \\rbrace  \\]\n\n\n\n\n\n\n\nDefinition 3\n\n\nL’inertie par rapport à un sous espace vectoriel \\(E\\) est définie par \\[I_{E} = \\frac{1}{n} \\sum_{i=1}^n \\lVert\\boldsymbol{x}_{i} - \\boldsymbol{p_i}^{E}\\rVert^2 = \\frac{1}{n} \\sum_{i=1}^n\\sum_{k=1}^p  (x_i^k -p^{k,E}_i)^2, \\quad \\mbox{où }\\  \\boldsymbol{p_i}^{E} = argmin_{\\boldsymbol{y}\\in E} d(\\boldsymbol{y}, \\boldsymbol{x}_{i}), \\mbox{i.e. projeté orthogonal de } \\boldsymbol{x_i} \\mbox{ sur }E.\\]\n\n\n\nC’est l’inertie perdue lorsque l’on résume le nuage de points à sa projection sur le sous espace \\(E\\)."
   },
   {
     "objectID": "01_inertie.html#décomposition-de-linertie",
     "href": "01_inertie.html#décomposition-de-linertie",
-    "title": "Organiser les données et mesurer la quantité d’information",
+    "title": "Mesurer la quantité d’information",
     "section": "Décomposition de l’inertie",
     "text": "Décomposition de l’inertie\n\nSoit \\(E\\) un sous espace vectoriel de \\({\\mathbb{R}}^p\\), alors \\[I = I_E + I_{E^\\perp}.\\]\n\nPreuve\n\n\nUn dessin vaut mieux qu’un long discours et Pythagore est ton ami !\n\\[d(\\class{alea}{\\boldsymbol{x}_{i}}, O)^2 = d(\\boldsymbol{x}_{i}, \\class{bleu}{\\boldsymbol{x}_{i}^E})^2  +  d(\\class{alea}{\\boldsymbol{x}_{i}}, \\class{rouge}{\\boldsymbol{x}_{i}^{E^\\perp}})^2.\\]\n\\[\\begin{align}\nI & = \\frac{1}{n} \\sum_{i=1}^n d(\\class{alea}{\\boldsymbol{x}_{i}}, O)^2 \\\\\n   & = \\frac{1}{n} \\sum_{i=1}^n d(\\class{alea}{\\boldsymbol{x}_{i}}, \\class{bleu}{\\boldsymbol{x}_{i}^E})^2   +  \\frac{1}{n} \\sum_{i=1}^n d(\\class{alea}{\\boldsymbol{x}_{i}}, \\class{rouge}{\\boldsymbol{x}_{i}^{E^\\perp}})^2 \\\\\n   & = \\class{bleu}{I_E} + \\class{rouge}{I_{E^\\perp}}\n\\end{align}\\]"
   },
   {
     "objectID": "01_inertie.html#principe-de-la-décomposition-à-venir",
     "href": "01_inertie.html#principe-de-la-décomposition-à-venir",
-    "title": "Organiser les données et mesurer la quantité d’information",
+    "title": "Mesurer la quantité d’information",
     "section": "Principe de la décomposition à venir",
     "text": "Principe de la décomposition à venir\n\nIdentifier le vecteur \\(\\boldsymbol{u_1}\\) de \\({\\mathbb{R}}^p\\), tel que \\(I_{E_1}\\) soit minimale avec \\(E_1=\\left \\lbrace \\lambda \\boldsymbol{u_1}, \\lambda \\in {\\mathbb{R}}\\right\\rbrace,\\)\nDans \\(E_1^\\perp\\), identifier le vecteur \\(\\boldsymbol{u_2}\\) de \\({\\mathbb{R}}^p\\), tel que \\(I_{E_2}\\) soit minimale avec \\(E_2=\\left \\lbrace \\lambda \\boldsymbol{u_2}, \\lambda \\in {\\mathbb{R}}\\right\\rbrace,\\)\nDans \\(\\left (  E_1 \\oplus E_2 \\right)^\\perp\\), identifier le vecteur \\(\\boldsymbol{u_3}\\) de \\({\\mathbb{R}}^p\\), tel que ….\n\n…\nFinalement on aura la décomposition\n\\[I= I_{E_1} + I_{E_2} + \\ldots + I_{E_p}, \\quad \\mbox{avec } I_{E_1} \\leq I_{E_2} \\leq \\ldots \\leq I_{E_p}\\]"
   },
@@ -1103,7 +1061,7 @@
     "href": "references_maf.html",
     "title": "References",
     "section": "",
-    "text": "liste &lt;- \n  readLines('MAF.bib') |&gt; \n  as_tibble() |&gt; \n  filter(stringr::str_detect(value, pattern = '@|keywords')) |&gt; \n  rowid_to_column() %&gt;% \n  mutate(int_part = floor((rowid-1)/2), parity = rowid %% 2) %&gt;% \n  select(-rowid) %&gt;% \n  pivot_wider( values_from = value, names_from = parity, names_prefix = \"key\") |&gt; \n  mutate(key1 = stringr::str_remove(key1, pattern = '@[:alnum:]+\\\\{')) |&gt; \n  mutate(key1 = stringr::str_remove(key1, pattern = ',')) \n  \nmaf_liste &lt;- liste %&gt;% \n  filter(str_detect(key0, 'MAF')) %&gt;% \n  select(key1) %&gt;% \n  pull()\n\nlinear_liste &lt;- liste %&gt;% \n  filter(!str_detect(key0, 'MAF')) %&gt;% \n  select(key1) %&gt;% \n  pull()\n  \nNoCite(bib = myBib, maf_liste)"
+    "text": "liste &lt;- \n  readLines('MAF.bib') |&gt; \n  as_tibble() |&gt; \n  filter(stringr::str_detect(value, pattern = '@|keywords')) |&gt; \n  rowid_to_column() %&gt;% \n  mutate(int_part = floor((rowid-1)/2), parity = rowid %% 2) %&gt;% \n  select(-rowid) %&gt;% \n  pivot_wider( values_from = value, names_from = parity, names_prefix = \"key\") |&gt; \n  mutate(key1 = stringr::str_remove(key1, pattern = '@[:alnum:]+\\\\{')) |&gt; \n  mutate(key1 = stringr::str_remove(key1, pattern = ',')) \n  \nMAF_liste &lt;- liste %&gt;% \n  filter(str_detect(key0, 'MAF')) %&gt;% \n  select(key1) %&gt;% \n  pull()\n\nNoCite(bib = myBib, MAF_liste)"
   },
   {
     "objectID": "references_maf.html#pour-approfondir-ou-compléter-le-cours",
