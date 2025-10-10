@@ -139,7 +139,12 @@ fig
 
 ### Et si on essayait de faire mieux ?
 
+
+Comment ?
+
+
 En 
+
 * Trouvant une (ou plusieurs) représentations en 2 dimensions la plus fidèle possible,
 * Faisant apparaître les liens plus complexes entre variables ($X_3 = X_1 + X_2$)
 * étant capable d'identifier les individus qui se ressemblent globalement
@@ -161,7 +166,9 @@ Une ligne regroupe toutes les caractéristiques d'un individu.
 ### Comment représenter les différentes variables 
 
 * Si une caractéristique est quantitative, alors on note dans une colonne la valeur mesurée sur l'individu.
-* Si une caractéristique est qualitative, alors on utilise classiquement la représentation *one hot encoding*, qui consiste à représenter cette caractéristique qualitative sur autant de colonnes que de modalités et attribuer un $1$ dans la colonne correspondant à la modalité de l'individu et 0 aux autres.
+* Si une caractéristique $j$ est qualitative, 
+  - soit on note sa modalité dans la colonne $j$, 
+  - soit  on utilise la représentation *one hot encoding*, qui consiste à représenter cette caractéristique qualitative sur autant de colonnes que de modalités et attribuer un $1$ dans la colonne correspondant à la modalité de l'individu et 0 aux autres.
 
 ### Rappel des données sur les manchots
 
@@ -171,7 +178,7 @@ par le Dr. Kristen Gorman et the Palmer Station, Antarctica LTER.
 On a mesuré les caractéristiques morphologiques de divers manchots :
 
 ::::: columns
-::: {.column width="48%"}
+::: {.column width="58%"}
 Les 3 premières lignes (parmi 333 )
 
 ```{r penguins_13, echo = FALSE, eval = TRUE}
@@ -180,7 +187,7 @@ Les 3 premières lignes (parmi 333 )
 ```
 :::
 
-::: {.column width="48%"}
+::: {.column width="40%"}
 
 - species : 3 espèces possibles (Adelie, Chinstrap, Gentoo)
 
@@ -251,7 +258,7 @@ penguins |>  drop_na()   |> GGally::ggpairs( columns = c(1:6))
 
 ## Voir c'est comprendre : comment représenter l'information contenue dans ce tableau ?
 
-### Idée 1 : dangereuse
+### Idée 1 : on a dit que c'était dangereux
 
 ```{r gen_data2,eval = TRUE, out.width = "100%"}
 scene = list(camera = list(eye = list(x = -2, y = 0, z = 0)),
@@ -266,18 +273,19 @@ fig
 
 ### Objectifs
 
--   Quantifier la quantité d'information disponible ou perdue par une représentation :
-(01_inertie.html)[Cours sur l'inertie]
+1.   Représenter sans perdre trop d'information,
+
+Pour cela, on veut pouvoir
+
+  -   Quantifier la quantité d'information disponible ou perdue par une représentation 
 
 
-Pour ensuite
-
--   Représenter sans perdre trop d'information,
--   Comprendre quelles sont les informations redondantes (variables
+2.   Comprendre quelles sont les informations redondantes (variables
     liées),
--   Idéalement des individus éloignés dans le nuage initial, restent
+3.   Idéalement des individus éloignés dans le nuage initial, restent
     éloignés dans la représentation
 
+# Formaliser le problème 
 
 ## Deux points de vue complémentaires
 
@@ -427,7 +435,7 @@ ggplot() +
   
   # Ajouter des labels mathématiques pour les distances
   # geom_text(aes(x = 2.5, y = 0.2), label = expression(x[ik] - bar(x)[k]), size = 5) +
-  geom_text(aes(x = 2.5, y = 0.2), label = as.character(expression(x[i]^k)), size = 5, col = "#F7A913") +
+  geom_text(aes(x = 2.5, y = 0.2), label = as.character(expression(x[i]^k)), parse = TRUE , size = 5, col = "#F7A913") +
   geom_segment(aes(x = 0, y = 0, xend = 1.5, yend = 1), col = "#F7A913", 
                arrow = arrow(length = unit(0.5, "cm")), size = 0.7)  + 
   # seconde variable
@@ -435,13 +443,13 @@ ggplot() +
                arrow = arrow(length = unit(0.5, "cm")), size = 0.7)  +
   
   # Ajouter des labels mathématiques pour l'es distances l'espace
-  geom_text(aes(x = 0.3, y = 2), label = as.character(expression(R^n)),col="#398d55", size = 5) +
+  geom_text(aes(x = 0.3, y = 2), label = as.character(expression(R^n)), parse = TRUE, ,col="#398d55", size = 5) +
   
   # Ajouter l'origine O = G
   geom_text(data = origins, aes(x = x, y = y, label = label), vjust = -0.8, size = 5) +
   
   # Ajouter variable k 
-  geom_text(data = vark, aes(x = x, y = y), label = as.character(expression(ind[i])), col="#398d55", vjust = -0.8, size = 5) +
+  geom_text(data = vark, aes(x = x, y = y), label = as.character(expression(ind[i])), parse = TRUE,  col="#398d55", vjust = -0.8, size = 5) +
   
   # Ajuster le thème
   theme_minimal()  +
@@ -472,7 +480,7 @@ ggplot() +
 
 ### ACP
 
-Comprendre les relations entre des variables toutes quantitatives. 
+Comprendre les relations entre des variables toute quantitatives. 
 
 [Example]{.rouge}
 
@@ -495,29 +503,29 @@ x_{n,1} &  \ldots & x_{n,p} \\
 \end{pmatrix}.
 $$
 
-### AFD 
+<!-- ### AFD  -->
 
 
-Comprendre les combinaisons de variables quantitatives qui expliquent les groupes, ou comment visualiser au mieux les différences entre les groupes. 
+<!-- Comprendre les combinaisons de variables quantitatives qui expliquent les groupes, ou comment visualiser au mieux les différences entre les groupes.  -->
 
-[Example]{.rouge}
-Comment visualiser au mieux les différences morpohologiques entre les espèces ?
+<!-- [Example]{.rouge} -->
+<!-- Comment visualiser au mieux les différences morpohologiques entre les espèces ? -->
 
-```{r x_afd}
-#| echo: true
-#| output-location: column
-#| results: hold
-#| message: false
-X_afd <- penguins %>% select(-island, -sex, -year) 
-head(X_afd)
-```
+<!-- ```{r x_afd} -->
+<!-- #| echo: true -->
+<!-- #| output-location: column -->
+<!-- #| results: hold -->
+<!-- #| message: false -->
+<!-- X_afd <- penguins %>% select(-island, -sex, -year)  -->
+<!-- head(X_afd) -->
+<!-- ``` -->
 
-$$ \Xbf = \begin{pmatrix}
-\class{rouge}{y_1} & x_{1,1} &  \ldots & x_{1,p} \\
-\vdots & &\vdots \\
-\class{rouge}{y_n} & x_{n,1} &  \ldots & x_{n,p} \\
-\end{pmatrix}, \quad x_{ij}\in\R,\  g_i \in \mathcal{G} =\left \lbrace g_1, \ldots, g_G\right \rbrace.
-$$
+<!-- $$ \Xbf = \begin{pmatrix} -->
+<!-- \class{rouge}{y_1} & x_{1,1} &  \ldots & x_{1,p} \\ -->
+<!-- \vdots & &\vdots \\ -->
+<!-- \class{rouge}{y_n} & x_{n,1} &  \ldots & x_{n,p} \\ -->
+<!-- \end{pmatrix}, \quad x_{ij}\in\R,\  g_i \in \mathcal{G} =\left \lbrace g_1, \ldots, g_G\right \rbrace. -->
+<!-- $$ -->
 
 
 
@@ -553,12 +561,9 @@ $$
 
 ## Organisation du cours
 
-* Ces méthodes ont beaucoup de points communs 
+* Ces deux méthodes ont beaucoup de points communs et de nombreuses variantes intéressantes 
 * Comprendre finement l'ACP permet de bien comprendre toutes les extensions suivantes
 * La mise en oeuvre requiert un peu de pratique car il faut faire des choix avisés.
-
-
-## Pour finir 
 
 
 ## Objectifs de ce cours
@@ -571,22 +576,23 @@ Découvrir des méthodes permettant de
 
 ### Les ingrédients
 
-* un peu de géométrie et d'algèbre linéaire,
+
 * une mesure de  la quantité d'information présente dans un jeu de données,
+* un peu de géométrie et d'algèbre linéaire,
 * un bon esprit pratique pour bien poser le problème au départ
 * des données bien rangées dans un tableau $\Xbf$ où
   * une ligne $i$ correspond à un individu 
   * une colonne $j$ à une variable
   $X_{ij}$ la valeur de la variable $j$ mesurée sur l'individu $i$.
   
-### Plan du cours
+## Plan du cours
 
 * Quantifier l'information
-* Analyse en composantes principales
+* Analyse en composantes principales ACP
   * Un exemple d'ACP    
   * Comprendre les mécanismes derrière l'ACP (notion d'inertie, distance entre individus, changement de repères, la correlation comme un cosinus)
-* Analyse Factorielle multiple AFM : une extension de l'ACP
-* Analyse Factorielle Discriminante : AFD
-* Analyse Factorielle des Correspondances : AFC
-* Analyse des Correspondances multiples : ACM
+* Analyse Factorielle multiple AFM : une extension de l'ACP pour tenir de groupes de variables
+* Analyse Factorielle Discriminante AFD : une extension de l'ACP pour tenir compte de groupes d'individus
+* Analyse Factorielle des Correspondances AFC 
+* Analyse des Correspondances multiples ACM : lorsqu'on a plus que deux variables qualitatives
 
