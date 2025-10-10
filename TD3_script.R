@@ -90,6 +90,8 @@ credit <- read.csv("https://husson.github.io/img/credit.csv", sep = ";")
 
 summary(credit)
 
+
+
 # Conversion de "Age" en variable qualitative
 credit <- credit |> 
   mutate(across(where(is.character), as.factor)) |> 
@@ -111,38 +113,57 @@ credit |>
   labs(title = "Distribution des variables", x = NULL, y = "Fréquence")
 
 # Regroupement d'une modalité rare dans "Marche"
+# Regroupement également de MLLE avec MME
 credit <- credit |> 
   mutate(Marche = fct_recode(Marche, Moto = "Side-car"))|> 
   mutate(Intitule = fct_recode(Intitule, MME = "MLLE"))
 
+summary(credit)
 # Analyse des correspondances multiples (MCA)
 res.mca <- MCA(credit, quali.sup = 6:11, graph = FALSE)
 
+
 # Choix du nombre d'axes via un scree plot
-fviz_eig(res.mca, addlabels = TRUE,  choice = "eigenvalue") +
+fviz_eig(res.mca, addlabels = TRUE,  choice = "variance") +
   labs(title = "Variance expliquée par dimension")
+
+
+# Comprendre les axes
+## regarder les contributions
+res.mca$var$contrib
+round(res.mca$ind$contrib,2)
+
+
+# Visualisation des variables
+fviz_mca_var(res.mca, repel = TRUE, 
+             select.var = list(contrib = 10), 
+             axes = c(1,2)) +
+  labs(title = "Représentation des variables (MCA)")
+
+
 
 # Visualisation des individus
 fviz_mca_ind(res.mca, repel = TRUE, 
              label = "none", 
-             habillage = "Marche", 
-             addEllipses = TRUE, 
-             ellipse.type = "confidence") +
+             habillage = "Logement", 
+              addEllipses = TRUE, 
+              ellipse.type = "confidence"
+             ) +
   labs(title = "Représentation des individus (MCA)")
 
-# Visualisation des variables
-fviz_mca_var(res.mca, repel = TRUE) +
-  labs(title = "Représentation des variables (MCA)")
 
 # Visualisation des modalités qualitatives supplémentaires
-fviz_mca_var(res.mca, col.var = "cos2", gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"), 
+fviz_mca_var(res.mca, col.var = "cos2", 
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"), 
              select.var = list(cos2 = 0.2)) +
   labs(title = "Modalités les plus corrélées aux axes")
 
 # Plan factoriel 3/4 pour les individus
-fviz_mca_ind(res.mca, axes = c(3, 4), repel = TRUE, 
-             habillage = "Marche", addEllipses = TRUE) +
-  labs(title = "Plan factoriel 3/4 des individus")
+fviz_mca_ind(res.mca, axes = c(1, 2), repel = TRUE, 
+             habillage = "Marche", 
+             # addEllipses = TRUE
+             ) +
+  labs(title = "Plan factoriel 1/2 des individus")
 
 # Plan factoriel 3/4 pour les variables
 fviz_mca_var(res.mca, axes = c(3, 4), repel = TRUE) +
