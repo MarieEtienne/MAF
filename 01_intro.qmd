@@ -50,18 +50,17 @@ $$
 \newcommand\Xbf{{\boldsymbol{X}}}
 \newcommand\norm[1]{\lVert#1\rVert}
 $$ \definecolor{wongBlue}{RGB}{0, 114, 178}
-
 :::
-
 
 # Un exemple pour commencer
 
-## Où l'on commence par parler de manchots 
+## Où l'on commence par parler de manchots
 
-::: {.panel-tabset} 
-
+::: panel-tabset
 ### Data presentation
-From the `palmerpenguins` package, data courtesy of Dr. Kristen Gorman and the Palmer Station, Antarctica LTER.
+
+From the `palmerpenguins` package, data courtesy of Dr. Kristen Gorman
+and the Palmer Station, Antarctica LTER.
 
 ```{r penguins}
 #| echo: true
@@ -79,28 +78,26 @@ Artwork by @allison_horst
 
 ### Les questions que l'on se pose
 
-
 [Point de vue science des données]{.orange}
 
-* Comment représenter ces données en perdant le moins d'information possible? [Visualisation]{.bleu}
-* Toutes les variables sont-elles utiles ? [Compression]{.bleu}
-* Peut-on mettre en évidence des liens entre variables ? [Compression]{.bleu}
-* Peut-on mettre en évidence des liens entre individus ? [Compression]{.bleu}
-
+-   Comment représenter ces données en perdant le moins d'information
+    possible? [Visualisation]{.bleu}
+-   Toutes les variables sont-elles utiles ? [Compression]{.bleu}
+-   Peut-on mettre en évidence des liens entre variables ?
+    [Compression]{.bleu}
+-   Peut-on mettre en évidence des liens entre individus ?
+    [Compression]{.bleu}
 
 [Point de vue biologique]{.rouge}
 
-* Quelles sont les différences morpholgiques entre espèces, entre sexe et entre les îles ?
-* Existe-t-il des relations morphométriques ?
-
+-   Quelles sont les différences morpholgiques entre espèces, entre sexe
+    et entre les îles ?
+-   Existe-t-il des relations morphométriques ?
 :::
-
 
 ## Représenter c'est déjà comprendre
 
-
-::: {.panel-tabset} 
-
+::: panel-tabset
 ### Représenter les liens entre variables 2 à 2
 
 ```{r penguins_ggpairs}
@@ -117,12 +114,12 @@ penguins %>%
   scale_colour_manual(values = c("darkorange","purple","cyan4")) +
   scale_fill_manual(values = c("darkorange","purple","cyan4"))
 ```
+
 Projection sur un espace à deux dimensions
 
-### DANGER 
+### DANGER
 
 Le mensonge de la projection
-
 
 ```{r gen_data,eval = TRUE, out.width = "100%"}
 #| output-location: column
@@ -139,36 +136,40 @@ fig
 
 ### Et si on essayait de faire mieux ?
 
-
 Comment ?
 
+En
 
-En 
-
-* Trouvant une (ou plusieurs) représentations en 2 dimensions la plus fidèle possible,
-* Faisant apparaître les liens plus complexes entre variables ($X_3 = X_1 + X_2$)
-* étant capable d'identifier les individus qui se ressemblent globalement
-
+-   Trouvant une (ou plusieurs) représentations en 2 dimensions la plus
+    fidèle possible,
+-   Faisant apparaître les liens plus complexes entre variables
+    ($X_3 = X_1 + X_2$)
+-   étant capable d'identifier les individus qui se ressemblent
+    globalement
 :::
 
 # Les données
 
 ## Mise en forme des données
 
-Toutes les méthodes d'analyse factorielle organisent les données dans un tableau  composé de [n individus]{.alea} (lignes) et de [p
+Toutes les méthodes d'analyse factorielle organisent les données dans un
+tableau composé de [n individus]{.alea} (lignes) et de [p
 colonnes]{.orange} (colonnes).
 
 Une ligne regroupe toutes les caractéristiques d'un individu.
 
-
 :::::: panel-tabset
+### Comment représenter les différentes variables
 
-### Comment représenter les différentes variables 
-
-* Si une caractéristique est quantitative, alors on note dans une colonne la valeur mesurée sur l'individu.
-* Si une caractéristique $j$ est qualitative, 
-  - soit on note sa modalité dans la colonne $j$, 
-  - soit  on utilise la représentation *one hot encoding*, qui consiste à représenter cette caractéristique qualitative sur autant de colonnes que de modalités et attribuer un $1$ dans la colonne correspondant à la modalité de l'individu et 0 aux autres.
+-   Si une caractéristique est quantitative, alors on note dans une
+    colonne la valeur mesurée sur l'individu.
+-   Si une caractéristique $j$ est qualitative,
+    -   soit on note sa modalité dans la colonne $j$,
+    -   soit on utilise la représentation *one hot encoding*, qui
+        consiste à représenter cette caractéristique qualitative sur
+        autant de colonnes que de modalités et attribuer un $1$ dans la
+        colonne correspondant à la modalité de l'individu et 0 aux
+        autres.
 
 ### Rappel des données sur les manchots
 
@@ -188,36 +189,29 @@ Les 3 premières lignes (parmi 333 )
 :::
 
 ::: {.column width="40%"}
+-   species : 3 espèces possibles (Adelie, Chinstrap, Gentoo)
 
-- species : 3 espèces possibles (Adelie, Chinstrap, Gentoo)
+-   island : l'île sur laquelle le mancho a été observé (Biscoe, Dream,
+    Torgersen)
 
-- island : l'île sur laquelle le mancho a été observé (Biscoe, Dream, Torgersen)
+-   bill_length_mm : la longueur du bec,
 
-- bill_length_mm : la longueur du bec,
+-   bill_depth_mm : l'épaisseur du bec,
 
-- bill_depth_mm : l'épaisseur du bec,
+-   flipper_length_mm : la longueur de la nageoire,
 
-- flipper_length_mm : la longueur de la nageoire,
+-   body_mass_g : le poids du corps.
 
-- body_mass_g : le poids du corps.
+-   sex : le sexe du manchot (male,female)
 
-- sex : le sexe du manchot (male,female)
-
-- year : l'année de l'observation
- 
+-   year : l'année de l'observation
 :::
 :::::
-
 ::::::
-
-
-
 
 ## Mise en forme des données
 
-
-:::::: panel-tabset
-
+::: panel-tabset
 ### Notation
 
 Dans la suite on va noter ${\boldsymbol{X}}$ la matrice des données,
@@ -234,19 +228,14 @@ x_{\class{alea}{1}}^{\class{orange}{1}} &  \ldots &  \ldots &\ldots &  x_{\class
 x_{\class{alea}{n}}^{\class{orange}{1}} & & & & \ldots x_{\class{alea}{n}}^{\class{orange}{p}}\\
  \end{pmatrix}}$$
 
-
 ### Exemple
 
-Ecrire les 2 premières lignes de $\Xbf$ pour l'exemple des manchots 
-
-::::::
+Ecrire les 2 premières lignes de $\Xbf$ pour l'exemple des manchots
+:::
 
 [Comment visualiser au mieux ces données pour faire apparaître les liens
 entre variables et identifier des resemblances entre individus
 ?]{.rouge}
-
-
-
 
 ## Voir c'est comprendre : comment représenter l'information contenue dans ce tableau ?
 
@@ -273,25 +262,24 @@ fig
 
 ### Objectifs
 
-1.   Représenter sans perdre trop d'information,
+1.  Représenter sans perdre trop d'information,
 
 Pour cela, on veut pouvoir
 
-  -   Quantifier la quantité d'information disponible ou perdue par une représentation 
+-   Quantifier la quantité d'information disponible ou perdue par une
+    représentation
 
-
-2.   Comprendre quelles sont les informations redondantes (variables
+2.  Comprendre quelles sont les informations redondantes (variables
     liées),
-3.   Idéalement des individus éloignés dans le nuage initial, restent
+3.  Idéalement des individus éloignés dans le nuage initial, restent
     éloignés dans la représentation
 
-# Formaliser le problème 
+# Formaliser le problème
 
 ## Deux points de vue complémentaires
 
 ::::: columns
 ::: {.column width="48%"}
-
 ### Le nuage des individus $C^n$
 
 On peut considérer qu'un [individu]{.alea} $i$ est un vecteur
@@ -553,46 +541,49 @@ $$\Xbf = \begin{pmatrix}
 \class{bleu}{a_n} & \class{orange}{b_n} \\
 \end{pmatrix}, \quad a_{i}\in \mathcal{A}, \ \#\mathcal{A}= p,\quad   b_{i}\in \mathcal{B}, \ \#\mathcal{B}= q.  
 $$
-
-
 :::
-
-
 
 ## Organisation du cours
 
-* Ces deux méthodes ont beaucoup de points communs et de nombreuses variantes intéressantes 
-* Comprendre finement l'ACP permet de bien comprendre toutes les extensions suivantes
-* La mise en oeuvre requiert un peu de pratique car il faut faire des choix avisés.
-
+-   Ces deux méthodes ont beaucoup de points communs et de nombreuses
+    variantes intéressantes
+-   Comprendre finement l'ACP permet de bien comprendre toutes les
+    extensions suivantes
+-   La mise en oeuvre requiert un peu de pratique car il faut faire des
+    choix avisés.
 
 ## Objectifs de ce cours
 
-Découvrir des méthodes permettant de 
+Découvrir des méthodes permettant de
 
-* Trouver une (ou plusieurs) représentations en 2 dimensions la plus fidèle possible,
-* Faire apparaître les liens entre les différentes variables,
-* Identifier les individus qui se ressemblent.
+-   Trouver une (ou plusieurs) représentations en 2 dimensions la plus
+    fidèle possible,
+-   Faire apparaître les liens entre les différentes variables,
+-   Identifier les individus qui se ressemblent.
 
 ### Les ingrédients
 
+-   une mesure de la quantité d'information présente dans un jeu de
+    données,
+-   un peu de géométrie et d'algèbre linéaire,
+-   un bon esprit pratique pour bien poser le problème au départ
+-   des données bien rangées dans un tableau $\Xbf$ où
+    -   une ligne $i$ correspond à un individu
+    -   une colonne $j$ à une variable $X_{ij}$ la valeur de la variable
+        $j$ mesurée sur l'individu $i$.
 
-* une mesure de  la quantité d'information présente dans un jeu de données,
-* un peu de géométrie et d'algèbre linéaire,
-* un bon esprit pratique pour bien poser le problème au départ
-* des données bien rangées dans un tableau $\Xbf$ où
-  * une ligne $i$ correspond à un individu 
-  * une colonne $j$ à une variable
-  $X_{ij}$ la valeur de la variable $j$ mesurée sur l'individu $i$.
-  
 ## Plan du cours
 
-* Quantifier l'information
-* Analyse en composantes principales ACP
-  * Un exemple d'ACP    
-  * Comprendre les mécanismes derrière l'ACP (notion d'inertie, distance entre individus, changement de repères, la correlation comme un cosinus)
-* Analyse Factorielle multiple AFM : une extension de l'ACP pour tenir de groupes de variables
-* Analyse Factorielle Discriminante AFD : une extension de l'ACP pour tenir compte de groupes d'individus
-* Analyse Factorielle des Correspondances AFC 
-* Analyse des Correspondances multiples ACM : lorsqu'on a plus que deux variables qualitatives
-
+-   Quantifier l'information
+-   Analyse en composantes principales ACP
+    -   Un exemple d'ACP\
+    -   Comprendre les mécanismes derrière l'ACP (notion d'inertie,
+        distance entre individus, changement de repères, la correlation
+        comme un cosinus)
+-   Analyse Factorielle multiple AFM : une extension de l'ACP pour tenir
+    compte de groupes de variables
+-   Analyse Factorielle Discriminante AFD : une extension de l'ACP pour
+    tenir compte de groupes d'individus
+-   Analyse Factorielle des Correspondances AFC
+-   Analyse des Correspondances multiples ACM : lorsqu'on a plus que
+    deux variables qualitatives
