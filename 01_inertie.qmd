@@ -1,5 +1,5 @@
 ---
-title: "Mesurer la quantité d'information"
+title: "Une mesure de la quantité d'information"
 author:
   - name: Marie-Pierre Etienne
     affiliation: 
@@ -7,8 +7,8 @@ author:
     email: marie-pierre.etienne@ensai.fr
 date: "Last updated on `r format(Sys.time(), '%d %B, %Y')`"
 institute: https://marieetienne.github.io/MAF/
-execute: 
-  freeze: true
+execute:
+  freeze: auto
 editor: 
   markdown: 
     wrap: 72
@@ -74,20 +74,129 @@ penguins <- penguins %>% na.omit() %>%
 
 ```
 
+# Inertie par rapport à un point 
 
-# Une mesure de la quantité d'information contenue dans un nuage de points
-
-## L'inertie par rapport à un point
+## L'inertie d'un nuage de points
 
 ::: {.callout-note icon="false" appearance="minimal"}
-### Definition 1
+### Définition
 
-L'inertie *par rapport à un point*
-$a \in {\mathbb{R}}^{p}$ est définie par\
-$$I_{\boldsymbol{a}} = \frac{1}{n} \sum_{i=1}^n \lVert\boldsymbol{x}_{i} - \boldsymbol{a}\rVert^2 = \frac{1}{n} \sum_{i=1}^n\sum_{k=1}^p  (x_i^k -a^k)^2$$
+$$I = \frac{1}{n} \sum_{i=1}^n d(x_i, g)^2, $$ où $g$ désigne le point
+qui résume le mieux l'ensemble des données.
+:::
+
+[C'est la quantité d'information contenue dans le nuage de
+points]{.care}
+
+ou
+
+[C'est la quantité d'information perdue lorsque l'on résume l'ensemble
+du nuages de points par le point $g$]{.care}
+
+::: panel-tabset
+### Ingrédients
+
+Il faut donc une
+
+-   une notion de distance
+
+-   un point résumé
+
+### Variables quantitatives
+Quelle distance choisir et que représente $g$ ?
+
+:::: {.incremental}
+
+- On peut choisir la distance euclidienne $$d(x_i, g)^2 = \sum_{j=1}^p (x_{i}^j - g^j)^2.$$ 
+
+- $g= (\bar{x^1}, \ldots, \bar{x^p})$ est un choix naturel et la distance
+euclidienne
+
+
+
+::::
+
+### Variables qualitatives
+
+[D'autres choix sont possibles pour la distance, dont certaines adaptées aux variables qualitatives.
+Il faudra réfléchir à
+qui est $g$ dans le cas de données qualitatives]{.care}
+
+le choix de la distance est le des différences entre ACP, AFC, ACM etc ... A venir donc ...
+
+:::
+
+
+
+## L'inertie par rapport d'un nuage par rapport à un point quelconque
+
+::: {.callout-note icon="false" appearance="minimal"}
+### Definition
+
+L'inertie *par rapport à un point* $a \in {\mathbb{R}}^{p}$ est définie
+par\
+$$I_{\boldsymbol{a}} = \frac{1}{n} \sum_{i=1}^n d({x}_{i} - \boldsymbol{a})^2 = \frac{1}{n} \sum_{i=1}^n\sum_{k=1}^p  (x_i^k -a^k)^2$$
 :::
 
 ::: panel-tabset
+
+### Géométriquement 
+
+::::: {.column width="65%"}
+```{r inertie_nuage}
+
+individus <- data.frame(
+  x = c(1.5, -0.5, -1),   # Coordonnées des points individuels
+  y = c(0.9, 1, -0.5)
+) 
+
+individus_dessin <- individus |>  mutate(xg= mean(x), yg=mean(y), xO =0, yO=0)
+
+barycentre <-  individus |>  summarise_all(mean)
+
+
+# Schéma avec ggplot
+ggplot() +
+
+  # Ajouter des lignes en pointillés (projection du point i)
+  geom_point(data = individus, aes(x = x, y = y), size = 3, col= "#398d55") +
+  
+  # Ajouter les  distances au barycentre
+  geom_segment(data = individus_dessin, aes(x = x, y = y, xend = xg, yend = yg), linetype = "dashed",  col= "#398d55") +
+  
+    # Ajouter les distances à l'origine
+  geom_segment(data = individus_dessin, aes(x = x, y = y, xend = xO, yend = yO), linetype = "dotted",  col= "#fdc455") +
+  
+  # Ajouter des labels mathématiques pour l'es distances l'espace
+  geom_text(aes(x = 0.3, y = 2), label = as.character(expression(R^p)),parse = TRUE, col="#F7A913", size = 5) +
+  
+  # Ajouter le nom des individus
+  geom_text(data= individus_dessin, aes(x = x, y =y),  label = paste0("x[", 1:3, "]"), parse = TRUE, vjust = -0.8, size = 5, col = "#398d55") +
+  
+  # Ajouter l'origine  G
+  geom_text(data=barycentre, aes(x = x, y = y), label = "G", vjust = -0.8, size = 5, col = "#398d55") +
+  geom_point(data=barycentre, aes(x = x, y = y),   size = 2, col = "#398d55") +
+  
+  # Ajouter l'origine  O
+  geom_text(aes(x = 0, y = 0),  , label = "O", vjust = +1.5, size = 5, col = "#fdc455") +
+  geom_point(aes(x = 0, y = 0),  size = 2, col = "#fdc455") +
+  
+  # Ajouter l'origine  O
+  # Ajuster le thème
+  theme_minimal()  +
+  
+  coord_fixed() +  # Conserver un rapport d'aspect fixe pour les axes
+
+  # Ajuster le thème
+  theme (axis.title=element_blank(),
+         axis.text=element_blank(),
+         axis.ticks=element_blank(),
+         panel.grid = element_blank())
+
+```
+
+:::::
+
 ### Intuitivement
 
 L'inertie par rapport à un point quantifie l'information perdue lorsque
@@ -107,53 +216,140 @@ $\boldsymbol{g}=\boldsymbol{x_{\bullet}}=({x}_{\bullet}^1, \ldots, {x}_{\bullet}
 avec ${x}_{\bullet}^k=\frac{1}{n} \sum_{i=1}^n x_{i}^k$, la valeur
 moyenne de la variable $k$ sur l'ensemble des individus.
 
-Puisque nous avons supposé que nos variables étaient centrées, $G=O$
-l'origine sur repère.
+Si les variables étaient centrées, alors $g=O$ l'origine sur repère.
 
 ### Théorème de Huyghens
 
 $$\forall \boldsymbol{a}\in\mathbb{R}^p,\; I_\boldsymbol{a}=I_\boldsymbol{g} + \lVert\boldsymbol{a}- \boldsymbol{g}\rVert^2.$$
 
+(preuve dans les notes de cours)
 :::
 
-
-## L'inertie par rapport à un point
+## L'inertie du nuage de points
 
 ::: {.callout-note icon="false" appearance="minimal"}
-### Definition 2
-L'inertie *du nuage de points* représentés par $\Xbf$ est l'inertie par rapport à son baycentre
-$$I = \frac{1}{n} \sum_{i=1}^n \lVert\boldsymbol{x}_{i} - {g}\rVert^2 = \frac{1}{n} \sum_{i=1}^n\sum_{k=1}^p  (x_i^k -\bar{x}^k)^2$$
+### Rappel Definition
 
+L'inertie *du nuage de points* représentés par ${\boldsymbol{X}}$ est
+l'inertie par rapport à son baycentre
+$$I = \frac{1}{n} \sum_{i=1}^n \lVert\boldsymbol{x}_{i} - {g}\rVert^2 $$
 :::
 
 [Conséquence]{.rouge}
 
 Le meilleur résumé du nuage de points à un unique point est le
 barycentre du nuage de points, c'est à dire la moyenne sur chacune des
-dimensions. 
+dimensions.
 
 La quantité d'information perdue lors de ce résumé est $I$
 
-### Remarque {#sec-inertie}
+## Des extensions
+
+### Poids des individus
+
+Si l'on souhaite accorder plus de poids à certains individus (par
+exemple poids du pays en fonction de sa population), on peut considérer
+le nuage de points **pesants** $(x_i, \omega_i)$ où $\omega_i$ est le
+poids associé à l'individu $i$, avec $\sum_i \omega_i=1$
+
+Le barycentre est bien défini $g$ comme le barycentre des points
+pondérés et l'inertie par rapport à un point ${\boldsymbol{a}}$
+quelqueconque est donné par
+
+$$I = \frac{1}{n} \sum_{i=1}^n \omega_i \lVert\boldsymbol{x}_{i} - {a}\rVert^2 $$
+
+
+### Choix de la distance
+
+On a évoqué la distance Euclidienne mais toute autre distance est
+possible. Chaque choix de distance correspond à une méthode d'analyse
+factorielle différente.
+
+-   euclidienne : ACP
+-   euclidienne normalisée : ACP normée ou AFM selon le type de
+    normalisation
+-   distance du $\chi\^2$ : AFC ou ACM
+
+[Cours présenté sans les poids mais tout se généralise]{.question}
+
+## Lien entre inertie et variance
+
+Dans le cas de la distance euclidienne, on met en évidence un lien fort
+entre inertie et variance dans les données.
+
+En effet :
 
 $$ I = \frac{1}{n}  \sum_{i=1}^n     \left( \sum_{k=1}^p \left( x_{i}^k - x_{\bullet}^k  \right)^2 \right)  = \sum_{k=1}^p  \left( \frac{1}{n}  \sum_{i=1}^n  \left( x_{i}^k - x_{\bullet}^k  \right)^2 \right)  = \sum_{k=1}^p  Var(\boldsymbol{x}^{k})$$
+
 Si les variables sont réduites, i.e de norme 1
 
 $$I = p$$
 
-## L'inertie par rapport à un axe
+## Où l'on commence à introduire l'algèbre linéaire
+
+Formellement, il nous faut 
+
+* une matrice $X$ (dimension $n\times p$), 
+* une distance, i.e une métrique (dimension $p\times p$)
+* Optionnellement une matrice de poids $D$
 
 ::: {.callout-note icon="false" appearance="minimal"}
-### Definition 2
-
-L'inertie *par rapport à l'axe* $\Delta$ est définie par
-
-$$I_{\boldsymbol{\Delta}} = \frac{1}{n} \sum_{i=1}^n \lVert\boldsymbol{x}_{i} - \boldsymbol{p_i}^{\Delta}\rVert^2 = \frac{1}{n} \sum_{i=1}^n\sum_{k=1}^p  (x_i^k -p^{k,\Delta}_i)^2, \quad \mbox{où }\  \boldsymbol{p_i}^{\Delta} \mbox{projeté orthogonal de } \boldsymbol{x_i} \mbox{ sur }\Delta.$$
-
+### Définition
+Une métrique $M$ est une matrice de $\mathbb{R}^{p\times p}$ symétrique,
+définie et positive.
+Elle permet de définir une distance entre les observations
 
 :::
 
-{Rajouter un exemple avec des projections sur les axes de départ}[.rouge]
+::: panel-tabset
+
+### Distance 
+
+Si $x_1\in\R^p$ et $x_2\in\R^p$, la distance entre $x_1$ et $x_2$ pour la métrique $M$ est 
+$$d_M(x_1,x_2) = \|x_1 - x_2\|_M $$ 
+où $$\|x_1 - x_2\|_M^2 = (x_1 - x_2)^\top M (x_1 - x_2).$$
+
+
+[Que vaut $M$  dans ce cas ?]{. question}
+
+### Cas de la distance euclidienne
+
+$$M= I_p$$, en effet si $x_1\in\R^p$ et $x_2\in \R^p$,
+
+alors 
+$$x_1 -x_2 = \begin{pmatrix}x_1^1 -x_2^1 \\ \vdots \\ x_1^p -x_2^p\end{pmatrix},$$
+donc 
+
+$$(x_1 -x_2 )^\top (x_1 -x_2 )= \sum_{j=1}^p  (x_1^j -x_2^j)^2.$$
+
+### Et l'inertie alors ?
+
+On définir la matrice des données centrées $$\tilde{X} = X - \boldsymbol{1}_n g = \begin{pmatrix} x_1^1- g^1 & x_1^2- g^2 & \ldots & x_1^p- g^p \\
+\vdots &&& \vdots\\
+x_n^1- g^1 & x_n^2- g^2 & \ldots & x_n^p- g^p \end{pmatrix}$$   
+Alors $$I = \frac{1}{n}  tr(\tilde{X}^\top \tilde{X}).$$
+:::
+
+## Et dans toute la suite
+
+[On va supposer que les données sont centrées (quitte à effectuer le centrage)]{.question} et donc 
+$$X = \tilde{X}$$ 
+et $g= O.$
+
+
+
+# Inertie par rapport à un sous espace affine
+
+## L'inertie par rapport à un axe passant par $\boldsymbol{g}$
+
+
+::: {.callout-note icon="false" appearance="minimal"}
+### Definition
+
+L'inertie *par rapport à l'axe* $\Delta$ passant par $g$ est définie par
+
+$$I_{\boldsymbol{\Delta}} = \frac{1}{n} \sum_{i=1}^n d(\boldsymbol{x}_{i} - \boldsymbol{p_i}^{\Delta})^2  \quad \mbox{où }\  \boldsymbol{p_i}^{\Delta} \mbox{projeté orthogonal de } \boldsymbol{x_i} \mbox{ sur }\Delta.$$
+:::
 
 ::::::::: panel-tabset
 ### Intuitivement
@@ -161,7 +357,8 @@ $$I_{\boldsymbol{\Delta}} = \frac{1}{n} \sum_{i=1}^n \lVert\boldsymbol{x}_{i} - 
 ::::: columns
 ::: {.column width="30%"}
 L'inertie par rapport à l'axe $\Delta$ quantifie l'information perdue
-lorsque l'on résume le nuage de points à son projeté sur $\Delta$.
+lorsque l'on résume le nuage de points à son projeté sur $\Delta$. On
+perd [toute l'information "orthogonale"]{.rouge}
 :::
 
 ::: {.column width="65%"}
@@ -178,25 +375,32 @@ norme_u = sum(u^2)
 ind_proj <- (as.matrix(individus)%*% as.matrix(u, ncol= 1)/(norme_u)) %*% matrix(u, ncol = 2, nrow=1)
 ind_proj <- as.data.frame(ind_proj) %>% 
   rename(xend= V1, yend=V2)
-individus_dessin <- cbind(individus, ind_proj) %>% as.data.frame()
+individus_dessin <- cbind(individus, ind_proj) %>% as.data.frame() |> 
+  mutate(xg =0, yg=0)
 
 # Schéma avec ggplot
 ggplot() +
   
   # Tracer Delta
-   geom_segment(aes(x = -1, y = -2, xend = 1, yend = 2), arrow = arrow(length = unit(0.3, "cm")), size = 0.5) +  # Axe vertical
+   geom_segment(aes(x = -1, y = -2, xend = 1, yend = 2), arrow = arrow(length = unit(0.3, "cm")),  alpha = 0.2) +# Axe vertical
   
   # Ajouter des lignes en pointillés (projection du point i)
   geom_point(data = individus, aes(x = x, y = y), size = 3, col= "#398d55") +
   
   # Ajouter les points en pointillés (projection du point i)
-  geom_segment(data = individus_dessin, aes(x = x, y = y, xend = xend, yend = yend), linetype = "dashed") +
+  geom_segment(data = individus_dessin, aes(x = x, y = y, xend = xend, yend = yend), linetype = "dotted", , col= "#C94326", linewidth = 1) +
+  
+  # Ajouter les points en tiret pour l'inertie totale
+  geom_segment(data = individus_dessin, aes(x = x, y = y, xend = xg, yend = yg), linetype = "dotdash",  col= "#398d55", linewidth = 1) +
+
+    # Ajouter les points en tiret pour l'inertie totale
+  geom_segment(data = individus_dessin, aes(x = xend, y = yend, xend = xg, yend = yg), linetype = "dashed",  col= "#33658a", linewidth = 1) +
   
   # Ajouter des labels mathématiques pour l'es distances l'espace
-  geom_text(aes(x = 0.3, y = 2), label = as.character(expression(R^p)),col="#F7A913", size = 5) +
+  geom_text(aes(x = 0.3, y = 2), label = as.character(expression(R^p)), parse = TRUE, col="#F7A913", size = 5) +
   
   # Ajouter le nom de l'axe
-  geom_text(aes(x = -1.2, y = -2), label = as.character(expression(Delta)), vjust = -0.8, size = 5) +
+  geom_text(aes(x = -1.2, y = -2), label = as.character(expression(Delta)), parse = TRUE, vjust = -0.8, size = 5) +
 
   # Ajouter le nom des individus
   geom_text(data= individus_dessin, aes(x = xend, y =yend),  label = paste0("p[", 1:3, "]^Delta"), parse = TRUE, vjust = -0.8, size = 5) +
@@ -222,15 +426,114 @@ ggplot() +
 
 ```
 :::
-:::::
+::::: 
 
 
-### Pour perdre le moins d'information possible 
+### Inertie par rapport à l'axe des abscisses 
 
+
+
+
+::::: columns
+::: {.column width="30%"}
+Quelle est l'inertie par rapport à l'axe des abscisses ?
+:::
+
+::: {.column width="65%"}
+```{r inertie_delta_10}
+
+individus <- data.frame(
+  x = c(1.5, -0.5, -1, -0.5),   # Coordonnées des points individuels
+  y = c(0.9, 1, -0.5, 3)
+) |> 
+  mutate(x =x - mean(x), y = y-mean(y))
+
+u = c(1,0)
+u_df <- data.frame(x=u[1], y = u[2])
+norme_u = sum(u^2)
+
+ind_proj <- (as.matrix(individus)%*% as.matrix(u, ncol= 1)/(norme_u)) %*% matrix(u, ncol = 2)
+ind_proj <- as.data.frame(ind_proj) %>% 
+  rename(xend= V1, yend=V2)
+individus_dessin <- cbind(individus, ind_proj) %>% as.data.frame() |> 
+  mutate(xg =0, yg=0)
+
+# Schéma avec ggplot
+p1 <- ggplot() +
+  
+  # Ajouter les points
+  geom_point(data = individus, aes(x = x, y = y), size = 3, col= "#398d55") +
+  
+  # Ajouter des labels mathématiques pour l'es distances l'espace
+  geom_text(aes(x = 0.3, y = 2), label = as.character(expression(R^p)), parse = TRUE, col="#F7A913", size = 5) +
+
+  # Ajouter le nom des individus
+
+  geom_text(data= individus_dessin, aes(x = x, y =y),  label = paste0("x[", 1:4, "]"), parse = TRUE, vjust = -0.8, size = 5, col = "#398d55") +
+  
+  # Ajouter l'origine O = G
+  geom_point(aes(x = 0, y = 0),  size = 2) +
+  
+  #ajouter les axe en 0,0
+  geom_hline(yintercept = 0, linewidth = 0.5, alpha = 0.5) +
+  geom_vline(xintercept = 0, linewidth = 0.5, alpha = 0.5) +
+  theme_minimal() +
+  theme(
+    axis.title=element_blank(),
+    panel.grid = element_blank(),
+    axis.line = element_blank(),
+     axis.text=element_blank()
+  ) +
+    theme_minimal()  +
+  
+  coord_fixed() 
+
+
+print(p1)
+```
+
+:::
+
+::::: 
+### Réponse
+
+::::: columns
+
+::: {.column width="30%"}
+L'inertie par rapport à l'axe $\Delta$ quantifie l'information perdue
+lorsque l'on résume le nuage de points à son projeté sur $\Delta$. On
+perd [toute l'information "orthogonale"]{.rouge}
+:::
+
+::: {.column width="65%"}
+
+```{r inertie_delta_1_complet}
+
+  p1 +
+  # Ajouter les projetes
+  geom_point(data = individus_dessin, aes(x = xend, y = yend),  size = 2) +
+  
+  geom_text(data= individus_dessin, aes(x = xend, y =yend),  label = paste0("p[", 1:4, "]^Delta"), parse = TRUE, vjust = -0.8, size = 5) +
+  # Ajouter les points en pointillés (projection du point i)
+  geom_segment(data = individus_dessin, aes(x = x, y = y, xend = xend, yend = yend), linetype = "dotted", , col= "#C94326", linewidth = 1) +
+  
+  # Ajouter les points en tiret pour l'inertie totale
+  geom_segment(data = individus_dessin, aes(x = x, y = y, xend = xg, yend = yg), linetype = "dotdash",  col= "#398d55", linewidth = 1) +
+
+    # Ajouter les points en tiret pour l'inertie totale
+  geom_segment(data = individus_dessin, aes(x = xend, y = yend, xend = xg, yend = yg), linetype = "dashed",  col= "#C94326", linewidth = 1) 
+```
+:::
+::::: 
+
+::::::::: 
+
+
+## Projeter en perdant un minimum d'information
 
 [Identifier $\Delta$ tel que $I_{\Delta}$ soit minimale]{.rouge}
 
-Ce qui revient à l'axe $\Delta$ qui assure que la projection sur
+Ce qui revient à identifier l'axe $\Delta$ qui assure que la projection sur
 $\Delta$ déforme le moins possible le nuage de points.
 
 Dans le cadre de l'ACP, on veut construire une ensemble d'axes
@@ -242,10 +545,33 @@ orthogonaux (une nouvelle base de ${\mathbb{R}}^p$), de façon à ce que
     meileur choix" .... dans un sens que l'on va définir
 -   le troisième ...
 
+## Où l'algèbre linéaire revient
+
 ### Rappel projection orthogonale
 
 ::::: columns
-::: {.column width="55%"}
+::: {.column width="43%"}
+-   **Produit scalaire** : Soient deux élements $\boldsymbol{x}$ et
+    $\boldsymbol{y}$ de $\mathbb{R}^p$, le produit scalaire est noté
+    $<\boldsymbol{x},\boldsymbol{y}>$ et
+    $<\boldsymbol{x},\boldsymbol{y}>=\sum_{i=1}^p x_i y_i = \boldsymbol{x}^\top \boldsymbol{y}.$
+
+-   **Orthogonalité** Soient deux élements $\boldsymbol{x}$ et
+    $\boldsymbol{y}$ de $\mathbb{R}^p$, on dit que $\boldsymbol{x}$ et
+    $\boldsymbol{y}$ sont orthogonaux ( noté
+    $\boldsymbol{x}\perp \boldsymbol{y}$ ) si
+    $<\boldsymbol{x},\boldsymbol{y}> = {\boldsymbol{x}^\top  \boldsymbol{y}=0.}$
+
+-   **Projection orthogonale** On note $\boldsymbol{a}_u$ le projeté de
+    $\boldsymbol{a}$ sur la droite $\Delta$ définie par son vecteur
+    directeur unitaire $\boldsymbol{u}$ et passant par l'origine
+    $$\boldsymbol{a}_u = < \boldsymbol{a}, \boldsymbol{u} > \boldsymbol{u} = (\boldsymbol{a}^\top \boldsymbol{u})\,  \boldsymbol{u}.$$
+    Le vecteur $\boldsymbol{a_u}$ est orthogonal à
+    $\boldsymbol{a}-\boldsymbol{a_u}$:
+    $$< \boldsymbol{a_u}, \boldsymbol{a}-\boldsymbol{a_u}> = \left ((\boldsymbol{a}^\top \boldsymbol{u}) \boldsymbol{u}\right)^\top \left ( \boldsymbol{a} -  (\boldsymbol{a}^\top \boldsymbol{u})\,  \boldsymbol{u} \right)=(\boldsymbol{a}^\top \boldsymbol{u}) (\boldsymbol{u}^\top \boldsymbol{a}) - (\boldsymbol{a}^\top \boldsymbol{u})^2 \boldsymbol{u}^\top \boldsymbol{u} =0  $$
+:::
+
+::: {.column width="52%"}
 ```{r proj_prodscalaire}
 #! message: false
 #! warning: false
@@ -266,20 +592,20 @@ data <- data.frame(
 label_dta = as.character(c(expression(O), expression(a), expression(a[u])))
 
 
-scale_f = max(point_a/u) +1
+scale_f = max(abs(point_a/u) )
 # Plot avec ggplot2
-ggplot(data) +
-  geom_point(aes(x, y), color = "#33658A", size = 3) +
-  geom_text(aes(x, y), label = label_dta, hjust = -0.4, vjust = -0.8) +
-  geom_text(x=u[1]/2, y=u[2]/2, label = "u", hjust = 0.4, vjust = -0.8, color = "#C94326") +
+ggplot() +
+  geom_point(data = data, aes(x, y), color = c("#000000", "#398d55", "#000000"), size = 3) +
+  geom_text(data = data, aes(x, y), label = label_dta, parse = TRUE,  hjust = -0.4, vjust = -0.8) +
+  geom_text(aes(x=u[1]/2, y=u[2]/2), label = "u", hjust = 0.4, vjust = -0.8, size = 4, color = "#C94326") +
   geom_segment(aes(x = 0, y = 0, xend = scale_f*u[1], yend = scale_f*u[2]), 
                color = "gray80", linetype = "dashed") +
-  geom_segment(aes(x = 0, y = 0, xend = u[1], yend = u[2]), 
-               color = "#C94326", linetype = "dashed", arrow = arrow(length = unit(0.2, "cm"))) +
+  geom_segment(aes(x = 0, y = 0, xend = point_a[1], yend = point_a[2]), 
+               color = "#398d55", linetype = "dotdash", linewidth = 1) +
   geom_segment(aes(x = point_a[1], y = point_a[2], xend = a_proj[1], yend = a_proj[2]),
-               color = "#398d55") +  
-  geom_segment(aes(x = point_a[1], y = point_a[2], xend = 0, yend = 0),
-               color = "#398d55", linetype = "dotted") +
+               color = "#C94326", linetype = "dotted", linewidth = 1) +  
+  geom_segment( aes(x = a_proj[1], y = a_proj[2], xend = 0, yend = 0),
+               color = "#33658A", linetype = "dotted",linewidth = 1) +
   labs(title = "Projection orthogonale d'un point A sur un sous espace affine", 
        x = "X", y = "Y") +
   theme_minimal() +
@@ -292,30 +618,20 @@ ggplot(data) +
 ```
 :::
 
-::: {.column width="40%"}
--   **Produit scalaire** : Soient deux élements $\boldsymbol{x}$ et
-    $\boldsymbol{y}$ de $\mathbb{R}^p$, le produit scalaire est noté
-    $<\boldsymbol{x},\boldsymbol{y}>$ et
-    $<\boldsymbol{x},\boldsymbol{y}>=\sum_{i=1}^p x_i y_i = \boldsymbol{x}^\top \boldsymbol{y}.$
-
--   **Orthogonalité** Soient deux élements $\boldsymbol{x}$ et
-    $\boldsymbol{y}$ de $\mathbb{R}^p$, on dit que $\boldsymbol{x}$ et
-    $\boldsymbol{y}$ sont orthogonaux (noté
-    $\boldsymbol{x}\perp \boldsymbol{y}$) si
-    $<\boldsymbol{x},\boldsymbol{y}> = \boldsymbol{x}^\top  \boldsymbol{y}=0$.
-
--   **Projection orthogonale** On note $\boldsymbol{a}_u$ le projeté de
-    $\boldsymbol{a}$ sur la droite $\Delta$ définit par son vecteur
-    directeur unitaire $\boldsymbol{u}$ et passant par l'origine
-    $$\boldsymbol{a}_u = < \boldsymbol{a}, \boldsymbol{u} > \boldsymbol{u} = (\boldsymbol{a}^\top \boldsymbol{u})\,  \boldsymbol{u}.$$
-    Le vecteur $\boldsymbol{a_u}$ est orthogonal à
-    $\boldsymbol{a}-\boldsymbol{a_u}$:
-    $$< \boldsymbol{a_u}, \boldsymbol{a}-\boldsymbol{a_u}> = \left ((\boldsymbol{a}^\top \boldsymbol{u}) \boldsymbol{u}\right)^\top \left ( \boldsymbol{a} -  (\boldsymbol{a}^\top \boldsymbol{u})\,  \boldsymbol{u} \right)=(\boldsymbol{a}^\top \boldsymbol{u}) (\boldsymbol{u}^\top \boldsymbol{a}) - (\boldsymbol{a}^\top \boldsymbol{u})^2 \boldsymbol{u}^\top \boldsymbol{u} =0  $$
-:::
 :::::
-:::::::::
 
-## L'inertie par rapport à un sous espace affine
+
+### Remarque 
+
+Que signifie projeter sur l'axe des abscisses ? sur l'axe des ordonnées ?
+
+* Il y a un lien fort entre coordonnées dans un système d'axes et projection.
+
+* Si on sait projeter sur un autre système orthogonal, on a les coordonnées.
+
+
+## Où l'algèbre linéaire reste encore
+
 
 -   **Espace orthogonal** Soit $E$ un sous-espace vectoriel de
     $\mathbb{R}^p$. On definit
@@ -333,7 +649,9 @@ Qui est $E^\perp$ ?
 
 ### Solution
 
-Soit $\boldsymbol{y}\in E^\perp,$ alors
+::::: columns
+::: {.column width="43%"}
+Soit $\boldsymbol{x}\in E,$ et  $\boldsymbol{y}\in E^\perp,$ alors
 
 \begin{align}
 0 & = \boldsymbol{x}^\top \boldsymbol{y}\\
@@ -345,12 +663,43 @@ Soit $\boldsymbol{y}\in E^\perp,$ alors
 $$E^\perp =  \left \lbrace  \boldsymbol{y}=\begin{pmatrix} y_1 &  y_2 \end{pmatrix}^\top \in {\mathbb{R}}^2 : y_1 + y_2 = 0 \right \rbrace  $$
 :::
 
-. . .
+
+::: {.column width="57%"}
+
+```{r}
+
+#! message: false
+#! warning: false
+
+
+
+# Définition du point x
+point_a <- c(1, 1)
+
+orthogonal <- c(1, -1)
+
+ggplot() +
+  geom_segment(aes(x = -point_a[1], y = -point_a[2], xend = point_a[1], yend = point_a[2]), 
+               color = "#F7A913", linetype = "dashed") +
+  geom_text(aes(x = point_a[1], y = point_a[2], label = "E"), color = "#F7A913", sier = 5) +
+  geom_text(aes(x = orthogonal[1], y = orthogonal[2], label = "E^{'\u22a5'}"), parse = TRUE, color = "#99b6b2", size = 5) +
+  geom_segment(aes(x = -orthogonal[1], y = -orthogonal[2], xend = orthogonal[1], yend = orthogonal[2]), 
+               color = "#99b6b2", linetype = "dashed") +
+  coord_fixed() +labs(x="", y="") + xlim(c(-1.2, 1.2))+ ylim(c(-1.2, 1.2)) 
+```
+:::
+
+::::: 
+
+::: 
+
+
+## L'inertie par rapport à un sous espace affine
 
 ::: {.callout-note icon="false" appearance="minimal"}
-### Definition 3
+### Definition
 
-L'inertie *par rapport à un sous espace vectoriel* $E$ est définie par
+L'inertie *par rapport à un sous espace affine* $E$ passant par l'origine est définie par
 $$I_{E} = \frac{1}{n} \sum_{i=1}^n \lVert\boldsymbol{x}_{i} - \boldsymbol{p_i}^{E}\rVert^2 = \frac{1}{n} \sum_{i=1}^n\sum_{k=1}^p  (x_i^k -p^{k,E}_i)^2, \quad \mbox{où }\  \boldsymbol{p_i}^{E} = argmin_{\boldsymbol{y}\in E} d(\boldsymbol{y}, \boldsymbol{x}_{i}), \mbox{i.e. projeté orthogonal de } \boldsymbol{x_i} \mbox{ sur }E.$$
 :::
 
@@ -361,7 +710,7 @@ C'est [l'inertie perdue]{.rouge} lorsque l'on résume le nuage de points
 
 ::: lemme
 Soit $E$ un sous espace vectoriel de ${\mathbb{R}}^p$, alors
-$$I = I_E + I_{E^\perp}.$$
+$$\class{alea}{I} = \class{rouge}{I_E} + \class{bleu}{I_{E^\perp}}.$$
 :::
 
 [Preuve]{.rouge}
@@ -370,12 +719,17 @@ $$I = I_E + I_{E^\perp}.$$
 ::: {.column width="30%"}
 Un dessin vaut mieux qu'un long discours et Pythagore est ton ami !
 
-$$d(\class{alea}{\boldsymbol{x}_{i}}, O)^2 = d(\boldsymbol{x}_{i}, \class{bleu}{\boldsymbol{x}_{i}^E})^2  +  d(\class{alea}{\boldsymbol{x}_{i}}, \class{rouge}{\boldsymbol{x}_{i}^{E^\perp}})^2.$$
+\begin{align}
+ \class{alea}{d(\boldsymbol{x}_{i}, O)^2} & = \class{alea}{\lVert \boldsymbol{x}_{i} \rVert^2} =  {\lVert \boldsymbol{x}_{i}- \boldsymbol{x}_{i}^E + \boldsymbol{x}_{i}^E  \rVert^2} \\
+ & = \class{rouge}{\lVert \boldsymbol{x}_{i}- \boldsymbol{x}_{i}^E\rVert^2} + \lVert \boldsymbol{x}_{i}^E  \rVert^2 \\
+ & = \class{rouge}{\lVert \boldsymbol{x}_{i}- \boldsymbol{x}_{i}^E\rVert^2} +  \class{bleu}{\lVert \boldsymbol{x}_{i} - \boldsymbol{x}_{i}^{E^\perp}}  \rVert^2. \\
+ \end{align}
 
 \begin{align}
- I & = \frac{1}{n} \sum_{i=1}^n d(\class{alea}{\boldsymbol{x}_{i}}, O)^2 \\
-   & = \frac{1}{n} \sum_{i=1}^n d(\class{alea}{\boldsymbol{x}_{i}}, \class{bleu}{\boldsymbol{x}_{i}^E})^2   +  \frac{1}{n} \sum_{i=1}^n d(\class{alea}{\boldsymbol{x}_{i}}, \class{rouge}{\boldsymbol{x}_{i}^{E^\perp}})^2 \\
-   & = \class{bleu}{I_E} + \class{rouge}{I_{E^\perp}}
+ I & = \frac{1}{n} \sum_{i=1}^n  \class{alea}{\lVert \boldsymbol{x}_{i} \rVert^2} \\
+   & = \frac{1}{n} \sum_{i=1}^n \class{rouge}{\lVert \boldsymbol{x}_{i}- \boldsymbol{x}_{i}^E\rVert^2} +  \class{bleu}{\lVert \boldsymbol{x}_{i} - \boldsymbol{x}_{i}^{E^\perp}}  \rVert^2,\\
+ &  \frac{1}{n}\sum_{i=1}^n \class{rouge}{\lVert \boldsymbol{x}_{i}- \boldsymbol{x}_{i}^E\rVert^2}+  \frac{1}{n} \sum_{i=1}^n   \class{bleu}{\lVert \boldsymbol{x}_{i} - \boldsymbol{x}_{i}^{E^\perp}}  \rVert^2.\\
+   & = \class{rouge}{I_E} + \class{bleu}{I_{E^\perp}}
 \end{align}
 :::
 
@@ -426,7 +780,7 @@ ggplot() +
   
   
   # Ajouter des labels mathématiques pour l'es distances l'espace
-  geom_text(aes(x = 0.3, y = 2), label = as.character(expression(R^p)),col="#F7A913", size = 5) +
+  geom_text(aes(x = 0.3, y = 2), label = as.character(expression(R^p)), parse = TRUE, col="#F7A913", size = 5) +
   
   # Ajouter le nom de l'axe
   geom_text(aes(x = -1.2, y = -2), label = "E", vjust = -0.8, col = "#33658A", size = 5) +
@@ -449,7 +803,104 @@ ggplot() +
 :::
 :::::
 
-## Principe de la décomposition à venir
+
+
+## L'objectif en image
+
+```{r acb_in_brief}
+#! message: false
+#! warning: false
+#! echo: false
+library(FactoMineR)
+
+
+individus <- data.frame(
+  x = c(2, -0.7, -1.1, 3, -0.2, 1),   # Coordonnées des points individuels
+  y = c(6, -2, -4, 7, -0.4, 4)
+)  |> mutate_all(scale)
+pca_res <- PCA(individus, scale.unit = FALSE, graph = FALSE)
+new_var <- t(pca_res$svd$V)
+u1 <- as.matrix(new_var[,1], ncol =1)
+coord_u1 <- as.matrix(individus ) %*% u1
+proj_u1 <- t(u1 %*% t(coord_u1)) |> as.data.frame()
+
+
+u2 <- as.matrix(new_var[,2], ncol =1)
+coord_u2 <- as.matrix(individus ) %*% u2
+proj_u2 <- t(u2 %*% t(coord_u2)) |> as.data.frame()
+
+individus <- individus |> bind_cols(proj_u1)|> rename(CP11 = V1, CP12= V2) |> bind_cols(proj_u2) |> rename(CP21 = V1, CP22= V2) 
+
+p1 <- ggplot() + geom_point(data = individus, aes(x=x, y=y), col = "#398d55") +
+  geom_hline(yintercept = 0, linewidth = 0.5, alpha = 0.5) +
+  geom_vline(xintercept = 0, linewidth = 0.5, alpha = 0.5)+
+  coord_fixed()
+
+p2 <- p1 +geom_segment( aes(xend=2*new_var[1,1], yend =2*new_var[2,1], x=-2*new_var[1,1], y=-2*new_var[2,1]), col = "#F7A913", alpha = 1) 
+
+p2_full <- p2 + geom_point(data=individus, aes(x=CP11, y=CP12)) + geom_segment(data =individus, aes(x=CP11, y=CP12, xend=x,yend =y), linetype = "dotted", col = "#C94326")
+
+
+p3 <- p1 +  geom_segment( aes(xend=2*new_var[1,2], yend =2*new_var[2,2], x=-2*new_var[1,2], y =- 2*new_var[2,2],), col = "#F7A913", alpha = 0.3) 
+
+p3_full <- p3 + geom_point(data=individus, aes(x=CP21, y=CP22)) + geom_segment(data =individus, aes(x=CP21, y=CP22, xend=x,yend =y), linetype = "dashed", col = "#0c324e")
+
+```
+::: panel-tabset
+### Au début
+
+```{r acp_in_brief_1}
+p1
+```
+
+### Un nouveau repère
+
+```{r acp_in_brief_2}
+p2+  geom_segment( aes(xend=2*new_var[1,2], yend =2*new_var[2,2], x=-2*new_var[1,2], y =- 2*new_var[2,2],), col = "#F7A913", alpha = 0.3) 
+```
+
+### Info perdue
+
+:::: columns
+
+::::: {.column width="49%"}
+```{r acp_in_brief_3}
+#| fig-cap: "Sur l'axe 1 "
+p2_full 
+```
+:::::
+
+::::: {.column width="49%"}
+```{r acp_in_brief_4}
+#| fig-cap: "Sur l'axe 2 "
+p3_full 
+```
+:::::
+
+:::: 
+
+### But final
+
+:::: columns
+
+::::: {.column width="49%"}
+```{r acp_in_brief_6}
+plot(pca_res, choix = "ind")
+```
+:::::
+
+::::: {.column width="49%"}
+```{r acp_in_brief_7}
+plot(pca_res, choix = "var")
+```
+:::::
+
+:::: 
+::: 
+
+
+
+## Principe de toutes les décompositions à venir
 
 1.  Identifier le vecteur $\boldsymbol{u_1}$ de ${\mathbb{R}}^p$, tel
     que $I_{E_1}$ soit minimale avec
@@ -462,9 +913,33 @@ ggplot() +
 3.  Dans $\left (  E_1 \oplus E_2 \right)^\perp$, identifier le vecteur
     $\boldsymbol{u_3}$ de ${\mathbb{R}}^p$, tel que ....
 
-...
+. . .
 
 Finalement on aura la décomposition
 
 $$I= I_{E_1} + I_{E_2} + \ldots + I_{E_p}, \quad \mbox{avec } I_{E_1} \leq I_{E_2} \leq \ldots \leq I_{E_p}$$
+
+## En quoi est ce utile ?
+
+* L'essentiel de l'information est portée par les premiers axes (puisque ce sont les axes sur lesquels on perd le moins d'information lorsqu'on projette)
+  * facilité de visualisation
+  * compression de l'information
+
+* Ce qui est plus complexe
+  * donner un sens aux nouveaux axes
+
+
+# Conclusion
+
+## Bilan de ce cours
+
+* Mise en place de tous les outils de base 
+
+* [L'inertie = de l'information]{.care}
+
+* on veut le plus d'information avec le moins de "variables possibles"
+
+* on va utiliser de l'algèbre linéaire
+
+* Il nous reste à comprendre comment trouver ce bon système d'axe
 
