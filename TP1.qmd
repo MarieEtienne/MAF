@@ -8,8 +8,8 @@ author:
 date: "Last updated on `r format(Sys.time(), '%d %B, %Y')`"
 institute: https://marieetienne.github.io/MAF/
 bibliography: TPs.bib
-execute: 
-  freeze: true
+execute:
+  freeze: auto
 editor: 
   markdown: 
     wrap: 72

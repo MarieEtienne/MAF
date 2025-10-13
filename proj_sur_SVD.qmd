@@ -3,8 +3,8 @@ title: "Singular Value Decomposition et ACP"
 author: "MP Etienne"
 date: "Last updated on `r format(Sys.time(), '%d %B, %Y')`"
 institute: https://marieetienne.github.io/TopicsInStatistics/
-execute: 
-  freeze: false
+execute:
+  freeze: auto
 editor: 
   markdown: 
     wrap: 72

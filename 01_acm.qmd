@@ -7,8 +7,8 @@ author:
     email: marie-pierre.etienne@ensai.fr
 date: last-modified
 institute: https://marieetienne.github.io/MAF/
-execute: 
-  freeze: true
+execute:
+  freeze: auto
 editor: 
   markdown: 
     wrap: 72
