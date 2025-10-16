@@ -228,7 +228,7 @@
     "href": "01_intro.html#plan-du-cours",
     "title": "Introduction",
     "section": "Plan du cours",
-    "text": "Plan du cours\n\nQuantifier l’information\nAnalyse en composantes principales ACP\n\nUn exemple d’ACP\n\nComprendre les mécanismes derrière l’ACP (notion d’inertie, distance entre individus, changement de repères, la correlation comme un cosinus)\n\nAnalyse Factorielle multiple AFM : une extension de l’ACP pour tenir de groupes de variables\nAnalyse Factorielle Discriminante AFD : une extension de l’ACP pour tenir compte de groupes d’individus\nAnalyse Factorielle des Correspondances AFC\nAnalyse des Correspondances multiples ACM : lorsqu’on a plus que deux variables qualitatives"
+    "text": "Plan du cours\n\nQuantifier l’information\nAnalyse en composantes principales ACP\n\nUn exemple d’ACP\n\nComprendre les mécanismes derrière l’ACP (notion d’inertie, distance entre individus, changement de repères, la correlation comme un cosinus)\n\nAnalyse Factorielle multiple AFM : une extension de l’ACP pour tenir compte de groupes de variables\nAnalyse Factorielle Discriminante AFD : une extension de l’ACP pour tenir compte de groupes d’individus\nAnalyse Factorielle des Correspondances AFC\nAnalyse des Correspondances multiples ACM : lorsqu’on a plus que deux variables qualitatives"
   },
   {
     "objectID": "01_afm.html#quelques-exemples",
@@ -917,46 +917,123 @@
     "text": "Ce que vous pensez devoir retenir\nA construire ensemble"
   },
   {
-    "objectID": "01_inertie.html#linertie-par-rapport-à-un-point",
-    "href": "01_inertie.html#linertie-par-rapport-à-un-point",
-    "title": "Mesurer la quantité d’information",
-    "section": "L’inertie par rapport à un point",
-    "text": "L’inertie par rapport à un point\n\n\n\nDefinition 1\n\n\nL’inertie par rapport à un point \\(a \\in {\\mathbb{R}}^{p}\\) est définie par\n\\[I_{\\boldsymbol{a}} = \\frac{1}{n} \\sum_{i=1}^n \\lVert\\boldsymbol{x}_{i} - \\boldsymbol{a}\\rVert^2 = \\frac{1}{n} \\sum_{i=1}^n\\sum_{k=1}^p  (x_i^k -a^k)^2\\]\n\n\n\n\nIntuitivementRéponseThéorème de Huyghens\n\n\nL’inertie par rapport à un point quantifie l’information perdue lorsque le jeu de données est résumé par ce point.\nQuel est selon vous le point \\(\\boldsymbol{a}\\) qui minimise l’inertie ?\n\\[argmin_{\\boldsymbol{a}} I_{\\boldsymbol{a}} = ??\\]\n\n\nBINGO !!!\nIl s’agit du point \\(\\boldsymbol{g}=\\boldsymbol{x_{\\bullet}}=({x}_{\\bullet}^1, \\ldots, {x}_{\\bullet}^p )^\\top,\\) avec \\({x}_{\\bullet}^k=\\frac{1}{n} \\sum_{i=1}^n x_{i}^k\\), la valeur moyenne de la variable \\(k\\) sur l’ensemble des individus.\nPuisque nous avons supposé que nos variables étaient centrées, \\(G=O\\) l’origine sur repère.\n\n\n\\[\\forall \\boldsymbol{a}\\in\\mathbb{R}^p,\\; I_\\boldsymbol{a}=I_\\boldsymbol{g} + \\lVert\\boldsymbol{a}- \\boldsymbol{g}\\rVert^2.\\]"
+    "objectID": "01_inertie.html#linertie-dun-nuage-de-points",
+    "href": "01_inertie.html#linertie-dun-nuage-de-points",
+    "title": "Une mesure de la quantité d’information",
+    "section": "L’inertie d’un nuage de points",
+    "text": "L’inertie d’un nuage de points\n\n\n\nDéfinition\n\n\n\\[I = \\frac{1}{n} \\sum_{i=1}^n d(x_i, g)^2, \\] où \\(g\\) désigne le point qui résume le mieux l’ensemble des données.\n\n\n\nC’est la quantité d’information contenue dans le nuage de points\nou\nC’est la quantité d’information perdue lorsque l’on résume l’ensemble du nuages de points par le point \\(g\\)\n\nIngrédientsVariables quantitativesVariables qualitatives\n\n\nIl faut donc une\n\nune notion de distance\nun point résumé\n\n\n\nQuelle distance choisir et que représente \\(g\\) ?\n\nOn peut choisir la distance euclidienne \\[d(x_i, g)^2 = \\sum_{j=1}^p (x_{i}^j - g^j)^2.\\]\n\\(g= (\\bar{x^1}, \\ldots, \\bar{x^p})\\) est un choix naturel et la distance euclidienne\n\n\n\nD’autres choix sont possibles pour la distance, dont certaines adaptées aux variables qualitatives. Il faudra réfléchir à qui est \\(g\\) dans le cas de données qualitatives\nle choix de la distance est le des différences entre ACP, AFC, ACM etc … A venir donc …"
   },
   {
-    "objectID": "01_inertie.html#linertie-par-rapport-à-un-point-1",
-    "href": "01_inertie.html#linertie-par-rapport-à-un-point-1",
-    "title": "Mesurer la quantité d’information",
-    "section": "L’inertie par rapport à un point",
-    "text": "L’inertie par rapport à un point\n\n\n\nDefinition 2\n\n\nL’inertie du nuage de points représentés par \\({\\boldsymbol{X}}\\) est l’inertie par rapport à son baycentre \\[I = \\frac{1}{n} \\sum_{i=1}^n \\lVert\\boldsymbol{x}_{i} - {g}\\rVert^2 = \\frac{1}{n} \\sum_{i=1}^n\\sum_{k=1}^p  (x_i^k -\\bar{x}^k)^2\\]\n\n\n\nConséquence\nLe meilleur résumé du nuage de points à un unique point est le barycentre du nuage de points, c’est à dire la moyenne sur chacune des dimensions.\nLa quantité d’information perdue lors de ce résumé est \\(I\\)\nRemarque\n\\[ I = \\frac{1}{n}  \\sum_{i=1}^n     \\left( \\sum_{k=1}^p \\left( x_{i}^k - x_{\\bullet}^k  \\right)^2 \\right)  = \\sum_{k=1}^p  \\left( \\frac{1}{n}  \\sum_{i=1}^n  \\left( x_{i}^k - x_{\\bullet}^k  \\right)^2 \\right)  = \\sum_{k=1}^p  Var(\\boldsymbol{x}^{k})\\] Si les variables sont réduites, i.e de norme 1\n\\[I = p\\]"
+    "objectID": "01_inertie.html#linertie-par-rapport-dun-nuage-par-rapport-à-un-point-quelconque",
+    "href": "01_inertie.html#linertie-par-rapport-dun-nuage-par-rapport-à-un-point-quelconque",
+    "title": "Une mesure de la quantité d’information",
+    "section": "L’inertie par rapport d’un nuage par rapport à un point quelconque",
+    "text": "L’inertie par rapport d’un nuage par rapport à un point quelconque\n\n\n\nDefinition\n\n\nL’inertie par rapport à un point \\(a \\in {\\mathbb{R}}^{p}\\) est définie par\n\\[I_{\\boldsymbol{a}} = \\frac{1}{n} \\sum_{i=1}^n d({x}_{i} - \\boldsymbol{a})^2 = \\frac{1}{n} \\sum_{i=1}^n\\sum_{k=1}^p  (x_i^k -a^k)^2\\]\n\n\n\n\nGéométriquementIntuitivementRéponseThéorème de Huyghens\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nL’inertie par rapport à un point quantifie l’information perdue lorsque le jeu de données est résumé par ce point.\nQuel est selon vous le point \\(\\boldsymbol{a}\\) qui minimise l’inertie ?\n\\[argmin_{\\boldsymbol{a}} I_{\\boldsymbol{a}} = ??\\]\n\n\nBINGO !!!\nIl s’agit du point \\(\\boldsymbol{g}=\\boldsymbol{x_{\\bullet}}=({x}_{\\bullet}^1, \\ldots, {x}_{\\bullet}^p )^\\top,\\) avec \\({x}_{\\bullet}^k=\\frac{1}{n} \\sum_{i=1}^n x_{i}^k\\), la valeur moyenne de la variable \\(k\\) sur l’ensemble des individus.\nSi les variables étaient centrées, alors \\(g=O\\) l’origine sur repère.\n\n\n\\[\\forall \\boldsymbol{a}\\in\\mathbb{R}^p,\\; I_\\boldsymbol{a}=I_\\boldsymbol{g} + \\lVert\\boldsymbol{a}- \\boldsymbol{g}\\rVert^2.\\]\n(preuve dans les notes de cours)"
   },
   {
-    "objectID": "01_inertie.html#linertie-par-rapport-à-un-axe",
-    "href": "01_inertie.html#linertie-par-rapport-à-un-axe",
-    "title": "Mesurer la quantité d’information",
-    "section": "L’inertie par rapport à un axe",
-    "text": "L’inertie par rapport à un axe\n\n\n\nDefinition 2\n\n\nL’inertie par rapport à l’axe \\(\\Delta\\) est définie par\n\\[I_{\\boldsymbol{\\Delta}} = \\frac{1}{n} \\sum_{i=1}^n \\lVert\\boldsymbol{x}_{i} - \\boldsymbol{p_i}^{\\Delta}\\rVert^2 = \\frac{1}{n} \\sum_{i=1}^n\\sum_{k=1}^p  (x_i^k -p^{k,\\Delta}_i)^2, \\quad \\mbox{où }\\  \\boldsymbol{p_i}^{\\Delta} \\mbox{projeté orthogonal de } \\boldsymbol{x_i} \\mbox{ sur }\\Delta.\\]\n\n\n\n{Rajouter un exemple avec des projections sur les axes de départ}[.rouge]\n\nIntuitivementPour perdre le moins d’information possibleRappel projection orthogonale\n\n\n\n\nL’inertie par rapport à l’axe \\(\\Delta\\) quantifie l’information perdue lorsque l’on résume le nuage de points à son projeté sur \\(\\Delta\\).\n\n\n\n\n\n\n\n\n\n\n\n\n\nIdentifier \\(\\Delta\\) tel que \\(I_{\\Delta}\\) soit minimale\nCe qui revient à l’axe \\(\\Delta\\) qui assure que la projection sur \\(\\Delta\\) déforme le moins possible le nuage de points.\nDans le cadre de l’ACP, on veut construire une ensemble d’axes orthogonaux (une nouvelle base de \\({\\mathbb{R}}^p\\)), de façon à ce que\n\nla projection sur le premier axe, soit le meilleur résumé du nuage de points en une dimension,\nle deuxième axe est orthogonal au premier et représente “le deuxième meileur choix” …. dans un sens que l’on va définir\nle troisième …\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nProduit scalaire : Soient deux élements \\(\\boldsymbol{x}\\) et \\(\\boldsymbol{y}\\) de \\(\\mathbb{R}^p\\), le produit scalaire est noté \\(&lt;\\boldsymbol{x},\\boldsymbol{y}&gt;\\) et \\(&lt;\\boldsymbol{x},\\boldsymbol{y}&gt;=\\sum_{i=1}^p x_i y_i = \\boldsymbol{x}^\\top \\boldsymbol{y}.\\)\nOrthogonalité Soient deux élements \\(\\boldsymbol{x}\\) et \\(\\boldsymbol{y}\\) de \\(\\mathbb{R}^p\\), on dit que \\(\\boldsymbol{x}\\) et \\(\\boldsymbol{y}\\) sont orthogonaux (noté \\(\\boldsymbol{x}\\perp \\boldsymbol{y}\\)) si \\(&lt;\\boldsymbol{x},\\boldsymbol{y}&gt; = \\boldsymbol{x}^\\top  \\boldsymbol{y}=0\\).\nProjection orthogonale On note \\(\\boldsymbol{a}_u\\) le projeté de \\(\\boldsymbol{a}\\) sur la droite \\(\\Delta\\) définit par son vecteur directeur unitaire \\(\\boldsymbol{u}\\) et passant par l’origine \\[\\boldsymbol{a}_u = &lt; \\boldsymbol{a}, \\boldsymbol{u} &gt; \\boldsymbol{u} = (\\boldsymbol{a}^\\top \\boldsymbol{u})\\,  \\boldsymbol{u}.\\] Le vecteur \\(\\boldsymbol{a_u}\\) est orthogonal à \\(\\boldsymbol{a}-\\boldsymbol{a_u}\\): \\[&lt; \\boldsymbol{a_u}, \\boldsymbol{a}-\\boldsymbol{a_u}&gt; = \\left ((\\boldsymbol{a}^\\top \\boldsymbol{u}) \\boldsymbol{u}\\right)^\\top \\left ( \\boldsymbol{a} -  (\\boldsymbol{a}^\\top \\boldsymbol{u})\\,  \\boldsymbol{u} \\right)=(\\boldsymbol{a}^\\top \\boldsymbol{u}) (\\boldsymbol{u}^\\top \\boldsymbol{a}) - (\\boldsymbol{a}^\\top \\boldsymbol{u})^2 \\boldsymbol{u}^\\top \\boldsymbol{u} =0  \\]"
+    "objectID": "01_inertie.html#linertie-du-nuage-de-points",
+    "href": "01_inertie.html#linertie-du-nuage-de-points",
+    "title": "Une mesure de la quantité d’information",
+    "section": "L’inertie du nuage de points",
+    "text": "L’inertie du nuage de points\n\n\n\nRappel Definition\n\n\nL’inertie du nuage de points représentés par \\({\\boldsymbol{X}}\\) est l’inertie par rapport à son baycentre \\[I = \\frac{1}{n} \\sum_{i=1}^n \\lVert\\boldsymbol{x}_{i} - {g}\\rVert^2 \\]\n\n\n\nConséquence\nLe meilleur résumé du nuage de points à un unique point est le barycentre du nuage de points, c’est à dire la moyenne sur chacune des dimensions.\nLa quantité d’information perdue lors de ce résumé est \\(I\\)"
+  },
+  {
+    "objectID": "01_inertie.html#des-extensions",
+    "href": "01_inertie.html#des-extensions",
+    "title": "Une mesure de la quantité d’information",
+    "section": "Des extensions",
+    "text": "Des extensions\nPoids des individus\nSi l’on souhaite accorder plus de poids à certains individus (par exemple poids du pays en fonction de sa population), on peut considérer le nuage de points pesants \\((x_i, \\omega_i)\\) où \\(\\omega_i\\) est le poids associé à l’individu \\(i\\), avec \\(\\sum_i \\omega_i=1\\)\nLe barycentre est bien défini \\(g\\) comme le barycentre des points pondérés et l’inertie par rapport à un point \\({\\boldsymbol{a}}\\) quelqueconque est donné par\n\\[I = \\frac{1}{n} \\sum_{i=1}^n \\omega_i \\lVert\\boldsymbol{x}_{i} - {a}\\rVert^2 \\]\nChoix de la distance\nOn a évoqué la distance Euclidienne mais toute autre distance est possible. Chaque choix de distance correspond à une méthode d’analyse factorielle différente.\n\neuclidienne : ACP\neuclidienne normalisée : ACP normée ou AFM selon le type de normalisation\ndistance du \\(\\chi\\^2\\) : AFC ou ACM\n\nCours présenté sans les poids mais tout se généralise"
+  },
+  {
+    "objectID": "01_inertie.html#lien-entre-inertie-et-variance",
+    "href": "01_inertie.html#lien-entre-inertie-et-variance",
+    "title": "Une mesure de la quantité d’information",
+    "section": "Lien entre inertie et variance",
+    "text": "Lien entre inertie et variance\nDans le cas de la distance euclidienne, on met en évidence un lien fort entre inertie et variance dans les données.\nEn effet :\n\\[ I = \\frac{1}{n}  \\sum_{i=1}^n     \\left( \\sum_{k=1}^p \\left( x_{i}^k - x_{\\bullet}^k  \\right)^2 \\right)  = \\sum_{k=1}^p  \\left( \\frac{1}{n}  \\sum_{i=1}^n  \\left( x_{i}^k - x_{\\bullet}^k  \\right)^2 \\right)  = \\sum_{k=1}^p  Var(\\boldsymbol{x}^{k})\\]\nSi les variables sont réduites, i.e de norme 1\n\\[I = p\\]"
+  },
+  {
+    "objectID": "01_inertie.html#où-lon-commence-à-introduire-lalgèbre-linéaire",
+    "href": "01_inertie.html#où-lon-commence-à-introduire-lalgèbre-linéaire",
+    "title": "Une mesure de la quantité d’information",
+    "section": "Où l’on commence à introduire l’algèbre linéaire",
+    "text": "Où l’on commence à introduire l’algèbre linéaire\nFormellement, il nous faut\n\nune matrice \\(X\\) (dimension \\(n\\times p\\)),\nune distance, i.e une métrique (dimension \\(p\\times p\\))\nOptionnellement une matrice de poids \\(D\\)\n\n\n\n\nDéfinition\n\n\nUne métrique \\(M\\) est une matrice de \\(\\mathbb{R}^{p\\times p}\\) symétrique, définie et positive. Elle permet de définir une distance entre les observations\n\n\n\n\nDistanceCas de la distance euclidienneEt l’inertie alors ?\n\n\nSi \\(x_1\\in{\\mathbb{R}}^p\\) et \\(x_2\\in{\\mathbb{R}}^p\\), la distance entre \\(x_1\\) et \\(x_2\\) pour la métrique \\(M\\) est \\[d_M(x_1,x_2) = \\|x_1 - x_2\\|_M \\] où \\[\\|x_1 - x_2\\|_M^2 = (x_1 - x_2)^\\top M (x_1 - x_2).\\]\n[Que vaut \\(M\\) dans ce cas ?]{. question}\n\n\n\\[M= I_p\\], en effet si \\(x_1\\in{\\mathbb{R}}^p\\) et \\(x_2\\in {\\mathbb{R}}^p\\),\nalors \\[x_1 -x_2 = \\begin{pmatrix}x_1^1 -x_2^1 \\\\ \\vdots \\\\ x_1^p -x_2^p\\end{pmatrix},\\] donc\n\\[(x_1 -x_2 )^\\top (x_1 -x_2 )= \\sum_{j=1}^p  (x_1^j -x_2^j)^2.\\]\n\n\nOn définir la matrice des données centrées \\[\\tilde{X} = X - \\boldsymbol{1}_n g = \\begin{pmatrix} x_1^1- g^1 & x_1^2- g^2 & \\ldots & x_1^p- g^p \\\\\n\\vdots &&& \\vdots\\\\\nx_n^1- g^1 & x_n^2- g^2 & \\ldots & x_n^p- g^p \\end{pmatrix}\\]\nAlors \\[I = \\frac{1}{n}  tr(\\tilde{X}^\\top \\tilde{X}).\\]"
+  },
+  {
+    "objectID": "01_inertie.html#et-dans-toute-la-suite",
+    "href": "01_inertie.html#et-dans-toute-la-suite",
+    "title": "Une mesure de la quantité d’information",
+    "section": "Et dans toute la suite",
+    "text": "Et dans toute la suite\nOn va supposer que les données sont centrées (quitte à effectuer le centrage) et donc \\[X = \\tilde{X}\\] et \\(g= O.\\)"
+  },
+  {
+    "objectID": "01_inertie.html#linertie-par-rapport-à-un-axe-passant-par-boldsymbolg",
+    "href": "01_inertie.html#linertie-par-rapport-à-un-axe-passant-par-boldsymbolg",
+    "title": "Une mesure de la quantité d’information",
+    "section": "L’inertie par rapport à un axe passant par \\(\\boldsymbol{g}\\)",
+    "text": "L’inertie par rapport à un axe passant par \\(\\boldsymbol{g}\\)\n\n\n\nDefinition\n\n\nL’inertie par rapport à l’axe \\(\\Delta\\) passant par \\(g\\) est définie par\n\\[I_{\\boldsymbol{\\Delta}} = \\frac{1}{n} \\sum_{i=1}^n d(\\boldsymbol{x}_{i} - \\boldsymbol{p_i}^{\\Delta})^2  \\quad \\mbox{où }\\  \\boldsymbol{p_i}^{\\Delta} \\mbox{projeté orthogonal de } \\boldsymbol{x_i} \\mbox{ sur }\\Delta.\\]\n\n\n\n\nIntuitivementInertie par rapport à l’axe des abscissesRéponse\n\n\n\n\nL’inertie par rapport à l’axe \\(\\Delta\\) quantifie l’information perdue lorsque l’on résume le nuage de points à son projeté sur \\(\\Delta\\). On perd toute l’information “orthogonale”\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nQuelle est l’inertie par rapport à l’axe des abscisses ?\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nL’inertie par rapport à l’axe \\(\\Delta\\) quantifie l’information perdue lorsque l’on résume le nuage de points à son projeté sur \\(\\Delta\\). On perd toute l’information “orthogonale”"
+  },
+  {
+    "objectID": "01_inertie.html#projeter-en-perdant-un-minimum-dinformation",
+    "href": "01_inertie.html#projeter-en-perdant-un-minimum-dinformation",
+    "title": "Une mesure de la quantité d’information",
+    "section": "Projeter en perdant un minimum d’information",
+    "text": "Projeter en perdant un minimum d’information\nIdentifier \\(\\Delta\\) tel que \\(I_{\\Delta}\\) soit minimale\nCe qui revient à identifier l’axe \\(\\Delta\\) qui assure que la projection sur \\(\\Delta\\) déforme le moins possible le nuage de points.\nDans le cadre de l’ACP, on veut construire une ensemble d’axes orthogonaux (une nouvelle base de \\({\\mathbb{R}}^p\\)), de façon à ce que\n\nla projection sur le premier axe, soit le meilleur résumé du nuage de points en une dimension,\nle deuxième axe est orthogonal au premier et représente “le deuxième meileur choix” …. dans un sens que l’on va définir\nle troisième …"
+  },
+  {
+    "objectID": "01_inertie.html#où-lalgèbre-linéaire-revient",
+    "href": "01_inertie.html#où-lalgèbre-linéaire-revient",
+    "title": "Une mesure de la quantité d’information",
+    "section": "Où l’algèbre linéaire revient",
+    "text": "Où l’algèbre linéaire revient\nRappel projection orthogonale\n\n\n\nProduit scalaire : Soient deux élements \\(\\boldsymbol{x}\\) et \\(\\boldsymbol{y}\\) de \\(\\mathbb{R}^p\\), le produit scalaire est noté \\(&lt;\\boldsymbol{x},\\boldsymbol{y}&gt;\\) et \\(&lt;\\boldsymbol{x},\\boldsymbol{y}&gt;=\\sum_{i=1}^p x_i y_i = \\boldsymbol{x}^\\top \\boldsymbol{y}.\\)\nOrthogonalité Soient deux élements \\(\\boldsymbol{x}\\) et \\(\\boldsymbol{y}\\) de \\(\\mathbb{R}^p\\), on dit que \\(\\boldsymbol{x}\\) et \\(\\boldsymbol{y}\\) sont orthogonaux ( noté \\(\\boldsymbol{x}\\perp \\boldsymbol{y}\\) ) si \\(&lt;\\boldsymbol{x},\\boldsymbol{y}&gt; = {\\boldsymbol{x}^\\top  \\boldsymbol{y}=0.}\\)\nProjection orthogonale On note \\(\\boldsymbol{a}_u\\) le projeté de \\(\\boldsymbol{a}\\) sur la droite \\(\\Delta\\) définie par son vecteur directeur unitaire \\(\\boldsymbol{u}\\) et passant par l’origine \\[\\boldsymbol{a}_u = &lt; \\boldsymbol{a}, \\boldsymbol{u} &gt; \\boldsymbol{u} = (\\boldsymbol{a}^\\top \\boldsymbol{u})\\,  \\boldsymbol{u}.\\] Le vecteur \\(\\boldsymbol{a_u}\\) est orthogonal à \\(\\boldsymbol{a}-\\boldsymbol{a_u}\\): \\[&lt; \\boldsymbol{a_u}, \\boldsymbol{a}-\\boldsymbol{a_u}&gt; = \\left ((\\boldsymbol{a}^\\top \\boldsymbol{u}) \\boldsymbol{u}\\right)^\\top \\left ( \\boldsymbol{a} -  (\\boldsymbol{a}^\\top \\boldsymbol{u})\\,  \\boldsymbol{u} \\right)=(\\boldsymbol{a}^\\top \\boldsymbol{u}) (\\boldsymbol{u}^\\top \\boldsymbol{a}) - (\\boldsymbol{a}^\\top \\boldsymbol{u})^2 \\boldsymbol{u}^\\top \\boldsymbol{u} =0  \\]\n\n\n\n\n\n\n\n\n\n\n\n\nRemarque\nQue signifie projeter sur l’axe des abscisses ? sur l’axe des ordonnées ?\n\nIl y a un lien fort entre coordonnées dans un système d’axes et projection.\nSi on sait projeter sur un autre système orthogonal, on a les coordonnées."
+  },
+  {
+    "objectID": "01_inertie.html#où-lalgèbre-linéaire-reste-encore",
+    "href": "01_inertie.html#où-lalgèbre-linéaire-reste-encore",
+    "title": "Une mesure de la quantité d’information",
+    "section": "Où l’algèbre linéaire reste encore",
+    "text": "Où l’algèbre linéaire reste encore\n\nEspace orthogonal Soit \\(E\\) un sous-espace vectoriel de \\(\\mathbb{R}^p\\). On definit \\(E^\\perp=\\{\\boldsymbol{x}\\in \\mathbb{R}^p:\\; \\forall \\boldsymbol{y}\\in E,\\; \\boldsymbol{x}\\perp \\boldsymbol{y}\\}\\).\n\n\nExempleSolution\n\n\nDans \\({\\mathbb{R}}^2\\), on considère le sous espace vectoriel \\(E\\), tel que \\[ E =\\left \\lbrace  \\boldsymbol{x}=\\begin{pmatrix} x_1 &  x_2 \\end{pmatrix}^\\top \\in {\\mathbb{R}}^2 : x_1 = x_2  \\right \\rbrace \\] \\(E\\) est la droite d’équation \\(y=x\\).\nQui est \\(E^\\perp\\) ?\n\n\n\n\nSoit \\(\\boldsymbol{x}\\in E,\\) et \\(\\boldsymbol{y}\\in E^\\perp,\\) alors\n\\[\\begin{align}\n0 & = \\boldsymbol{x}^\\top \\boldsymbol{y}\\\\\n  & = \\begin{pmatrix} x_1 &  x_2 \\end{pmatrix} \\begin{pmatrix} y_1 \\\\  y_2 \\end{pmatrix}\\\\\n  & = x_1 y_1 + x_2 y_2 \\\\\n  & = x_1 (y_1 + y_2) \\quad (\\boldsymbol{x}\\in E \\Rightarrow x_1 =x_2) \\\\\n\\end{align}\\]\n\\[E^\\perp =  \\left \\lbrace  \\boldsymbol{y}=\\begin{pmatrix} y_1 &  y_2 \\end{pmatrix}^\\top \\in {\\mathbb{R}}^2 : y_1 + y_2 = 0 \\right \\rbrace  \\]"
   },
   {
     "objectID": "01_inertie.html#linertie-par-rapport-à-un-sous-espace-affine",
     "href": "01_inertie.html#linertie-par-rapport-à-un-sous-espace-affine",
-    "title": "Mesurer la quantité d’information",
+    "title": "Une mesure de la quantité d’information",
     "section": "L’inertie par rapport à un sous espace affine",
-    "text": "L’inertie par rapport à un sous espace affine\n\nEspace orthogonal Soit \\(E\\) un sous-espace vectoriel de \\(\\mathbb{R}^p\\). On definit \\(E^\\perp=\\{\\boldsymbol{x}\\in \\mathbb{R}^p:\\; \\forall \\boldsymbol{y}\\in E,\\; \\boldsymbol{x}\\perp \\boldsymbol{y}\\}\\).\n\n\nExempleSolution\n\n\nDans \\({\\mathbb{R}}^2\\), on considère le sous espace vectoriel \\(E\\), tel que \\[ E =\\left \\lbrace  \\boldsymbol{x}=\\begin{pmatrix} x_1 &  x_2 \\end{pmatrix}^\\top \\in {\\mathbb{R}}^2 : x_1 = x_2  \\right \\rbrace \\] \\(E\\) est la droite d’équation \\(y=x\\).\nQui est \\(E^\\perp\\) ?\n\n\nSoit \\(\\boldsymbol{y}\\in E^\\perp,\\) alors\n\\[\\begin{align}\n0 & = \\boldsymbol{x}^\\top \\boldsymbol{y}\\\\\n  & = \\begin{pmatrix} x_1 &  x_2 \\end{pmatrix} \\begin{pmatrix} y_1 \\\\  y_2 \\end{pmatrix}\\\\\n  & = x_1 y_1 + x_2 y_2 \\\\\n  & = x_1 (y_1 + y_2) \\quad (\\boldsymbol{x}\\in E \\Rightarrow x_1 =x_2) \\\\\n\\end{align}\\]\n\\[E^\\perp =  \\left \\lbrace  \\boldsymbol{y}=\\begin{pmatrix} y_1 &  y_2 \\end{pmatrix}^\\top \\in {\\mathbb{R}}^2 : y_1 + y_2 = 0 \\right \\rbrace  \\]\n\n\n\n\n\n\n\nDefinition 3\n\n\nL’inertie par rapport à un sous espace vectoriel \\(E\\) est définie par \\[I_{E} = \\frac{1}{n} \\sum_{i=1}^n \\lVert\\boldsymbol{x}_{i} - \\boldsymbol{p_i}^{E}\\rVert^2 = \\frac{1}{n} \\sum_{i=1}^n\\sum_{k=1}^p  (x_i^k -p^{k,E}_i)^2, \\quad \\mbox{où }\\  \\boldsymbol{p_i}^{E} = argmin_{\\boldsymbol{y}\\in E} d(\\boldsymbol{y}, \\boldsymbol{x}_{i}), \\mbox{i.e. projeté orthogonal de } \\boldsymbol{x_i} \\mbox{ sur }E.\\]\n\n\n\nC’est l’inertie perdue lorsque l’on résume le nuage de points à sa projection sur le sous espace \\(E\\)."
+    "text": "L’inertie par rapport à un sous espace affine\n\n\n\nDefinition\n\n\nL’inertie par rapport à un sous espace affine \\(E\\) passant par l’origine est définie par \\[I_{E} = \\frac{1}{n} \\sum_{i=1}^n \\lVert\\boldsymbol{x}_{i} - \\boldsymbol{p_i}^{E}\\rVert^2 = \\frac{1}{n} \\sum_{i=1}^n\\sum_{k=1}^p  (x_i^k -p^{k,E}_i)^2, \\quad \\mbox{où }\\  \\boldsymbol{p_i}^{E} = argmin_{\\boldsymbol{y}\\in E} d(\\boldsymbol{y}, \\boldsymbol{x}_{i}), \\mbox{i.e. projeté orthogonal de } \\boldsymbol{x_i} \\mbox{ sur }E.\\]\n\n\n\nC’est l’inertie perdue lorsque l’on résume le nuage de points à sa projection sur le sous espace \\(E\\)."
   },
   {
     "objectID": "01_inertie.html#décomposition-de-linertie",
     "href": "01_inertie.html#décomposition-de-linertie",
-    "title": "Mesurer la quantité d’information",
+    "title": "Une mesure de la quantité d’information",
     "section": "Décomposition de l’inertie",
-    "text": "Décomposition de l’inertie\n\nSoit \\(E\\) un sous espace vectoriel de \\({\\mathbb{R}}^p\\), alors \\[I = I_E + I_{E^\\perp}.\\]\n\nPreuve\n\n\nUn dessin vaut mieux qu’un long discours et Pythagore est ton ami !\n\\[d(\\class{alea}{\\boldsymbol{x}_{i}}, O)^2 = d(\\boldsymbol{x}_{i}, \\class{bleu}{\\boldsymbol{x}_{i}^E})^2  +  d(\\class{alea}{\\boldsymbol{x}_{i}}, \\class{rouge}{\\boldsymbol{x}_{i}^{E^\\perp}})^2.\\]\n\\[\\begin{align}\nI & = \\frac{1}{n} \\sum_{i=1}^n d(\\class{alea}{\\boldsymbol{x}_{i}}, O)^2 \\\\\n   & = \\frac{1}{n} \\sum_{i=1}^n d(\\class{alea}{\\boldsymbol{x}_{i}}, \\class{bleu}{\\boldsymbol{x}_{i}^E})^2   +  \\frac{1}{n} \\sum_{i=1}^n d(\\class{alea}{\\boldsymbol{x}_{i}}, \\class{rouge}{\\boldsymbol{x}_{i}^{E^\\perp}})^2 \\\\\n   & = \\class{bleu}{I_E} + \\class{rouge}{I_{E^\\perp}}\n\\end{align}\\]"
+    "text": "Décomposition de l’inertie\n\nSoit \\(E\\) un sous espace vectoriel de \\({\\mathbb{R}}^p\\), alors \\[\\class{alea}{I} = \\class{rouge}{I_E} + \\class{bleu}{I_{E^\\perp}}.\\]\n\nPreuve\n\n\nUn dessin vaut mieux qu’un long discours et Pythagore est ton ami !\n\\[\\begin{align}\n\\class{alea}{d(\\boldsymbol{x}_{i}, O)^2} & = \\class{alea}{\\lVert \\boldsymbol{x}_{i} \\rVert^2} =  {\\lVert \\boldsymbol{x}_{i}- \\boldsymbol{x}_{i}^E + \\boldsymbol{x}_{i}^E  \\rVert^2} \\\\\n& = \\class{rouge}{\\lVert \\boldsymbol{x}_{i}- \\boldsymbol{x}_{i}^E\\rVert^2} + \\lVert \\boldsymbol{x}_{i}^E  \\rVert^2 \\\\\n& = \\class{rouge}{\\lVert \\boldsymbol{x}_{i}- \\boldsymbol{x}_{i}^E\\rVert^2} +  \\class{bleu}{\\lVert \\boldsymbol{x}_{i} - \\boldsymbol{x}_{i}^{E^\\perp}}  \\rVert^2. \\\\\n\\end{align}\\]\n\\[\\begin{align}\nI & = \\frac{1}{n} \\sum_{i=1}^n  \\class{alea}{\\lVert \\boldsymbol{x}_{i} \\rVert^2} \\\\\n   & = \\frac{1}{n} \\sum_{i=1}^n \\class{rouge}{\\lVert \\boldsymbol{x}_{i}- \\boldsymbol{x}_{i}^E\\rVert^2} +  \\class{bleu}{\\lVert \\boldsymbol{x}_{i} - \\boldsymbol{x}_{i}^{E^\\perp}}  \\rVert^2,\\\\\n&  \\frac{1}{n}\\sum_{i=1}^n \\class{rouge}{\\lVert \\boldsymbol{x}_{i}- \\boldsymbol{x}_{i}^E\\rVert^2}+  \\frac{1}{n} \\sum_{i=1}^n   \\class{bleu}{\\lVert \\boldsymbol{x}_{i} - \\boldsymbol{x}_{i}^{E^\\perp}}  \\rVert^2.\\\\\n   & = \\class{rouge}{I_E} + \\class{bleu}{I_{E^\\perp}}\n\\end{align}\\]"
   },
   {
-    "objectID": "01_inertie.html#principe-de-la-décomposition-à-venir",
-    "href": "01_inertie.html#principe-de-la-décomposition-à-venir",
-    "title": "Mesurer la quantité d’information",
-    "section": "Principe de la décomposition à venir",
-    "text": "Principe de la décomposition à venir\n\nIdentifier le vecteur \\(\\boldsymbol{u_1}\\) de \\({\\mathbb{R}}^p\\), tel que \\(I_{E_1}\\) soit minimale avec \\(E_1=\\left \\lbrace \\lambda \\boldsymbol{u_1}, \\lambda \\in {\\mathbb{R}}\\right\\rbrace,\\)\nDans \\(E_1^\\perp\\), identifier le vecteur \\(\\boldsymbol{u_2}\\) de \\({\\mathbb{R}}^p\\), tel que \\(I_{E_2}\\) soit minimale avec \\(E_2=\\left \\lbrace \\lambda \\boldsymbol{u_2}, \\lambda \\in {\\mathbb{R}}\\right\\rbrace,\\)\nDans \\(\\left (  E_1 \\oplus E_2 \\right)^\\perp\\), identifier le vecteur \\(\\boldsymbol{u_3}\\) de \\({\\mathbb{R}}^p\\), tel que ….\n\n…\nFinalement on aura la décomposition\n\\[I= I_{E_1} + I_{E_2} + \\ldots + I_{E_p}, \\quad \\mbox{avec } I_{E_1} \\leq I_{E_2} \\leq \\ldots \\leq I_{E_p}\\]"
+    "objectID": "01_inertie.html#lobjectif-en-image",
+    "href": "01_inertie.html#lobjectif-en-image",
+    "title": "Une mesure de la quantité d’information",
+    "section": "L’objectif en image",
+    "text": "L’objectif en image\n\nAu débutUn nouveau repèreInfo perdueBut final\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nSur l’axe 1\n\n\n\n\n\n\n\n\n\n\nSur l’axe 2"
+  },
+  {
+    "objectID": "01_inertie.html#principe-de-toutes-les-décompositions-à-venir",
+    "href": "01_inertie.html#principe-de-toutes-les-décompositions-à-venir",
+    "title": "Une mesure de la quantité d’information",
+    "section": "Principe de toutes les décompositions à venir",
+    "text": "Principe de toutes les décompositions à venir\n\nIdentifier le vecteur \\(\\boldsymbol{u_1}\\) de \\({\\mathbb{R}}^p\\), tel que \\(I_{E_1}\\) soit minimale avec \\(E_1=\\left \\lbrace \\lambda \\boldsymbol{u_1}, \\lambda \\in {\\mathbb{R}}\\right\\rbrace,\\)\nDans \\(E_1^\\perp\\), identifier le vecteur \\(\\boldsymbol{u_2}\\) de \\({\\mathbb{R}}^p\\), tel que \\(I_{E_2}\\) soit minimale avec \\(E_2=\\left \\lbrace \\lambda \\boldsymbol{u_2}, \\lambda \\in {\\mathbb{R}}\\right\\rbrace,\\)\nDans \\(\\left (  E_1 \\oplus E_2 \\right)^\\perp\\), identifier le vecteur \\(\\boldsymbol{u_3}\\) de \\({\\mathbb{R}}^p\\), tel que ….\n\n\nFinalement on aura la décomposition\n\\[I= I_{E_1} + I_{E_2} + \\ldots + I_{E_p}, \\quad \\mbox{avec } I_{E_1} \\leq I_{E_2} \\leq \\ldots \\leq I_{E_p}\\]"
+  },
+  {
+    "objectID": "01_inertie.html#en-quoi-est-ce-utile",
+    "href": "01_inertie.html#en-quoi-est-ce-utile",
+    "title": "Une mesure de la quantité d’information",
+    "section": "En quoi est ce utile ?",
+    "text": "En quoi est ce utile ?\n\nL’essentiel de l’information est portée par les premiers axes (puisque ce sont les axes sur lesquels on perd le moins d’information lorsqu’on projette)\n\nfacilité de visualisation\ncompression de l’information\n\nCe qui est plus complexe\n\ndonner un sens aux nouveaux axes"
+  },
+  {
+    "objectID": "01_inertie.html#bilan-de-ce-cours",
+    "href": "01_inertie.html#bilan-de-ce-cours",
+    "title": "Une mesure de la quantité d’information",
+    "section": "Bilan de ce cours",
+    "text": "Bilan de ce cours\n\nMise en place de tous les outils de base\nL’inertie = de l’information\non veut le plus d’information avec le moins de “variables possibles”\non va utiliser de l’algèbre linéaire\nIl nous reste à comprendre comment trouver ce bon système d’axe"
   },
   {
     "objectID": "ACP_images.html",
