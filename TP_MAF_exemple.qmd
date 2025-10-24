@@ -1,6 +1,0 @@
----
-title: "TP - Analyse en composante principale"
-author: "Prénom et Nom"
-date: "`r Sys.Date()`"
-format: html
----
