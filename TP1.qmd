@@ -1,26 +1,21 @@
 ---
-title: "Labs1 - Analyse en composante Principale"
+title: "TD1 - Analyse en composante Principale"
 author:
-  - name: Marie-Pierre Etienne
-    affiliation: 
+  - name: MAF 2025-2026
+    affiliation:
       - ENSAI - CREST
     email: marie-pierre.etienne@ensai.fr
-date: "Last updated on `r format(Sys.time(), '%d %B, %Y')`"
 institute: https://marieetienne.github.io/MAF/
 bibliography: TPs.bib
 execute:
   freeze: auto
-editor: 
-  markdown: 
-    wrap: 72
-css: mpe_pres_revealjs.css
+format: pdf
 ---
 
-
-
-```{r setup, include=FALSE, eval = TRUE}
+```{r setup, include=FALSE, eval = TRUE, message = FALSE}
 library(tidyverse)
-knitr::opts_chunk$set(echo = FALSE, comment = NA, cache = TRUE, message = FALSE,
+library(FactoMineR)
+knitr::opts_chunk$set(echo = FALSE, comment = NA,  message = FALSE,
                       warning = FALSE, eval = FALSE,
                       fig.align = "center")
 theme_set(theme_minimal())
@@ -31,8 +26,6 @@ scale2 <- function(x, na.rm = FALSE) (x - mean(x, na.rm = na.rm)) / ( sqrt((leng
 ```
 
 ::: hidden
-\$\$
-
 \newcommand\R{{\mathbb{R}}}
 \newcommand\Xbf{{\boldsymbol{X}}}
 \newcommand\norm[1]{\lVert#1\rVert}
@@ -40,586 +33,321 @@ scale2 <- function(x, na.rm = FALSE) (x - mean(x, na.rm = na.rm)) / ( sqrt((leng
 \newcommand\xrow[1]{\boldsymbol{x}_{#1}}
 \newcommand\xbf{\boldsymbol{x}}
 \newcommand\ybf{\boldsymbol{y}}
-
-\$\$
 :::
-
-
-
-
-
-
 
 # Avant-propos
 
-Les TP du cours MAF servent deux objectifs. Revenir sur certaines notions de  cours et donner des outils pratiques pour mettre ne oeuvre les méthodes vues, et réfléchir à quelles informations elles peuvent apportées pour une ceratine application.
+Les TD et TP du cours MAF servent trois objectifs:
 
-Il est donc fréquent que l'on fasse certaine partie avec peu d'outils (à la main) pouur bien faire le lien avec les concets de cours, tandis que d'autres servent d'exemple pour illustrer comment dérouler une analyse sur un jeu de données en particulier.
+-   Revenir sur certaines notions de cours pour mieux les appréhender
 
+-   donner des outils pratiques pour mettre en oeuvre les méthodes vues
+    en cours,
 
+-   réfléchir à leur mise en oeuvre et leur application dans des cas
+    concrets.
 
-# Statistiques avec R à l'Ensai 
+Il est donc fréquent que l'on fasse certaine partie avec peu d'outils (à
+la main) pouur bien faire le lien avec les concets de cours, tandis que
+d'autres servent d'exemple pour illustrer comment dérouler une analyse
+sur un jeu de données en particulier.
 
-Le Logiciel R est libre et disponible sur divers plateformes [sur cette page](https://www.r-project.org/) et le logiciel [Rstudio](https://posit.co/download/rstudio-desktop/) est une interface agréable pour l'utilisation de R  Vous pouvez installer ces logiciels sur votre ordinateur, toutefois il faut être prêt à gérer soi-même les problèmes de version, d'installation etc.
+# Faire le lien avec le cours
 
-Pour plus de sérénité il est préférable d'utiliser les serveurs auqxuels vous pouvez vous connecter par l'url suivante (depuis n'importe où)
-
-[http://clust-n1.ensai.fr \; ou \; http://clust-n2.ensai.fr]{.center}
-
-Pour accéder en plus à une interface graphique, par exemple pour utiliser `shiny` et notamment `Factoshiny`, il faut être à l'ENSAI et utiliser l'adresse
-
-
-[http://clust-n1.domensai.ecole \; ou \; http://clust-n2.domensai.ecole]{.center}
-
-# De bonnes pratiques
-
-## Préparation de l'environnement 
-
-* Ouvrir un navigateur web et se connecter au serveur de calcul.
-* Créer un Projet  (File --> New Project) ou bien en cliquant en haut à droite.  Le travail par projet facilite l'accès aux données (notamment lorsque l'on passe d'un ordinateur à l'autre) et permet surtout de "zapper" d'un projet à un autre. 
-* Choisissez Créer un projet depuis un Nouveau Repertoire, nommez le `MAF_TD1` (comme toujours en programmation on évite les caractères spéciaux, c'est-à-dire, les accents, les espaces entre autres)
-* Pour pouvoir garder le code et l'interprétation des résultats au même endroit nous allons utiliser un type de document [Quarto](https://quarto.org/) qui est adapté pour mélanger code et texte. Quarto accepte du code R mais aussi Python et Julia. Créer un fichier `TP1_Exo1.qmd`. Vous pouvez utiliser [le fichier d'exemple](TP_MAF_exemple.qmd).
-* Passez en mode `source`(en haut à gauche) au lieu de `Visual` ceci permet de mieux comprendre la structure d'un document quarto.
-
-
-## Structure Document Quarto
-
-Un document Quarto se divise en plusieurs sections clés qui facilitent l'organisation de l'analyse, l'intégration de code, et la présentation des résultats. Voici une présentation des principales composantes :
-
-### En-tête YAML
-
-C'est la section de métadonnées du document. Elle est située en haut du fichier et est encadrée par des lignes ---. On y définit des informations essentielles telles que :
-        title : le titre du document ;
-        author : l’auteur ou les auteurs du document ;
-        date : la date de création, qui peut être dynamique avec R, par exemple en utilisant date: "r Sys.Date()" ;
-        format : le format de sortie (HTML, PDF, Word, revealjs pour les présentations, etc.).
-
-    Exemple d'en-tête YAML :
-
-```{yaml}
-#| echo: true
-
----
-title: "Analyse de Données avec R"
-author: "Votre Nom"
-date: "`r Sys.Date()`"
-format: html
----
-
-```
-
-### Texte en Markdown 
-
-La rédaction du texte dans Quarto utilise la syntaxe Markdown pour structurer le contenu de manière simple et lisible. Markdown permet de formater le texte (titres, listes, liens, etc.) sans avoir à écrire du code complexe. Par exemple :
-
-```{markdown}
-    # pour les titres (niveau 1, 2, etc. avec ##, ###...),
-    - ou * pour les listes,
-    [lien](url) pour les liens.
-
-```
-
-Exemple :
-
-```{markdown}
-#| echo: true
-
-## Introduction
-Ce document présente une analyse de données en utilisant **R**.
-- Point 1
-- Point 2
-```
-
-Le markup langage markdown permet aussi d'insérer des formules mathématiques, comme du latex.
-
-```{markdown}
-  $$x_{+k}= \sum_{i=1^n} x_{ik}$$
-
-```
-
-### Blocs de Code
-Quarto permet d'intégrer du code R (mais aussi  Python, et Julia) grâce à des blocs de code, `chunks`. Les blocs de code sont délimités par trois accents graves (triple backtick), avec le langage spécifié entre accolades ({}). Les blocs peuvent exécuter du code directement dans le document et afficher les résultats en ligne.
-
-Exemple de bloc de code en R :
-
-```{markdown}
- ```{r chunk_example}
- #| echo: true
-
- # Calcul simple
-  2+2
-  ```
-```
-
-Les options de rendu du bloc de code peuvent être précisées. Par exemple ici 
-* #| echo: true permet de montrer le code
-* #| eval: false permet de ne pas executer le code
-
-Une présentation plus complète des options, pour un rendu plus fin est disponible sur [le site de Quarto](https://quarto.org/docs/computations/r.html#chunk-options).
-
-Le bloc peut être défini en tapant 
-  * manuellement les triples backticks, 
-  * ou en utilisant le menu Code --> Insert Chunk, 
-  * ou avec le raccourci CTRL + ALT + i
-
-
-### Rendu et Exportation du Document
-
-Une fois le document terminé, on peut le rendre dans le format souhaité en utilisant la commande suivante dans le terminal `quarto render mon_document.qmd`ou en cliquant sur Render dans RStudio.
-
-Cette commande crée une version finalisée du document dans le format spécifié (HTML, PDF, etc.).
-
-
-Avec Quarto on peut tout autant faire des slides, des rapports en pdf, en word etc. Ceci permet de s'assurer que les résulats présentés sont ceux de l'analyse et c'est un *premier pas important dans le sens d'assurer plus de reproductibilité en science*. (d'autres outils sont utiles voir [ici](https://marieetienne.github.io/reproductibilite/_presentation/#1) )
-
-C'est très utile en TP puisque vous pouvez commenter les analyses proposées, les résultats obtenus directement dans le fichier qui contient les codes permettant d'obetenir ces résultats.
-
-
-Plus largement, en suivant cette structure, vous pouvez organiser vos analyses de manière professionnelle et claire.
-
-### Création du document
-
-Lors de la mise en place de l'analyse, on peut éxécuter chaque chunk avec le raccourci CTL + Enter, ou en cliquant sur la petite flèxche verte en haut à droite du chunk.
-
-
-# Analyse des caractéristiques géochimiques des sols en forêt de Bornéo
-
-
-Il s'agit ici de carcatériser les propriétés physico chimiques des sols en forêt à Bornéo. Pour ceci on a prélevé des échantillons de sol, à diverses profondeurs et on cherche à mettre en évidence des typologies de sols et à identifier des sites de prélèvement qui se ressemblent. Les données consistent en la mesure de caractéristiques géochimiques de sols dans une forêt pluviale de Bornéo et sont issues de @sellan2021differences.
-
-## Comprendre les données
-
-### Importation
-
-
-Nous allons importer les données et les manipuler en utiliser les possibilités de la suite de package `tidyverse`. Les données sont [disponibles sur ce lien](https://marieetienne.github.io/datasets/donnees_sols.txt)
+On s'intéresse à un jeu de données de 100 individus, pour lesquels on
+mesure 4 variables
 
 ```{r}
-#| label: donnees
+#| label: donnees_marche
+#| echo: false
+#| eval: true
+#| message: false
+
+walking_dta <- read.table('walking_dataset_100.csv', sep = ',', header = TRUE, row.names = 1)
+```
+
+-   le poids en $Kg$ (variable `P` )
+-   la taille en $m$,
+-   la longueur de pas en $cm$,
+-   la vitesse de marche en $m.s^{-1}$.
+
+```{r}
+#| label: donnees_marche_sum
+#| echo: false
+#| eval: true
+#| message: false
+
+n <- nrow(walking_dta)
+sum_dta <- walking_dta |>
+  summarize_all(list(moyenne = mean, variance = var))  |>
+  pivot_longer(
+    everything(),
+    names_to = c("variable", ".value"),
+    names_sep = "_"
+  ) |>
+   mutate(variance = variance *(n-1)/n)
+sum_dta |>
+  mutate(across(is.numeric, \(x) round(x, 2)))
+```
+
+1.  Que peut-on dire de la dispersion le long de chacun des axes
+    initiaux.
+
+2.  Combien vaut l'inertie projeté sur l'axe de vecteur directeur
+    $(1,0,0,0)^\top$ ?
+
+
+```{r}
+sum_dta |>
+  mutate(across(is.numeric, \(x) round(x, 2))) |> summarise(Inertie = round(sum(variance)))
+```
+
+3.  Combien vaut l'inertie projeté sur l'axe de vecteur directeur
+    $(0,1,0,0)^\top$ ?
+
+
+
+On note $X$ de dimension $100 \times 4$ la matrice des données centrées.
+Chaque individu a le même poids.
+
+4.  On souhaite utiliser la distance euclidienne puis réaliser une ACP.
+    le cours indique qu'on diagonalise la matrice $MVM$. Indiquer ce que
+    sont les matrices $V$ et $M$ impliquées.
+
+```{r}
+#| label: donnees_marche_XX
+#| echo: false
+#| eval: true
+#| message: false
+
+X <- scale(walking_dta, center = TRUE, scale =FALSE) |> as.matrix()
+V <- 1/n * t(X) %*% X
+```
+
+5.  On diagonalise la matrice $MVM$ et on obtient les valeurs propres
+    suivantes. Quelle est l'inertie portée par le premier plan
+    principal, quel pourcentage de l'inertie totale ceci représente-t-il
+    ? Pensez vous qu'on ait ainsi une bonne manière de représenter les
+    données inditiales en seulement deux dimensions ?
+
+```{r}
+#| label: donnees_marche_eigen
+#| echo: false
+#| eval: true
+#| message: false
+round(eigen(V)$values,3)
+```
+
+6.  Quelle est l'inertie portée par l'axe de vecteur directeur
+    $(1,0,0,0)^\top$ dans ce cas ?
+
+
+7.  Que deviennent les matrices $V$ et $M$ dans ce cas ?
+
+
+8.  Les valeurs propres de $M V M$ sont données ci-dessous. Quelle est
+    maintenant la part d'inertie représentée sur le premier axe
+    principal, sur le premier plan principal.
+
+```{r}
+#| label: donnees_marche_eigen_normed
+#| echo: false
+#| eval: true
+#| message: false
+
+M <- diag(1/sqrt(sum_dta$variance))
+round(eigen(M%*%V%*%M)$values,3)
+```
+
+
+9.  On utilise le package `FactoMineR` pour réaliser l'ACP. Peut on
+    deviner quelle est la métrique utilisée par défaut ? Quelles sont
+    les variables bien représentées ? Discuter du lien entre les
+    variables.
+
+```{r}
+#| label: donnees_marche_eigen_facto_var
 #| echo: true
 #| eval: true
 #| message: false
-library(tidyverse) # Pour la manipulation de données
-donnees_sols <- read.table("https://marieetienne.github.io/datasets/donnees_sols.txt",
-                           sep = ";", # separateur de champs
-                           header = TRUE, # 1ere ligne donne le nom des colonnes
-                           encoding = "UTF-8")  # Encodage initial du fichier
+
+walking_dta_pca <- PCA(walking_dta, graph = FALSE)
+walking_dta_pca$eig
+plot(walking_dta_pca, choix = "var")
 ```
 
+10. En utilisant le graphique ci-dessous, que pouvez-vous dire
 
-
-Le jeu de données `donnees_sols` regroupe donc les mesures chimiques surtous les types de sols. Les auteurs précisent  le préfixe Exc signifie échangeable et le préfixe P signifie Available. 
-
-
-### Une première exploration 
-
-Proposer des résumés univariés de chaque variable présente dans le jeu de données.
+-   sur l'individu 10 ?
+-   sur l'individu 94 ?
 
 ```{r}
-#| label: resume_univarie
-#| echo: false
-#| include: false
-
-donnees_sols |>    
-  summary()
-
-## transformer les variables Sol, et Profondeur en facteur
-
-donnees_sols <- donnees_sols |>    
-  mutate(Sol = as.factor(Sol),
-         Site = as.factor(Site), 
-         Profondeur = as.factor(Profondeur))
-donnees_sols |>    
-  summary()
-#  summarise(across(where(is.numeric), list(moy = mean, var = var))) 
-# pour un affichage plus slisible on peut utiliser 
-# |> 
-#   pivot_longer( cols = everything(), names_pattern = "([a-zA-Z]+_moy|[a-zA-Z]+_var)")
-```
-
-
-* Combien y a t-il de variables quantitatives / qualiltatives?
-* Combien d'échantillons sont mesurés par site ?
-
-```{r}
-#| label: echantillon-par-site
-#| echo: false
-#| include: false
-donnees_sols |> group_by(Profondeur) |> count() |> arrange(n)
-donnees_sols |> group_by(Site) |> count() |> arrange(n)
-donnees_sols |> group_by(Site, Profondeur) |> count() 
-```
-
-* Sont-ils tous prélevés à la même profondeur ?
-
-* Quel est le pH moyen tout site/Sol et Profondeur confondu ?
-* Chercher le sens de chaque variable.
- * Av.P Phospore disponible
- * C  Carbone
- * N  Azote
- * NO3 Nitrate
- * NH4 Amonium
- * Exc.Ac Actinium Echangeable
- * Exc.Al Aluminium Echangeable 
- * Exc.Ca Calcium Echangeable
- * Exc.Mg Magnésium 2changeable 
- * Exc.K Potassium échangeable
- * Exc.Na Sodium échangeable
- * Exc.Cations Cations (ions chargés positivement) échangeables 
- * SatBase [Taux de Saturation du sol](https://fr.wikipedia.org/wiki/Taux_de_saturation_du_sol)
- * Argile pourcentage d'argile dans le sol,
- * Limon pourcentage de Limon dans le sol,
- * Sable pourcentage de sable dans le sol.
- 
- 
- 
-* Quelle la variance de la teneur en Eau ? Quelle est la variance de la teneur en Sodium (Na) ?
-
-```{r}
-#| label: variance
-#| echo: false
-#| include: false
-donnees_sols |> summarize(Eau_var = var(Eau), Na_var = var(Exc.Na)) 
-```
-
-
-### Représentation bivariée
-
-Pour appréhender le jeu de données, il est utile de commencer par comprendre les relations deux à deux entre les variables. On peut commencer par la corrélation entre celles-ci
-
-```{r}
-#| label: correlation
-#| echo: false
-#| include: false
-library("corrplot")
-donnees_sols_quanti <- donnees_sols |> 
-  select(where(is.numeric))
-cor.mat <- round(cor(donnees_sols_quanti),2)
-corrplot(cor.mat, type="upper", order="hclust", 
-         tl.col="black", tl.srt=45)
-```
-
-
-
-
-
-
-En utilisant le package `GGally`et notamment la fonction ggpairs, proposer une représentation bivariée des différents couples de variables. 
-
-```{r}
-#| label: graphique-deux-a-deux
-#| echo: false
-#| include: false
-#| message: false
-
-library(GGally)
-ggpairs(donnees_sols,  columns = 4:21)
-```
-
-La visualisation est difficile, d'où l'intérêt d'une approche multivariée.
-
-## Approche factorielle
-
-Le but est de faire émerger des typologies de sol. Pour le moment nous mettons de coté les variables qualitatives.
-
-
-### Mise en place de l'approche factorielle
-
-* Comment décider le poids attribuer à chaque individu  ?
-
-<!-- par défaut le poids est 1/n sauf si autre bonne raison  -->
-
-* Quelle distance entre variables choisir ? 
-
-<!-- Ici les varaibles ont des ordres de grandeur différent, la mesure de pH n'est pas comparable avec la teneur en Sodium par exemple, on va faire une ACP normée. on pourrait classer les variables par trype et faire une AFM mais on a peu de connaissance sur les groupes  -->
-
-* Quelles varaibles choisissez vous de considérer comme supplémentaires (qualitative et ou quantitative) 
-
-<!-- on prend uniquement les variables quali en supplméentaires  -->
-
-* Quelle doit être l'inertie du nuage ?
-
-<!-- Si on a bien choisi une ACP normée on s'attend à avoir 18 d'inertie, mais le pourcentage de Argile Limon ou sable somme à 1, donc on devra avoir  17 variables indépendantes et 17 d'inertie. Il y a toutefois sans doute à cause des arrondis certains sites qui ne somment pas à 100 -->
-
-Ces choix étant faits, on peut lancer une analyse en composante principale.
-
-### ACP "à la main"
-
-L'ACP consiste à construire une nouvelle base de $\R^p$ pour représenter les individus.
-
-* Combien vaut $p$ ici ?
-
-* Cette base est formée des veteurs propres d'une matrice. De quelle matrice parle-t-on  ?
-
-<!-- C'est la matrice de corrélation des varaibles si on fait une ACP normée  -->
-
-* A l'aide de la fonction `eigen` représenter la suite décroissante des valeurs propres. A partir de combien de vecteurs de base considérez-vous que l'information apportée devient négligeable?
-
-
-```{r}
-#| label: eigen-decomposition
-#| echo: false
-#| include: false
-#| message: false
-
-V <- cor(donnees_sols_quanti)# V = t(X)%*% W %*% X
-V.eigen <- eigen(V)
-valeurspropres <- V.eigen$values
-vecteurspropres <- V.eigen$vectors
-dta.vp <- data.frame(index = 1:length(valeurspropres), valeurspropres = valeurspropres, inertiepercent = cumsum(valeurspropres)/sum(valeurspropres)) |> 
-  mutate(diffinertie = valeurspropres-lead(valeurspropres))
-dta.vp  |> ggplot() +  geom_col(aes(x=index, y = valeurspropres)) 
-dta.vp  |> ggplot() +  geom_line(aes(x=index, y = inertiepercent)) + ylim(c(0,1)) + ylab("Pourcentage d'inertie représentée")
-
-```
-
-
-
-Pour réaliser l'ACP, on utilise deux packages `FactomineR` qui fait les calculs et `factoextra`pour des sorties plus agréables
-
-
-```{r}
-#| label: facto
+#| label: donnees_marche_eigen_facto_ind
 #| echo: true
+#| eval: true
 #| message: false
-library(FactoMineR)
-library(factoextra)
+
+plot(walking_dta_pca, choix = "ind")
 ```
 
-Vous pouvez maintenant lancer l'ACP sur le jeu de données du sol.
+11. Quels sont les individus qui contribuent le plus à la formation du
+    premier axe ?
 
 ```{r}
-#| label: facto-spec
+#| label: donnees_marche_eigen_facto_contrib
 #| echo: true
-#| eval: false
+#| eval: true
 #| message: false
 
-sols.pca <- PCA(X = donnees_sols,
-    scale.unit = , ## ACP normée ou non ? 
-    ncp = , ## nombre de composantes principales à garder, dans le doute on garde tout
-    ind.sup = , ## numero des lignes des individus supplémentaires
-    quanti.sup = , ## numero des colonnes des variables quanti sup
-    quali.sup = , ## numero des colonnes des variables quanti sup
-    row.w = , ## poids des individus
-    col.w = , ## poids des variables 
-    graph = , ## TRUE or FALSe doit on sortir les graphes
-    axes = ,  ## pour quels axes 
-    )
+walking_dta_pca$ind$contrib |> as_tibble() |> rowid_to_column("Ind") |> arrange(-Dim.1)
 ```
 
 
 ```{r}
-#| label: facto-sols
+walking_dta_pca$ind$contrib |> as_tibble() |> rowid_to_column("Ind") |> arrange(-Dim.2)
+```
+
+12. Quels sont les individus les mieux représentés sur le premier axe ?
+
+```{r}
+#| label: donnees_marche_eigen_facto_cos2
 #| echo: true
-#| message: false
-sols.pca <- PCA(X = donnees_sols[, -2],
-    scale.unit = TRUE, ## ACP normée ou non ? 
-    ncp = 18, ## nombre de composantes principales à garder, dans le doute on garde tout
-    quali.sup = c(1,2), ## numero des colonnes des variables quali sup
-    graph = FALSE
-    )
-```
-
-* Indiquer comment est construit l'objet `sols.pca` et détailler ce qu'il contient.
-
-
-* A l'aide de la commande `sols.pca$eig`, visualisez le pourcentage d'information expliqué par chaque composante principale (ou nouvelle colonne). Comparer avec ce qui a été trouvé "à la main". Les vecteurs propres sont disponibles dans sols.pca`$svd$V`, comparer également les deux premiers axes principaux et les vecteurs propres trouvés à la main.
-
-
-```{r}
-#| label: facto-eigen
-#| echo: false
-#| message: false
-sols.pca$eig - valeurspropres
-sum(sols.pca$svd$V[,1]*vecteurspropres[,1])
-```
-
-## Mise en oeuvre pratique de l'ACP pour analyse des données de sol
-
-
-* Représentez l'éboulis des valeurs propres à partir de la sortie `sols.pca` (ce qui a déjà été fait à la main précédemment).
-
-```{r}
-#| label: eboulis-facto
-#| echo: false
+#| eval: true
 #| message: false
 
-sols.pca$eig |> 
-  as.data.frame() |>  
-  rowid_to_column() |> 
-  ggplot() + geom_col(aes(x=rowid, y =eigenvalue)) 
+walking_dta_pca$ind$cos2 |> as_tibble() |> rowid_to_column("Ind") |> arrange(-Dim.1)
 ```
 
-* A partir de combien d'axes factoriels considérez vous que l'information apportée devient négligeable?
+13. Comment sont définies ces deux quantités ?
+
+14. Comment mesurer la qualité de la représentation sur le premier plan
+    ?
 
 
-### Variables
-
-Le package `factoextra`donne des outils pour produire des sorties les plus lisibles possibles.
-
-Pour représenter le cercle des corrélations dans un plan principal, on utilise la fonction `fviz_pca_var`.
-Sur chaque graphe, qu'est ce qui est représenté? 
+# Une première ACP. Etude des performance au Décathlon
 
 ```{r}
-#| label: fviz_pca_par
-fviz_pca_var(sols.pca,
-             axes = c(1, 2)) # Numéro des axes à représenter 
-fviz_pca_var(sols.pca,
-             axes = c(1, 3)) #
-fviz_pca_var(sols.pca,
-             axes = c(2, 3)) # 
+#| label: donnees_decathlon
+#| echo: true
+#| eval: true
+#| message: false
+
+data("decathlon")
 ```
 
-* Pour plus de lisibilité, refaites le même graphique avec seulement les variables bien représentées (par exemple celles pour lesquelles le cos2 de l'angle entre la variable initiale et la variable projetée dans le plan représenté est supérieur à 0.8). Jouer sur les différentes repésentations pour bien comprendre quelle information est disponible sur chaque projection
+1.  Discuter de la nature des variables
 
+*On a 11 variables quantitatives, les performances aux épreuves et le
+nombre total de points. Le rang est une variable numérique mais qui a un
+rôle particulier, on ne peut pas vraiment donner de sens au rang moyen
+par exemple. enfin on a une variable qualitative la competition dont il
+s'agit.*
 
+Le code ci-dessous calcule des résumés quantitatifs pour les variables
+pertinentes.
 
 ```{r}
-#| label: fviz_pca_var_select
-fviz_pca_var(sols.pca,
-             axes = c(1, 4), 
-             select.var = list(cos2 = 0.8)) # 
+#| label: donnees_decathlon_sum
+#| echo: true
+#| eval: true
+#| message: false
+
+decathlon |> summarise(across(is.numeric, list(moyenne=mean, variance=var ))) |>
+  pivot_longer(
+    everything(),
+    names_to = c("variable", ".value"),
+    names_sep = "_"
+  ) |>
+   mutate(variance = variance *(n-1)/n) |> # pour corriger la variance par défaut de R
+  mutate(across(is.numeric, \(x) round(x, 2)))
 ```
 
+2.  Pour comprendre les relations entre les variables, nous pouvons
+    réaliser une ACP.
 
+-   Faut il prendre en compte toutes les variables quantitatives ?
+-   Quelle choix de distance feriez vous ?
 
-Il est important de noter qu'on peut grâce à `resultat_acp`, tracer ce graphique nous même et donc modifier son apparence à notre guise.
+3.  l'ACP est réalisée grâce aux commandes suivantes. A quoi servent les
+    options `quanti.sup` et `quali.sup` ? pourquoi ce choix ? Combien y
+    a t il de variables quantitatives au total ?
 
 ```{r}
-#| label: cercle_correlation_perso
-sols.pca$var$cor %>% # Corrélations entre
-  as.data.frame() %>% 
-  rownames_to_column("Variable") %>% 
-  ggplot() +
-  geom_segment(aes(xend = Dim.1, yend = Dim.2), x = 0, y = 0, 
-               arrow = arrow(length=unit(.5,"cm"))) +
-  ggforce::geom_circle(aes(x0 = 0, y0 = 0, r = 1)) +
-  geom_text(aes(x = Dim.1, y = Dim.2, label = Variable)) +
-  coord_fixed()
+#| label: donnees_decathlon_pca
+#| echo: true
+#| eval: true
+#| message: false
+decathlon_pca <- PCA(decathlon, scale.unit = TRUE, quanti.sup = c("Rank"), quali.sup = "Competition", graph = FALSE, ncp = 11)
 ```
 
-- Avec la fonction `corrplot` et l'objet `sols.pca$var$cor`, représentez les corrélations entre anciennes et nouvelles variables.
+4.  Combien suggérez d'axes vous semble-t-il pertinent de regarder ?
 
 ```{r}
-#| label: corrplot_pca
-corrplot(sols.pca$var$cor)
+#| label: donnees_decathlon_eig
+#| echo: true
+#| eval: true
+#| message: false
+library(factoextra) # for nice vizualisation
+decathlon_pca$eig
+fviz_eig(decathlon_pca, choice = "eigenvalue", ncp = 11)
 ```
 
-- Quel est l'intérêt du cercle de corrélation par rapport à ce dernier graphique?
-
-### Individus
-
-Pour représenter la projection des individus dans un plan principal, on utilise la fonction `fviz_pca_ind`.
+5.  Quelles sont les variables bien représentées sur le premier plan
+    principal ?
 
 ```{r}
-#| label: fviz_pca_ind
-# Représentation dans le premier plan_principal
-fviz_pca_ind(sols.pca,
-             axes = c(1, 2)) # Numéro des axes à représenter 
+#| label: donnees_decathlon_var
+#| echo: true
+#| eval: true
+#| message: false
+library(factoextra) # for nice vizualisation
+fviz_pca_var(decathlon_pca, axes = c(1,2), alpha.var = "cos2")
 ```
 
-* Dans la fonction `fviz_pca_ind`, en rajoutant `col.ind = donnees_sols$Sol`, coloriez les individus selon leur typologie de sol.
+6.  Discuter du lien entre les variables. Cela semble-t-il surprenant ?
 
+7.  Le saut à la perche `Pole.vault` est il bien représenté ? Sur quel
+    plan faut-il projeté pour pouvoir visualiser les performances au
+    saut à la perche ?
 
 ```{r}
-#| label: fviz_pca_ind_hab
-# # Représentation dans le premier plan_principal
-# pour une raison qui m'échappe ce code produit une erreur de palette
-
-fviz_pca_ind(sols.pca,
-              axes = c(1, 2),
-              habillage=1) 
+#| label: donnees_decathlon_var_cos2
+#| echo: true
+#| eval: true
+#| message: false
+decathlon_pca$var$cos2
 ```
 
-<!-- Elements d'explication pour les TDS -->
-<!--  les 2 premiers axes sont facilement interprétables, et que le 3e est pas si clair (bien que le pH semble assez lié), mais le 4e l'est très bien. -->
-<!-- Et notamment ce qui est cool c'est que le plan (1, 2) permet de bien distinguer la profondeur des échantillons, alors que le plan (1, 4) permet de  bien distinguer les trois grands types de sol. (Axe 1 = Alluvial d'un coté, Grès/ Dunaire de l'autre, Axe 4 permet ensuite de distinguer entre Grès et Dunaire). -->
-
-
-
+8.  Le saut à la perche est la huitième épreuve au décathlon, le javelot
+    la neuvième, le 1500 m la dernière. Que laisse espérer une bonne
+    performance au saut à la perche, quant à la performance au javelot à
+    venir ?
 
 ```{r}
-#| label: FactomineR_pca_ind
-# Représentation dans le premier plan_principal
-plot.PCA(sols.pca, 
-         axes = c(1,4), invisible=c('ind.sup'),
-         habillage=1, ## numero de la variable quali  à utiliser pour l'habillage
-         label ='none')
+#| label: donnees_decathlon_var_34
+#| echo: true
+#| eval: true
+#| message: false
+fviz_pca_var(decathlon_pca, axes = c(3,4), alpha.var = "cos2")
 ```
 
+9.  La variable nombre de points est très bien représentée par l'axe 1.
+    que pensez de l'intérêt des trois dernières épreuves sur le résultat
+    final ?
 
+10. Ci-dessous le code pour obtenir la représentation des individus dans
+    le premier plan principal. Citer un excellent décathlonien. Discuter
+    de la performance de Casarsa (en haut à gauche) au 400m. Peut-on
+    affirmer que Qi (près de l'origine) est un décathlonien moyen ?
 
-* Représenter la projection des individus dans les premiers plans principaux. Quel plan vous semble bien distinguer les types de sol? Comment interprétez-vous alors les typologies de sols au vu des premières variables?
+```{r}
+#| label: donnees_decathlon_ind12
+#| echo: true
+#| eval: true
+#| message: false
+fviz_pca_ind(decathlon_pca, axes = c(1,2), alpha.ind = "cos2")
+```
 
-
-* Faites le même exercice avec les profondeurs et essayez d'interpréter quel(s) gradient(s) distingue(nt) bien les profondeurs?
-
-
-## Comment trouver la représentation qui discrimine le mieux les types de sol.
-
-* Quelle méthode vous semble adaptée ? 
-
-* Pouvez-vous proposer un métodologie pour la mettre en oeuvre 
-
-<!-- l'AFD sera vue plus en détaille dan sle sprochains TDs, ne pas insister -->
-<!-- FactormineR Ne proose pas d'AFD, on peut utiliser la fonction suivante qui a été codée par M. Marbac.  -->
-<!-- Il est tout à fait possible de la donner aux étudiants -->
-<!-- Mais c'est bien de leur faire réfléchir à l'implémentation à partir de l'ACP à la main -->
-<!-- ## Attention z doit être numérique -->
-<!-- mon.AFD <- function(x, z){ -->
-<!--   x <- as.matrix(x) -->
-<!--   n <- nrow(x) -->
-<!--   Vt <- cov(x) * (n-1) / n -->
-<!--   nk <- table(z) -->
-<!--   K <- length(nk) -->
-<!--   g <- colMeans(x) -->
-<!--   gk <- matrix(0, K, ncol(x)) -->
-<!--   for (k in 1:K) gk[k,] <- colMeans(x[which(z==k), ]) -->
-<!--   Vb <- (t(gk)%*%diag(nk)%*%gk) / n - g%*%t(g) -->
-<!--   res.afd <- eigen(Vb %*% solve(Vt)) -->
-<!--   res.afd$values <- as.numeric(res.afd$values[1:(K-1)]) -->
-<!--   res.afd$vectors <- sapply(1:(K-1), function(u) as.numeric(res.afd$vectors[,u])) -->
-<!--   x %*% solve(Vt) %*% res.afd$vectors -->
-<!-- } -->
-
-<!-- x <- donnees_sols_quanti -->
-<!-- z <- donnees_sols$Sol -->
-
-
-<!-- mon.AFD(x,as.numeric(z)) -->
-
-
-
-# Performances au Décathlon 
-
-*potentiellement commencer en TP mais surtout à faire chez soi pour vérifier qu'on a compris*
-
-L'objectif de l'étude est de mettre en évidence des profils d'athlètes  parmi des décathloniens (\emph{e.g.,}, mais également de mettre en évidence si certaines épreuves se ressemble (quand on est excellent au 100m, est on aussi excellent au saut en longueur ?)
-
-Les données sont disponibles dans le package `FactoMineR` et peuvent etre chargée par la commande `data(decathlon)`après avoir chargé le package `FactoMineR`. Ces données portent sur les résultats aux épreuves du décathlon lors de deux compétitions d'athlétisme qui ont eu lieu à un mois d'intervalle: les Jeux Olympiques d'Athènes (23 et 24 août 2004) et le Décastar (25 et 26 septembre 2004). Lors d'une compétition, les athlètes participent à cinq épreuves (100m, longueur, poids, hauteur, 400m) le premier jour, puis aux épreuves restantes (110m haies, disque, perche, javelot, 1500m) le lendemain. Pour chaque athlète, on dispose de ses performances dans chacune des 10 épreuves, de son classement final, de son nombre de points final et  de la compétition à laquelle il a participé.
-
-## Plan de l'étude 
-
-* Une étude descriptive simple et bivariée pour identifier des individus atypiques, les variables les plus corrélées. 
-* Mettre en place une ACP
-  * Bien réfléchir aux variables actives et supplémentaires
-  * Choisir la métrique adaptée et les poids des individus.
-  * Réaliser l'ACP.
-* Interprétation
-  * Discuter la qualité de la représentation
-  * Expliquer ce qui est visible sur les différents plans factoriels
-  * Combien de plan factoriels vous semblent intéressants ?
-  * Donner un sens aux axes factoriels.
-  * Identifier les disciplines qui se ressemblent (elles mettent en jeu les mêmes compétences physiques)
-  * Quelles sont les disciplines qui contribuent le plus au premier axe factoriel ?
-  * Quels sont les individus qui contribuent le plus à ce même premier axe ?
-  * Comment le score est il lié aux différentes disciplines ?
-  * Est ce qu'un athlète qui  est excellent au 100m, est  aussi excellent au saut en longueur ?
-* Technique
-  * Calculer manuellenent (sans package) la corrélation entre les performances au 100m et le premier axe factoriel
-  * Reconstruisez à la main les coordonnées des individus dans le premier plan factoriel
-  * calculer à la main les contributions des différents individus
-  
-  
-  
-
+11. Le graphique suivant ajoute l'information sur la Competition. Que
+    pouvez vous déduire des résultats au Decastar et aux Jeux Olympiques
+    ?

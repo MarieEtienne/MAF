@@ -1,0 +1,397 @@
+---
+title: "TD1 - Analyse en composante Principale"
+author:
+  - name: MAF 2025-2026
+    affiliation:
+      - ENSAI - CREST
+    email: marie-pierre.etienne@ensai.fr
+institute: https://marieetienne.github.io/MAF/
+bibliography: TPs.bib
+execute:
+  freeze: auto
+format: pdf
+---
+
+```{r setup, include=FALSE, eval = TRUE, message = FALSE}
+library(tidyverse)
+library(FactoMineR)
+knitr::opts_chunk$set(echo = FALSE, comment = NA,  message = FALSE,
+                      warning = FALSE, eval = FALSE,
+                      fig.align = "center")
+theme_set(theme_minimal())
+options(ggplot2.discrete.colour=   scale_color_manual(values = wesanderson::wes_palette(name = "Darjeeling1")) )
+couleur <-  wesanderson::wes_palette(name = "Darjeeling1")
+scale2 <- function(x, na.rm = FALSE) (x - mean(x, na.rm = na.rm)) / ( sqrt((length(x)-1) / length(x)) *sd(x, na.rm) )
+
+```
+
+::: hidden
+\newcommand\R{{\mathbb{R}}}
+\newcommand\Xbf{{\boldsymbol{X}}}
+\newcommand\norm[1]{\lVert#1\rVert}
+\newcommand\xcol[1]{\boldsymbol{x}^{#1}}
+\newcommand\xrow[1]{\boldsymbol{x}_{#1}}
+\newcommand\xbf{\boldsymbol{x}}
+\newcommand\ybf{\boldsymbol{y}}
+:::
+
+# Avant-propos
+
+Les TD et TP du cours MAF servent trois objectifs:
+
+-   Revenir sur certaines notions de cours pour mieux les appréhender
+
+-   donner des outils pratiques pour mettre en oeuvre les méthodes vues en cours,
+
+-   réfléchir à leur mise en oeuvre et leur application dans des cas concrets.
+
+Il est donc fréquent que l'on fasse certaine partie avec peu d'outils (à la main) pouur bien faire le lien avec les concets de cours, tandis que d'autres servent d'exemple pour illustrer comment dérouler une analyse sur un jeu de données en particulier.
+
+# Faire le lien avec le cours
+
+On s'intéresse à un jeu de données de 100 individus, pour lesquels on mesure 4 variables
+
+```{r}
+#| label: donnees_marche
+#| echo: false
+#| eval: true
+#| message: false
+
+walking_dta <- read.table('walking_dataset_100.csv', sep = ',', header = TRUE, row.names = 1)
+```
+
+-   le poids en $Kg$ (variable `P` )
+-   la taille en $m$,
+-   la longueur de pas en $cm$,
+-   la vitesse de marche en $m.s^{-1}$.
+
+```{r}
+#| label: donnees_marche_sum
+#| echo: false
+#| eval: true
+#| message: false
+
+n <- nrow(walking_dta)
+sum_dta <- walking_dta |>
+  summarize_all(list(moyenne = mean, variance = var))  |>
+  pivot_longer(
+    everything(),
+    names_to = c("variable", ".value"),
+    names_sep = "_"
+  ) |>
+   mutate(variance = variance *(n-1)/n)
+sum_dta |>
+  mutate(across(is.numeric, \(x) round(x, 2)))
+```
+
+1.  Que peut-on dire de la dispersion le long de chacun des axes initiaux. *Les variance des variables weight et steplength sont bien plus grandes.*
+
+2.  Combien vaut l'inertie projeté sur l'axe de vecteur directeur $(1,0,0,0)^\top$ ?
+
+*L'inertie totale est la somme des variances.*
+
+```{r}
+sum_dta |> summarise(test = num(sum(variance), digits = 2))
+```
+
+*En projetant sur le premier axe, on ne garde que l'information sur la première variable. Donc l'inertie du nuage ainsi projeté est la variance de la première variable soit* `r sum_dta$variance[1]`
+
+*L'inertie par rapport à un axe est l'inertie perdu en projetant sur cet axe. Donc c'est l'inertie totale moins l'inertie portée par l'axe soit* `r sum_dta |>    mutate(across(is.numeric, \(x) round(x, 2))) |> summarise(Inertie = sum(variance)) -sum_dta$variance[1]`
+
+3.  Combien vaut l'inertie projeté sur l'axe de vecteur directeur $(0,1,0,0)^\top$ ?
+
+`r sum_dta$variance[3]`
+
+On note $X$ de dimension $100 \times 4$ la matrice des données centrées. Chaque individu a le même poids.
+
+4.  On souhaite utiliser la distance euclidienne puis réaliser une ACP. le cours indique qu'on diagonalise la matrice $MVM$. Indiquer ce que sont les matrices $V$ et $M$ impliquées.
+
+```{r}
+#| label: donnees_marche_XX
+#| echo: false
+#| eval: true
+#| message: false
+
+X <- scale(walking_dta, center = TRUE, scale =FALSE) |> as.matrix()
+V <- 1/n * t(X) %*% X
+```
+
+*Puisqu'on choisit la distance euclidienne la métrique* $M$ est la matrice Identité $4 \times 4$.
+
+*Dans le cours la matrice $V= X^\top W X$, où $W$ est la métrique sur l'espece des variables $\mathbb{R}^n$. Puisque tous les individus ont le même poids, $W = 1/n I_n$, donc $V$ est la matrice de covariance.*
+
+5.  On diagonalise la matrice $MVM$ et on obtient les valeurs propres suivantes. Quelle est l'inertie portée par le premier plan principal, quel pourcentage de l'inertie totale ceci représente-t-il ? Pensez vous qu'on ait ainsi une bonne manière de représenter les données inditiales en seulement deux dimensions ?
+
+```{r}
+#| label: donnees_marche_eigen
+#| echo: false
+#| eval: true
+#| message: false
+round(eigen(V)$values,3)
+```
+
+*L'inertie portée par le premier plan est la somme des deux plus grandes valeurs propres.*
+
+`r sum(eigen(V)$values[1:2])`
+
+*Le pourcentage que ceci représente est donné par* $\frac{\lambda_1 +\lambda_2}{\sum_{i=1}^p \lambda_i}$
+
+`r sum(eigen(V)$values[1:2])/ sum(eigen(V)$values)`
+
+*A cause des ordres de grandeur différents des différentes variables, la représentation est telle qu'on n'a pas d'intérêt à préserver l'information sur les variables 2 et 4, car elles sont associées à une plus petite variance. Les variables initiales ont des poids tres différents dans la construction des axes ce qui n'est pas vraiment pertinent. On va vouloir donner une importance identique à chacune des variables.*
+
+*On propose de faire une ACP normée, c'est à dire qu'on change la métrique dans l'espace des individus pour donner le même poids à chaque variable.*
+
+6.  Quelle est l'inertie portée par l'axe de vecteur directeur $(1,0,0,0)^\top$ dans ce cas ?
+
+*Le premier axe comme tous les autres porte une valeur d'inertie de 1.*
+
+7.  Que deviennent les matrices $V$ et $M$ dans ce cas ?
+
+*La matrice $V$ ne change pas, $M$ est une matrice diagonale diagonale $4 \times 4$, dont le terme diagonal $i$ est l'inverse de l'écart type de la variable $i$.*
+
+8.  Les valeurs propres de $M V M$ sont données ci-dessous. Quelle est maintenant la part d'inertie représentée sur le premier axe principal, sur le premier plan principal.
+
+```{r}
+#| label: donnees_marche_eigen_normed
+#| echo: false
+#| eval: true
+#| message: false
+
+M <- diag(1/sqrt(sum_dta$variance))
+round(eigen(M%*%V%*%M)$values,3)
+```
+
+*On obtient à nouveau en faisant $\frac{\lambda_1 +\lambda_2}{\sum_{i=1}^p \lambda_i}$, ce qui vaut maintenant* `r sum(eigen(M%*%V%*%M)$value[1:2])/sum(eigen(M%*%V%*%M)$value)`
+
+9.  On utilise le package `FactoMineR` pour réaliser l'ACP. Peut on deviner quelle est la métrique utilisée par défaut ? Quelles sont les variables bien représentées ? Discuter du lien entre les variables.
+
+```{r}
+#| label: donnees_marche_eigen_facto_var
+#| echo: true
+#| eval: true
+#| message: false
+
+walking_dta_pca <- PCA(walking_dta, graph = FALSE)
+walking_dta_pca$eig
+plot(walking_dta_pca, choix = "var")
+```
+
+*La somme des valeurs propres vaut 4, soit le nombre de variables, ont peut donc en déduire que par défaut la fonction PCA fait une ACP normée. On peut aussi vérifier dans l'aide.*
+
+*Les vecteurs de variables sont de norme 1 dans l'ACP normé, on constante que la norme des vecteurs projetés est proche de 1 (proche du bord du cercle), on ne perd donc que peux d'information, l'information portée par ces variables est bien représentée dans la projection proposée. Puisque toutes les variables sont bien représentées on peut discuter leur lien. steplength et walkingspeed sont très fortement corrélée mais quasimment orthogonale et donc indépendante du poids. Surprenant, la taille et le poids ne sontn pas si fortement corrélées.*
+
+10. En utilisant le graphique ci-dessous, que pouvez-vous dire
+
+-   sur l'individu 10 ?
+-   sur l'individu 94 ?
+
+```{r}
+#| label: donnees_marche_eigen_facto_ind
+#| echo: true
+#| eval: true
+#| message: false
+
+plot(walking_dta_pca, choix = "ind")
+```
+
+*L'individu 21 se caractérise par une coordonée très prositive sur l'axe 1 et quasi nulle sur l'axe 2. L'axe 1 étant fortement lié à la vitesse de marche et à la taille, l'individu 21 marche vite, avec de grands pas et semble grand au regard de l'ensemble de notre échantillon. La valeur presque nulle sur l'axe 2, donne à penser qu'il a plutot un poids relativement moyen. L'individu 94 a une valeur très négative sur l'axe 2, ce qui indique qu'il a un poids plus faible que la moyenne (l'origine est le point représentant un poids moyen), sa faible valeur sur l'axe 1 donne à penser que sa vitesse de marche, sa longueur de pas et sa taille sont dans dans la moyenne.*
+
+11. Quels sont les individus qui contribuent le plus à la formation du premier axe ?
+
+```{r}
+#| label: donnees_marche_eigen_facto_contrib
+#| echo: true
+#| eval: true
+#| message: false
+
+walking_dta_pca$ind$contrib |> as_tibble() |> rowid_to_column("Ind") |> arrange(-Dim.1)
+```
+
+*La contribution d'un individu* $i$ à la formation de l'axe $j$ est la proportion de l'inertie portée par cet axe du à un individu
+
+$$contrib_{ij} = \frac{1/n C_{ij}^2}{\lambda_j}$$
+
+*Sans surprise les individus extremes contribuent fortement à la formation des axes, c'est le cas de 21, 75, 7 et 10 pour l'axe 1 qui contribuent pour plus de* $5\%$ alors qu'on s'attend en moyenne à une contribution de 1/n soit $1\%$ par individu
+
+*Si on regarde sur l'axe 2, on trouve 68 et 63 et dans une moindre mesure 94 identifié plus tôt*
+
+```{r}
+walking_dta_pca$ind$contrib |> as_tibble() |> rowid_to_column("Ind") |> arrange(-Dim.2)
+```
+
+12. Quels sont les individus les mieux représentés sur le premier axe ?
+
+```{r}
+#| label: donnees_marche_eigen_facto_cos2
+#| echo: true
+#| eval: true
+#| message: false
+
+walking_dta_pca$ind$cos2 |> as_tibble() |> rowid_to_column("Ind") |> arrange(-Dim.1)
+```
+
+*La qualité de la représentation d'un individu sur le premier axe est la part d'information portée par cet individu qui est bien représentée dans l'e plan'axe*
+
+$$\frac{ C_{i1}^2 }{\rVert x_i \lVert^2}$$
+
+
+13. Comment sont définies ces deux quantités ?
+
+*Je viens de répondre*
+
+14. Comment mesurer la qualité de la représentation sur le premier plan ?
+
+*On additionne les qualité de représentations ou autrement dit*
+
+$$\frac{ C_{i1}^2 +  C_{i2}^2 + }{\rVert x_i \lVert^2}$$
+
+# Une première ACP. Etude des performance au Décathlon
+
+```{r}
+#| label: donnees_decathlon
+#| echo: true
+#| eval: true
+#| message: false
+
+data("decathlon")
+decathlon <- decathlon |> mutate(Competition=as.character(Competition))
+```
+
+1.  Discuter de la nature des variables
+
+*On a 11 variables quantitatives, les performances aux épreuves et le nombre total de points. Le rang est une variable numérique mais qui a un rôle particulier, on ne peut pas vraiment donner de sens au rang moyen par exemple. enfin on a une variable qualitative la competition dont il s'agit.*
+
+Le code ci-dessous calcule des résumés quantitatifs pour les variables pertinentes.
+
+```{r}
+#| label: donnees_decathlon_sum
+#| echo: true
+#| eval: true
+#| message: false
+
+decathlon |> summarise(across(is.numeric, list(moyenne=mean, variance=var ))) |>
+  pivot_longer(
+    everything(),
+    names_to = c("variable", ".value"),
+    names_sep = "_"
+  ) |>
+   mutate(variance = variance *(n-1)/n) |> # pour corriger la variance par défaut de R
+  mutate(across(is.numeric, \(x) round(x, 2)))
+```
+
+2.  Pour comprendre les relations entre les variables, nous pouvons réaliser une ACP.
+
+- Faut il prendre en compte toutes les variables quantitatives ?
+- Si vous deviez construire un score basée sur les 10 épreuves comment feriez vous ?
+- Quelle choix de distance feriez vous ?
+
+*On peut prendre en compte les 10 résultats aux épreuves, et mettre le score de coté pour construire les axes. Dans l'idée le score devrait être une combinaison des 10 variables de base qui résument le mieux la variabilité entre les participants. l'axe 1 est un bon candidat. Les épreuves sont dans des unités différentes, on veut donner le même poids à toutes les épreuves donc une ACP normée vaec la distance qui pondère la distance euclidienne par l'inverse de  l'écart type.*
+
+
+3.  l'ACP est réalisée grâce aux commandes suivantes. A quoi servent les options `quanti.sup` et `quali.sup` ? pourquoi ce choix ? Combien y a t il de variables quantitatives au total ?
+
+```{r}
+#| label: donnees_decathlon_pca
+#| echo: true
+#| eval: true
+#| message: false
+decathlon_pca <- PCA(decathlon, scale.unit = TRUE, quanti.sup = c("Rank", "Points"), quali.sup = "Competition", graph = FALSE, ncp = 10)
+```
+
+*quanti.sup et quali.sup sont des variables que l'on pourra représenter par la suite mais qui ne sont pas utilisé pour construire les axes. Il y a 10 variables prises en compte au total*
+
+4.  Combien suggérez d'axes vous semble-t-il pertinent de regarder ?
+
+```{r}
+#| label: donnees_decathlon_eig
+#| echo: true
+#| eval: true
+#| message: false
+library(factoextra) # for nice vizualisation
+decathlon_pca$eig
+fviz_eig(decathlon_pca, choice = "eigenvalue", ncp = 11)
+```
+
+*Dans la représenation initiale, chaque variable compte pour 1 d'inertie, on peut considérer que dès qu'un axe porte plus que 1 d'inertie il résume un peu plus qu'une variable et on peut le regarder. Ce qui nous conduit à regarder 4 axes. L'autre règle est la règle du coude, qui nous conduit à regarder 2 axes*
+
+5.  Quelles sont les variables bien représentées sur le premier plan principal ?
+
+```{r}
+#| label: donnees_decathlon_var
+#| echo: true
+#| eval: true
+#| message: false
+library(factoextra) # for nice vizualisation
+fviz_pca_var(decathlon_pca, axes = c(1,2), alpha.var = "cos2")
+```
+
+*toutes les variables sont assez bien représentées à l'exception de 1500m, Javeline High.jump et Pole.vault (saut à la perche). On peut remarque que les points sont très bien représentés alors que cette variable n'a pas servi à construire les axes. C'est parfaitement lié à l'axe 1. le système de score du décathlon est bien conçu pour résumer la variabitlité des performances à l'aide d'une seule variable.*
+
+6.  Discuter du lien entre les variables. Cela semble-t-il surprenant ?
+
+*100m, et 110m haies sont très fortement corrélés et finalement assez corrélés au 400m. ces épreuves sont des épreuves de vitesse. Les résultats sont parfaitement anti corrélés avec le saut en longueur. Ce qui peut paraitre surepnant au premier abord puisque les athlètes qui performent au saut au longueur sont souvent également performant aux épreuves de vitesse. Pour bien comprendre, il faut prendre en compte qu'une bonne performance à la vitesse est un temps petit, tandis qu'une bonne performance aux sauts en lobgueurs est une longue distance. Un athlète performant dans ces disciplines aurant une forte valeur de sauts en longueur et une petite valeur au 100m, les deux valeurs sont bien anti corrélées. Le saut en hauteur et le disque sont orthogonaux au saut en hauteur, donc indépendants*
+
+*Le saut à la perche est tout à fait orthogonale au plan de projection, il est donc indépendant de tout ce qui est bien représenté dans ce plan. Donc la performance au saut à la perche est indépendante de la performance au saut en longueur.*
+
+7.  Le saut à la perche `Pole.vault` est il bien représenté ? Sur quel plan faut-il projeté pour pouvoir visualiser les performances au saut à la perche ?
+
+
+```{r}
+#| label: donnees_decathlon_var_cos2
+#| echo: true
+#| eval: true
+#| message: false
+decathlon_pca$var$cos2
+```
+
+*On voit sur la mesure de corrélation capturé par les cos2 que le saut à la perche est bien corrélé avec Dim3 et 4, en effet environ 78% de l'information propre aux performance de saut à la perche est portée par ce plan*
+
+
+8.  Le saut à la perche est la huitième épreuve au décathlon, le javelot la neuvième, le 1500 m la dernière. Que laisse espérer une bonne performance au saut à la perche, quant à la performance au javelot à venir ?
+
+```{r}
+#| label: donnees_decathlon_var_34
+#| echo: true
+#| eval: true
+#| message: false
+fviz_pca_var(decathlon_pca, axes = c(3,4), alpha.var = "cos2")
+```
+
+
+*On rentre dans des questions d'interprétation plus fine. Sur le plan 3,4 javelot saut à la perche et 1500 m sont bien représentés. le saut à la perche et le javelot sont indpédants. Visiblement les deux performances sont indpéendantes l'une de l'autre. le 1500 m est lui aussi assez faiblement lié.*
+
+
+9.  La variable nombre de points est très bien représentée par l'axe 1. que pensez de l'intérêt des trois dernières épreuves sur le résultat final ?
+
+*L'information présente sur les 3 dernières epreuves est plutot sur les axes 3 et 4, donc orthogonale à l'axe 1, ce qui signifie que les performances à ces 3 dernières épreuves sont indépendantes du score final. On peut se poser la question de l'intérêt de ces épreuves."
+
+10. Ci-dessous le code pour obtenir la représentation des individus dans le premier plan principal. Citer un excellent décathlonien. Discuter de la performance de Casarsa (en haut à gauche) au 400m. Peut-on affirmer que Qi (près de l'origine) est un décathlonien moyen ?
+
+```{r}
+#| label: donnees_decathlon_ind12
+#| echo: true
+#| eval: true
+#| message: false
+fviz_pca_ind(decathlon_pca, axes = c(1,2), alpha.ind = "cos2")
+```
+
+*Karpov est excellent, a une valeur très forte le long de l'axe 1 qui porte les scores*
+
+*Casarsa est particulièrement mauvais au saut en longueur et à la vitess dans ce jeu de données*
+
+*Qi est mal représenté, on ne peut pas vraiment parler de lui dans cette représentation*
+
+11. Le graphique suivant ajoute l'information sur la Competition. Que pouvez vous déduire des résultats au Decastar et aux Jeux Olympiques ?
+
+
+```{r}
+#| label: donnees_decathlon_compare
+#| echo: true
+#| eval: true
+#| message: false
+#fviz_pca_ind(decathlon_pca, axes = c(1,2), alpha.ind = "cos2", habillage= "Competition")
+plot.PCA(decathlon_pca,invisible=c('ind.sup'),habillage=13,label =c('quali'))
+```
+
+*Sur ces données,  les performances au Decastar sont en général moins bonnes qu'aux JO*

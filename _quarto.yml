@@ -1,5 +1,5 @@
 project:
-  render: 
+  render:
     - "*.qmd"
     - "!TP_MAF_exemple.qmd"
   type: website
@@ -15,30 +15,30 @@ website:
         href: https://github.com/MarieEtienne/MAF.git
         aria-label: GitHub
       - text: "References "
-        menu: 
-          - text: Cours        
+        menu:
+          - text: Cours
             href: references_maf.qmd
-          - text: Algèbre linéaire        
+          - text: Algèbre linéaire
             href: references_linear.qmd
       - text: "Cours"
-        menu: 
+        menu:
           - href: 01_intro.qmd
           - href: 01_inertie.qmd
           - href: 01_acp.qmd
           - href: 01_afm.qmd
           - href: 01_afd.qmd
-          - href: 01_afc.qmd          
+          - href: 01_afc.qmd
           - href: 01_acm.qmd
-          
-      - text: "TP"
-        menu: 
-          - href: TP1.qmd
-          - href: tp1_example.qmd
-          - href: TP2.qmd          
-          - href: TP3.qmd
-          - href: TP4.qmd
 
-       
+      - text: "TD/TP"
+        menu:
+          - text: TD1
+            href: TP1.pdf
+
+
+
+
+
 
 format:
   html:
@@ -47,4 +47,3 @@ format:
     toc: true
 
 editor: visual
-
