@@ -248,15 +248,23 @@ $$\frac{ C_{i1}^2 +  C_{i2}^2 + }{\rVert x_i \lVert^2}$$
 
 # Une première ACP. Etude des performance au Décathlon
 
+
+La package `FactoMineR`contient un jeu de données sur des performances au Décathlon. Le tableau de données contient 41 lignes et 13 colonnes. Les dix premières colonnes correspondent aux performances des athlètes pour les dix épreuves du décathlon et les colonnes 11 et 12 correspondent respectivement au rang et au nombre de points obtenus. La dernière colonne indique la compétition durant laquelle a eu lieu cette performance  (Jeux Olympiques de 2004 ou Décastar 2004). Les lignes sont identifiés avec le nom de l'athlète.
+
+Chargez la package FactoMineR et le tableau de données en tapant la ligne de code suivante :
+
+
 ```{r}
 #| label: donnees_decathlon
 #| echo: true
 #| eval: true
 #| message: false
 
+library(FactoMineR)
 data("decathlon")
-decathlon <- decathlon |> mutate(Competition=as.character(Competition))
 ```
+
+
 
 1.  Discuter de la nature des variables
 

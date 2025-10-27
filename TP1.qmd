@@ -226,22 +226,25 @@ walking_dta_pca$ind$cos2 |> as_tibble() |> rowid_to_column("Ind") |> arrange(-Di
 
 # Une première ACP. Etude des performance au Décathlon
 
+
+La package `FactoMineR`contient un jeu de données sur des performances au Décathlon. Le tableau de données contient 41 lignes et 13 colonnes. Les dix premières colonnes correspondent aux performances des athlètes pour les dix épreuves du décathlon et les colonnes 11 et 12 correspondent respectivement au rang et au nombre de points obtenus. La dernière colonne indique la compétition durant laquelle a eu lieu cette performance  (Jeux Olympiques de 2004 ou Décastar 2004). Les lignes sont identifiés avec le nom de l'athlète.
+
+Chargez la package FactoMineR et le tableau de données en tapant la ligne de code suivante :
+
+
 ```{r}
 #| label: donnees_decathlon
 #| echo: true
 #| eval: true
 #| message: false
 
+library(FactoMineR)
 data("decathlon")
 ```
 
 1.  Discuter de la nature des variables
 
-*On a 11 variables quantitatives, les performances aux épreuves et le
-nombre total de points. Le rang est une variable numérique mais qui a un
-rôle particulier, on ne peut pas vraiment donner de sens au rang moyen
-par exemple. enfin on a une variable qualitative la competition dont il
-s'agit.*
+
 
 Le code ci-dessous calcule des résumés quantitatifs pour les variables
 pertinentes.
@@ -351,3 +354,14 @@ fviz_pca_ind(decathlon_pca, axes = c(1,2), alpha.ind = "cos2")
 11. Le graphique suivant ajoute l'information sur la Competition. Que
     pouvez vous déduire des résultats au Decastar et aux Jeux Olympiques
     ?
+
+
+
+```{r}
+#| label: donnees_decathlon_compare
+#| echo: true
+#| eval: true
+#| message: false
+#fviz_pca_ind(decathlon_pca, axes = c(1,2), alpha.ind = "cos2", habillage= "Competition")
+plot.PCA(decathlon_pca,invisible=c('ind.sup'),habillage=13,label =c('quali'))
+```
