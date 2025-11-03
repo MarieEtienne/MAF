@@ -286,6 +286,7 @@ decathlon |> summarise(across(is.numeric, list(moyenne=mean, variance=var ))) |>
   ) |>
    mutate(variance = variance *(n-1)/n) |> # pour corriger la variance par défaut de R
   mutate(across(is.numeric, \(x) round(x, 2)))
+decathlon <- decathlon |> mutate(Competition = as.character(Competition))
 ```
 
 2.  Pour comprendre les relations entre les variables, nous pouvons réaliser une ACP.
@@ -398,8 +399,9 @@ fviz_pca_ind(decathlon_pca, axes = c(1,2), alpha.ind = "cos2")
 #| echo: true
 #| eval: true
 #| message: false
-#fviz_pca_ind(decathlon_pca, axes = c(1,2), alpha.ind = "cos2", habillage= "Competition")
-plot.PCA(decathlon_pca,invisible=c('ind.sup'),habillage=13,label =c('quali'))
+Nobs <- nrow(decathlon)
+plot.PCA(decathlon_pca,invisible=c('ind.sup'), habillage = c("Competition"), palette = c("#999999", "#222222"))
+
 ```
 
 *Sur ces données,  les performances au Decastar sont en général moins bonnes qu'aux JO*

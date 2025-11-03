@@ -362,6 +362,6 @@ fviz_pca_ind(decathlon_pca, axes = c(1,2), alpha.ind = "cos2")
 #| echo: true
 #| eval: true
 #| message: false
-#fviz_pca_ind(decathlon_pca, axes = c(1,2), alpha.ind = "cos2", habillage= "Competition")
-plot.PCA(decathlon_pca,invisible=c('ind.sup'),habillage=13,label =c('quali'))
+plot.PCA(decathlon_pca,invisible=c('ind.sup'), habillage = c("Competition"),
+         palette = c("#999999", "#222222"))
 ```
