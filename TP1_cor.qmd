@@ -100,7 +100,7 @@ sum_dta |> summarise(test = num(sum(variance), digits = 2))
 
 3.  Combien vaut l'inertie projeté sur l'axe de vecteur directeur $(0,1,0,0)^\top$ ?
 
-`r sum_dta$variance[3]`
+`r sum_dta$variance[2]`
 
 On note $X$ de dimension $100 \times 4$ la matrice des données centrées. Chaque individu a le même poids.
 

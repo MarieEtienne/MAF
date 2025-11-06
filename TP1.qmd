@@ -138,8 +138,7 @@ V <- 1/n * t(X) %*% X
 round(eigen(V)$values,3)
 ```
 
-6.  Quelle est l'inertie portée par l'axe de vecteur directeur
-    $(1,0,0,0)^\top$ dans ce cas ?
+6.  Si on sqouhaite réaliser une ACP normée, on change de métrique,  quelle est l'inertie portée par l'axe de vecteur directeur   $(1,0,0,0)^\top$ dans ce cas ?
 
 
 7.  Que deviennent les matrices $V$ et $M$ dans ce cas ?
