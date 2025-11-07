@@ -85,9 +85,10 @@ sum_dta <- walking_dta |>
     names_to = c("variable", ".value"),
     names_sep = "_"
   ) |>
-   mutate(variance = variance *(n-1)/n)
-sum_dta |>
-  mutate(across(is.numeric, \(x) round(x, 2)))
+  mutate(variance = variance *(n-1)/n) |>
+  mutate(across(is.numeric,  \(x) num(x,digits = 4)))
+
+sum_dta
 ```
 
 1.  Que peut-on dire de la dispersion le long de chacun des axes
@@ -98,8 +99,7 @@ sum_dta |>
 
 
 ```{r}
-sum_dta |>
-  mutate(across(is.numeric, \(x) round(x, 2))) |> summarise(Inertie = round(sum(variance)))
+sum_dta  |> summarise(Inertie = sum(variance))
 ```
 
 3.  Combien vaut l'inertie projeté sur l'axe de vecteur directeur
@@ -111,7 +111,7 @@ On note $X$ de dimension $100 \times 4$ la matrice des données centrées.
 Chaque individu a le même poids.
 
 4.  On souhaite utiliser la distance euclidienne puis réaliser une ACP.
-    le cours indique qu'on diagonalise la matrice $MVM$. Indiquer ce que
+    le cours indique qu'on diagonalise la matrice $M^{1/2}VM^{1/2}$. Indiquer ce que
     sont les matrices $V$ et $M$ impliquées.
 
 ```{r}
@@ -124,7 +124,7 @@ X <- scale(walking_dta, center = TRUE, scale =FALSE) |> as.matrix()
 V <- 1/n * t(X) %*% X
 ```
 
-5.  On diagonalise la matrice $MVM$ et on obtient les valeurs propres
+5.  On diagonalise la matrice $M^{1/2}VM^{1/2}$ et on obtient les valeurs propres
     suivantes. Quelle est l'inertie portée par le premier plan
     principal, quel pourcentage de l'inertie totale ceci représente-t-il
     ? Pensez vous qu'on ait ainsi une bonne manière de représenter les

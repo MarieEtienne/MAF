@@ -104,7 +104,7 @@ sum_dta |> summarise(test = num(sum(variance), digits = 2))
 
 On note $X$ de dimension $100 \times 4$ la matrice des données centrées. Chaque individu a le même poids.
 
-4.  On souhaite utiliser la distance euclidienne puis réaliser une ACP. le cours indique qu'on diagonalise la matrice $MVM$. Indiquer ce que sont les matrices $V$ et $M$ impliquées.
+4.  On souhaite utiliser la distance euclidienne puis réaliser une ACP. le cours indique qu'on diagonalise la matrice $M^{1/2}VM^{1/2}$. Indiquer ce que sont les matrices $V$ et $M$ impliquées.
 
 ```{r}
 #| label: donnees_marche_XX
@@ -120,7 +120,7 @@ V <- 1/n * t(X) %*% X
 
 *Dans le cours la matrice $V= X^\top W X$, où $W$ est la métrique sur l'espece des variables $\mathbb{R}^n$. Puisque tous les individus ont le même poids, $W = 1/n I_n$, donc $V$ est la matrice de covariance.*
 
-5.  On diagonalise la matrice $MVM$ et on obtient les valeurs propres suivantes. Quelle est l'inertie portée par le premier plan principal, quel pourcentage de l'inertie totale ceci représente-t-il ? Pensez vous qu'on ait ainsi une bonne manière de représenter les données inditiales en seulement deux dimensions ?
+5.  On diagonalise la matrice $M^{1/2}VM^{1/2}$ et on obtient les valeurs propres suivantes. Quelle est l'inertie portée par le premier plan principal, quel pourcentage de l'inertie totale ceci représente-t-il ? Pensez vous qu'on ait ainsi une bonne manière de représenter les données inditiales en seulement deux dimensions ?
 
 ```{r}
 #| label: donnees_marche_eigen
