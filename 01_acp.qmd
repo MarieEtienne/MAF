@@ -738,9 +738,9 @@ de la variable $i$,
 $$d_M(\boldsymbol{x}_1, \boldsymbol{x}_2)^2=  (\boldsymbol{x}_1 - \boldsymbol{x}_2)^\top M (\boldsymbol{x}_1 - \boldsymbol{x}_2) =\sum_{k=1}^p \frac{(x_{1k}-x_{2k})^2}{s_k^2}=\sum_{k=1}^p \left ( \frac{x_{1k}}{s_k}-\frac{x_{2k}}{s_k} \right)^2.$$
 
 Dans une ACP normée on s'intéresse donc aux valeurs propres de la
-matrice $M X^\top  W X M,$ il s'agit de la matrice de corrélation.
+matrice $M^{1/2} X^\top  W X M^{1/2},$ il s'agit de la matrice de corrélation.
 
-On note $V$ la matrice de covariance et on va donc travailler sur $ M V M$
+On note $V$ la matrice de covariance et on va donc travailler sur $M^{1/2} V M^{1/2}$
 :::
 
 
@@ -755,7 +755,7 @@ sous la contrainte $\lVert\boldsymbol{u_1}\rVert$ \begin{align}
 \end{align}
 
 D'apères ce qui précède [$\boldsymbol{u_1}$ est le premier vecteur propre]{.rouge} de
-$ M^{1/2} V M^{1/2}.$
+$M^{1/2} V M^{1/2}.$
 
 [Le changement de métrique a un impact sur la matrice à diagonaliser mais pas sur la logique de construction.]{.rouge}
 
@@ -995,11 +995,11 @@ ggplot() +
   #geom_segment(aes(x = -2*u[1], y = -2*u[2], xend = 2*u[1], yend = 2*u[2]), linewidth = 0.5) +  # Axe vertical
   geom_segment(data = variables, aes(xend = xend, yend = yend, x= x0, y = y0), arrow = arrow(length = unit(0.3, "cm")),   col= c("#F7A913", "#d61d09","#F7A913","#d61d09")) +
   geom_segment(aes(xend = lambda1 * variables$xend[2], yend = lambda1 * variables$yend[2], x= 0, y = 0), arrow = arrow(length = unit(0.3, "cm")),   col= "#d61d09", alpha = 0.5) +
-  geom_text(aes(x = lambda1 * variables$xend[2], y = lambda1 * variables$yend[2]), label = as.character(expression(C^k == lambda[k]~u^k)),   col= "#d61d09", alpha = 0.5) +
+  geom_text(aes(x = lambda1 * variables$xend[2], y = lambda1 * variables$yend[2]), label = as.character(expression(C^k == lambda[k]~u^k)),   col= "#d61d09", parse = TRUE, alpha = 0.5) +
   # geom_text(aes(x = -1.2, y = -2), label = as.character(expression(Delta)), vjust = -0.8, size = 5) +
   geom_text(data= variables, aes(x = xend, y =yend),  label = c("X^j", "u^k", "X^i", "u^l"), parse = TRUE, vjust = -0.1, hjust =  -0.5,  size = 5,   col= c("#F7A913", "#d61d09", "#F7A913", "#d61d09"))  +
-  geom_text(data = pos, aes(x = x, y = y), label = as.character(expression(theta["j,k"])), size = 5) +
-  geom_text(data = pos, aes(x = x/3, y = 3*y), label = as.character(expression(theta["i,k"])), size = 5) +
+  geom_text(data = pos, aes(x = x, y = y), label = as.character(expression(theta["j,k"])), parse = TRUE,  size = 5) +
+  geom_text(data = pos, aes(x = x/3, y = 3*y), label = as.character(expression(theta["i,k"])), parse = TRUE, size = 5) +
   theme_minimal()  +
   coord_fixed() +  # Conserver un rapport d'aspect fixe pour les axes
   theme (axis.title=element_blank(),
