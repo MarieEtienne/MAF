@@ -34,6 +34,8 @@ website:
         menu:
           - text: TD1
             href: TP1.pdf
+          - text: TD2
+            href: TP2.qmd
 
 
 

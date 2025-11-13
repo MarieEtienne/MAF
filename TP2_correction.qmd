@@ -1,5 +1,5 @@
 ---
-title: "Labs2 - Analyse en composante Principale et au-delà"
+title: "Labs2 - Analyse en composante Principale et au-delà — Corrigé"
 author:
   - name: Marie-Pierre Etienne
     affiliation:
@@ -8,12 +8,13 @@ author:
 date: "Last updated on `r format(Sys.time(), '%d %B, %Y')`"
 institute: https://marieetienne.github.io/MAF/
 bibliography: TPs.bib
-execute:
-  freeze: auto
 editor:
   markdown:
     wrap: 72
 css: mpe_pres_revealjs.css
+format:
+  html: default
+  pdf: default
 ---
 
 ```{r}
@@ -46,6 +47,8 @@ scale2 <- function(x, na.rm = FALSE) (x - mean(x, na.rm = na.rm)) / ( sqrt((leng
 \$\$
 :::
 
+
+
 # Statistiques avec R à l'Ensai
 
 Le Logiciel R est libre et disponible sur divers plateformes [sur cette page](https://www.r-project.org/) et le logiciel [Rstudio](https://posit.co/download/rstudio-desktop/) est une interface agréable pour l'utilisation de R  Vous pouvez installer ces logiciels sur votre ordinateur, toutefois il faut être prêt à gérer soi-même les problèmes de version, d'installation etc.
@@ -77,7 +80,6 @@ Nous utilisons la suite de packages `tidyverse` pour la manipulation de données
 ::: callout-tip
  Une bonne pratique consiste à ne charger que le nombre minimal de packages nécessaires. Evitez de commencer tous les codes avec la même liste de package, pesez l'intérêt de chacun d'eux.
 :::
-
 
 
 ## Structure Document Quarto
@@ -126,7 +128,6 @@ Exemple :
 Ce document présente une analyse de données en utilisant **R**.
 - Point 1
 - Point 2
-
 ```
 
 Le markup langage markdown permet aussi d'insérer des formules mathématiques, comme du latex.
@@ -141,32 +142,28 @@ Quarto permet d'intégrer du code R (mais aussi  Python, et Julia) grâce à des
 
 Exemple de bloc de code en R :
 
-```{r}
-#| label: chunk_example
-#| echo: fenced
-#| eval: false
+```{markdown}
+ ```{r chunk_example}
+ #| echo: true
 
  # Calcul simple
   2+2
+  ```
 ```
 
-
 Les options de rendu du bloc de code peuvent être précisées. Par exemple ici
-
-* #| label: identifie le morceau de code, pratique pour identifier les erreurs
-
+* #| echo: true permet de montrer le code
 * #| eval: false permet de ne pas executer le code
 
 Une présentation plus complète des options, pour un rendu plus fin est disponible sur [le site de Quarto](https://quarto.org/docs/computations/r.html#chunk-options).
 
 Le bloc peut être défini en tapant
+  * manuellement les triples backticks,
+  * ou en utilisant le menu Code --> Insert Chunk,
+  * ou avec le raccourci CTRL + ALT + i
 
-- manuellement les triples backticks,
-- ou en utilisant le menu Code --> Insert Chunk,
-- ou avec le raccourci CTRL + ALT + i
 
-
-### Rendu et exportation du document
+### Rendu et exportation du Document
 
 Une fois le document terminé, on peut le rendre dans le format souhaité en utilisant la commande suivante dans le terminal `quarto render mon_document.qmd`ou en cliquant sur Render dans RStudio.
 
@@ -186,7 +183,20 @@ Lors de la mise en place de l'analyse, on peut éxécuter chaque chunk avec le r
 
 
 
+
 # Le jour du dépassement
+
+
+## Les packages que nous allons utiliser pour l'ACP
+
+```{r}
+#| label: load_package
+library(FactoMineR)
+library(factoextra)
+library(explor)
+library(tidyverse)
+library(ggpubr)
+```
 
 Les méthodes d'analyse factorielles sont utiles pour l'exploration de
 données, soit en tant que telle soit dans une phase préparatoire à un
@@ -237,41 +247,6 @@ surface productive d'une région) peut régénérer sur ces surfaces
 -   Jour de dépassement : Jour de l'année où la demande d'un pays
     dépasse sa biocapacité annuelle.
 
-
-L'unité utilisé pour comparer est le Global Hectare (gha): Unité de
-surface qui correspondrait à la production moyenne d'un hectare du
-monde. Un hectare de champ vaudra donc plus de global hectare qu'un
-hectare de desert.
-
-Le gha par personne correspond à une production (ou consommation)
-globale d'une unité, (ici un pays) divisé par le nombre d'habitants dans
-cette unité.
-
-Les **Variables disponibles** sont
-
-1.  **life_expectancy** : Espérance de vie moyenne (années).
-2.  **hdi** : Indice de développement humain.
-3.  **per_capita_gdp** : PIB par habitant (USD).
-4.  **region** : Région géographique.
-5.  **income_group** : Catégorie de revenu (HI : Haut, UM : Moyen
-    supérieur, LM : Moyen inférieur, LI : Faible).
-6.  **pop** : Population (en millions).
-7.  **total_prod** : Production totale (gha par personne) la production
-    du pays par habitant.
-8.  **total_cons** : Consommation totale (gha par personne) la
-    consommation par habitant.
-9.  **biocapacity** : La production durable (gha par personne) par
-    habitant, ce que peut fournir le pays ramené par habitant.
-10. **number_of_countries_required** : Nombre de pays nécessaires pour
-    satisfaire la consommation (total_cons/biocapacity)
-11. **number_of_earths_required** : Nombre de terres dont on aurait
-    besoin si tout le monde faisait comme dans le pays en question (nb
-    gha par personnes du pays / 1.583 (nb de gha par habitant de la
-    terre, ce chiffre est mis à jour chaque année))
-12. **overshoot_day** : Jour de dépassement (numéro du jour dans
-    l'année).
-
-
 Des détails supplémentaires sont disponibles
 [ici](https://data.footprintnetwork.org/?_ga=2.237587203.280109455.1689844989-712229654.1682588383#/abouttheData)
 
@@ -281,8 +256,6 @@ Les relations entre les différentes mesures de l'empreinte écologique et
 les caractéristiques des pays.
 
 ### Chargement des Données
-
-- Charger les données
 
 ```{r}
 #| label: load_data
@@ -295,20 +268,25 @@ overshoot_dta <- read.table("https://marieetienne.github.io/datasets/overshootda
                             header = TRUE,
                             row.names = 1)
 
-head(overshoot_dta)
-```
 
+```
 ### Analyse Exploratoire des Données
 
-- Pouvez vous indiquer le nombre de lignes et de colonnes ?
+-   Pouvez vous indiquer le nombre de lignes et de colonnes
 
-- Proposez des résumés numériques pour chaque variable, ainsi qu'une étude
+::: correction
+Le jeu de données contient **184 lignes et 12 colonnes** avant suppression des valeurs manquantes.\
+Il  y a  **162 pays complets**.\
+:::
+
+### Statistiques descriptives :
+
+Proposez des résumés numériques pour chaque variable, ainsi qu'une étude
 des corrélations.
 
 ```{r}
 #| label: desc_data
-#| echo: false
-#| include: false
+#| echo: true
 
 overshoot_dta |>
   mutate(across(c(region, income_group), ~as.factor(.x))) |>
@@ -322,7 +300,7 @@ Base.
 
 ```{r}
 #| label: drop_na
-#| echo: false
+#| echo: true
 #| include: false
 
 overshoot_dta <- overshoot_dta |> drop_na()
@@ -331,117 +309,256 @@ summary(overshoot_dta)
 
 ## Construire une ACP
 
+
+
 -   Quel poids choisir pour les pays ?
+
+::: correction
+Si on veut faire un bilan à l'échelle de la planète il est pertinent de prendre les poids des pays proportionnels à leur population. Ainsi un pays avec une grosse population aura plus de poids qu'un petit pays.  Si on souhaite plutôt comparer les pays, alors on va pas mettre la population comme poids, pour s'assurer de représenter équitablement tous les pays. Il est utile de faire l'exercice avec et sans poids pour constater les différences.
+:::
+
+
 
 -   Quelle métrique choisir ?
 
+::: correction
+On va normaliser puisque espérance de vie n'a pas de lien avec l'empreinte écologique
+:::
+
 -   Quelles variables met-on en variables supplémentaires ?
 
+::: correction
+Les variables qualitatives ici region et income_group sont forcément supplémentaires.
+Par ailleurs, le nombre de terre est parfaitement corrélée à la production par construction (nombre de terres = production / prodction_terre), donc cette dimension est inutile. On devrait trouver que la 10eme valeur propre vaut 0  si on met cette variable.
+:::
+
 ```{r}
-#| label: PCA
+#| label: pca
+#| echo: true
 #| include: false
-library(FactoMineR)
-library(explor)
-library(factoextra)
-#avec la population comme poids
 overshoot_pca <- PCA(overshoot_dta,
+                     scale.unit = TRUE,
+                     quali.sup = c(4,5), quanti.sup = c(11))
+overshoot_pca$eig
+fviz_eig(overshoot_pca)
+```
+
+Si on veut tester avec des poids
+
+
+```{r}
+#avec la population comme poids
+overshoot_pca_w <- PCA(overshoot_dta,
                      scale.unit = TRUE,
                      quali.sup = c(4,5),
                      row.w = overshoot_dta[,6],
                      quanti.sup = c(6, 11))
 
-#meme poids pour tous les pays, la population devient une variable comme les autres. on verra qu'elle est assez orthogonale au premier plan
-overshoot_pca <- PCA(overshoot_dta,
-                     scale.unit = TRUE,
-                     quali.sup = c(4,5),
-                     quanti.sup = c(11))
-
-#explor(overshoot_pca)
-
-
-
-
-plot(overshoot_pca, axes = c(1,2), choix = "var")
-
-fviz_pca_ind(overshoot_pca,  col.ind = "cos2")
-
-plot(overshoot_pca, axes = c(1,2), choix = "ind", habillage = 5)
-
-plot(overshoot_pca, axes = c(1,2), choix = "ind", habillage = 5) + ylim(c(-10,10))
 ```
 
 -   Quelle est l'inertie portée par l'axe 1 , l'axe 2, l'axe 3 ?
 
 ```{r}
 #| label: inertia
-#| include: false
 overshoot_pca$eig[1:3,1]
 ```
 
+::: correction
+L'inertie vaut 4.88 sur le premier axe, 1.26 sur le second et 0.99 sur le 3eme.
+Le premier axe explique donc \~54%, le second \~14%, le troisième \~11%.   \~80% cumulés.
+:::
+
+
+
 -   Commentez la qualité de la représentation sur le plan (1-2), puis
     (1-3).
-    <!-- Le plan 1-2 représente  `r overshoot_pca$eig[2,3]` d'inertie, tandis que le plan 1-3 en représente `r sum(overshoot_pca$eig[c(1,3),2])`. Le premier axe porte à lui seul `r overshoot_pca$eig[1,3]` d'inertie. -->
-    <!-- lorsque l'on fait une acp en prenant la pop en compte et sans mettre les poids, on voit que l'axe 3 est la population, cela signifie que la population d'un pâys est indépendante des 2 premiers axes dans la suite on pourrait déduire qu'il y a de gros pays avec une grosse empreinte carbone mais aussi des gros pays avec une faible empreinte carbone  -->
+
+```{r}
+plot(overshoot_pca, choix = "var", axes = c(1,2))
+plot(overshoot_pca, choix = "var", axes = c(1,3))
+plot(overshoot_pca, choix = "var", axes = c(2,4))
+```
+
+::: correction
+Le plan 1-2 représente  `r overshoot_pca$eig[2,3]` d'inertie, tandis que le plan 1-3 en représente `r sum(overshoot_pca$eig[c(1,3),2])`. Le premier axe porte à lui seul `r overshoot_pca$eig[1,3]` d'inertie.
+
+La plupart des variables sont assez bien représentées sur ce plan à l'exception de la population, dans une moindre mesure le nombre de pays nécessaires. Il faut regarder sur le plan 2,4 pour bien voir biocapacité et nombre de pays requis.
+
+
+Lorsque l'on fait une ACP en prenant la variable population pop en compte et sans mettre de poids, on voit que l'axe 3 est la population, cela signifie que la population d'un pays est indépendante des 2 premiers axes dans la suite on pourrait déduire qu'il y a de gros pays avec une grosse empreinte carbone mais aussi des gros pays avec une faible empreinte carbone.
+:::
 
 -   De quelles variables nous parle l'axe 1 ? l'axe 2 ? Pour répondre à
     cette question on regardera le cercle des corrélations mais aussi
     les contributions des variables à la création des axes.
 
-<!-- On peut voir que l'axe 1 est quasi parfaitement anti corrélé avec le jour du dépassement et fortement corrélé au nombre de terres, à la consommation totale, la production totale. Cet axe nous parle donc bien de l'empreinte écologique. Il est aussi très corrélé positivement avec le hdi et life_expectancy. Ce qui signifie que plus le hdi est élevé plus la consommation totale par individu est importante, donc l'empreinte carbone est plus forte. Ca se confirme en regardant les contributions, les variables qui contribuent le plus sont  total_cons. L'anticorrélation entre overshoot_day et total cons est du meme ordre que dans l'exemple du decathlon avec course et saut : un pays au sein duquel les habitants consomment bcp est un pays avec un jour du dépassement faible, on épuise rapidement les ressources disponibles.       -->
+```{r}
+overshoot_pca$var$contrib
+overshoot_pca$var$cos2
+```
 
-<!-- overshoot_day  hdi -->
+::: correction
+6 variables contribuent presque également à la construction de l'axe 1
+life_expectancy, hdi, per_capita_gdp, total_prod, total_cons, overshoot_day
+L'axe 2 est formé essentiellement de biocapacité et nombre de pays requis (c'est le cas aussi de l'axe 4), l'axe 3 est la poplation.
 
-<!-- l'axe 2 nous parle de la biocapacité on le voit sur le cercle.
-Le nombre de pâys nécessaires dépend de la production du pays et de sa consommation d'ou son positionnement entre les axes 1 et 2. On en déduit que la biocapacité est indépendante de la consommation et de manière plus surprenante de la production... Souvent la produciton d'un pays n'est pas completement durable et donc n'est pas compté dans la biocapicité  -->
+L'information sur life_expectancy, hdi, per_capita_gdp,  total_cons, overshoot_day est bien représenté sur l'axe 1 (voir les cos2).
 
-<!-- Avec une ACP avec les poids on a des choses similaires sauf que le role de la population disparait-->
+L'information concernant total_prod est répartie entre les axes 1,2, et 5
+
+La bio capacity est surtout sur l'axe 2 et 4, tout comme le nombre de pays_requis
+
+
+Pour résumer on peut dire :
+Finalement  l'axe 1 est quasi parfaitement anti corrélé avec le jour du dépassement et fortement corrélé au nombre de terres, à la consommation totale. Cet axe nous parle donc bien de l'empreinte écologique. Il est aussi très corrélé positivement avec le hdi et life_expectancy. Ce qui signifie que plus le hdi est élevé plus la consommation totale par individu est importante, donc l'empreinte carbone est plus forte. Ca se confirme en regardant les contributions, les variables qui contribuent le plus sont  total_cons, et overshoot_day. L'anticorrélation entre overshoot_day et total cons est du meme ordre que dans l'exemple du decathlon avec course et saut : un pays au sein duquel les habitants consomment bcp est un pays avec un jour du dépassement faible, on épuise rapidement les ressources disponibles.
+
+ l'axe 2 nous parle de la biocapacité on le voit sur le cercle.
+Le nombre de pays nécessaires dépend de la production du pays et de sa consommation d'ou son positionnement entre les axes 1 et 2. (n'oublions pas qu'une partie n'est visble que dans le sdimensions suivantes) On en déduit que la biocapacité est indépendante de la consommation et de manière plus surprenante de la production... Souvent la production d'un pays n'est pas completement durable et donc n'est pas compté dans la biocapicité
+
+Enfin la population est sur l'axe 3, cet axe est d'ailleurs essentiellement constitué par cette information, donc la population est indépendante de tout ça. la population d'un pays ne nous donne aucune information sur l'empreinte écologique d'un de ses habitants
+
+
+
+Avec une ACP avec les poids on a des choses similaires sauf que le role de la population disparait
+:::
+
+
+
+
+
+
+
+### Observation des individus
+
+```{r}
+fviz_pca_ind(overshoot_pca,  col.ind = "cos2")
+overshoot_pca$ind$contrib |> as.data.frame()|>
+  rownames_to_column() |> as_tibble()|> arrange(-Dim.1)
+overshoot_pca$ind$contrib |> as.data.frame()|>
+  rownames_to_column() |> as_tibble()|> arrange(-Dim.2)
+
+```
 
 -   Que pensez vous du graphe des individus ? Quels sont les individus
     atypiques ? Quels sont les pays les mieux représentés ?
+
+
+::: correction
+Singapour, Qatar, Luxembourg United Arab Emirates, Canada et  Bahrain sont les plus gros
+contributeurs de l'axe 1
+
+Ce sont de très gros consommateurs et à part le Canade, ces pays ont des capcités de production durable plus faible que la moyenne.
+
+Singapore est aussi un gros contributeurs de l'axe 2 car il produit vraiment beaucoup moins que la moyenne des pays (en terme de production durable)
+
+Au contraire le Suriname et le Guyana, grace à la foret tropicale se caractérisent par une très grosse biocapacité.
+
+Singapour est à la fois important pour l'axe 1 et 2, ca vaut la peine de refaire l'analyse sans singapour pour vérifier que toutes nos conclusions ne sont pas influencées par ce pays.
+
 
 -   Comment l'ACP est-elle modifiée si on retire Singapour de l'analyse ?
 
 
 
-- De nombreuses variables nous parlent de l'empreinte écologique, et les
+### Impact de Singapour
+
+```{r}
+
+overshoot_pca2 <- PCA(overshoot_dta |> filter(!row.names(overshoot_dta) %in% c("Singapore")),
+                      scale.unit = TRUE, quali.sup = c(4,5), quanti.sup = c(11))
+
+fviz_eig(overshoot_pca2)
+fviz_pca_var(overshoot_pca2)
+fviz_pca_ind(overshoot_pca2,  col.ind = "cos2")
+
+```
+
+::: correction
+Sans Singapour, rien ne change completement,On remarque le poids de Surinamn et Guuyana dans l'axe 2
+:::
+
+## MFA
+
+
+De nombreuses variables nous parle de l'empreinte écologique, et les
 variables nous parlant du développement du pays sont moins nombreuses.
 On peut rééquilibrer l'importance des variables avec une méthodes vue en
 cours, laquelle ?
 
-On souhaite distinguer deux groupes de variables : les variables
+
+
+::: correction
+C'est l'AFM bien sur
+AFM rééquilibre le poids de chacun des groupes de variables:\
+:::
+
+
+-   On souhaite identifier deux groupes de variables : les variables
     concernant l'empreinte carbone et les variables portant sur le
     développement du pays.
+
+
+
+::: correction
+Variables concernant les aspects écologiques: overshoot_day, biocapicity, total_prod, number_of_countries, total_cons
+variables socio/eco life_expectancy, hdi, per_capita_gdi, pop
+:::
+
 
 -   Faites 2 ACP différentes sur chacun de ces deux groupes. Quelle est
     la première valeur propre dans les deux cas ?
 
+
+```{r}
+overshoot_pca_ecolo <- PCA(overshoot_dta ,
+                      scale.unit = TRUE, quali.sup = c(4,5), quanti.sup = c(1,2,3,6, 11))
+
+overshoot_pca_ecolo$eig[,1]
+
+sd1 <- sqrt(overshoot_pca_ecolo$eig[1,1])
+overshoot_pca_socio <- PCA(overshoot_dta,
+                      scale.unit = TRUE, quali.sup = c(4,5), quanti.sup = c(7,8, 9, 10,  11,12))
+overshoot_pca_socio$eig[,1]
+sd2 <- sqrt(overshoot_pca_socio$eig[1,1])
+
+```
+
+::: correction
+On a 5 variables dans le groupe des variables écologiques et 4 dans le groupe des variables/socio/demo/eco
+Lorsqu'on résume chacune de ces variables à une seul axe on a pourtant à peu pres la meme information 2.8 pour l'un 2.6 pour l'autre.
+Ce sont ces deux variances qui vont nous permettre de définir la métrique de l'AFM
+
+:::
+
 -   Rappelez en quoi la méthode mentionnée plus haut est une ACP
     particulière.
 
--   On réaliser une AFM grâce la fonction `̀MFA` de FactoMineR.
+::: correction
+  C'est une ACP dans laquelle le ppoids d'une variable est donné par l'inverse de la variance fois l'inverse de la première valeur propre qu'on vient de calculer
+:::
+
+-   On peut le faire directement, avec la fonction `̀MFA` de FactoMineR.
     Reprenez l'analyse précédente avec ce nouvel équilibre entre les
     différentes variables équilibrées. Quelles sont les informations que
     vous pouvez retenir ?
 
-Attention on ne peut pas indiquer de variables qualitatives
-supplémentaires dans MFA
 
 ```{r}
 overshoot_quanti <-  overshoot_dta |>
-  select(where(is.numeric))
+  select(where(is.numeric))  |> select(!number_of_earths_required)
 ```
 
 ```{r}
 
 overshoot_mfa <- MFA(overshoot_quanti,
-    group = c(4, 6), ## 4 variables dans le premier groupe, les 6 suivantes dans le groupe 2
-    type = rep("s", 2) ## le groupe est de type quanti qu'on veut normaliser par l'eacrt type, meme chose pour le groupe 2
+    group = c(4, 5), ## 4 variables dans le premier groupe, les 6 suivantes dans le groupe 2
+    type = rep("s", 2) ## le groupe est de type quanti qu'on veut normaliser par l'ecart type, meme chose pour le groupe 2
 )
+
+plot(overshoot_mfa, choix = "var")
+plot(overshoot_mfa, choix = "ind")
+plot(overshoot_mfa, choix = "group")
 ```
-- En vous servant de l'aide, indiquez ce que signie ce que l'argument `type = rep("s",2)` signifie.
-
-- La visualisation est elle grandement modifiée, est-ce surprenant ?
-
 
 # ACP pour compresser l'information : analyse d'images.
 
@@ -464,7 +581,6 @@ donc autant de valeurs que de pixel. Peut on compresser l'information en utilisa
     placez la dans votre répertoire de travail dans
     `img/abbey_road.jpg`.
 
-Nous allons utiliser les packages suivants:
 Nous allons utiliser les packages
 
 ```{r}
@@ -475,8 +591,6 @@ Nous allons utiliser les packages
 library(imager) ## pour manipuler les images
 library(parallel) # pour les calculs sur les images
 ```
-
-Par ailleurs pour manipuler les images, nous aurons besoin de quelques fonctions disponibles ci-dessous
 
 ```{r}
 #| label: utils
@@ -534,7 +648,7 @@ image2block <- function(channel_matrix, block_size) {
   }
 
   # Parallelize the block extraction using mclapply
-  blocks <- parallel::mclapply(1:nrow(indices), function(k) extract_single_block(indices[k,]), mc.cores = num_cores)
+  blocks <- mclapply(1:nrow(indices), function(k) extract_single_block(indices[k,]), mc.cores = num_cores)
 
   # Combine the results into a matrix
   blocks_matrix <- do.call(rbind, blocks)
@@ -557,13 +671,11 @@ block2image <- function(image_blocks, nrow_img, ncol_img, block_size) {
 }
 ```
 
-
 Pour bien comprendre comment sont décomposées les images en bloc de 4 par 4, on peut créer une matrice avec des cases numérotées et constater comment elle est transformée.
 
 Un bloc de 4x4 pixels est un individu à 16 variables.
 
 ```{r micro_example}
-block_size <- 4
 test_image <- as.cimg(array(1:(20*16), dim= c(20, 16, 1, 1)), dim=c(32,16))
 test_image[,]
 plot(test_image, interpolate = FALSE )
@@ -572,21 +684,27 @@ test_image_blocks
 block2image(test_image_blocks, nrow(test_image), ncol(test_image), block_size = 4)
 
 exemple2 <- matrix(10*rep(1:9, each=16), byrow= TRUE, ncol = 16)
-exemple2
 exemple2_img <- block2image(exemple2, nrow_img = 12, ncol=12, block_size = 4)
 plot(as.cimg(exemple2_img), interpolate = FALSE )
 ```
 
-On encode donc l'image des Beattles avec ce système de patches.
+On encode donc l'image des Beattles avec ce système de patches. On choisit des patches de taille 4 x 4.
+
+```{r}
+#| message: false
+#| label: patch
+#| echo: true
+#| eval: true
+block_size <- 4
+```
 
 
 Pour  charger avec R, on utilise le package `imager` et la fonction `load.image`. puis la fonction `grayscale`pour bien s'assurer que l'image est codée en niveaux de gris.
 
 ```{r}
+#| message: false
 #| label: load_abbey
-#| echo: true
-#| eval: true
-
+#|
 image <- load.image('img/abbey_road.jpg')
 image <- grayscale(image)
 dim(image)
@@ -601,11 +719,12 @@ head(abbey_matrix)
 
 -   Que représente le baycentre de ce nuage de points ?
 
-::: details *Solution: Interpretation* On fait la moyenne composante par
-composante du niveau de gris, on obtient un vecteur moyen de
+::: correction
+On fait la moyenne composante par composante du niveau de gris, on obtient un vecteur moyen de
 ${\mathbb{R}}^{16}$ que l'on peut réorganiser sous forme d'un patch 4 x
 4. C'est le patch moyen.
 :::
+
 
 ```{r}
 #| label: barycentre
@@ -614,19 +733,27 @@ ${\mathbb{R}}^{16}$ que l'on peut réorganiser sous forme d'un patch 4 x
 #| message: false
 
 barycentre <- abbey_matrix |> as_data_frame() |> summarise_all(mean) |> as.numeric()
-patch_moy <- barycentre |> matrix(ncol=16, nrow=1)
+patch_moy <- barycentre |> matrix(ncol=block_size^2, nrow=1)
 
-block2image(patch_moy, nrow_img = 4, ncol_img = 4, block_size = 4)  |> as.cimg(width = 4, col=4)  |> plot( interpolate = 0, axes = FALSE, rescale=FALSE)
+block2image(patch_moy, nrow_img = block_size, ncol_img = block_size, block_size = block_size)  |> as.cimg(width = block_size, col=block_size)  |> plot( interpolate = 0, axes = FALSE, rescale=FALSE)
 ##pour voir les différences on peut rescaler les niveaux de gris
-block2image(patch_moy, nrow_img = 4, ncol_img = 4, block_size = 4)  |> as.cimg(width = 4, col=4)  |> plot( interpolate = 0, axes = FALSE, rescale=TRUE)
+block2image(patch_moy, nrow_img = block_size, ncol_img = block_size, block_size = block_size)  |> as.cimg(width = block_size, col=block_size)  |> plot( interpolate = 0, axes = FALSE, rescale=TRUE)
 ```
 
-### ACP sur les patches
+### ACP sur les patchs
+
 
 -   Faire une ACP sur les données contenues dans `abbey_matrix` (Faut il faire une ACP normée ou non ? y a t il des variables supplémentaires)
 
--   Combien d'axes proposez vous de garder ?
+Dans une ACP,  on travaille sur les variables centrées. On peut regarder l'image centrée
 
+```{r}
+X <- abbey_matrix |> sweep(2,barycentre, FUN = '-' )
+```
+
+on ne peut pas la dessiner car les nombres négatifs ne sont pas des niveaux de gris
+
+-   Combien d'axes proposez vous de garder ?
 
 ```{r}
 #| label: abbey_pca
@@ -637,7 +764,21 @@ abbey_pca <- PCA(abbey_matrix, scale.unit=FALSE, ncp=block_size*block_size, grap
 abbey_pca$eig
 ```
 
+
 - Que représente un vecteur propre ici ?
+
+C'est un vecteur de $R^{16}$ on peut le mettre sous forme de patch
+
+
+```{r}
+abbey_pca$svd$V[,1] |> matrix(, ncol = 16) |> block2image(nrow_img = 4, ncol_img = 4, block_size = 4) |> as.cimg(width = 4, col=4)  |> plot( interpolate = 0, axes = FALSE, rescale=FALSE)
+
+abbey_pca$svd$V[,1] |> matrix(, ncol = 16) |> block2image(nrow_img = 4, ncol_img = 4, block_size = 4) |> as.cimg(width = 4, col=4)  |> plot( interpolate = 0, axes = FALSE, rescale=TRUE)
+
+abbey_pca$svd$V[,2] |> matrix(, ncol = 16) |> block2image(nrow_img = 4, ncol_img = 4, block_size = 4) |> as.cimg(width = 4, col=4)  |> plot( interpolate = 0, axes = FALSE, rescale=TRUE)
+
+abbey_pca$svd$V[,3] |> matrix(, ncol = 16) |> block2image(nrow_img = 4, ncol_img = 4, block_size = 4) |> as.cimg(width = 4, col=4)  |> plot( interpolate = 0, axes = FALSE, rescale=TRUE)
+```
 
 
 ### Reconstruction avec 1 composante
@@ -646,7 +787,8 @@ abbey_pca$eig
 
 
 ```{r reconstruction1}
-abbey_recons_centred <- abbey_pca$ind$coord[,1,drop=FALSE] %*% t(abbey_pca$svd$V)[1,,drop=FALSE]
+k <- 1
+abbey_recons_centred <- abbey_pca$ind$coord[,1:k,drop=FALSE] %*% t(abbey_pca$svd$V)[1:k,,drop=FALSE]
 #on rajoute la moyenne
 
 # X_recon_centred <- block2image(abbey_recons_centred, nrow_img = nrow(abbey_comp), ncol_img = ncol(abbey_comp), block_size = 4)
@@ -664,6 +806,20 @@ plot(as.cimg(array(X_recon, dim=dim(abbey_comp))), interpolate = FALSE, rescale 
 
 - Modifier le code pour garder 2 composantes principales (taille de l'image divisée par 8 au lieu de 16)
 
+```{r reconstruction2}
+k <- 2
+abbey_recons_centred <- abbey_pca$ind$coord[,1:k,drop=FALSE] %*% t(abbey_pca$svd$V)[1:k,,drop=FALSE]
+
+# X_recon_centred <- block2image(abbey_recons_centred, nrow_img = nrow(abbey_comp), ncol_img = ncol(abbey_comp), block_size = 4)
+# plot(as.cimg(array(X_recon_centred, dim=dim(abbey_comp))), interpolate = FALSE, rescale = FALSE)
+
+abbey_recons2 <- abbey_recons_centred |> sweep(2, barycentre, FUN = "+")
+## un niveau de gris doit etre en 0 et 1
+abbey_recons_norm <- pmax(pmin(abbey_recons2,1),0)
+
+X_recon <- block2image(abbey_recons_norm, nrow_img = nrow(abbey_comp), ncol_img = ncol(abbey_comp), block_size = block_size)
+plot(as.cimg(array(X_recon, dim=dim(abbey_comp))), interpolate = FALSE, rescale = FALSE)
+```
 
 
 ### Evaluation de l'erreur de reconstruction
@@ -674,11 +830,11 @@ Une autre manière de faire serait de ne garder que la valeur moyenne pour chaqu
 
 ```{r}
 rmse_pca <- mean((abbey_recons-abbey_matrix )^2)
+rmse_pca2 <- mean((abbey_recons2-abbey_matrix )^2)
 #simple filter
 abbey_filter <- matrix(rowMeans(abbey_matrix), ncol = 16, nrow = nrow(abbey_matrix))
 rmse_filter <- mean((abbey_filter-abbey_matrix )^2)
 ```
-
 
 
 ### Exercice d'extension
@@ -688,9 +844,9 @@ rmse_filter <- mean((abbey_filter-abbey_matrix )^2)
 -  Quel intérêt y aurait-il à traiter simultanément les 3 couleurs plutot que séparément ?
 
 
-**Remarque:** On a représenté l'image dans un espace de plus petite dimension en appliquant un filtre sur l'image de départ.  Plutôt que de choisir un filtre standard (la moyenne de tous les pixels d'un patch), on a appris le meilleur filtre, (celui qui fait perdre le moins d'information).
-
-En effet on a appris une transformation qui envoie une image de `r 712^2` pixels dans un espace de dimension `r round(712/4)^2`. Ce sont ces idées qui sont utilisées dans les réseaux de neurones convolutionnels à la base de l'IA pour les images.
+**Remarque:** On a représenté l'image dans un espace de plus petite dimension en appliquant un filtre sur l'image de départ.
+plutôt que de choisir un filtre strandard (la moyenne de tous les pixels d'un patch, on a appris le meilleur filtre, celui qui fait perdre le moins d'information).
+En effet on a appris une transformation qui envoie une image de `r 712^2` pixels dans un espace de dimension `r round(712/4)^2`. Ce sont ces idées qui sont utilisées dans les réseaux de neurones convolutionnels à la base de l'IA pour les images. Si ce n'est qu'on travaille sur plusieurs tailles de filtre simultanément, sur un gros ensemble d'image et que le critère que l'on optimise n'est pas le même ... mais il y a des points communs.
 
 -   Vous pouvez tester d'autres tailles de patches  (`block_size=8` ou `16`) et
     observer l'effet sur la variance expliquée et la qualité de
