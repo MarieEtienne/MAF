@@ -66,7 +66,7 @@ Pour accéder en plus à une interface graphique, par exemple pour utiliser `shi
 * Ouvrir un navigateur web et se connecter au serveur de calcul.
 * Créer un Projet  (File --> New Project) ou bien en cliquant en haut à droite.  Le travail par projet facilite l'accès aux données (notamment lorsque l'on passe d'un ordinateur à l'autre) et permet surtout de "zapper" d'un projet à un autre.
 * Choisissez Créer un projet depuis un Nouveau Repertoire, nommez le `MAF_TD2` (comme toujours en programmation on évite les caractères spéciaux, c'est-à-dire, les accents, les espaces entre autres)
-* Pour pouvoir garder le code et l'interprétation des résultats au même endroit nous allons utiliser un type de document [Quarto](https://quarto.org/) qui est adapté pour mélanger code et texte. Quarto accepte du code R mais aussi Python et Julia. Créer un fichier `TP2.qmd`. Vous pouvez utiliser [le fichier d'exemple](TP_MAF_exemple.qmd).
+* Pour pouvoir garder le code et l'interprétation des résultats au même endroit nous allons utiliser un type de document [Quarto](https://quarto.org/) qui est adapté pour mélanger code et texte. Quarto accepte du code R mais aussi Python et Julia. Créer un fichier `TP2.qmd`. Vous pouvez utiliser [le fichier d'exemple](tp_maf_exemple.qmd).
 * Passez en mode `source`(en haut à gauche) au lieu de `Visual` ceci permet de mieux comprendre la structure d'un document quarto.
 
 ## Gestion de packages
