@@ -21,10 +21,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
-      - name: Additional R packages
-        run: |
-          Rscript -e "install.packages(c('palmerpenguins'))"
-          Rscript -e "install.packages(c('factoextra','flextable'))"
+      # - name: Additional R packages
+      #   run: |
+      #     Rscript -e "install.packages(c('palmerpenguins'))"
+      #     Rscript -e "install.packages(c('factoextra','flextable', 'imager'))"
       - name: Generate slides
         run: "quarto render"
       - name: GitHub Pages action
