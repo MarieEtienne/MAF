@@ -3,19 +3,19 @@ title: "Analyse Factorielle Multiple"
 subtitle: "Une ACP avec une métrique particulière"
 author:
   - name: Marie-Pierre Etienne
-    affiliation: 
+    affiliation:
       - ENSAI - CREST
     email: marie-pierre.etienne@ensai.fr
 date: "Last updated on `r format(Sys.time(), '%d %B, %Y')`"
 institute: https://marieetienne.github.io/MAF/
 execute:
   freeze: auto
-editor: 
-  markdown: 
+editor:
+  markdown:
     wrap: 72
 css: mpe_pres_revealjs.css
 format:
-  revealjs: 
+  revealjs:
     theme: [default, custom.scss]
     width: 1050
     margin: 0.05
@@ -157,8 +157,8 @@ sensoriels : acidité, amertume, odeur agrume, etc.
 ```{r data_vin,  eval = TRUE}
 #| echo: true
 #| message: false
-#| 
-vins <- read.table("https://husson.github.io/MOOC_AnaDo/AnaDo_JeuDonnees_VinsJury.csv", 
+#|
+vins <- read.table("https://husson.github.io/MOOC_AnaDo/AnaDo_JeuDonnees_VinsJury.csv",
       header=TRUE, sep=";",dec=".", row.names=1, check.names=FALSE, fileEncoding="latin1")
 head(vins, n= 4)
 ```
@@ -170,7 +170,7 @@ head(vins, n= 4)
 -   descripteurs sensoriels : acidité, amertume, odeur agrume, etc.
 -   description sensorielle de 3 jurys : [oenologue]{.rouge},
     [consommateurs]{.orange}, [étudiant]{.bleu}
--   notes hédoniques de 60 consommateurs : [appréciation globale]{.
+-   notes hédoniques de 60 consommateurs : \[appréciation globale\]{.
     vert}
 
 Au total 118 variables, dont 60 sont des notes hédoniques
@@ -209,34 +209,34 @@ On souhaite mettre en évidence
 ### Première idée
 
 -   Rééquilibrer les variables entre groupes en attribuant à chaque
-    variable $k$ du groupe $i$ un poids $1/n_k$, où $n_k$ est le nombre de variables dans le groupe $k$.
+    variable $k$ du groupe $i$ un poids $1/n_k$, où $n_k$ est le nombre
+    de variables dans le groupe $k$.
 :::
 :::::
 
 ## Illustration
 
-::: panel-tabset
+:::::: panel-tabset
 ### Le Doubs
 
 ::::: columns
 ::: {.column width="49%"}
-
 ```{r}
 #| echo: false
 #| message: false
-#| fig-cap: "ACP normée" 
+#| fig-cap: "ACP normée"
 #| label: doubs_1ACP
 doubs_pca <- PCA(doubs.env, graph = FALSE, ncp = ncol(doubs.env))
 plot(doubs_pca, choix = "var")
 ```
 
-```{r doubs_1ACP_group}
+```{r}
 #| echo: false
 #| message: false
-#| fig-cap: "ACP sur les données réduites en prenant un poids $1/n_k$ pour les variables du groupe $k$" 
-#| label: acp_nk 
+#| fig-cap: "ACP sur les données réduites en prenant un poids $1/n_k$ pour les variables du groupe $k$"
+#| label: acp_nk
 
-doubs.env_normgroup <- scale((doubs.env)) 
+doubs.env_normgroup <- scale((doubs.env))
 weight_group <- diag(sqrt(c(rep(1/4, 4),rep(1/5,5), rep(1/2, 2))))*sqrt(3)
 dta <- doubs.env_normgroup %*% weight_group  |> as.data.frame()
 colnames(dta) = colnames(doubs.env)
@@ -246,45 +246,40 @@ plot(doubs_pca_normgroup, choix = "var")
 :::
 
 ::: {.column width="49%"}
-
-
 ### Poids des groupes de variables (variance préservée )
-
 
 ```{r}
 #| echo: false
 #| label: weight_var
-#| 
+#|
 vp1 <- svd(doubs.env_scaled[,1:4])$d
 vp2 <- svd(doubs.env_scaled[,5:9])$d
 vp3 <- svd(doubs.env_scaled[,10:11])$d
 
-valeurs_propres <- data.frame(Physique = svd(doubs.env_scaled[,1:4])$d[1:3], 
-                              Chimique = svd(doubs.env_scaled[,5:9])$d[1:3], 
-                              Ecologique = c(svd(doubs.env_scaled[,10:11])$d[1:2],NA) 
-) |> 
+valeurs_propres <- data.frame(Physique = svd(doubs.env_scaled[,1:4])$d[1:3],
+                              Chimique = svd(doubs.env_scaled[,5:9])$d[1:3],
+                              Ecologique = c(svd(doubs.env_scaled[,10:11])$d[1:2],NA)
+) |>
   mutate(Methode = "ACP")
 
-valeurs_propres_nk <- data.frame(Physique = svd(doubs.env_scaled[,1:4]/sqrt(4))$d[1:3], 
-                                 Chimique = svd(doubs.env_scaled[,5:9]/sqrt(5))$d[1:3], 
-                                 Ecologique = c(svd(doubs.env_scaled[,10:11]/sqrt(2))$d[1:2],NA) 
-) |>   
+valeurs_propres_nk <- data.frame(Physique = svd(doubs.env_scaled[,1:4]/sqrt(4))$d[1:3],
+                                 Chimique = svd(doubs.env_scaled[,5:9]/sqrt(5))$d[1:3],
+                                 Ecologique = c(svd(doubs.env_scaled[,10:11]/sqrt(2))$d[1:2],NA)
+) |>
   mutate(Methode = "n_k")
 
-valeurs_propres_afm <- data.frame(Physique = svd(doubs.env_scaled[,1:4]/vp1[1])$d[1:3], 
-                                  Chimique = svd(doubs.env_scaled[,5:9]/vp2[1])$d[1:3], 
-                                  Ecologique = c(svd(doubs.env_scaled[,10:11]/vp3[1])$d[1:2],NA) 
-) |> 
+valeurs_propres_afm <- data.frame(Physique = svd(doubs.env_scaled[,1:4]/vp1[1])$d[1:3],
+                                  Chimique = svd(doubs.env_scaled[,5:9]/vp2[1])$d[1:3],
+                                  Ecologique = c(svd(doubs.env_scaled[,10:11]/vp3[1])$d[1:2],NA)
+) |>
   mutate(Methode = "AFM")
 
 
-valeurs_propres |> bind_rows(valeurs_propres_nk) |> 
-  mutate(across(where(is.numeric), ~round(.x, 1))) |> 
-  select(Methode, Physique, Chimique, Ecologique) 
+valeurs_propres |> bind_rows(valeurs_propres_nk) |>
+  mutate(across(where(is.numeric), ~round(.x, 1))) |>
+  select(Methode, Physique, Chimique, Ecologique)
 
 ```
-
-
 
 ### Contribution des variables aux différents axes
 
@@ -292,43 +287,49 @@ valeurs_propres |> bind_rows(valeurs_propres_nk) |>
 #| echo: false
 #| message: false
 #| label: doubs_contrib
-#| 
+#|
 comp <- doubs_pca$var$contrib[,1:2]
-comp |> as.data.frame() |> 
-  rename(Dim.1_acp = Dim.1, Dim.2_acp = Dim.2) |> 
-  bind_cols(doubs_pca_normgroup$var$contrib[,1:2]) |> 
-  rename(Dim.1_nk = Dim.1, Dim.2_nk = Dim.2) 
+comp |> as.data.frame() |>
+  rename(Dim.1_acp = Dim.1, Dim.2_acp = Dim.2) |>
+  bind_cols(doubs_pca_normgroup$var$contrib[,1:2]) |>
+  rename(Dim.1_nk = Dim.1, Dim.2_nk = Dim.2)
 ```
-
 :::
-
-::::
+:::::
 
 ### Première idée
 
 -   Rééquilibrer les variables entre groupes en attribuant à chaque
-    variable $k$ du groupe $i$ un poids $1/n_k$, où $n_k$ est le nombre de variables dans le groupe $k$.
+    variable $k$ du groupe $i$ un poids $1/n_k$, où $n_k$ est le nombre
+    de variables dans le groupe $k$.
 
 [Problème]{.rouge}
 
-* les deux variables écologiques sont presque parfaitement corrélées, l'information qu'elles portent se résume très bien avec un seul axe. Ainsi cet axe porte presque la même information que l'ensemble des variables, elles  ont donc beaucoup de poids dans la création des axes finaux. 
+-   les deux variables écologiques sont presque parfaitement corrélées,
+    l'information qu'elles portent se résume très bien avec un seul axe.
+    Ainsi cet axe porte presque la même information que l'ensemble des
+    variables, elles ont donc beaucoup de poids dans la création des
+    axes finaux.
 
-* Les variables chimiques (pH, dureté, phosphate, nitrite et ammoniaque) sont moins corélées, l'information qu'elles portent se diffusent sur plusieurs axes et donc le poids de ces variables est réparti sur plusieurs axes.
+-   Les variables chimiques (pH, dureté, phosphate, nitrite et
+    ammoniaque) sont moins corélées, l'information qu'elles portent se
+    diffusent sur plusieurs axes et donc le poids de ces variables est
+    réparti sur plusieurs axes.
 
-[La première idée n'est pas toujours la bonne !]{.rouge} 
+[La première idée n'est pas toujours la bonne !]{.rouge}
 
-On souhaiterait que l'axe résume aussi bien les différents types de variable, et donc que chaque groupe de variable ait un poids 1 pour le premier axe.
-
-:::
-
+On souhaiterait que l'axe résume aussi bien les différents types de
+variable, et donc que chaque groupe de variable ait un poids 1 pour le
+premier axe.
+::::::
 
 ## L'AFM en pratique
 
-
 Pour chaque groupe de variable $k$,
 
-* On calcule la 1ère valeur propre $\lambda_{k1}$ du groupe de variable $k$, (chaque variable ayant été normée) 
-* On réalise l'ACP  globale sur le tableau pondéré :
+-   On calcule la 1ère valeur propre $\lambda_{k1}$ du groupe de
+    variable $k$, (chaque variable ayant été normée)
+-   On réalise l'ACP globale sur le tableau pondéré :
 
 \begin{align}
 X & = \begin{pmatrix}
@@ -341,19 +342,17 @@ X & = \begin{pmatrix}
 \end{pmatrix}\\
 \end{align}
 
-
-On a ainsi la pondération 
-
+On a ainsi la pondération
 
 ```{r}
 #| echo: false
 #| label: weight_afm
 
-valeurs_propres |> 
-  bind_rows(valeurs_propres_nk) |> 
-  bind_rows(valeurs_propres_afm) |>  
-  mutate(across(where(is.numeric), ~round(.x, 1))) |> 
-  select(Methode, Physique, Chimique, Ecologique) 
+valeurs_propres |>
+  bind_rows(valeurs_propres_nk) |>
+  bind_rows(valeurs_propres_afm) |>
+  mutate(across(where(is.numeric), ~round(.x, 1))) |>
+  select(Methode, Physique, Chimique, Ecologique)
 
 ```
 
@@ -361,19 +360,20 @@ valeurs_propres |>
 
 Finalement dans une AFM, on étudie
 
-* le nuage de points $\boldsymbol{X}$,
-* Les points sont potentiellement pondérés avec la matrice de poids  $W \in \R^{n\times n}$,
-* on utilise la mérique 
-$$M = Diag\left (\frac{1}{s_1^2 \lambda_{c_1}},\ldots ,\frac{1}{s_p^2 \lambda_{c_p}} \right)$$
+-   le nuage de points $\boldsymbol{X}$,
+-   Les points sont potentiellement pondérés avec la matrice de poids
+    $W \in {\mathbb{R}}^{n\times n}$,
+-   on utilise la mérique
+    $$M = Diag\left (\frac{1}{s_1^2 \lambda_{c_1}},\ldots ,\frac{1}{s_p^2 \lambda_{c_p}} \right)$$
 
-où Diag désigne la matrice diagonale, le terme $i$ est donné par  $\frac{1}{s_i^2 \lambda_{c_i},}$ $s_i$ est l'écart type de la variable $i$ et $\lambda_{c_i}$ est la première valeur propre de la classe à laquelle appartient la variable  $i$.
+où Diag désigne la matrice diagonale, le terme $i$ est donné par
+$\frac{1}{s_i^2 \lambda_{c_i},}$ $s_i$ est l'écart type de la variable
+$i$ et $\lambda_{c_i}$ est la première valeur propre de la classe à
+laquelle appartient la variable $i$.
 
-On a notre tryptique 
-$$(X, W, M)$$
+On a notre tryptique $$(X, W, M)$$
 
-
-
-## En pratique 
+## En pratique
 
 ```{r}
 #| message: false
@@ -382,7 +382,7 @@ $$(X, W, M)$$
 #| output-location: column
 #| results: hold
 
-doubs_mfa <- MFA(doubs.env, 
+doubs_mfa <- MFA(doubs.env,
     group = c(4, 5, 2), # un vecteur qui spécifie le nombre de variable dans chaque groupe. Les variables doivent être organisées comme il faut
     type = rep("s", 3), # pour indiquer que ce sont de svariables quanti que l'on souhaite normaliser et ce pour chaque groupe
     ncp=11, # on garde tous les axes
@@ -397,13 +397,19 @@ doubs_mfa <- MFA(doubs.env,
 
 ## Ce que vous pensez devoir retenir
 
-On *choisit* de faire une AFM si  on veut mettre l'accent sur les liens entre les groupes de variables
+On *choisit* de faire une AFM si on veut mettre l'accent sur les liens
+entre les groupes de variables
 
-* Pour ce faire, on veut  que chaque groupe contribue de la même manière à construire  des premmiers axes principaux 
+-   Pour ce faire, on veut que chaque groupe contribue de la même
+    manière à construire des premmiers axes principaux
 
-* Pour normaliser l'importance de chaque groupe, on calcule la première valeur propre de chaque groupe et on normalise les données par la racine de cette vp, ou de manière équivalente on prend une métrique $M£ dans maquelle le terme $M_{ii}$ contient la première valeur propre du groupe de variables auquel appartient $i$.
+-   Pour normaliser l'importance de chaque groupe, on calcule la
+    première valeur propre de chaque groupe et on normalise les données
+    par la racine de cette vp, ou de manière équivalente on prend une
+    métrique \$M£ dans maquelle le terme $M_{ii}$ contient la première
+    valeur propre du groupe de variables auquel appartient $i$.
 
-
-La méthode est proche de l'ACP, c'est une ACP avec une métrique particulière. 
+La méthode est proche de l'ACP, c'est une ACP avec une métrique
+particulière.
 
 On va inetrpéter les relations entre les groupes de variables.
