@@ -498,8 +498,8 @@ image2block <- function(channel_matrix, block_size) {
   if(  w %/% block_size != w/block_size ){
     stop("width is not a multiple of block size")
   }
-  # Get the number of cores available for parallel processing
-  num_cores <- parallel::detectCores() - 1  # Use one less than available cores to avoid system overload
+  # Get the number of cores available for parallel processing if ubuntu, set to 1 with windows
+  num_cores <- ifelse(.Platform$OS.type == "unix", parallel::detectCores() - 1, 1)
 
   # Define indices for parallelization
   indices <- expand.grid(seq(1, h, by = block_size), seq(1, w, by = block_size))
