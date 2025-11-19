@@ -1029,7 +1029,7 @@ Or $<X^j, C^k> = \lVert X^j\rVert\lVert C^k\rVert cos(\theta_{jk})$
 \end{align}
 
 Ainsi $<X^j, C^k>$ est le $j^\text{ème}$ terme du vecteur $PC^\top C^k$,
-or $C^\top C$ est diagonale avec $ \lVert C_k \rVert  = n \lambda_k$, donc
+or $C^\top C$ est diagonale avec $\lVert C_k \rVert  = n \lambda_k$, donc
 $(C^\top C)^k=(0, \dots, n\lambda_k, 0, \ldots)^\top$ et
 
 $$\cos(\theta_{jk}) = \frac{n \lambda_k \boldsymbol{u_k^j}}{\sqrt{\lVert X^j\rVert^2 \, \lVert C_k\rVert^2}}=  \sqrt{\lambda_k} \boldsymbol{u_k^j},  \quad \cos^2(\theta_{jk}) =  \lambda_k{(\boldsymbol{u_k^j})^2}$$
