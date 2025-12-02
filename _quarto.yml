@@ -39,11 +39,6 @@ website:
           - text: TD3
             href: TP3.qmd
 
-
-
-
-
-
 format:
   html:
     theme: cosmo
