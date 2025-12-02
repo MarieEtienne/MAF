@@ -26,9 +26,9 @@ website:
           - href: 01_inertie.qmd
           - href: 01_acp.qmd
           - href: 01_afm.qmd
-          - href: 01_afd.qmd
           - href: 01_afc.qmd
           - href: 01_acm.qmd
+          - href: 01_afd.qmd
 
       - text: "TD/TP"
         menu:
@@ -36,6 +36,8 @@ website:
             href: TP1.pdf
           - text: TD2
             href: TP2.qmd
+          - text: TD3
+            href: TP3.qmd
 
 
 

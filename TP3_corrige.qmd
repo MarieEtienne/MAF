@@ -45,9 +45,11 @@ scale2 <- function(x, na.rm = FALSE) (x - mean(x, na.rm = na.rm)) / ( sqrt((leng
 \newcommand\ybf{\boldsymbol{y}}
 :::
 
-Ce TD a pour but de reprendre les notions de base de l’analyse factorielle des correspondances (AFC) et de l'analyse des correspondantes multiples vues en cours mais à partir d’exemples simples. Ce TD permet aussi de voir les commandes principales utiles pour mettre en oeuvre ce type de méthode.
+Ce TD a pour but de reprendre  les notions de base de l’analyse factorielle des correspondances (AFC) et de l'analyse des correspondantes multiples vues en cours mais à partir d’exemples simples. Ce TD permet aussi de voir les commandes principales utiles pour mettre en oeuvre ce type de méthode.
+
 
 # Dégustation de fromages
+
 
 On s’intéresse à 8 fromages AOP, évalués par un panel de dégustateurs à l’aide de 7 descripteurs sensoriels. Pour chaque fromage, les dégustateurs devaient choisir le descripteur jugé le plus caractéristique.
 
@@ -56,6 +58,7 @@ On s’intéresse à 8 fromages AOP, évalués par un panel de dégustateurs à 
 **Les fromages sont** Comté, Beaufort, Camembert, Roquefort, Munster, Chèvre frais, Reblochon, Emmental
 
 Le tableau suivant donne, pour chaque fromage, le nombre de fois où chaque descripteur a été choisi.
+
 
 ## Tableau 1 : Fromages × descripteurs
 
@@ -67,39 +70,90 @@ fromage_dta <- read.table('fromage.csv', header = TRUE, sep = ",")|> column_to_r
 fromage_dta   |>  kable()
 ```
 
-On note ce tableau de contingence (X = (x\_{ij})) avec\
-- (i = 1,\dots,I) les fromages,\
-- (j = 1,\dots,J) les descripteurs.
+On note ce tableau de contingence \(X = (x_{ij})\) avec
+- \(i = 1,\dots,I\) les fromages,
+- \(j = 1,\dots,J\) les descripteurs.
 
-1.  En reprenant les notations du cours combien, donner les valeurs de $k_{1+}$, $k_{+2}$, $n$, $k_{12}$, $f_{1+}$, $f_{+2}$, $f_{ij}$
 
-2.  Sous l'hypothèse où le type de fromage et le descripteur sont deux variables indépendantes, quelle relation devrait vérifier les fréquences ?
+
+1. En reprenant les notations du cours combien, donner les valeurs de $k_{1+}$, $k_{+2}$, $n$, $k_{12}$, $f_{1+}$, $f_{+2}$, $f_{ij}$
+
+* $k_{i+}$ est l'effectif de la ligne i donc
+$k_{1+} = 33$, $k_{2+}=30$
+
+* $k_{+j}$ est l'effectif marginal de la colonne $j$ $k_{+1}=40$, $k_{+2}=41$ etc
+
+* $n$ est l'effectif total , $n=221$
+
+* La fréquence marginale $f_{1+}=k_{1+}/n= 0.1493213$, c'est la proportion de Comté évalué parmi l'ensemble des dégustations
+
+* La fréquence marginale $f_{+1}=k_{+1}/n= 0.1809955$, c'est la proportion de dégustation pour lesquelles le descripteur doux a été choisi
+
+*$f_{ij}=k_{ij}/n$ $f_{11}=8/221=0.0361991$ c'est la proportion de comté qui ont été descrits comme doux dans l'ensemble des dégustations.
+
+
+2. Sous l'hypothèse où le type de fromage et le descripteur sont deux variables indépendantes, quelle relation devrait vérifier les fréquences ?
+
+
+* Si les deux variables sont indépendantes
+$$P(Fromage = i, Descripteur = j)=P(Fromage = i) P(Descripteur = j)$$
+Donc
+$$f_{ij} = f_{i+} f_{+j}$$
+
 
 ## Profils lignes
 
-3.  Donner pour chaque decripteur le nombre de fois où il a été choisi.
+3. Donner pour chaque decripteur le nombre de fois où il a été choisi.
 
-4.  Rappeler la forme de la matrice de données utilisées pour étudier les profils lignes.
+Ce sont exactement les $k+j$
 
-5.  Rappeler le poids attribué à chaque individu (chaque ligne).
+4. Rappeler la forme de la matrice de données utilisées pour étudier les profils lignes.
 
-6.  Déterminer le profil ligne moyen.
+On travaille sur la matrice des fréquences empiriques
+$$X_{ij} = f_{ij}/f_{i+}$$
 
-7.  Rappeler la métrique utilisée et calculer l'inertie.
 
-8.  Quel est le nombre d'axes principaux maximum ?
+5. Rappeler le poids attribué à chaque individu (chaque ligne).
+
+Chaque ligne est affecté du poids $f_{i+}$, une ligne a un poids plus élevé si elle a une fréquence plus forte.
+
+6. Déterminer le profil ligne moyen.
+
+le profil ligne moyen $L=(L_{.1}, \ldots, L_{iJ})$ est la moyenne pondérée, la pondération est le poids $\omega_i$ de chaque ligne
+$$L_{.j} = \sum_{i=1}^I \omega_i x_{ij} =\sum_{i=1}^I f_{i+} \frac{f_{ij}}{f_{i+}} = \sum_{i=1}^I f_{ij} = f_{+j}$$
+C'est la proportion de descripteurs $j$ choisis parmi toutes les dégustations
+
+
+7. Rappeler la métrique utilisée et calculer l'inertie.
+
+
+On pondére chaque variable $i$ par le poids $\frac{1}{f_{+j}}$. Dans la distance entre individu, les modalités rares ont un rôle particulier. Si une modalité est rare, elle est très discriminante sur les profils lignes.
+
+8. Quel est le nombre d'axes principaux maximum ?
+
+$$Min(I-1, J-1)= min(8-1, 7-1)=6$$
 
 ## Profils colonnes
 
 Pour vérifier votre compréhension, essayer de répondre aux mêmes questions sur les profils colonnes.
 
+
+Laisser les étudiants le faire chez eux
+
+
 ## Mise en oeuvre de l'AFC
 
-9.  A quelle valeur correspond la somme des valeurs propres ?
+9. A quelle valeur correspond la somme des valeurs propres ?
+
+C'est la statistique de test du text du Chi2 divisé par l'effectif.
+
 
 10. Dans quel cas, une valeur propre vaut 1 ?
 
+une valeur peut valoir 1, un sous groupe de colonnes, identifie parfaitement un sous groupe de lignes
+
 11. Voici les valeurs propres obtenues sur les données de dégustation fromage, Combien d'axes avez-vous envie de considérer ?
+
 
 ```{r}
 #| label: CA_fromage
@@ -109,6 +163,9 @@ Pour vérifier votre compréhension, essayer de répondre aux mêmes questions s
 fromage_ca <- CA(fromage_dta, graph = FALSE, ncp = 10)
 fromage_ca$eig
 ```
+
+2 au vu du graphique, mais il ne faut pas s'interdire d'aller voir plus loin, c'est ce qu'on fait dans le 2ème exo.
+
 
 ## Analyse des profils colonnes
 
@@ -123,7 +180,15 @@ fromage_ca$eig
 fromage_ca$col$contrib |> kable()
 ```
 
-13. 13. Le tableau ci dessous donne la qualité de la représentation. Identifier un descripteur peu contributif à la création de l'axe 1 et pourtant bien représenté.
+* piquant et odorant pour le premier axe
+
+* sec et crémeux pour le second
+
+
+13. Le tableau ci dessous donne la qualité de la représentation.  Identifier un descripteur peu contributif à la création de l'axe 1 et pourtant bien représenté.
+
+
+* doux est très bien représenté alors qu'il ne contribue pas tant que ca sur le premier axe.
 
 ```{r}
 #| label: CA_ligne_cos2
@@ -136,6 +201,7 @@ fromage_ca$col$cos2|> kable()
 
 14. On obtient la projection suivante pour les profils colonnes dans le premier plan principal. Que pouvez-vous dire des liens entre les descripteurs ?
 
+
 ```{r}
 #| label: CA_colonnes_visu
 #| echo: false
@@ -144,7 +210,18 @@ fromage_ca$col$cos2|> kable()
 fviz_ca_col(fromage_ca)
 ```
 
+
+piquant et odorant sont du même coté, sur l'axe 1, il ont des profils lignes similaires c'est à dire que  sont associés à ces qualificatif de la même manière.
+
+même chose pour fruité et doux
+
+* sec a un profil très atypique
+
+
 15. A votre avis où devrait-on trouver le munster ?
+
+
+On devrait le trouver à droite si il avait été dégusté
 
 16. Voici la représentation conjointe des profils lignes et colonnes, rédiger 5 lignes d'analyse obtenue à partir de cette représentation.
 
@@ -156,21 +233,31 @@ fviz_ca_col(fromage_ca)
 fviz_ca(fromage_ca)
 ```
 
+
+* Le premier axe oppose le caractère piquant et odorant au caractère doux et crémeux. on retrouve donc à droite les fromages forts munster et roquefort (mais étrangement pas le camembert) et de l'autre les fromages plus doux le chèvre frais, l'emmental et le beaufort
+Le comté est plus haut sur l'axe 2, il s'associe de manière préféretielle au caractere sec.
+
+
 ## Variables supplémentaires
 
 17. Selon vous, à quel endroit du plan s'attend-on à trouver un crottin de chèvre bien sec, le livarot, le caprice des Dieux ?
+
 
 # Analyse des activités de Loisir
 
 La base loisirs est un jeu de données individuel destiné à l’étude des comportements de pratique des loisirs et de leurs déterminants socio-démographiques. Chaque observation correspond à un individu, et les variables renseignent :
 
-**les pratiques de loisirs** Un ensemble de variables binaires ou qualitatives décrivant la participation à différentes activités culturelles, récréatives ou domestiques : Lecture, Écouter.musique, Cinéma, Spectacle, Exposition, Ordinateur, Sport, Marche, Voyage, Jouer.musique, Collection, Activité.bénévole, Bricolage, Jardinage, Tricot, Cuisine, Pêche, TV (niveau d'utilisation de 0 à 4).
+**les pratiques de loisirs**
+Un ensemble de variables binaires ou qualitatives décrivant la participation à différentes activités culturelles, récréatives ou domestiques :
+Lecture, Écouter.musique, Cinéma, Spectacle, Exposition, Ordinateur, Sport, Marche, Voyage, Jouer.musique, Collection, Activité.bénévole, Bricolage, Jardinage, Tricot, Cuisine, Pêche, TV (niveau d'utilisation de 0 à 4).
 
-**Des indications socio-démographiques** Sexe, Âge, Situation.matrimoniale et Profession fournissent des informations permettant de caractériser les individus et d’expliquer les variations de comportements de loisirs.Il y a quelques valeurs manquantes.
+**Des indications socio-démographiques**
+Sexe, Âge, Situation.matrimoniale et Profession fournissent des informations permettant de caractériser les individus et d’expliquer les variations de comportements de loisirs.Il y a quelques valeurs manquantes.
+
 
 **Une Variable synthétique** Nb.activités est une variable dérivée indiquant, pour chaque individu, le nombre total d’activités pratiquées parmi celles listées.
 
-Ces données sont disponibles sur le site de [Francois Husson](https://husson.github.io/data.html)
+Ces données sont disponibles sur le site de [Francois Husson](https://husson.github.io/data.html).
 
 ```{r}
 #| label: import_loisirs
@@ -181,11 +268,18 @@ loisirs <- read.table("http://factominer.free.fr/course/donnees/AnaDo_JeuDonnees
 loisirs <- loisirs |> mutate(TV = as.factor(TV))
 ```
 
-1.  On cherche à construire une visualisation de cette base, permettant de mettre en évidence des liens potentiels entre différentes. Quelle est la méthode adaptée ?
+1. On cherche à construire une visualisation de cette base, permettant de mettre en évidence des liens potentiels entre différentes. Quelle est la méthode adaptée ?
 
-2.  Rappeler les éléments clés pour construire une ACM (tableau de données, métrique et poids).
+une ACM
 
-3.  L'analyse des correspondances multiples est mise en oeuvre à l'aide de la fonction `MCA` ci-dessous. Seules les activités de loisirs sont utilisées pour construire ACM. Indiquez toutes les variables supplémentaires.
+2. Rappeler les éléments clés pour construire une ACM (tableau de données, métrique et poids).
+
+une ligne est le tableau des données encodées sous forme one hot encoding (codage en 0/1 pour chaque modalité de chaque variable)
+
+
+3. L'analyse des correspondances multiples est mise en oeuvre à l'aide de la fonction `MCA`  ci-dessous. Seules les activités de loisirs sont utilisées pour construire ACM. Indiquez toutes les variables supplémentaires. Que signifie le fait qu'une variable est supplémentaire dans une analyse factorielle ?
+
+Les variables catégorielles socio démographiques et la variable quanti sur le nombre d'activités
 
 ```{r}
 #| label: mca_loisirs
@@ -193,24 +287,37 @@ loisirs <- loisirs |> mutate(TV = as.factor(TV))
 res.mca <- MCA(loisirs,quali.sup=19:22,quanti.sup=23, graph = FALSE)
 ```
 
-4.  A partir du graphique d'inertie ci-dessous, discuter la répartition de l'inertie sur les 2 premières dimensions.
+4. A partir du graphique d'inertie ci-dessous, discuter la répartition de l'inertie sur les 2 premières dimensions.
 
 ```{r}
 #| label: eig_loisirs
 #| eval: true
+
 res.mca$eig |> kable()
+fviz_eig(res.mca)
 ```
+
+L'inertie est très quitable répartie sur la plupart des dimnsiosn sauf la première qui captur. 20$\%$ pour la première puis entre 3 et 7 pour les suivantes
+
 
 ## Représentation des variables
 
-5.  Expliquer ce qui est représenté sur le graphique suivant et discuter du rôle particulier de la variable quantitative supplémentaire.
+5. Expliquer ce qui est représenté sur le graphique suivant et discuter du rôle particulier de la variable quantitative supplémentaire.
 
 ```{r}
 #| eval: true
 plot(res.mca,   choix = "var", invisible = "quali.sup", axes = c(1,2))
 ```
 
-6.  Quelles sont les variables les mieux représentées sur l'axe 1, l'axe 2 ?
+On fait le rapport entre l'inertie d'une variable et  l'inertie portée par cette même variable (avec toutes ses modalités) lorsqu'elle a été projeté sur le premier axe. plus on est proche de 1, mieux cette variable est représentée.
+
+Même chose pour l'axe 2. On repere ensuite une variable avec ces deux valeurs,
+
+6. Quelles sont les variables les mieux représentées sur l'axe 1, l'axe 2 ?
+
+Expostion, spectacle et Cinéma sont bien représentés sur l'axe 1.
+jardinage est la mieux représenté sur l'axe 2
+
 
 ## Représentation des différentes modalités.
 
@@ -221,7 +328,14 @@ Le graphique ci-dessous représente l'ensemble des modalités
 plot(res.mca,   choix = "ind", invisible = c("ind", "quali.sup", "quanti.sup"), axes = c(1,2)) + xlim(c(-1,1))
 ```
 
-7.  Pour y voir plus clair, on s'intéresse au 10 variables les plus contributives, quel enseignement pouvez-vous tirer de ce graphique ?
+7. Pour y voir plus clair, on s'intéresse au 10 variables les plus contributives, quel enseignement pouvez-vous tirer de ce graphique ?
+
+* Sur le graphique complet on constante que les modalités O et n d'une même variable s'oppose par rapport au centre de garvité. Celui ci n'est pas le centre du segment des ces deux modalités à cause des poids différents des modalités (les fréquences).
+
+Sur le graphique epuré, on constate que l'axe 1 sépare les modalité O à droite et  les modalités  N à gauche.
+
+L'axe 2 oppose semble t il les 2 modalités de jardinage qui semble etre une variable très discriminante.
+
 
 ```{r}
 #| eval: true
@@ -229,11 +343,20 @@ plot(res.mca,   choix = "ind", invisible = c("ind", "quali.sup", "quanti.sup"), 
 plot(res.mca,   choix = "ind", invisible = c("ind", "quali.sup", "quanti.sup"), axes = c(1,2), selectMod="contrib 10") +xlim(c(-1,1))+ ylim(c(-1,1))
 ```
 
-8.  Peut-on affirmer que les personnes qui vont à des expositions ont également tendance à aller au spectacle ?
+8. Peut-on affirmer que les personnes qui vont à des expositions ont également tendance à aller au spectacle ?
 
-9.  Les personnes adeptes du jardinage passent-elles peu de temps sur leur ordinateur ?
+on peut si ces variables sont bien représentées, sans cette information on ne peut pas vraiment conclure même si en général les variables contributives sont assez bien représentées.
+
+9. Les personnes adeptes du jardinage passent-elles peu de temps sur leur ordinateur ?
+
+A nouveau il faut s'assurer de la qualité de la représentation. Sous réserve qu'elles soient bien représentées.
+
+Les deux modalités ont toutes les deux des valeurs positives sur l'axe 2, ce qui pourrait aller dans le sens de l'affirmation toutefois elles s'opposent un peu sur l'axe1. Les deux modalités sont finalement assez éloignées l'une de l'autre et ne s'associe pas vraiment.
+
 
 10. A votre avis quelles sont les caractéristiques démographiques des personnes adeptes du Jardinage ?
+
+On s'attend peut etre à des personnes plutot agées,
 
 11. Dans le graphique ci-dessous, on ne représente que les modalités dont le $cos^2$ est supérieur à 0.4. Expliquer de quel $cos^2$ il est question. Comparer avec le graphique précédent. Est ce surprenant ?
 
@@ -246,35 +369,51 @@ mod_names <-liste_mod[liste_mod> seuil_cos] |> names()
 plot(res.mca,   choix = "ind", invisible = c("ind", "quanti.sup"), axes = c(1,2), selectMod=mod_names) +xlim(c(-1,1))+ ylim(c(-1,1))
 ```
 
+
+Les variables les plus contributives ne sont pas toujours bien représentées ! Le seuil de 0.4 est choisipour illustrer ca. on peut montrer aux étudiants un autre seuil pour voir la différence.
+
+
 ## Prise en compte de variables supplémentaires.
 
 On s'intéresse à la variable suppémentaire Age.
 
+
 12. Selon votre intuition à la question 10, ou devrait-on retrouer les personnes de 65 à 75 ans ?
+
+
+plutot en haut du coté du jardin
+
+
+13. Que constatez-vous pour la variable Age ?
+
+Elles sont bien en haut mais sont assez différentes sur l'axe 1. Ce sont aussi des personnes qui vont moins au spectacle, au cinéma etc
 
 ```{r}
 #| eval: true
 plot(res.mca,   choix = "ind", invisible = c("ind", "quanti.sup", "var"), axes = c(1,2))
 ```
-
-13. Que constatez-vous pour la variable Age ?
-
-14. Le tableau ci-dessous donne la qualité de représentation pour chacune des modalités de la variable Age. Quelle information peut-on en tirer ?
+14. Le tableau ci-dessous donne la qualité de représentation pour chacune des modalités de la variable Age. Quelle  information peut-on en tirer ?
 
 ```{r}
 #| eval: true
 rowSums(res.mca$quali.sup$cos2[,1:2])[3:8]
 ```
 
+Ouais tout ca est mal rerpésenté, attention à ne pas faire dire n'importe quoi. les variables supplémentaires peuvent être  très déformées par la projection qui a été construite
+
 15. On refait l'analyse en gardant plus de dimensions principales (argument `ncp` de `MCA`) et on illustre la qualité de la représentation des `(25-35]` pour chaque axe principal. Comment expliquer cette qualité de représentation ?
 
 ```{r}
 #| eval: true
-res.mca <- MCA(loisirs,quali.sup=c(19:22),quanti.sup=23, ncp = 20)
+res.mca <- MCA(loisirs,quali.sup=c(19:22),quanti.sup=23, ncp = 20, graph = FALSE)
 barplot(res.mca$quali.sup$cos2[3,])
 ```
 
+Parce que ces variables n'ont pas été utilisés,la projection n'est pas construite pour préserver l'information qu'elles portent
+
 16. Quel est le plan le plus pertinent pour bien visualiser les sondés de la catégories `(25-35]` ?
+
+le plan 2 8
 
 17. Dans le graphique ci-dessous, seules les modalités dont le cos2 sont supérieures à 0.2 sont représentées. Discuter ce que vous voyez en 5 lignes max.
 
@@ -287,13 +426,14 @@ cos2_var <- rowSums(res.mca$var$cos2[,axe_s]) |> sort(decreasing = TRUE)
 liste_var<- cos2_var[cos2_var>cos2_s] |> names()
 liste_age <- res.mca$quali.sup$cos2[3:10,] |>   rownames()
 
-plot(res.mca,   choix = "ind", invisible = c("ind", "quanti.sup"), axes = c(2,8), selectMod=c(liste_var,liste_age) )
+plot(res.mca,   choix = "ind", invisible = c("ind", "quanti.sup"), axes = c(2,8), selectMod=c(liste_var,liste_age) ) + xlab("") + ylab("")
 ```
+
+Les 25 35 ne marchent pas !!!!
 
 <!-- ## Analyse des choix sur la plateforme Parcour Sup. -->
 
 <!-- Les données sont extraites des résultats de la plateforme -->
-
 <!-- [Parcoursup](https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-parcoursup/information/). -->
 
 <!-- ### Contexte -->
@@ -303,45 +443,33 @@ plot(res.mca,   choix = "ind", invisible = c("ind", "quanti.sup"), axes = c(2,8)
 <!-- Dans les données disponibles dans le [parcoursup2023.csv](https://marieetienne.github.io/datasets/parcoursup2023.csv) une ligne correspond à une formation ouverte sur ParcourSup en 2023. Chaque formation est décrite au travers  -->
 
 <!-- -   Variables qualitatives d'intérêts : `Dept` le département de la -->
-
 <!--     formation concernée, 'Formation\`le type de formation. -->
 
 <!-- -   Variables additionnelles : `Selection` vaut sélective si la -->
-
 <!--     formation est sélective, `Parite` est une variable pouvant prendre -->
-
 <!--     trois modalités : `feminine`si la formation comporte plus de 65% de -->
-
 <!--     femmes, -->
-
 <!--     `paritaire si la formation compte entre 35 et 65% de femmes, masculine sinon,`Detail\ Formation` précise -->
-
 <!--     le type de formation. -->
 
 <!-- -   Dimensions : 11 formations disciplines, 97 départements (les -->
-
 <!--     départements hors france métropolitaines et l'étranger sont -->
-
 <!--     rassemble dans un département fictif 99), répartis au sein de 14 régions -->
+
+
 
 <!-- Voici  un aperçu des données  -->
 
 <!-- ```{r} -->
-
 <!-- #| label: load_dta_parcoursup -->
-
 <!-- #| message: false -->
-
 <!-- #| echo: true -->
-
 <!-- #| eval: false -->
-
 <!-- psup_dta <- read.csv("https://marieetienne.github.io/datasets/parcoursup2023.csv",fileEncoding = "UTF-8")  -->
 
 <!-- departements_region <- read_csv("departements-region.csv") |> rename(Dept= num_dep, Region = region_name) |> select(-dep_name) -->
 
 <!-- psup_dta <- psup_dta |> left_join(departements_region) |> mutate(Region = ifelse(is.na(Region), "Outre Mer", Region)) -->
-
 <!-- head(psup_dta) -->
 
 <!-- ``` -->
@@ -351,93 +479,70 @@ plot(res.mca,   choix = "ind", invisible = c("ind", "quanti.sup"), axes = c(2,8)
 <!-- 1. Pour étudier le lien entre département et type de formation, quel type d'analyse vous semble pertinent ? -->
 
 <!-- ```{r} -->
-
 <!-- #| label: parcour_sup_presentation -->
-
 <!-- #| message: false -->
-
 <!-- #| echo: true -->
-
 <!-- #| eval: false -->
 
 <!-- dta_dep_form <- psup_dta |>  -->
-
 <!--   group_by(Dept, Formation) |>  -->
-
 <!--   count() |>  -->
-
 <!--   pivot_wider(names_from = Formation, values_from = n, values_fill = 0)  -->
 
+
 <!-- dta_dep_selection <- psup_dta |>  -->
-
 <!--   group_by(Dept, Selection) |>  -->
-
 <!--   count() |>  -->
-
 <!--   pivot_wider(names_from = Selection, values_from = n, values_fill = 0)  -->
 
 <!-- dta_dep_parite <- psup_dta |>  -->
-
 <!--   group_by(Dept, Parite) |>  -->
-
 <!--   count() |>  -->
-
 <!--   pivot_wider(names_from = Parite, values_from = n, values_fill = 0)  -->
 
 <!-- dta_dep_detail <- psup_dta |>  -->
-
 <!--   group_by(Dept, Detail) |>  -->
-
 <!--   count() |>  -->
-
 <!--   pivot_wider(names_from = Detail, values_from = n, values_fill = 0)  -->
 
+
 <!-- dta <- dta_dep_form |> inner_join(dta_dep_parite) |> inner_join(dta_dep_selection)  |>  column_to_rownames('Dept') -->
+
+
 
 <!-- dep_filiere.ca <-  CA(dta, quanti.sup = 12:ncol(dta)) -->
 
 <!-- fviz_eig(dep_filiere.ca, choice = "eigenvalue") -->
 
+
+
 <!-- inertia.row <- tibble(Dept= row.names(dta_dep_filiere), -->
-
 <!--                       poids = dep_filiere.ca$call$marge.row,  -->
-
 <!--                   inertie = dep_filiere.ca$row$inertia, -->
-
 <!--                   percent.inertie = dep_filiere.ca$row$inertia / sum(dep_filiere.ca$row$inertia), -->
-
 <!--                   contrib_Dim1 = round(dep_filiere.ca$row$contrib[,1],2), -->
-
 <!--                   contrib_Dim2 = round(dep_filiere.ca$row$contrib[,2],2), -->
-
 <!--                   contrib_Dim3 = round(dep_filiere.ca$row$contrib[,3],2)) -->
-
 <!-- inertia.row |>  arrange(-inertie)|> flextable() -->
 
+
 <!-- inertia.col <- tibble(Formation= colnames(dta_dep_filiere[1:11]), -->
-
 <!--                       poids = dep_filiere.ca$call$marge.col,  -->
-
 <!--                   inertie = dep_filiere.ca$col$inertia, -->
-
 <!--                   percent.inertie = dep_filiere.ca$col$inertia / sum(dep_filiere.ca$col$inertia),  -->
-
 <!--                   contrib_Dim1 = round(dep_filiere.ca$col$contrib[,1],2), -->
-
 <!--                   contrib_Dim2 = round(dep_filiere.ca$col$contrib[,2]), -->
-
 <!--                   contrib_Dim3 = round(dep_filiere.ca$col$contrib[,3])) -->
-
 <!-- inertia.col |>  arrange(-inertie) |> flextable() -->
+
 
 <!-- fviz_ca_row(dep_filiere.ca, axes = 1:2) -->
 
 <!-- fviz_ca_col(dep_filiere.ca, axes = 1:2, invisible = c("col.sup")) ## bug montre encore les colonnes supplémenatiares -->
-
 <!-- fviz_ca_col(dep_filiere.ca, axes = 1:2, invisible = c("col.sup"), select.col = list(contrib = 11)) ## trick -->
 
-<!-- fviz_ca(dep_filiere.ca, axes = 1:2) -->
 
+<!-- fviz_ca(dep_filiere.ca, axes = 1:2) -->
 <!-- fviz_ca(dep_filiere.ca, axes = 1:2, select.col =  list(cos2 = 20),  alpha.col="cos2", select.row= list(contrib = 15)) -->
 
 <!-- ``` -->
@@ -447,61 +552,38 @@ plot(res.mca,   choix = "ind", invisible = c("ind", "quanti.sup"), axes = c(2,8)
 <!-- ### Contexte -->
 
 <!-- Le but de cette étude est d'étudier le lien entre domaine d'étude, -->
-
 <!-- niveau d'étude et genre à l'université : -->
 
 <!-- -   Quelles sont les disciplines pour lesquelles le profil des étudiants -->
-
 <!--     est le même ? -->
-
 <!-- -   Quelles sont les disciplines privilégiées par les femmes (resp. par -->
-
 <!--     les hommes) ? -->
-
 <!-- -   Quelles sont les disciplines pour lesquelles les études sont plus -->
-
 <!--     longues ? -->
 
 <!-- Données : -->
 
 <!-- -   Fichier : -->
-
 <!--     [universite.csv](https://husson.github.io/img/universite.csv) -->
-
 <!-- -   Variables qualitatives croisées : `Discipline` et `Niveau-sexe` -->
-
 <!-- -   Dimensions : 10 disciplines et croisements de `niveau` (licence, -->
-
 <!--     master, doctorat) avec `sexe` (homme, femme). -->
 
 <!-- ### Étapes de l'analyse -->
 
 <!-- 1.  **Importer le jeu de données** -->
-
 <!--     -   Identifier le format (éditeur de texte). -->
-
 <!--     -   Importer sous R. -->
-
 <!-- 2.  **Statistiques descriptives** -->
-
 <!--     -   Indépendance entre `Discipline` et `sexe` ? -->
-
 <!--     -   Indépendance entre `Discipline` et `niveau` ? -->
-
 <!--     -   Indépendance entre `niveau` et `sexe` ? -->
-
 <!-- 3.  **Mise en œuvre de l'AFC** -->
-
 <!--     -   Choisir les lignes et colonnes actives. -->
-
 <!--     -   Utiliser la fonction `CA`. -->
-
 <!-- 4.  **Interprétation des résultats** -->
-
 <!--     -   Interpréter le test du $χ^2$. -->
-
 <!--     -   Choisir le nombre d'axes. -->
-
 <!--     -   Visualiser et interpréter. -->
 
 <!-- ## Analyse des correspondances multiples (ACM) -->
@@ -513,47 +595,27 @@ plot(res.mca,   choix = "ind", invisible = c("ind", "quanti.sup"), axes = c(2,8)
 <!-- Données : -->
 
 <!-- -   Fichier : [credit.csv](https://husson.github.io/img/credit.csv) -->
-
 <!-- -   66 clients ayant souscrit un crédit à la consommation. -->
-
 <!-- -   11 variables qualitatives : -->
-
 <!--     -   Exemple : `Marché`, `Apport`, `Impayé`, `Taux d'endettement`, -->
-
 <!--         etc. -->
 
 <!-- ### Étapes de l'analyse -->
 
 <!-- 1.  **Importer le jeu de données** -->
-
 <!--     -   Identifier le format (éditeur de texte). -->
-
 <!--     -   Importer sous R. -->
-
 <!--     -   Vérifier le type des variables. -->
-
 <!-- 2.  **Statistiques descriptives** -->
-
 <!--     -   Identifier les modalités rares. -->
-
 <!--     -   Regrouper les modalités si nécessaire. -->
-
 <!--     -   Identifier les variables liées. -->
-
 <!-- 3.  **Mise en œuvre de l'ACM** -->
-
 <!--     -   Choisir les éléments actifs et supplémentaires. -->
-
 <!--     -   Utiliser la fonction `MCA`. -->
-
 <!-- 4.  **Interprétation des résultats** -->
-
 <!--     -   Choisir le nombre d'axes. -->
-
 <!--     -   Visualiser et interpréter les axes factoriels. -->
-
 <!-- 5.  **Synthèse des résultats** -->
-
 <!--     -   Rédiger un rapport de l'analyse : 2 pages, 3 graphiques, 5 -->
-
 <!--         statistiques numériques maximum. -->
