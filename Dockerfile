@@ -34,3 +34,4 @@ RUN apt-get update && apt-get install -y \
     apt-get clean
 
 ENV PATH="${PATH}:/root/bin"
+RUN R -e "install.packages(c('kableExtra'))"
