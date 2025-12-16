@@ -35,3 +35,4 @@ RUN apt-get update && apt-get install -y \
 
 ENV PATH="${PATH}:/root/bin"
 RUN R -e "install.packages(c('kableExtra'))"
+RUN R -e "install.packages(c('janitor'))"
