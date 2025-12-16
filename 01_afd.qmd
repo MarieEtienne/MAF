@@ -2,19 +2,20 @@
 title: "Analyse Factorielle Discrimante"
 author:
   - name: Marie-Pierre Etienne
-    affiliation: 
+    affiliation:
       - ENSAI - CREST
     email: marie-pierre.etienne@ensai.fr
 date: "Last updated on `r format(Sys.time(), '%d %B, %Y')`"
 institute: https://marieetienne.github.io/MAF/
 execute:
   freeze: auto
-editor: 
-  markdown: 
+editor:
+  markdown:
     wrap: 72
+  mode: source
 css: mpe_pres_revealjs.css
 format:
-  revealjs: 
+  revealjs:
     theme: [default, custom.scss]
     width: 1050
     margin: 0.05
@@ -82,27 +83,36 @@ doubs.env_scaled <- scale(doubs.env)
 
 ### les manchots
 
-On a mesuré les carcatéristqiues physiques de plusieurs manchots de trois espèces différentes.
+On a mesuré les carcatéristqiues physiques de plusieurs manchots de
+trois espèces différentes.
 
-On souhaite visualiser au mieux les différences entre les différentes espèces.
+On souhaite visualiser au mieux les différences entre les différentes
+espèces.
 
-### Les vins de Loire 
+### Les vins de Loire
 
-On a mesuré des caractéristiques sensorielles pour  10 vins blancs du Val de Loire,
+On a mesuré des caractéristiques sensorielles pour 10 vins blancs du Val
+de Loire,
 
-Deux types de vin sont étudiés des Sauvignon et de Vouvray (cépage Chenin Blanc) et on souhaite mettre en évidence des profils sensoriels différents.
+Deux types de vin sont étudiés des Sauvignon et de Vouvray (cépage
+Chenin Blanc) et on souhaite mettre en évidence des profils sensoriels
+différents.
 
+## Formalisation
 
+### Données
 
-## Formalisation 
+On dispose de données quantitatives, stockées dans une matrice
+$\boldsymbol{X}$ comme en ACP.
 
-### Données 
+D'une variable qualitative $\boldsymbol{Z}$ de classe, il y a $K$
+classes au total ($K=3$ dans le cas des manchots). Celle-ci est encodée
+dans **un tableau disjonctif complet**, c'est à dire que pour l'individu
+$i$, le vecteur $Z_{ik}=1$ si l'individu appartient à la classe $k$ et
+$0$ sinon. Si bien que
 
-On dispose de données quantitatives, stockées dans une matrice $\boldsymbol{X}$ comme en ACP.
-
-D'une variable qualitative $\boldsymbol{Z}$ de classe, il y a $K$ classes au total ($K=3$ dans le cas des manchots). Celle-ci est encodée dans **un tableau disjonctif complet**, c'est à dire que pour l'individu $i$, le vecteur $Z_{ik}=1$ si l'individu appartient à la classe $k$ et $0$ sinon. Si bien que 
-
-$\sum_{k=1}^K Z_{ik} =1$ et $\sum_{i=1}^n Z_{ik}=n_k$ le nombre d'individus dans la classe $k$.
+$\sum_{k=1}^K Z_{ik} =1$ et $\sum_{i=1}^n Z_{ik}=n_k$ le nombre
+d'individus dans la classe $k$.
 
 $$\boldsymbol{Z} =\begin{pmatrix}
 Z_{11} & \ldots &Z_{1K} \\
@@ -110,159 +120,155 @@ Z_{11} & \ldots &Z_{1K} \\
 Z_{n1} & \ldots &Z_{nK} \\
 \end{pmatrix}$$
 
-### Metrique et poids 
+### Metrique et poids
 
-On a aussi une matrice de poids $\boldsymbol{W}$ pour les individus et une métrique $\boldsymbol{M}$ sur les variables
+On a aussi une matrice de poids $\boldsymbol{W}$ pour les individus et
+une métrique $\boldsymbol{M}$ sur les variables
 
-### But 
+### But
 
-[Trouver la projection qui permet de mettre en évidence les différences entre les groupes.]{.rouge}
-
-
+[Trouver la projection qui permet de mettre en évidence les différences
+entre les groupes.]{.rouge}
 
 # Point Technique
 
 ## Matrice d'inertie
 
-:::: columns
+::::: columns
 ::: {.column width="49%"}
+### Revisiter l'inertie
 
-### Revisiter l'inertie 
+L'inertie du nuage de points est définie comme
+$$I = \sum_{i=1}^n w_i \lVert\class{alea}{x_i} -\boldsymbol{g}\rVert^2_M$$
+On a considéré des variables centrées donc
+$\boldsymbol{g} = \boldsymbol{0}$.
 
-L'inertie du nuage de points est définie comme 
-$$I = \sum_{i=1}^n w_i \norm{\class{alea}{x_i} -\boldsymbol{g}}^2_M$$
-On a considéré des variables centrées donc $\boldsymbol{g} = \boldsymbol{0}$.
-
-* Or 
+-   Or
 
 \begin{align}
  I = & \sum_{i=1}^n w_i x_i^\top M x_i = tr(\sum_{i=1}^n w_i x_i^\top M x_i ) \\
-   = & tr(\sum_{i=1}^n M x_i w_i x_i^\top ) \quad \text{(commutatitvité de la trace)} \\
+   = & tr(\sum_{i=1}^n M x_i w_i x_i^\top ) \quad \text{(commutatitivité de la trace)} \\
    = & tr(M \sum_{i=1}^n  x_i w_i x_i^\top )\\
    = & tr(M X^\top W X)\\
    = & tr( X^\top W X M)\\
-   = & tr( V M)\\
-   
+   = & tr(V M)\\
+   = & tr(M^{1/2} V M^{1/2})\\
+
 \end{align}
 
-* Ainsi l'inertie est la trace de la matrice $VM$, avec $V=  X^\top W X.$ 
-
+-   Ainsi l'inertie est la trace de la matrice $M^{1/2} V M^{1/2}$, avec
+    $V=  X^\top W X.$
 :::
 
 ::: {.column width="49%"}
-
 ### Exemple sur les cas présentés
 
-* Dans le cas de l'ACP, la matrice $V$ est la matrice de covariance et $M = Id$,
+-   Dans le cas de l'ACP, la matrice $V$ est la matrice de covariance et
+    $M = Id$,
 
-* Dans le cas de l'ACP normée , la matrice $V$ est la matrice de covariance et $M = Diag(s_k^{-2})$,
+-   Dans le cas de l'ACP normée , la matrice $V$ est la matrice de
+    covariance et $M = Diag(s_k^{-2})$,
 
-* Dans le cas de l'AFM, la matrice $V$ est la matrice de covariance et $M = Diag( s_k^{-2} \lambda_{c_k}^{-1})$.
-
+-   Dans le cas de l'AFM, la matrice $V$ est la matrice de covariance et
+    $M = Diag( s_k^{-2} \lambda_{c_k}^{-1})$.
 :::
-
-::::
+:::::
 
 L'inertie du nuage est la *trace de la matrice d'inertie*.
 
-[Trouver les axes principaux dans ces méthodes se résume à trouver les vecteurs propres de  $VM$]{.rouge}
+[Trouver les axes principaux dans ces méthodes se résume à trouver les
+vecteurs propres de $VM$]{.rouge}
 
 ## Matrice d'inertie dans l'AFD
 
-On a besoin de faire apparaître des barycentres de classe donc on réécrit la matrice d'inertie dans sa forme générale, et on indice par $T£ pour indiquer que c'est l'inertie totale du nuage.
+On a besoin de faire apparaître des barycentres de classe donc on
+réécrit la matrice d'inertie dans sa forme générale, et on indice par
+$T$ pour indiquer que c'est l'inertie totale du nuage.
 
 $$V_T =  X^\top W X - \boldsymbol{g} \boldsymbol{g}^\top,$$
 
-avec $\boldsymbol{g} = \sum_{i=1}^n w_i  x_i$, $\boldsymbol{g}\in\R^d.$
+avec $\boldsymbol{g} = \sum_{i=1}^n w_i  x_i$,
+$\boldsymbol{g}\in{\mathbb{R}}^d.$
 
-
-:::: columns
+::::: columns
 ::: {.column width="49%"}
 ### Inertie Intra-classe
 
-* Dans la classe $k$
+-   Dans la classe $k$
 
 $$V_k =  X^\top \tilde{W_k} X - \boldsymbol{g_k} \boldsymbol{g_k}^\top,$$
 
-avec $\boldsymbol{g_k} = \sum_{i=1}^n \tilde{w}_{ik}  x_i$, $\tilde{w}_{ik} = \frac{w_i z_{ik}}{\sum_i w_i z_{ik}}.$
+avec $\boldsymbol{g_k} = \sum_{i=1}^n \tilde{w}_{ik}  x_i$,
+$\tilde{w}_{ik} = \frac{w_i z_{ik}}{\sum_i w_i z_{ik}}.$
 
-[Intuitivement, c'est la variabilité dans la classe, c'est à dire la dispersion autour du centre de gravité des individus de la classe $k$]{.rouge}
+[Intuitivement, c'est la variabilité dans la classe, c'est à dire la
+dispersion autour du centre de gravité des individus de la classe
+$k$]{.rouge}
 
-* Dans l'ensemble des classes $k$, la matrice d’inertie intra-classes $V_W$ (W pour Within)
+-   Dans l'ensemble des classes $k$, la matrice d’inertie intra-classes
+    $V_W$ (W pour Within)
 
 $$V_W  = \sum_{k=1}^K n_k V_k.$$
-
-
 :::
 
 ::: {.column width="49%"}
-
 ### Inertie Inter-classe
 
-La matrice d’inertie inter-classes mesure la dispersion des centres de gravité des classes, affectés de leur poids,  autour du centre de gravité du nuage.
+La matrice d’inertie inter-classes mesure la dispersion des centres de
+gravité des classes, affectés de leur poids, autour du centre de gravité
+du nuage.
 
 $$V_B = \sum_{k=1}^n n_k \boldsymbol{g_k}\boldsymbol{g_k}^\top - \boldsymbol{g}\boldsymbol{g}^\top.$$
-
-
 :::
-::::
+:::::
 
 ## Décomposition de l'inertie
 
-On a la décomposition suivante de l'inertie en inertie intra-classes plus inertie inter-classes
-$$
+On a la décomposition suivante de l'inertie en inertie intra-classes
+plus inertie inter-classes $$
 V_T= V_W + V_B.
 $$
 
-:::: columns
+::::: columns
 ::: {.column width="49%"}
-
 ### Décomposition de l'inertie expliquée par un axe
 
-[L'inertie du nuage projeté sur l'axe $\Delta_u$ de vecteur unitaire $u$, avec métrique $M$, peut se décomposer comme ]{ .smaller}
-$$
+[L'inertie du nuage projeté sur l'axe $\Delta_u$ de vecteur unitaire
+$u$, avec métrique $M$, peut se décomposer comme]{.smaller} $$
 u^\top M V_T M u = u^\top M V_B M u + u^\top M V_W M u,
-$$
-où 
+$$ où
 
-* $u^\top M V_T M u$ est l'inertie totale portée par $\Delta_u$
-* $u^\top M V_B M u$ est l'inertie inter-classes portée par $\Delta_u$
-* $u^\top M V_W M u$ est l'inertie intra-classes portée par $\Delta_u$.
-
-
+-   $u^\top M V_T M u$ est l'inertie totale portée par $\Delta_u$
+-   $u^\top M V_B M u$ est l'inertie inter-classes portée par $\Delta_u$
+-   $u^\top M V_W M u$ est l'inertie intra-classes portée par
+    $\Delta_u$.
 :::
 
 ::: {.column width="49%"}
-
-
 ### Formalisation du problème
 
-On cherche donc l'axe $\Delta_u$ tel que lors de la projection sur $\Delta_u$, les classes soient le plus séparées possible et que la variabilité au sein de chaque classe soit la plus petite possible
+On cherche donc l'axe $\Delta_u$ tel que lors de la projection sur
+$\Delta_u$, les classes soient le plus séparées possible et que la
+variabilité au sein de chaque classe soit la plus petite possible
 
-Si $V_T$ est inversible et puisque $M V_T M  = M V_B M  +  M V_W M$, alors
+Si $V_T$ est inversible et puisque $M V_T M  = M V_B M  +  M V_W M$,
+alors
 
-$$I_d = (MV_TM)^{-1} M V_B M  + (MV_TM)^{-1} M V_W M$$
-On cherche $u_1$, $\norm{u_1}=1$ tel que 
+$$I_d = (MV_TM)^{-1} M V_B M  + (MV_TM)^{-1} M V_W M$$ On cherche $u_1$,
+$\lVert u_1\rVert=1$ tel que
 
-$$u_1^T  (MV_TM)^{-1} M V_B M  u_1= u_1^T M^{-1} V_T^{-1} V_B M u_1 $$ 
-
+$$u_1^T  (MV_TM)^{-1} M V_B M  u_1= u_1^T M^{-1} V_T^{-1} V_B M u_1 $$
 :::
+:::::
 
-::::
-
-On cherche donc les vecteurs propres de  $M^{-1} V_T^{-1} V_B M$
-
+On cherche donc les vecteurs propres de $M^{-1} V_T^{-1} V_B M$
 
 ## L'AFD = une méthode factorielle
-
 
 Si $u_1$ est vecteur propre de $M^{-1} V_T^{-1} V_B M$, donc
 $$M^{-1} V_T^{-1} V_B M u_1 = \lambda_1 u_1  \quad \text{ i .e} \quad V_T^{-1} V_B M u_1  = \lambda_1  M u_1 $$
 
 Dans une ACP, on fait une décomposition de $V_T M$
-
-
-
 
 # Bilan
 

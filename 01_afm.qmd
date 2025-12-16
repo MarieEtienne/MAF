@@ -454,9 +454,19 @@ Ainsi $\class{bleu}{\mathcal{L}_g(K_\ell, \boldsymbol{u_1})}$ est le mesure du l
 #| output-location: column
 #| results: hold
 
+
+doubs.env_dbo <- doubs.env |> select(-dbo)
+doubs.env_dbo_pca <- PCA(doubs.env_dbo, graph = FALSE)
+plot(doubs.env_dbo_pca, choix = "var")
+doubs_mfa <- MFA(doubs.env_dbo,
+    group = c(4, 5, 1), # un vecteur qui spécifie le nombre de variable dans chaque groupe. Les variables doivent être organisées comme il faut
+    type = rep("s", 3), # pour indiquer que ce sont des variables quanti que l'on souhaite normaliser et ce pour chaque groupe
+    ncp=11, # on garde tous les axes
+    name.group=c("Physique","Chimique","Ecologique"), graph = TRUE)
+
 doubs_mfa <- MFA(doubs.env,
     group = c(4, 5, 2), # un vecteur qui spécifie le nombre de variable dans chaque groupe. Les variables doivent être organisées comme il faut
-    type = rep("s", 3), # pour indiquer que ce sont de svariables quanti que l'on souhaite normaliser et ce pour chaque groupe
+    type = rep("s", 3), # pour indiquer que ce sont des variables quanti que l'on souhaite normaliser et ce pour chaque groupe
     ncp=11, # on garde tous les axes
     name.group=c("Physique","Chimique","Ecologique"), graph = TRUE)
 #summary(doubs_mfa)

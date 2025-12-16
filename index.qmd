@@ -4,9 +4,9 @@ author: "MP Etienne"
 format: html
 toc: true
 date: last-modified
-date-format: "[Dernière Mise à jour] Octobre 2024"
+date-format: "[Dernière Mise à jour] Novembre 2025"
 css: mpe_pres_revealjs.css
-execute: 
+execute:
   freeze: auto
 ---
 
