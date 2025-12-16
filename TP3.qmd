@@ -123,7 +123,7 @@ fromage_ca$eig
 fromage_ca$col$contrib |> kable()
 ```
 
-13. 13. Le tableau ci dessous donne la qualité de la représentation. Identifier un descripteur peu contributif à la création de l'axe 1 et pourtant bien représenté.
+13. Le tableau ci dessous donne la qualité de la représentation. Identifier un descripteur peu contributif à la création de l'axe 1 et pourtant bien représenté.
 
 ```{r}
 #| label: CA_ligne_cos2
@@ -181,7 +181,7 @@ loisirs <- read.table("http://factominer.free.fr/course/donnees/AnaDo_JeuDonnees
 loisirs <- loisirs |> mutate(TV = as.factor(TV))
 ```
 
-1.  On cherche à construire une visualisation de cette base, permettant de mettre en évidence des liens potentiels entre différentes. Quelle est la méthode adaptée ?
+1.  On cherche à construire une visualisation de cette base, permettant de mettre en évidence des liens potentiels entre différentes activités. Quelle est la méthode adaptée ?
 
 2.  Rappeler les éléments clés pour construire une ACM (tableau de données, métrique et poids).
 
@@ -254,7 +254,10 @@ On s'intéresse à la variable suppémentaire Age.
 
 ```{r}
 #| eval: true
-plot(res.mca,   choix = "ind", invisible = c("ind", "quanti.sup", "var"), axes = c(1,2))
+plot(res.mca,   choix = "ind", invisible = c("ind", "quanti.sup", "var"), axes = c(1,2), select = (cos2 =10))
+select_mod <- names(sort(rowSums(res.mca$quali.sup$cos2[, 1:2]), decreasing = TRUE)[1:9])
+
+
 ```
 
 13. Que constatez-vous pour la variable Age ?
@@ -270,7 +273,7 @@ rowSums(res.mca$quali.sup$cos2[,1:2])[3:8]
 
 ```{r}
 #| eval: true
-res.mca <- MCA(loisirs,quali.sup=c(19:22),quanti.sup=23, ncp = 20)
+res.mca <- MCA(loisirs,quali.sup=c(19:22),quanti.sup=23, ncp = 21)
 barplot(res.mca$quali.sup$cos2[3,])
 ```
 
@@ -289,271 +292,3 @@ liste_age <- res.mca$quali.sup$cos2[3:10,] |>   rownames()
 
 plot(res.mca,   choix = "ind", invisible = c("ind", "quanti.sup"), axes = c(2,8), selectMod=c(liste_var,liste_age) )
 ```
-
-<!-- ## Analyse des choix sur la plateforme Parcour Sup. -->
-
-<!-- Les données sont extraites des résultats de la plateforme -->
-
-<!-- [Parcoursup](https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-parcoursup/information/). -->
-
-<!-- ### Contexte -->
-
-<!-- Le but de l'étude menée ici est d'étudier l'offre de formation à l'échelle des départements et des régions. -->
-
-<!-- Dans les données disponibles dans le [parcoursup2023.csv](https://marieetienne.github.io/datasets/parcoursup2023.csv) une ligne correspond à une formation ouverte sur ParcourSup en 2023. Chaque formation est décrite au travers  -->
-
-<!-- -   Variables qualitatives d'intérêts : `Dept` le département de la -->
-
-<!--     formation concernée, 'Formation\`le type de formation. -->
-
-<!-- -   Variables additionnelles : `Selection` vaut sélective si la -->
-
-<!--     formation est sélective, `Parite` est une variable pouvant prendre -->
-
-<!--     trois modalités : `feminine`si la formation comporte plus de 65% de -->
-
-<!--     femmes, -->
-
-<!--     `paritaire si la formation compte entre 35 et 65% de femmes, masculine sinon,`Detail\ Formation` précise -->
-
-<!--     le type de formation. -->
-
-<!-- -   Dimensions : 11 formations disciplines, 97 départements (les -->
-
-<!--     départements hors france métropolitaines et l'étranger sont -->
-
-<!--     rassemble dans un département fictif 99), répartis au sein de 14 régions -->
-
-<!-- Voici  un aperçu des données  -->
-
-<!-- ```{r} -->
-
-<!-- #| label: load_dta_parcoursup -->
-
-<!-- #| message: false -->
-
-<!-- #| echo: true -->
-
-<!-- #| eval: false -->
-
-<!-- psup_dta <- read.csv("https://marieetienne.github.io/datasets/parcoursup2023.csv",fileEncoding = "UTF-8")  -->
-
-<!-- departements_region <- read_csv("departements-region.csv") |> rename(Dept= num_dep, Region = region_name) |> select(-dep_name) -->
-
-<!-- psup_dta <- psup_dta |> left_join(departements_region) |> mutate(Region = ifelse(is.na(Region), "Outre Mer", Region)) -->
-
-<!-- head(psup_dta) -->
-
-<!-- ``` -->
-
-<!-- ## Etude du lien entre les départements et le type de formation  -->
-
-<!-- 1. Pour étudier le lien entre département et type de formation, quel type d'analyse vous semble pertinent ? -->
-
-<!-- ```{r} -->
-
-<!-- #| label: parcour_sup_presentation -->
-
-<!-- #| message: false -->
-
-<!-- #| echo: true -->
-
-<!-- #| eval: false -->
-
-<!-- dta_dep_form <- psup_dta |>  -->
-
-<!--   group_by(Dept, Formation) |>  -->
-
-<!--   count() |>  -->
-
-<!--   pivot_wider(names_from = Formation, values_from = n, values_fill = 0)  -->
-
-<!-- dta_dep_selection <- psup_dta |>  -->
-
-<!--   group_by(Dept, Selection) |>  -->
-
-<!--   count() |>  -->
-
-<!--   pivot_wider(names_from = Selection, values_from = n, values_fill = 0)  -->
-
-<!-- dta_dep_parite <- psup_dta |>  -->
-
-<!--   group_by(Dept, Parite) |>  -->
-
-<!--   count() |>  -->
-
-<!--   pivot_wider(names_from = Parite, values_from = n, values_fill = 0)  -->
-
-<!-- dta_dep_detail <- psup_dta |>  -->
-
-<!--   group_by(Dept, Detail) |>  -->
-
-<!--   count() |>  -->
-
-<!--   pivot_wider(names_from = Detail, values_from = n, values_fill = 0)  -->
-
-<!-- dta <- dta_dep_form |> inner_join(dta_dep_parite) |> inner_join(dta_dep_selection)  |>  column_to_rownames('Dept') -->
-
-<!-- dep_filiere.ca <-  CA(dta, quanti.sup = 12:ncol(dta)) -->
-
-<!-- fviz_eig(dep_filiere.ca, choice = "eigenvalue") -->
-
-<!-- inertia.row <- tibble(Dept= row.names(dta_dep_filiere), -->
-
-<!--                       poids = dep_filiere.ca$call$marge.row,  -->
-
-<!--                   inertie = dep_filiere.ca$row$inertia, -->
-
-<!--                   percent.inertie = dep_filiere.ca$row$inertia / sum(dep_filiere.ca$row$inertia), -->
-
-<!--                   contrib_Dim1 = round(dep_filiere.ca$row$contrib[,1],2), -->
-
-<!--                   contrib_Dim2 = round(dep_filiere.ca$row$contrib[,2],2), -->
-
-<!--                   contrib_Dim3 = round(dep_filiere.ca$row$contrib[,3],2)) -->
-
-<!-- inertia.row |>  arrange(-inertie)|> flextable() -->
-
-<!-- inertia.col <- tibble(Formation= colnames(dta_dep_filiere[1:11]), -->
-
-<!--                       poids = dep_filiere.ca$call$marge.col,  -->
-
-<!--                   inertie = dep_filiere.ca$col$inertia, -->
-
-<!--                   percent.inertie = dep_filiere.ca$col$inertia / sum(dep_filiere.ca$col$inertia),  -->
-
-<!--                   contrib_Dim1 = round(dep_filiere.ca$col$contrib[,1],2), -->
-
-<!--                   contrib_Dim2 = round(dep_filiere.ca$col$contrib[,2]), -->
-
-<!--                   contrib_Dim3 = round(dep_filiere.ca$col$contrib[,3])) -->
-
-<!-- inertia.col |>  arrange(-inertie) |> flextable() -->
-
-<!-- fviz_ca_row(dep_filiere.ca, axes = 1:2) -->
-
-<!-- fviz_ca_col(dep_filiere.ca, axes = 1:2, invisible = c("col.sup")) ## bug montre encore les colonnes supplémenatiares -->
-
-<!-- fviz_ca_col(dep_filiere.ca, axes = 1:2, invisible = c("col.sup"), select.col = list(contrib = 11)) ## trick -->
-
-<!-- fviz_ca(dep_filiere.ca, axes = 1:2) -->
-
-<!-- fviz_ca(dep_filiere.ca, axes = 1:2, select.col =  list(cos2 = 20),  alpha.col="cos2", select.row= list(contrib = 15)) -->
-
-<!-- ``` -->
-
-<!-- ## Analyse factorielle des correspondances (AFC) - A vous de jouer -->
-
-<!-- ### Contexte -->
-
-<!-- Le but de cette étude est d'étudier le lien entre domaine d'étude, -->
-
-<!-- niveau d'étude et genre à l'université : -->
-
-<!-- -   Quelles sont les disciplines pour lesquelles le profil des étudiants -->
-
-<!--     est le même ? -->
-
-<!-- -   Quelles sont les disciplines privilégiées par les femmes (resp. par -->
-
-<!--     les hommes) ? -->
-
-<!-- -   Quelles sont les disciplines pour lesquelles les études sont plus -->
-
-<!--     longues ? -->
-
-<!-- Données : -->
-
-<!-- -   Fichier : -->
-
-<!--     [universite.csv](https://husson.github.io/img/universite.csv) -->
-
-<!-- -   Variables qualitatives croisées : `Discipline` et `Niveau-sexe` -->
-
-<!-- -   Dimensions : 10 disciplines et croisements de `niveau` (licence, -->
-
-<!--     master, doctorat) avec `sexe` (homme, femme). -->
-
-<!-- ### Étapes de l'analyse -->
-
-<!-- 1.  **Importer le jeu de données** -->
-
-<!--     -   Identifier le format (éditeur de texte). -->
-
-<!--     -   Importer sous R. -->
-
-<!-- 2.  **Statistiques descriptives** -->
-
-<!--     -   Indépendance entre `Discipline` et `sexe` ? -->
-
-<!--     -   Indépendance entre `Discipline` et `niveau` ? -->
-
-<!--     -   Indépendance entre `niveau` et `sexe` ? -->
-
-<!-- 3.  **Mise en œuvre de l'AFC** -->
-
-<!--     -   Choisir les lignes et colonnes actives. -->
-
-<!--     -   Utiliser la fonction `CA`. -->
-
-<!-- 4.  **Interprétation des résultats** -->
-
-<!--     -   Interpréter le test du $χ^2$. -->
-
-<!--     -   Choisir le nombre d'axes. -->
-
-<!--     -   Visualiser et interpréter. -->
-
-<!-- ## Analyse des correspondances multiples (ACM) -->
-
-<!-- ### Contexte -->
-
-<!-- Objectif : Caractériser la clientèle d'un organisme de crédit. -->
-
-<!-- Données : -->
-
-<!-- -   Fichier : [credit.csv](https://husson.github.io/img/credit.csv) -->
-
-<!-- -   66 clients ayant souscrit un crédit à la consommation. -->
-
-<!-- -   11 variables qualitatives : -->
-
-<!--     -   Exemple : `Marché`, `Apport`, `Impayé`, `Taux d'endettement`, -->
-
-<!--         etc. -->
-
-<!-- ### Étapes de l'analyse -->
-
-<!-- 1.  **Importer le jeu de données** -->
-
-<!--     -   Identifier le format (éditeur de texte). -->
-
-<!--     -   Importer sous R. -->
-
-<!--     -   Vérifier le type des variables. -->
-
-<!-- 2.  **Statistiques descriptives** -->
-
-<!--     -   Identifier les modalités rares. -->
-
-<!--     -   Regrouper les modalités si nécessaire. -->
-
-<!--     -   Identifier les variables liées. -->
-
-<!-- 3.  **Mise en œuvre de l'ACM** -->
-
-<!--     -   Choisir les éléments actifs et supplémentaires. -->
-
-<!--     -   Utiliser la fonction `MCA`. -->
-
-<!-- 4.  **Interprétation des résultats** -->
-
-<!--     -   Choisir le nombre d'axes. -->
-
-<!--     -   Visualiser et interpréter les axes factoriels. -->
-
-<!-- 5.  **Synthèse des résultats** -->
-
-<!--     -   Rédiger un rapport de l'analyse : 2 pages, 3 graphiques, 5 -->
-
-<!--         statistiques numériques maximum. -->
