@@ -46,11 +46,17 @@ library(wesanderson)
 
 # Présentation de la séance
 
+L'objectif est de mettre en oeuvre les méthodes d'AFC et d'ACM pour explorer deux jeux de données dinnéerents. Le premier porte sur les logements, le second sur l'exploration de la richesse écologique de sites suivis.
+
+# Typologie des logements
+
 Nous souhaitons identifier les méthodes adéquates pour appréhender et
 visualiser un jeu de données sur la consommation énergétiques des EPCI (
 [Etablissements Publics de Coopération
 Intercommunale](https://www.insee.fr/fr/metadonnees/definition/c1160) )
 sur le territoire métropolitain en 2023.
+
+## Présentation des données
 
 Les données sont disponibles sur [ce
 lien](https://raw.githubusercontent.com/MarieEtienne/MAF/refs/heads/master/logement_conso2023.csv)
@@ -178,9 +184,9 @@ différente question.
     entre type d'habitat et consommation ? ou entre vétusté du parc
     immobilier et consommation ?
 
-# Mise en oeuvre
+## Mise en oeuvre
 
-## Importation des données
+### Importation des données
 
 ```{r }
 #| label: import_dta
@@ -221,7 +227,7 @@ dta_logement_conso <- dta_logement_conso %>%
 
 2. Combien y a t il de lignes au total ? Combien y a t il d'EPCI différents ?
 
-## Vers Une typologie des départements
+### Vers Une typologie des départements
 
 3. Expliquer le code suivant ligne à ligne
 
@@ -272,7 +278,7 @@ dept <- epci_unique_dta %>%
   )
 ```
 
-## AFC sur les surfaces des logements
+### AFC sur les surfaces des logements
 
 On se focalise pour le moment sur les données suivantes
 
