@@ -1,0 +1,168 @@
+---
+title: "Script R TP3"
+author:
+  - name: Marie-Pierre Etienne
+affiliation:
+  - ENSAI - CREST
+email: marie-pierre.etienne@ensai.fr
+date: last-modified
+institute: https://marieetienne.github.io/MAF/
+bibliography: TPs.bib
+execute:
+  eval: false
+  echo: true
+  freeze: auto
+editor:
+  markdown:
+    wrap: 72
+css: mpe_pres_revealjs.css
+---
+
+```{r}
+
+
+## ----setup, include=FALSE, eval = TRUE, message = FALSE-------------------------------------------------
+library(tidyverse)
+library(forcats)
+library(FactoMineR)
+library(factoextra)
+library(kableExtra)
+knitr::opts_chunk$set(echo = FALSE, comment = NA,  message = FALSE,
+                      warning = FALSE, eval = FALSE,
+                      fig.align = "center")
+theme_set(theme_minimal())
+options(ggplot2.discrete.colour=   scale_color_manual(values = wesanderson::wes_palette(name = "Darjeeling1")) )
+couleur <-  wesanderson::wes_palette(name = "Darjeeling1")
+scale2 <- function(x, na.rm = FALSE) (x - mean(x, na.rm = na.rm)) / ( sqrt((length(x)-1) / length(x)) *sd(x, na.rm) )
+
+
+
+## -------------------------------------------------------------------------------------------------------
+#| label: desc_fromage
+#| echo: false
+#| eval: true
+fromage_dta <- read.table('fromage.csv', header = TRUE, sep = ",")|> column_to_rownames('Fromage')
+fromage_dta   |>  kable()
+
+
+## -------------------------------------------------------------------------------------------------------
+#| label: CA_fromage
+#| echo: false
+#| eval: true
+#|
+fromage_ca <- CA(fromage_dta, graph = FALSE, ncp = 10)
+fromage_ca$eig
+
+
+## -------------------------------------------------------------------------------------------------------
+#| label: CA_col_contrib
+#| echo: false
+#| eval: true
+
+
+fromage_ca$col$contrib |> kable()
+
+
+## -------------------------------------------------------------------------------------------------------
+#| label: CA_ligne_cos2
+#| echo: false
+#| eval: true
+
+
+fromage_ca$col$cos2|> kable()
+
+
+## -------------------------------------------------------------------------------------------------------
+#| label: CA_colonnes_visu
+#| echo: false
+#| eval: true
+#|
+fviz_ca_col(fromage_ca)
+
+
+## -------------------------------------------------------------------------------------------------------
+#| label: CA_visu
+#| echo: false
+#| eval: true
+#|
+fviz_ca(fromage_ca)
+
+
+## -------------------------------------------------------------------------------------------------------
+#| label: import_loisirs
+#| eval: true
+
+loisirs <- read.table("http://factominer.free.fr/course/donnees/AnaDo_JeuDonnees_Loisirs.csv",
+                     header=TRUE, sep=";", fileEncoding="latin1", stringsAsFactors = TRUE)
+loisirs <- loisirs |> mutate(TV = as.factor(TV))
+
+
+## -------------------------------------------------------------------------------------------------------
+#| label: mca_loisirs
+#| eval: true
+res.mca <- MCA(loisirs,quali.sup=19:22,quanti.sup=23, graph = FALSE)
+
+
+## -------------------------------------------------------------------------------------------------------
+#| label: eig_loisirs
+#| eval: true
+res.mca$eig |> kable()
+
+
+## -------------------------------------------------------------------------------------------------------
+#| eval: true
+plot(res.mca,   choix = "var", invisible = "quali.sup", axes = c(1,2))
+
+
+## -------------------------------------------------------------------------------------------------------
+#| eval: true
+plot(res.mca,   choix = "ind", invisible = c("ind", "quali.sup", "quanti.sup"), axes = c(1,2)) + xlim(c(-1,1))
+
+
+## -------------------------------------------------------------------------------------------------------
+#| eval: true
+#| message: false
+plot(res.mca,   choix = "ind", invisible = c("ind", "quali.sup", "quanti.sup"), axes = c(1,2), selectMod="contrib 10") +xlim(c(-1,1))+ ylim(c(-1,1))
+
+
+## -------------------------------------------------------------------------------------------------------
+#| eval: true
+seuil_cos <- 0.4
+liste_mod <- res.mca$var$cos2[, 1:2] |> rowSums()  |> sort(, decreasing = TRUE)
+mod_names <-liste_mod[liste_mod> seuil_cos] |> names()
+
+plot(res.mca,   choix = "ind", invisible = c("ind", "quanti.sup"), axes = c(1,2), selectMod=mod_names) +xlim(c(-1,1))+ ylim(c(-1,1))
+
+
+## -------------------------------------------------------------------------------------------------------
+#| eval: true
+plot(res.mca,   choix = "ind", invisible = c("ind", "quanti.sup", "var"), axes = c(1,2), select = (cos2 =10))
+select_mod <- names(sort(rowSums(res.mca$quali.sup$cos2[, 1:2]), decreasing = TRUE)[1:9])
+
+
+
+
+## -------------------------------------------------------------------------------------------------------
+#| eval: true
+rowSums(res.mca$quali.sup$cos2[,1:2])[3:8]
+
+
+## -------------------------------------------------------------------------------------------------------
+#| eval: true
+res.mca <- MCA(loisirs,quali.sup=c(19:22),quanti.sup=23, ncp = 21)
+barplot(res.mca$quali.sup$cos2[3,])
+
+
+## -------------------------------------------------------------------------------------------------------
+#| eval: true
+axe_s <- c(2,8)
+cos2_s <- 0.2
+
+cos2_var <- rowSums(res.mca$var$cos2[,axe_s]) |> sort(decreasing = TRUE)
+liste_var<- cos2_var[cos2_var>cos2_s] |> names()
+liste_age <- res.mca$quali.sup$cos2[3:10,] |>   rownames()
+
+plot(res.mca,   choix = "ind", invisible = c("ind", "quanti.sup"), axes = c(2,8), selectMod=c(liste_var,liste_age) )
+
+
+```
