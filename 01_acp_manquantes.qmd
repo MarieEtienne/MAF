@@ -1,0 +1,306 @@
+---
+title: "ACP : données manquantes, imputation, imputation multiple"
+author:
+  - name: Marie-Pierre Etienne
+    affiliation:
+      - ENSAI - CREST
+    email: marie-pierre.etienne@ensai.fr
+date: "Last updated on `r format(Sys.time(), '%d %B, %Y')`"
+institute: https://marieetienne.github.io/MAF/
+execute:
+  freeze: auto
+  eval: true
+  echo: true
+editor:
+  markdown:
+    wrap: 72
+  mode: source
+css: mpe_pres_revealjs.css
+format:
+  revealjs:
+    theme: [default, custom.scss]
+    width: 1050
+    margin: 0.05
+    slide-number: true
+    slide-level: 2
+    show-slide-number: print
+    menu:
+      useTextContentForMissingTitles: false
+    mathjax: true  # Active MathJax
+    self-contained: true
+---
+
+
+# Introduction
+
+## ACP sur données réelles : rarement complètes
+
+**Constat empirique**
+- Les tableaux analysés par ACP sont souvent incomplets :
+  - mesures manquantes,
+  - variables coûteuses ou difficiles à acquérir,
+  - protocoles hétérogènes.
+
+**Exemples concrets**
+- Environnement : stations × variables physico-chimiques
+  → capteurs défaillants, données non synchrones.
+- Écologie : espèces × traits fonctionnels
+  → traits manquants pour certaines espèces.
+- Socio-économie : individus × indicateurs
+  → non-réponse partielle aux questionnaires.
+
+**Objectif de l’ACP**
+> Résumer la structure de dépendance *globale* entre variables
+→ difficile si le tableau est incomplet.
+
+
+## Le suivi d'ozone à Rennes
+
+112 mesures journalières de variables météorologiques (vitesse du vent, température, précipitations, etc.) ainsi que la concentration d’ozone, relevées à Rennes (France) durant l’été 2001.
+
+11 variables continues et 2 variables catégorielles comportant 2 ou 4 modalités.
+
+
+Cet exemple est issu du package R  ` missMDA`
+
+```{r}
+library(tidyverse)
+library(FactoMineR)
+library(missMDA)
+library(mice)
+data("ozone")
+ozone |> summarise_all(~sum(is.na(.)))
+```
+
+
+## Attitude 1 : suppression des individus incomplets
+
+**Approche naïve**
+- Conserver uniquement les lignes sans valeurs manquantes.
+
+**Conséquences**
+- Forte réduction de la taille de l’échantillon.
+- Perte d’information multivariée.
+- Biais potentiel si les manquants ne sont pas MCAR.
+
+
+Une ACP « propre » sur peu de données peut être moins informative  qu’une ACP bien traitée sur des données incomplètes.
+
+### Exemple Ozone
+
+```{r}
+ozone |> count()
+ozone |> drop_na() |> count()
+table(rowSums(is.na(ozone)))
+```
+
+C'est bien dommage !!!
+
+## Question sur la structure des manquants
+
+**vision schématique**
+
+$$\mathbf{X} =
+\begin{pmatrix}
+x_{11} & x_{12} & \bullet & x_{14} \\
+x_{21} & \bullet & x_{23} & x_{24} \\
+x_{31} & x_{32} & x_{33} & \bullet
+\end{pmatrix}$$
+
+$\bullet$ : valeur manquante
+
+**Problème**
+- Les corrélations sont calculées sur des sous-échantillons différents.
+- La matrice de covariance peut devenir incohérente.
+
+**Conséquence**
+- Axes principaux instables ou difficilement interprétables.
+
+
+## La question centrale
+
+**Question statistique**
+> Comment estimer un sous-espace principal pertinent
+> à partir d’un tableau incomplet \(\mathbf{X}_{obs}\) ?
+
+**Deux grandes familles de réponses**
+1. Compléter les données (imputation)
+2. Modéliser directement la structure latente (ACP comme modèle factoriel)
+
+👉 Les deux approches sont étroitement liées.
+
+
+# Formalisation
+
+## Données manquantes et ACP : cadre formel
+
+**Données et notations**
+
+- ( \mathbf{X} \in \mathbb{R}\^{n \times p} ) : matrice de données (souvent centrée, éventuellement réduite).
+- ( \mathbf{R} \in {0,1}\^{n \times p} ) : indicateurs de données manquantes : $$r\_{ij} = \begin{cases}
+  1 & \text{si } x_{ij} \text{ est observé} \\
+  0 & \text{si } x_{ij} \text{ est manquant}
+  \end{cases}$$
+
+- Décomposition : ( \mathbf{X} = (\mathbf{X}*{obs},* \mathbf{X}{mis}) ).
+
+**ACP complète** \[ \hat{\Sigma} = \frac{1}{n}\mathbf{X}\^\top \mathbf{X} \]
+
+
+**Mécanismes des données manquantes**
+
+- **MCAR** : (P(\mathbf{R}\mid \mathbf{X}) = P(\mathbf{R}))
+- **MAR** : (P(\mathbf{R}\mid \mathbf{X}) = P(\mathbf{R}\mid \mathbf{X}*{obs}))
+- **MNAR** : (P(*\mathbf{R}\mid \mathbf{X})) dépend de (\mathbf{X}{mis})
+
+**Impact sur l’ACP** - (\hat{\Sigma}) n’est plus directement calculable ; estimations ad hoc (\Rightarrow) biais possibles. - Distorsion des inerties et des sous-espaces principaux.
+
+#Imputation de données
+
+## Imputation simple : principe et propriétés
+
+**Principe** - Construire (\tilde{\mathbf{X}}) par remplacement **ponctuel** des valeurs manquantes. - Appliquer ensuite une ACP standard sur (\tilde{\mathbf{X}}).
+
+**Exemples**
+- **Moyenne** (si centrée : (0)) : (\tilde{x}\_{ij} = \bar{x}\_j)
+- **Régression** : \[ x_j = \beta*0 +* \sum{k\neq j}\beta\_k x_k + \varepsilon \]
+- **ACP itérative / EM-PCA (idée)** : alternance (estimation sous-espace) / (reconstruction) jusqu’à convergence. (Hors programme nécessite les cours de stat plus avancés)
+
+**Problèmes**
+- Incertitude sur (\mathbf{X}\_{mis}) ignorée (\Rightarrow) variances souvent sous-estimées, corrélations modifiées.
+
+
+## Imputation multiple et ACP
+
+**Principe**
+- Générer (M) complétions : \[ \tilde{\mathbf{X}}\^{(1)}, \ldots, \tilde{\mathbf{X}}\^{(M)} \] en simulant (\mathbf{X}*{mis}) selon une loi approchant (p(*\mathbf{X}{mis}\mid \mathbf{X}\_{obs})) (souvent sous MAR + modèle).
+
+**Analyse**
+- ACP sur chaque (\tilde{\mathbf{X}}\^{(m)}) (\Rightarrow) (M) jeux (valeurs propres, charges, scores).
+
+**Combinaison (une option simple)**
+
+$$\bar{\Sigma}=\frac{1}{M}\sum_{m=1}^M \hat{\Sigma}^{(m)} $$ puis ACP de $\bar{\Sigma}.$
+
++ diagnostics : variabilité inter-imputations des charges/axes.
+
+
+## Pratiquement
+
+**1) Diagnostiquer les manquants** - Taux global + par variable/individu ; structure (blocs, monotone, etc.). - Tester/argumenter (au moins qualitativement) MCAR vs MAR vs MNAR.
+
+**2) Pré-traitement cohérent**
+- Décider centrage / réduction (important en ACP sur corrélation).
+- Idéalement : inclure ce pré-traitement *dans* le modèle d’imputation (ou le reproduire à l’identique après imputation).
+
+**3) Choisir la stratégie**
+- **Exploration rapide** : imputation simple (moyenne / kNN / ACP itérative).
+- **Inférence / reporting** : imputation multiple (MI), surtout sous MAR.
+
+**4) Estimer l’ACP**
+- Sur (\tilde{\mathbf{X}}) (simple) ou sur chaque (\tilde{\mathbf{X}}\^{(m)}) (IM).
+- Attention à l'alignement des axes si besoin (indétermination du signe / rotations).
+
+**5) Diagnostics & sensibilité**
+- Stabilité des charges/axes (bootstrap ou IM).
+- Sensibilité au nombre de composantes (q), au modèle d’imputation, et (si plausible) scénarios MNAR.
+
+
+## Deux mots sur l'ACP comme modèle factoriel (vue probabiliste)
+
+**Modèle**
+- Pour l’individu (i) : $$\mathbf{x}\_i = \boldsymbol{\mu} + \mathbf{L}\mathbf{z}\_i + \boldsymbol{\varepsilon}\_i$$
+où
+- $\mathbf{z}\_i \in \mathbb{R}\^q$ : facteurs latents (scores), - (\mathbf{L} \in \mathbb{R}^{p\times q}) : charges (loadings),
+- $\boldsymbol{\varepsilon}_i \sim \mathcal{N}(\mathbf{0}, \sigma^2\mathbf{I}_p)$ (hypothèse “bruit isotrope”).
+
+**Lien avec l’ACP**
+- Si $\mathbf{z}\_i \sim \mathcal{N}(0,\mathbf{I}\_q)$, alors : $$\mathrm{Cov}(\mathbf{x}\_i)=\mathbf{L}\mathbf{L}\top+\sigma2\mathbf{I}\_p$$
+- L’estimation des paramètres (par maximum de vraisemblance ou EM, cf cours statistique inférentielle) mène à un sous-espace proche de celui de l’ACP (cas $\sigma\^2 I$ : “probabilistic PCA”).
+
+**Pourquoi utile avec des manquants ?** - Le cadre probabiliste donne naturellement $p(\mathbf{X}^{mis}\mid \mathbf{X}{obs})$.
+- EM : E-step (espérances conditionnelles des facteurs et/ou manquants),
+M-step (mise à jour de $\mathbf{L},\sigma\^2)$.
+
+## Exemple de mise en œuvre (R) : ACP itérative vs imputation multiple
+
+```{r}
+#| eval: false
+library(missMDA)
+library(FactoMineR)
+library(palmerpenguins)
+library(mice)
+
+data(penguins)
+# Exemple : jeu de données continu avec manquants
+
+X <- scale(penguins[, 3:6])
+dim(X)
+X_no_na <- X  |> as.data.frame() |> drop_na()
+dim(X_no_na)
+# ici juste pour l'exemple set.seed(1)
+prop_na <- 0.15
+Xmiss <- X
+Xmiss[sample(x= length(Xmiss), size = round(0.15*length(Xmiss)))] <- NA
+X_no_na <- Xmiss  |> as.data.frame() |> drop_na()
+dim(X_no_na)
+
+# --- (A) Imputation ACP itérative (missMDA) ---
+
+# Choisir nb de composantes pour l'imputation (validation croisée)
+
+ncp <- estim_ncpPCA(Xmiss, ncp.max = 5)$ncp ## on teste la reconstruction par validation croisée
+Xmiss_pca <- imputePCA(Xmiss, ncp = ncp)$completeObs
+res_pca <- PCA(Xmiss_pca, graph = FALSE)
+
+# --- (B) Imputation multiple (mice) ---
+
+X_miss_df <- as.data.frame(Xmiss)
+
+# Méthode par défaut (pmm) souvent robuste ; adapter selon contexte
+Xmiss_im  <- mice(X_miss_df, m = 20, method = "pmm", seed = 1, printFlag = FALSE) # methode pmm regression multiple aà expliquer
+
+# ACP sur chaque jeu imputé
+pcas <- lapply(1:Xmiss_im$m,
+               function(m){
+                 dta_m <- complete(Xmiss_im, m)
+                 PCA(dta_m, graph = FALSE) })
+
+# Combinaison simple : moyenne des matrices de covariance
+Sigmas <- lapply(1:Xmiss_im$m,
+                 function(m){
+                   dta_m <- as.matrix(complete(Xmiss_im, m))
+                   cov(dta_m)  # si déjà centré/réduit : attention aux conventions
+})
+Sigma_bar <- Reduce("+", Sigmas) / Xmiss_im$m
+
+# ACP sur Sigma_bar : via eigen-decomposition
+
+# Base de référence : plan (PC1, PC2) de Sigma_bar
+eig_bar <- eigen(Sigma_bar)
+U <- eig_bar$vectors[, 1:2, drop = FALSE]  # p x 2 (orthonormé)
+
+# Fonction : angles principaux (en degrés) entre deux plans 2D
+principal_angles_2d <- function(U, V) {
+  # cosinus des angles = valeurs singulières de t(U) %*% V
+  sv <- svd(t(U) %*% V, nu = 0, nv = 0)$d
+  sv <- pmin(1, pmax(0, sv))  # sécurité numérique
+  acos(sv) * 180 / pi         # angles en degrés
+}
+
+# Angles entre le plan de Sigma_bar et le plan de chaque imputation
+angles_deg <- sapply(seq_along(Sigmas), function(m) {
+  eig_m <- eigen(Sigmas[[m]])
+  V <- eig_m$vectors[, 1:2, drop = FALSE]
+  principal_angles_2d(U, V)   # renvoie 2 angles : theta1 <= theta2
+})
+
+rownames(angles_deg) <- c("theta1_deg", "theta2_deg")
+colnames(angles_deg) <- paste0("imp", seq_along(Sigmas))
+
+# Résumé utile
+t(apply(angles_deg, 1, summary))
+# ou visualiser rapidement
+angles_deg[, 1:5]
+
+```
