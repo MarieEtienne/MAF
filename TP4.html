@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Marie-Pierre Etienne">
-<meta name="dcterms.date" content="2025-12-02">
+<meta name="dcterms.date" content="2025-12-16">
 
 <title>Lab4 - Explorer un jeu de données complexes – Méthodes d’analyse factorielle</title>
 <style>
@@ -21,6 +21,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -70,6 +105,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="mpe_pres_revealjs.css">
@@ -164,6 +228,14 @@ ul.task-list li input[type="checkbox"] {
     <a class="dropdown-item" href="./TP3.pdf">
  <span class="dropdown-text">TD3</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="./TP3_scriptR.qmd">
+ <span class="dropdown-text">TD3 - script R</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./TP4.html">
+ <span class="dropdown-text">TD4</span></a>
+  </li>  
     </ul>
   </li>
 </ul>
@@ -188,16 +260,37 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#objectifs-de-la-séance" id="toc-objectifs-de-la-séance" class="nav-link active" data-scroll-target="#objectifs-de-la-séance">Objectifs de la séance</a>
+  <li><a href="#présentation-de-la-séance" id="toc-présentation-de-la-séance" class="nav-link active" data-scroll-target="#présentation-de-la-séance">Présentation de la séance</a>
   <ul class="collapse">
   <li><a href="#identification-et-informations-géographiques" id="toc-identification-et-informations-géographiques" class="nav-link" data-scroll-target="#identification-et-informations-géographiques">Identification et informations géographiques</a></li>
   <li><a href="#consommation-énergétique" id="toc-consommation-énergétique" class="nav-link" data-scroll-target="#consommation-énergétique">Consommation énergétique</a></li>
   <li><a href="#caractéristiques-socio-démographiques-et-du-logement" id="toc-caractéristiques-socio-démographiques-et-du-logement" class="nav-link" data-scroll-target="#caractéristiques-socio-démographiques-et-du-logement">Caractéristiques socio-démographiques et du logement</a></li>
   <li><a href="#année-de-construction-des-résidences-principales" id="toc-année-de-construction-des-résidences-principales" class="nav-link" data-scroll-target="#année-de-construction-des-résidences-principales">Année de construction des résidences principales</a></li>
   <li><a href="#modes-de-chauffage" id="toc-modes-de-chauffage" class="nav-link" data-scroll-target="#modes-de-chauffage">Modes de chauffage</a></li>
-  </ul></li>
   <li><a href="#quelques-remarques-préalables" id="toc-quelques-remarques-préalables" class="nav-link" data-scroll-target="#quelques-remarques-préalables">Quelques remarques préalables</a></li>
-  <li><a href="#quelques-pistes" id="toc-quelques-pistes" class="nav-link" data-scroll-target="#quelques-pistes">Quelques pistes</a></li>
+  <li><a href="#les-questions-que-lon-se-pose" id="toc-les-questions-que-lon-se-pose" class="nav-link" data-scroll-target="#les-questions-que-lon-se-pose">Les questions que l’on se pose</a></li>
+  </ul></li>
+  <li><a href="#mise-en-oeuvre" id="toc-mise-en-oeuvre" class="nav-link" data-scroll-target="#mise-en-oeuvre">Mise en oeuvre</a>
+  <ul class="collapse">
+  <li><a href="#importation-des-données" id="toc-importation-des-données" class="nav-link" data-scroll-target="#importation-des-données">Importation des données</a></li>
+  <li><a href="#vers-une-typologie-des-départements" id="toc-vers-une-typologie-des-départements" class="nav-link" data-scroll-target="#vers-une-typologie-des-départements">Vers Une typologie des départements</a></li>
+  <li><a href="#afc-sur-les-surfaces-des-logements" id="toc-afc-sur-les-surfaces-des-logements" class="nav-link" data-scroll-target="#afc-sur-les-surfaces-des-logements">AFC sur les surfaces des logements</a></li>
+  </ul></li>
+  <li><a href="#typologie-de-sites-écologiques" id="toc-typologie-de-sites-écologiques" class="nav-link" data-scroll-target="#typologie-de-sites-écologiques">Typologie de sites écologiques</a>
+  <ul class="collapse">
+  <li><a href="#contexte" id="toc-contexte" class="nav-link" data-scroll-target="#contexte">Contexte</a></li>
+  <li><a href="#données" id="toc-données" class="nav-link" data-scroll-target="#données">Données</a></li>
+  <li><a href="#description-des-données" id="toc-description-des-données" class="nav-link" data-scroll-target="#description-des-données">Description des données</a></li>
+  <li><a href="#construire-une-typologie-des-sites" id="toc-construire-une-typologie-des-sites" class="nav-link" data-scroll-target="#construire-une-typologie-des-sites">Construire une typologie des sites</a>
+  <ul class="collapse">
+  <li><a href="#mettre-en-place-lacm" id="toc-mettre-en-place-lacm" class="nav-link" data-scroll-target="#mettre-en-place-lacm">Mettre en place l’ACM</a></li>
+  </ul></li>
+  <li><a href="#donner-du-sens-aux-axes" id="toc-donner-du-sens-aux-axes" class="nav-link" data-scroll-target="#donner-du-sens-aux-axes">Donner du sens aux axes</a>
+  <ul class="collapse">
+  <li><a href="#visualisation" id="toc-visualisation" class="nav-link" data-scroll-target="#visualisation">Visualisation</a></li>
+  <li><a href="#variables-supplémentaires" id="toc-variables-supplémentaires" class="nav-link" data-scroll-target="#variables-supplémentaires">5. Variables supplémentaires</a></li>
+  </ul></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -233,7 +326,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">December 2, 2025</p>
+      <p class="date">December 16, 2025</p>
     </div>
   </div>
   
@@ -250,11 +343,11 @@ ul.task-list li input[type="checkbox"] {
 <p>$$</p>
 </div>
 <hr>
-<section id="objectifs-de-la-séance" class="level2">
-<h2 class="anchored" data-anchor-id="objectifs-de-la-séance">Objectifs de la séance</h2>
-<p>Le but de la séance est d’identifier les méthodes adéquates pour appréhender et visualiser un heu de données complexes. Vous pourrez puiser dans le panel des méthodes vues en cours pour extraire des information pertinentes du jeu de données sur la consommation énergétiques des EPCI ( <a href="https://www.insee.fr/fr/metadonnees/definition/c1160">Etablissements Publics de Coopération Intercommunale</a> ) sur le territoire métropolitain en 2023.</p>
-<p>Les données sont disponibles sur <a href="https://raw.githubusercontent.com/MarieEtienne/MAF/refs/heads/master/logement_conso2023.csv">ce lien</a> Les variables disponibles dans ce jeu de données sont</p>
-<p>Voici une description concise des variables de la base <strong><code>conso2023_metro_dta</code></strong> :</p>
+<section id="présentation-de-la-séance" class="level1">
+<h1>Présentation de la séance</h1>
+<p>Nous souhaitons identifier les méthodes adéquates pour appréhender et visualiser un jeu de données sur la consommation énergétiques des EPCI ( <a href="https://www.insee.fr/fr/metadonnees/definition/c1160">Etablissements Publics de Coopération Intercommunale</a> ) sur le territoire métropolitain en 2023.</p>
+<p>Les données sont disponibles sur <a href="https://raw.githubusercontent.com/MarieEtienne/MAF/refs/heads/master/logement_conso2023.csv">ce lien</a> Les variables disponibles dans ce jeu de données sont décrites ci dessous</p>
+<p>Vous pouvez vous inspirer du code du précédent TP, disponible <a href="TP3_scriptR.html">ici</a></p>
 <section id="identification-et-informations-géographiques" class="level3">
 <h3 class="anchored" data-anchor-id="identification-et-informations-géographiques">Identification et informations géographiques</h3>
 <ol type="1">
@@ -316,25 +409,206 @@ ul.task-list li input[type="checkbox"] {
 <p>Les données sont assemblées à partir du site <a href="https://www.data.gouv.fr/fr/datasets/consommation-annuelle-delectricite-et-gaz-par-epci/#/resources">data.gouv.fr</a> et <a href="https://www.observatoire-des-territoires.gouv.fr/nombre-de-residences-principales">l’Observatoire des territoires</a>.</p>
 <p>Les définitions des modes de calcul sont disponibles sur le site <a href="https://data.enedis.fr/api/v2/catalog/datasets/consommation-electrique-par-secteur-dactivite-epci/attachments/description_du_jeu_de_donnees_consommation_et_thermosensibilite_electriques_annuelles_pdf">d’ENEDIS</a></p>
 </section>
-</section>
 <section id="quelques-remarques-préalables" class="level2">
 <h2 class="anchored" data-anchor-id="quelques-remarques-préalables">Quelques remarques préalables</h2>
 <ul>
 <li><p>Les variables 20 à 25, donnent des effectifs par EPCI, ceci peut constituer une table de contingence, mais elles peuvent aussi être aggrégées à l’échelle du département pour construire des profils de département.</p></li>
 <li><p>la même remarque peut être faite pour les variables 26 à 32.</p></li>
+<li><p>On va travailler par département, certains EPCI sont à cheval sur plusieurs départements, il faut faire des choix les concernant. L’objectif du TP étant de mettre en oeuvre les méthodes vues en cours, nous allons opter pour un choix drastique et discutable, consistant à associer l’EPCI au département sur le lequel il a la plus grosse population.</p></li>
 </ul>
 </section>
-<section id="quelques-pistes" class="level2">
-<h2 class="anchored" data-anchor-id="quelques-pistes">Quelques pistes</h2>
+<section id="les-questions-que-lon-se-pose" class="level2">
+<h2 class="anchored" data-anchor-id="les-questions-que-lon-se-pose">Les questions que l’on se pose</h2>
 <p>Ces données permmettent d’extraire des informations en rapport avec différente question.</p>
 <ul>
 <li>Peut on faire des typologies de département en terme d’habitat ?</li>
 <li>Ces données permettent-elles de faire des hypothèses sur le lien entre type d’habitat et consommation ? ou entre vétusté du parc immobilier et consommation ?</li>
 </ul>
-<p>Plusieurs pistes d’utilisation des méthodes factorielles sont envisageables, elles vont permettre de mettre en lumière différents aspects.</p>
-<p>Dans le cas ou vous décideriez de faire une ACP, la question du poids des individus se posent. Selon que l’on pondère les données d’un EPCI par le nombre d’habitants ou non, la vision que l’on a de la consommation énergétique n’est pas la même. Discuter de l’intérêt de l’un ou de l’autre.</p>
+</section>
+</section>
+<section id="mise-en-oeuvre" class="level1">
+<h1>Mise en oeuvre</h1>
+<section id="importation-des-données" class="level2">
+<h2 class="anchored" data-anchor-id="importation-des-données">Importation des données</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(FactoMineR)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(factoextra)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)<span class="co">#&nbsp;fonction clean_names</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>dta_logement_conso <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> <span class="st">"logement_conso2023.csv"</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol type="1">
+<li>Que fait la commande suivante</li>
+</ol>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>dta_logement_conso <span class="ot">&lt;-</span> dta_logement_conso <span class="sc">%&gt;%</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">clean_names</span>() <span class="sc">%&gt;%</span> <span class="do">##&nbsp;clean variable names</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># gardez uniquement les colonnes utiles au TP (adaptez si besoin)</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    id, operateur,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    code_epci, nom_epci,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    code_departement, nom_departement,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    code_region, nom_region,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    nb_sites, <span class="fu">starts_with</span>(<span class="st">"conso"</span>),</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    nombre_d_habitants,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    taux_de_logements_collectifs,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    taux_de_residences_principales,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">starts_with</span>(<span class="st">"superficie_des_logements"</span>),</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">starts_with</span>(<span class="st">"residences_principales_"</span>),</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    taux_de_chauffage_electrique,</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    part_thermosensible</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="2" type="1">
+<li>Combien y a t il de lignes au total ? Combien y a t il d’EPCI différents ?</li>
+</ol>
+</section>
+<section id="vers-une-typologie-des-départements" class="level2">
+<h2 class="anchored" data-anchor-id="vers-une-typologie-des-départements">Vers Une typologie des départements</h2>
+<ol start="3" type="1">
+<li>Expliquer le code suivant ligne à ligne</li>
+</ol>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>epci_unique_dta <span class="ot">&lt;-</span> dta_logement_conso <span class="sc">%&gt;%</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(code_epci) <span class="sc">%&gt;%</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(<span class="at">order_by =</span> nombre_d_habitants, <span class="at">n =</span> <span class="dv">1</span>, <span class="at">with_ties =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="4" type="1">
+<li>Combien y’ a t il d’epci ?</li>
+</ol>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(epci_unique_dta)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1233</code></pre>
+</div>
+</div>
+<p>Le code suivant construit la table de contingence.</p>
+<ol start="5" type="1">
+<li>Expliquez le traitement différent des variables type superficie de logements et des variables taux de logement, notamment l’utilisation d’une moyenne pondérée.</li>
+</ol>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dept <span class="ot">&lt;-</span> epci_unique_dta <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(code_departement, nom_departement, nom_region) <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># effectifs logement par classes de surface</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(<span class="fu">starts_with</span>(<span class="st">"superficie_des_logements"</span>), <span class="sc">~</span> <span class="fu">sum</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># effectifs logement par périodes de construction</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(<span class="fu">starts_with</span>(<span class="st">"residences_principales_"</span>), <span class="sc">~</span> <span class="fu">sum</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(<span class="fu">starts_with</span>(<span class="st">"conso_total"</span>), <span class="sc">~</span> <span class="fu">sum</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">conso_totale_m_wh =</span> <span class="fu">sum</span>(conso_totale_m_wh, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># moyenne pondérée par nb_sites (important !)</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">conso_moyenne_m_wh =</span> <span class="fu">weighted.mean</span>(conso_moyenne_m_wh, <span class="at">w =</span> nb_sites, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">part_thermosensible =</span> <span class="fu">weighted.mean</span>(part_thermosensible, <span class="at">w =</span> nb_sites, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">taux_de_logements_collectifs =</span> <span class="fu">weighted.mean</span>(taux_de_logements_collectifs, <span class="at">w =</span> nb_sites, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">taux_de_chauffage_electrique =</span> <span class="fu">weighted.mean</span>(taux_de_chauffage_electrique, <span class="at">w =</span> nb_sites, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">nombre_d_habitants =</span> <span class="fu">sum</span>(nombre_d_habitants, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">nb_sites =</span> <span class="fu">sum</span>(nb_sites, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="afc-sur-les-surfaces-des-logements" class="level2">
+<h2 class="anchored" data-anchor-id="afc-sur-les-surfaces-des-logements">AFC sur les surfaces des logements</h2>
+<p>On se focalise pour le moment sur les données suivantes</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>tab_surface <span class="ot">&lt;-</span> dept <span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(code_departement, nom_departement, nom_region, <span class="fu">starts_with</span>(<span class="st">"superficie_des_logements"</span>), <span class="fu">starts_with</span>(<span class="st">"taux"</span>), <span class="fu">starts_with</span>(<span class="st">"conso"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">column_to_rownames</span>(<span class="st">"nom_departement"</span>) <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">-</span>code_departement)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="6" type="1">
+<li><p>Réaliser un test ud chi-2 d’indépendance pour tester l’hypothèse d’indépandance entre le département et les surfaces de logements</p></li>
+<li><p>On a vu dans le cours que la statistique de test du Chi-2 était liée à l’inertie calculée dans l’AFC. rappeler comment c’est lié et indiquer combien vaut <span class="math inline">\(n\)</span> dans ce cas ?</p></li>
+</ol>
+<p>8 . Réaliser une AFC à l’aide de la fonction <code>CA</code>. Combien vaut l’inertie totale. Vérifier la cohérence avec votre réponse récédente</p>
+<ol start="9" type="1">
+<li><p>Quel est le nombre d’axes principaux maximal ? Combien d’axes vous semblent pertinents ?</p></li>
+<li><p>Quels sont les types de logement le plus contributif à l’axe 1 ? Quels sont les départements ? Quelle information représente l’axe 1 ?</p></li>
+<li><p>Représenter sur le même graphique les lignes et les colonnes du tableau de contingence dont la qualité de représentation dépasse 0.8. Pour cela on peut s’aider de la structure suivante dans laquelle il faut juste précalculer les variables rows_keep et cols_keep</p></li>
+</ol>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_ca_biplot</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  res_ca_surface,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">select.row =</span> <span class="fu">list</span>(<span class="at">name =</span> rows_keep),</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">select.col =</span> <span class="fu">list</span>(<span class="at">name =</span> cols_keep),</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">repel =</span> <span class="cn">TRUE</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="12" type="1">
+<li>On souhaite faire le lien avec des éventuelles variables supplémentaires. Quel graphique proposez vous ? Quelle information pouvons-nous en tirer ? (Indication plot avec l’option choix = “quanti.sup”).</li>
+</ol>
+</section>
+</section>
+<section id="typologie-de-sites-écologiques" class="level1">
+<h1>Typologie de sites écologiques</h1>
+<section id="contexte" class="level2">
+<h2 class="anchored" data-anchor-id="contexte">Contexte</h2>
+<p>On s’intéresse à la <strong>caractérisation et à la typologie de sites écologiques</strong> décrits par des variables qualitatives liées au milieu, à la gestion et aux pressions anthropiques.</p>
+<p>Chaque <strong>individu statistique</strong> correspond à un <strong>site d’observation</strong> (parcelle, zone naturelle, site suivi). Le jeu de données comporte <strong>200 sites</strong>.</p>
+<p>L’objectif de l’analyse est</p>
+<ul>
+<li>d’explorer la structure des données qualitatives,</li>
+<li>d’identifier les <strong>grands gradients écologiques</strong>,</li>
+</ul>
+</section>
+<section id="données" class="level2">
+<h2 class="anchored" data-anchor-id="données">Données</h2>
+<p>Le fichier [sites_acm.csv]((https://raw.githubusercontent.com/MarieEtienne/MAF/refs/heads/master/sites_acm.csv) contient les variables suivantes.</p>
+<ul>
+<li><strong>Milieu</strong> : urbain / periurbain / rural</li>
+<li><strong>Couverture</strong> : boise / prairial / agricole / mixte</li>
+<li><strong>Gestion</strong> : fauche_tardive / fauche_frequente / paturage / aucune</li>
+<li><strong>Pression</strong> : forte / moyenne / faible</li>
+<li><strong>Eau</strong> : proche / eloigne</li>
+<li><strong>Artificialisation</strong> : oui / non</li>
+<li><strong>Usage</strong> : loisirs / agricole / conservation / mixte</li>
+</ul>
+<p>On a également des informations sur * <strong>Richesse écologique</strong> : faible / moyenne / elevee (classe de richesse spécifique) * <strong>Region</strong> : Nord / Ouest / Sud / Est</p>
+</section>
+<section id="description-des-données" class="level2">
+<h2 class="anchored" data-anchor-id="description-des-données">Description des données</h2>
+<ol type="1">
+<li><p>Donner le nombre d’individus et de variables.</p></li>
+<li><p>Dans l’objectif de faire une typologie des sites, préciser quelles variables vous souhaitez considérer comme actives et lesquelles seront supplémentaires.</p></li>
+<li><p>Identifier des éventuelles modalités rares</p></li>
+</ol>
+<p>Aucune modalité n’est rare seule mais on s’attend à avoir des croisements peu fréquents dans la table de contingence par exemple artificialisation oui et gestion fauche_frequente..</p>
+</section>
+<section id="construire-une-typologie-des-sites" class="level2">
+<h2 class="anchored" data-anchor-id="construire-une-typologie-des-sites">Construire une typologie des sites</h2>
+<section id="mettre-en-place-lacm" class="level3">
+<h3 class="anchored" data-anchor-id="mettre-en-place-lacm">Mettre en place l’ACM</h3>
+<ol start="4" type="1">
+<li><p>Que signifie ACM ?</p></li>
+<li><p>Faire une ACM sur les données à l’aide de la fonction MCA, (prendre garde aux variables supplémentaires)</p></li>
+<li><p>Présenter les <strong>valeurs propres</strong> et commenter la part d’inertie expliquée par les premiers axes.</p></li>
+</ol>
+</section>
+</section>
+<section id="donner-du-sens-aux-axes" class="level2">
+<h2 class="anchored" data-anchor-id="donner-du-sens-aux-axes">Donner du sens aux axes</h2>
+<p>Pour les deux premiers axes :</p>
+<ol start="7" type="1">
+<li><p>Identifier les <strong>modalités les plus contributrices</strong>.</p></li>
+<li><p>Identifier les <strong>modalités les mieux représentées</strong> (cos² élevés).</p></li>
+</ol>
+<section id="visualisation" class="level3">
+<h3 class="anchored" data-anchor-id="visualisation">Visualisation</h3>
+<ol start="8" type="1">
+<li><p>Représenter les <strong>modalités</strong> sur le plan factoriel (1,2). et discuter de leur organisation</p></li>
+<li><p>Représenter les <strong>individus</strong>, colorés selon la variable <em>Milieu</em>.</p></li>
+</ol>
+</section>
+<section id="variables-supplémentaires" class="level3">
+<h3 class="anchored" data-anchor-id="variables-supplémentaires">5. Variables supplémentaires</h3>
+<ol start="10" type="1">
+<li><p>Projeter les variables <strong>Richesse</strong> et <strong>Region</strong> sur le plan factoriel et commenter la position des différentes classes de richesse spécifique.</p></li>
+<li><p>Discuter le rôle (ou l’absence de rôle) de la variable <em>Region</em> dans la structuration des données.</p></li>
+</ol>
 
 
+</section>
+</section>
 </section>
 
 </main> <!-- /main -->
