@@ -17,10 +17,9 @@ editor:
 css: mpe_pres_revealjs.css
 ---
 
-
 ```{r setup, include=FALSE, eval = TRUE}
 
-knitr::opts_chunk$set(comment = NA, cache = TRUE, message = FALSE,
+knitr::opts_chunk$set( comment = NA, cache = TRUE, message = FALSE,
                       warning = FALSE,
                       fig.align = "center")
 library(tidyverse)
@@ -54,10 +53,11 @@ sur le territoire métropolitain en 2023.
 
 Les données sont disponibles sur [ce
 lien](https://raw.githubusercontent.com/MarieEtienne/MAF/refs/heads/master/logement_conso2023.csv)
-Les variables disponibles dans ce jeu de données sont décrites ci dessous
+Les variables disponibles dans ce jeu de données sont décrites ci
+dessous
 
-
-Vous pouvez vous inspirer du code du précédent TP, disponible [ici](TP3_scriptR.html)
+Vous pouvez vous inspirer du code du précédent TP, disponible
+[ici](TP3_scriptR.html)
 
 ### Identification et informations géographiques
 
@@ -187,6 +187,7 @@ différente question.
 #| eval: true
 
 
+
 library(tidyverse)
 library(FactoMineR)
 library(factoextra)
@@ -194,11 +195,12 @@ library(janitor)# fonction clean_names
 dta_logement_conso <- read.csv(file = "logement_conso2023.csv", header = TRUE)
 ```
 
-1. Que fait la commande suivante
+1.  Que fait la commande suivante
 
 ```{r}
 #| label: clean_dta
 #| eval: true
+
 
 dta_logement_conso <- dta_logement_conso %>%
  clean_names() %>% ## clean variable names
@@ -219,15 +221,30 @@ dta_logement_conso <- dta_logement_conso %>%
   )
 ```
 
-2. Combien y a t il de lignes au total ? Combien y a t il d'EPCI différents ?
+Reponse : Elle standardise les noms avec des `_` (fonction clean_names)
+puis selectionne seulement les colonnes d'intérêts. Noter la syntaxe
+utile starts_with
+
+2.  Combien y a t il de lignes au total ? Combien y a t il d'EPCI
+    différents ?
+
+Reponse
+
+```{r}
+#| eval: true
+
+nrow(dta_logement_conso)
+n_distinct(dta_logement_conso$code_epci)
+```
 
 ## Vers Une typologie des départements
 
-3. Expliquer le code suivant ligne à ligne
+3.  Expliquer le code suivant ligne à ligne
 
 ```{r}
 #| label: affect_epci
 #| eval: true
+
 
 epci_unique_dta <- dta_logement_conso %>%
   group_by(code_epci) %>%
@@ -235,8 +252,19 @@ epci_unique_dta <- dta_logement_conso %>%
   ungroup()
 ```
 
+Reponse
 
-4. Combien y' a t il d'epci ?
+```{r}
+#| label: affect_epci_correct
+#| eval: true
+
+epci_unique_dta <- dta_logement_conso %>%
+  group_by(code_epci) %>% #on groupe par code_epce, les operations suivantes seront faites au sein de chaque groupe
+  slice_max(order_by = nombre_d_habitants, n = 1, with_ties = FALSE) %>% # on choisit la tranche max basé sur l'odre donnée par le nombre_d'habitants
+  ungroup() # on degroupe
+```
+
+4.  Combien y' a t il d'epci ?
 
 ```{r}
 #| label: n_epci
@@ -247,7 +275,9 @@ nrow(epci_unique_dta)
 
 Le code suivant construit la table de contingence.
 
-5. Expliquez le traitement différent des variables type superficie de logements et des variables taux de logement, notamment l'utilisation d'une moyenne pondérée.
+5.  Expliquez le traitement différent des variables type superficie de
+    logements et des variables taux de logement, notamment l'utilisation
+    d'une moyenne pondérée.
 
 ```{r}
 #| eval: true
@@ -272,6 +302,11 @@ dept <- epci_unique_dta %>%
   )
 ```
 
+Reponse : quand on groupe par département, on veut faire la somme des
+habitants, et du nombre de logement. pour le taux de chauffages
+electriques on le pondère par le nombre de compteur dans l'EPCI qui a
+servi à calculer le taux de chauffage electrique au départ
+
 ## AFC sur les surfaces des logements
 
 On se focalise pour le moment sur les données suivantes
@@ -286,19 +321,73 @@ tab_surface <- dept %>%
 
 ```
 
-6. Réaliser un test ud chi-2 d'indépendance pour tester l'hypothèse d'indépandance entre le département et les surfaces de logements
+6.  Réaliser un test ud chi-2 d'indépendance pour tester l'hypothèse
+    d'indépandance entre le département et les surfaces de logements
 
-7. On a vu dans le cours que la statistique de test du Chi-2 était liée à l'inertie calculée dans l'AFC. rappeler comment c'est lié et indiquer combien vaut $n$ dans ce cas ?
+Reponse
 
-8 . Réaliser une AFC à l'aide de la fonction `CA`. Combien vaut l'inertie totale. Vérifier la cohérence avec votre réponse récédente
+```{r}
+chisq.test(tab_surface[, 2:7])
+```
 
+7.  On a vu dans le cours que la statistique de test du Chi-2 était liée
+    à l'inertie calculée dans l'AFC. rappeler comment c'est lié et
+    indiquer combien vaut $n$ dans ce cas ?
 
-9. Quel est le nombre d'axes principaux maximal ? Combien d'axes vous semblent pertinents ?
+Reponse : inertie = chi2_stat/n, ici $n$ est le nombre total de
+logement. (bien les laisser chercher ici )
 
-10. Quels sont les types de logement  le plus contributif à l'axe 1 ? Quels sont les départements ? Quelle information représente l'axe 1 ?
+```{r}
+sum(tab_surface[, 2:7])
+```
 
-11. Représenter sur le même graphique les lignes et les colonnes du tableau de contingence dont la qualité de représentation dépasse 0.8. Pour cela on peut s'aider de la structure suivante dans laquelle il faut juste précalculer les variables rows_keep et cols_keep
+8 . Réaliser une AFC à l'aide de la fonction `CA`. Combien vaut
+l'inertie totale. Vérifier la cohérence avec votre réponse récédente
 
+Reponse
+
+```{r}
+#| eval: true
+
+res_ca_surface <- CA(tab_surface, graph = FALSE, quali.sup = 1, quanti.sup = c(8:13))
+sum(res_ca_surface$eig[,1])
+chi_deux  <- chisq.test(tab_surface[, 2:7])
+chi_deux$statistic/ sum(tab_surface[, 2:7])
+```
+
+9.  Quel est le nombre d'axes principaux maximal ? Combien d'axes vous
+    semblent pertinents ?
+
+Reponse : au max nombre de colonnes - 1 ou nombre de ligns moins 1. donc
+5, toute l'info semble etre sur le premier axe
+
+```{r}
+fviz_eig(res_ca_surface, choice = "eigenvalue")
+```
+
+10. Quels sont les types de logement le plus contributif à l'axe 1 ?
+    Quels sont les départements ? Quelle information représente l'axe 1
+    ?
+
+Reponse :
+
+```{r}
+res_ca_surface$col$contrib|> as.data.frame() |> clean_names() |> arrange(-dim_1 )
+res_ca_surface$row$contrib|> as.data.frame() |> clean_names() |> arrange(-dim_1 )
+```
+
+la variable nombre de petits appartements represente les départements
+avec une forte vs faible proportion de petits logement et par
+oppositions une faible/forte proportion des logements et nombre de
+grands logements sont très contributifs de l'axe1 comme les départements
+Paris Alpes Maritime Bouches du rhone et dans une moindre mesure Vendée
+et Moselle.
+
+11. Représenter sur le même graphique les lignes et les colonnes du
+    tableau de contingence dont la qualité de représentation dépasse
+    0.8. Pour cela on peut s'aider de la structure suivante dans
+    laquelle il faut juste précalculer les variables rows_keep et
+    cols_keep
 
 ```{r}
 #| label: biplot
@@ -314,79 +403,233 @@ fviz_ca_biplot(
 
 ```
 
-12. On souhaite faire le lien avec des éventuelles variables supplémentaires. Quel graphique proposez vous ? Quelle information pouvons-nous en tirer ? (Indication plot avec l'option choix = "quanti.sup").
+Reponses :
+
+```{r}
+#| label: biplot_cor
+#| echo: true
+#| eval: true
+
+
+rows_keep <- res_ca_surface$row$cos2 |>
+  as.data.frame() |>
+  filter(`Dim 1` + `Dim 2` > 0.8) |>
+  rownames_to_column('dept') |> pull(dept)
+
+cols_keep <- res_ca_surface$col$cos2 |>
+  clean_names() |>
+  as.data.frame() |>
+  filter(dim_1 + dim_2 > 0.8) |>
+  rownames_to_column('surface') |> pull(surface)
+
+fviz_ca_biplot(
+  res_ca_surface,
+  select.row = list(name = rows_keep),
+  select.col = list(name = cols_keep),
+  repel = TRUE
+)
+
+```
+
+12. On souhaite faire le lien avec des éventuelles variables
+    supplémentaires. Quel graphique proposez vous ? Quelle information
+    pouvons-nous en tirer ? (Indication plot avec l'option choix =
+    "quanti.sup").
+
+Reponse :
+
+```{r}
+plot(res_ca_surface, choix = "quanti.sup",
+     col.quanti.sup = "#33BB33")
+```
 
 # Typologie de sites écologiques
 
 ## Contexte
 
-On s’intéresse à la **caractérisation et à la typologie de sites écologiques** décrits par des variables qualitatives liées au milieu, à la gestion et aux pressions anthropiques.
+On s’intéresse à la **caractérisation et à la typologie de sites
+écologiques** décrits par des variables qualitatives liées au milieu, à
+la gestion et aux pressions anthropiques.
 
-Chaque **individu statistique** correspond à un **site d’observation** (parcelle, zone naturelle, site suivi). Le jeu de données comporte **200 sites**.
+Chaque **individu statistique** correspond à un **site d’observation**
+(parcelle, zone naturelle, site suivi). Le jeu de données comporte **200
+sites**.
 
 L’objectif de l'analyse est
 
-* d'explorer la structure des données qualitatives,
-* d'identifier les **grands gradients écologiques**,
-
+-   d'explorer la structure des données qualitatives,
+-   d'identifier les **grands gradients écologiques**,
 
 ## Données
 
 Le fichier [sites_acm.csv]((https://raw.githubusercontent.com/MarieEtienne/MAF/refs/heads/master/sites_acm.csv) contient les variables suivantes.
 
-* **Milieu** : urbain / periurbain / rural
-* **Couverture** : boise / prairial / agricole / mixte
-* **Gestion** : fauche_tardive / fauche_frequente / paturage / aucune
-* **Pression** : forte / moyenne / faible
-* **Eau** : proche / eloigne
-* **Artificialisation** : oui / non
-* **Usage** : loisirs / agricole / conservation / mixte
+-   **Milieu** : urbain / periurbain / rural
+-   **Couverture** : boise / prairial / agricole / mixte
+-   **Gestion** : fauche_tardive / fauche_frequente / paturage / aucune
+-   **Pression** : forte / moyenne / faible
+-   **Eau** : proche / eloigne
+-   **Artificialisation** : oui / non
+-   **Usage** : loisirs / agricole / conservation / mixte
 
-On a également des informations sur
-* **Richesse écologique** : faible / moyenne / elevee (classe de richesse spécifique)
-* **Region** : Nord / Ouest / Sud / Est
-
+On a également des informations sur \* **Richesse écologique** : faible
+/ moyenne / elevee (classe de richesse spécifique) \* **Region** : Nord
+/ Ouest / Sud / Est
 
 ## Description des données
 
-1. Donner le nombre d’individus et de variables.
+1.  Donner le nombre d’individus et de variables.
 
-2. Dans l'objectif de faire une typologie des sites, préciser quelles variables vous souhaitez considérer comme actives et lesquelles seront supplémentaires.
+Reponse : 200 sites = 200 individus, 9 variables
 
-3. Identifier des éventuelles modalités rares
+2.  Dans l'objectif de faire une typologie des sites, préciser quelles
+    variables vous souhaitez considérer comme actives et lesquelles
+    seront supplémentaires.
 
- Aucune modalité n'est rare seule mais on s'attend à avoir des croisements peu fréquents dans la table de contingence par exemple artificialisation oui et gestion fauche_frequente..
+Reponse: les variables supp sont la richesse écologiques et la région.
+On pourrait ajouter la région mais ce que l'on souhaite surtout voir ce
+sont les caractéristiques biologiques des sites, la région ne nous
+intéresse pas vraiment.
 
+3.  Identifier des éventuelles modalités rares
 
+Reponse
+
+```{r}
+#| label: modalite_rare
+sites_dta <- read.csv("sites_acm.csv", row.names = 1)
+## pour compter facilement on peut utiliser le résumé d'un facteur, pour cela on transforme tous els characters en facteurs et on appelle ensuisuite le résumé
+sites_dta |> mutate(across(where(is.character), as.factor)) |>summary()
+```
+
+Aucune modalité n'est rare seule mais on s'attend à avoir des
+croisements peu fréquents dans la table de contingence par exemple
+artificialisation oui et gestion fauche_frequente..
 
 ## Construire une typologie des sites
 
 ### Mettre en place l'ACM
 
-4. Que signifie ACM ?
+4.  Que signifie ACM ?
 
-5. Faire une ACM sur les données à l'aide de la fonction MCA, (prendre garde aux variables supplémentaires)
+5.  Faire une ACM sur les données à l'aide de la fonction MCA, (prendre
+    garde aux variables supplémentaires)
 
-6. Présenter les **valeurs propres** et commenter la part d’inertie expliquée par les premiers axes.
+Réponse
+
+```{r}
+sites_mca <- MCA(sites_dta,
+                 quali.sup = 8:9,
+                 graph = FALSE)
+```
+
+6.  Présenter les **valeurs propres** et commenter la part d’inertie
+    expliquée par les premiers axes.
+
+Réponse
+
+```{r}
+fviz_eig((sites_mca))
+```
+
+Si linertie était équitablement répartie, on s'attend à une inertie de
+10 pour centes par axe, on peut garder au moins les deux premiers. et
+peut etre aller voir ce qui se passe sur le 3.
 
 ## Donner du sens aux axes
 
 Pour les deux premiers axes :
 
-7. Identifier les **modalités les plus contributrices**.
+7.  Identifier les **modalités les plus contributrices**.
 
+Reponse:
 
-8. Identifier les **modalités les mieux représentées** (cos² élevés).
+```{r}
+sites_mca$var$contrib |> as.data.frame() |>
+  slice_max(order_by = `Dim 1`, n = 4)
+sites_mca$var$contrib |> as.data.frame() |>
+  slice_max(order_by = `Dim 2`, n = 4)
+```
 
+ou bien
+
+```{r}
+fviz_contrib(sites_mca, choice = "var",  axes = 1)
+fviz_contrib(sites_mca, choice = "var",  axes = 2)
+```
+
+8.  Identifier les **modalités les mieux représentées** (cos² élevés).
+
+```{r}
+sites_mca$var$cos2 |> as.data.frame() |>
+  filter(`Dim 1`  > 0.5)
+sites_mca$var$cos2 |> as.data.frame() |>
+  filter(`Dim 2` > 0.3)
+sites_mca$var$contrib |> as.data.frame() |>
+  slice_max(order_by = `Dim 2`, n = 4)
+fviz_cos2(sites_mca, choice = "var",  axes = 1)
+fviz_cos2(sites_mca, choice = "var",  axes = 2)
+```
 
 ### Visualisation
 
-8. Représenter les **modalités** sur le plan factoriel (1,2). et discuter de leur organisation
+8.  Représenter les **modalités** sur le plan factoriel (1,2). et
+    discuter de leur organisation
 
-9. Représenter les **individus**, colorés selon la variable *Milieu*.
+Reponse
+
+```{r}
+fviz_mca_var(sites_mca, choice = "var.cat",   invisible = "quali.sup")
+```
+
+L'axe 1 montre plutot enthropise à gauche versus plus rural à droite.
+l'axe 2 en bas montre les zones naturelles sans gestion qui s'oppose aux
+forets.
+
+Au cas ou si les étudiants font
+
+```{r}
+fviz_mca_var(sites_mca, choice = "var")
+```
+
+ce qu'on voit dans ce cas c'est la qualité de la représentation dans le
+premier plan.
+
+9.  Représenter les **individus**, colorés selon la variable *Milieu*.
+
+Reponse : c'est le moemnt de parler des ellipses. elles sont construites
+à partir de la covariance au sein de chaque groupe défini par habillage.
+Sous l'hypothèse d'une distribution gaussienne c'est la ligne de niveau
+correspondnat à la proba 0.95 d'etre dans l'ellipse.
+
+```{r}
+fviz_mca_ind(sites_mca,
+             habillage = "Milieu",
+             addEllipses = TRUE,
+             ellipse.level = 0.95,
+             repel = TRUE)
+```
 
 ### 5. Variables supplémentaires
 
-10. Projeter les variables **Richesse** et **Region** sur le plan factoriel et commenter la position des différentes classes de richesse spécifique.
+10. Projeter les variables **Richesse** et **Region** sur le plan
+    factoriel et commenter la position des différentes classes de
+    richesse spécifique.
 
-11. Discuter le rôle (ou l’absence de rôle) de la variable *Region* dans la structuration des données.
+Reponse : la richesse est plus forte à droite dans les milieux non
+urbains
+
+```{r}
+fviz_mca_var(sites_mca, choice = "var.cat")
+fviz_mca_var(sites_mca, choice = "var")
+fviz_mca_ind(sites_mca,
+             habillage = "Richesse",
+             addEllipses = TRUE,
+             ellipse.level = 0.95,
+             repel = TRUE)
+```
+
+11. Discuter le rôle (ou l’absence de rôle) de la variable *Region* dans
+    la structuration des données.
+
+Réponse La région se semble pas liée à la richesse

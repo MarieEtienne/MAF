@@ -38,6 +38,10 @@ website:
             href: TP2.qmd
           - text: TD3
             href: TP3.qmd
+          - text: TD3 - script R
+            href: TP3_scriptR.qmd
+          - text: TD4
+            href: TP4.qmd
 
 format:
   html:
