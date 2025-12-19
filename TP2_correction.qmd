@@ -807,7 +807,7 @@ plot(as.cimg(array(X_recon, dim=dim(abbey_comp))), interpolate = FALSE, rescale 
 - Modifier le code pour garder 2 composantes principales (taille de l'image divisée par 8 au lieu de 16)
 
 ```{r reconstruction2}
-k <- 2
+k <- 3
 abbey_recons_centred <- abbey_pca$ind$coord[,1:k,drop=FALSE] %*% t(abbey_pca$svd$V)[1:k,,drop=FALSE]
 
 # X_recon_centred <- block2image(abbey_recons_centred, nrow_img = nrow(abbey_comp), ncol_img = ncol(abbey_comp), block_size = 4)
@@ -832,7 +832,7 @@ Une autre manière de faire serait de ne garder que la valeur moyenne pour chaqu
 rmse_pca <- mean((abbey_recons-abbey_matrix )^2)
 rmse_pca2 <- mean((abbey_recons2-abbey_matrix )^2)
 #simple filter
-abbey_filter <- matrix(rowMeans(abbey_matrix), ncol = 16, nrow = nrow(abbey_matrix))
+abbey_filter <- matrix(rowMeans(abbey_matrix), ncol = block_size^2, nrow = nrow(abbey_matrix))
 rmse_filter <- mean((abbey_filter-abbey_matrix )^2)
 ```
 

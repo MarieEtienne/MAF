@@ -570,17 +570,18 @@ Un bloc de 4x4 pixels est un individu à 16 variables.
 #| echo: true
 #| eval: false
 
-block_size <- 4
-test_image <- as.cimg(array(1:(20*16), dim= c(20, 16, 1, 1)), dim=c(32,16))
+block_size <- 8
+test_image <- as.cimg(array(1:(20*block_size^2), dim= c(5*block_size, 4*block_size, 1, 1)), dim=c(20,block_size^2))
 test_image[,]
 plot(test_image, interpolate = FALSE )
-test_image_blocks <- image2block(test_image[,], block_size = 4)
+test_image_blocks <- image2block(test_image[,], block_size = block_size)
 test_image_blocks
-block2image(test_image_blocks, nrow(test_image), ncol(test_image), block_size = 4)
+block2image(test_image_blocks, nrow(test_image), ncol(test_image), block_size = block_size)
 
-exemple2 <- matrix(10*rep(1:9, each=16), byrow= TRUE, ncol = 16)
+nblock <- 4
+exemple2 <- matrix(10*rep(1:nblock^2, each=block_size^2), byrow= TRUE, ncol = block_size^2)
 exemple2
-exemple2_img <- block2image(exemple2, nrow_img = 12, ncol=12, block_size = 4)
+exemple2_img <- block2image(exemple2, nrow_img = nblock*block_size, ncol=nblock*block_size, block_size = block_size)
 plot(as.cimg(exemple2_img), interpolate = FALSE )
 ```
 
@@ -615,11 +616,11 @@ abbey_matrix <- image2block(abbey_comp, block_size = block_size)
 #| message: false
 
 barycentre <- abbey_matrix |> as_data_frame() |> summarise_all(mean) |> as.numeric()
-patch_moy <- barycentre |> matrix(ncol=16, nrow=1)
+patch_moy <- barycentre |> matrix(ncol=block_size^2, nrow=1)
 
-block2image(patch_moy, nrow_img = 4, ncol_img = 4, block_size = 4)  |> as.cimg(width = 4, col=4)  |> plot( interpolate = 0, axes = FALSE, rescale=FALSE)
+block2image(patch_moy, nrow_img = block_size, ncol_img = block_size, block_size = block_size)  |> as.cimg(width = block_size, col=block_size)  |> plot( interpolate = 0, axes = FALSE, rescale=FALSE)
 ##pour voir les différences on peut rescaler les niveaux de gris
-block2image(patch_moy, nrow_img = 4, ncol_img = 4, block_size = 4)  |> as.cimg(width = 4, col=4)  |> plot( interpolate = 0, axes = FALSE, rescale=TRUE)
+block2image(patch_moy, nrow_img = block_size, ncol_img = block_size, block_size = block_size)  |> as.cimg(width = block_size, col=block_size)  |> plot( interpolate = 0, axes = FALSE, rescale=TRUE)
 ```
 
 ### ACP sur les patches
@@ -636,6 +637,7 @@ block2image(patch_moy, nrow_img = 4, ncol_img = 4, block_size = 4)  |> as.cimg(w
 #| message: false
 abbey_pca <- PCA(abbey_matrix, scale.unit=FALSE, ncp=block_size*block_size, graph=FALSE)
 abbey_pca$eig
+fviz_eig(abbey_pca)
 ```
 
 - Que représente un vecteur propre ici ?
@@ -665,11 +667,22 @@ plot(as.cimg(array(X_recon, dim=dim(abbey_comp))), interpolate = FALSE, rescale 
 
 - Modifier le code pour garder 2 composantes principales (taille de l'image divisée par 8 au lieu de 16)
 
+- Modifier le code pour garderles composantes 3 et 4  pour la reconstruction.
 
 
 ### Evaluation de l'erreur de reconstruction
 
 Une autre manière de faire serait de ne garder que la valeur moyenne pour chaque patch. On compare les deux méthodes ci-dessous.
+
+- Visaliser l'erreur spatial, en regardant l'ereur entre l'image originale et l'image reconstruite.
+
+```{r}
+error <-   abs(abbey_recons_norm-abbey_matrix )
+plot(as.cimg(array(error, dim=dim(abbey_comp))), interpolate = FALSE, rescale = TRUE)
+#simple filter
+abbey_filter <- matrix(rowMeans(abbey_matrix), ncol = 16, nrow = nrow(abbey_matrix))
+rmse_filter <- mean((abbey_filter-abbey_matrix )^2)
+```
 
 - Ajoutez la comparaison avec la méthode qui utilise les 2 premiers composantes principales et commentez
 

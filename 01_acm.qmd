@@ -6,12 +6,13 @@ author:
       - ENSAI - CREST
     email: marie-pierre.etienne@ensai.fr
 date: last-modified
+editor:
+  markdown:
+    canonical: true
+    wrap: 72
 institute: https://marieetienne.github.io/MAF/
 execute:
   freeze: auto
-editor:
-  markdown:
-    wrap: 72
 css: mpe_pres_revealjs.css
 format:
   revealjs:
@@ -73,19 +74,17 @@ Le but de l'analyse des correspondances multiples (ACM) est de
 généraliser l'AFC en étudiant les liaisons entre plusieurs variables
 qualitatives.
 
--   C'est l'équivalent de l'AFM pour des variables qualitatives.
+- C'est l'équivalent de l'AFM pour des variables qualitatives.
 
 Les données décrivent
 
--   $n$ individus
--   au travers de $p$ variables qualitatives
--   ayant respectivement $m_1, \ldots, m_p$ modalités.
+- $n$ individus
+- au travers de $p$ variables qualitatives
+- ayant respectivement $m_1, \ldots, m_p$ modalités.
 
 On note $m$ le nombre total de modalités de sorte que :
 
-$$
-m=\sum_{j=1}^p m_j.
-$$
+$$m=\sum_{j=1}^p m_j.$$
 
 ## Exemple : Position sur les OGM
 
@@ -133,17 +132,16 @@ sinon
 
 Questions :
 
--   Quelles sont les dimensions de $Z$ ?
--   $\sum_{k=1}^m Z_{ik} = ??$
--   $\sum_{i=1}^n Z_{ik} = ??$
+- Quelles sont les dimensions de $Z$ ?
+- $\sum_{k=1}^m Z_{ik} = ??$
+- $\sum_{i=1}^n Z_{ik} = ??$
 
 . . .
 
 ### Notation :
 
-$$
-Z = \begin{pmatrix}Z_1 \ldots Z_p\end{pmatrix}
-$$ $Z_j$ est donc un tableau à $n$ lignes et $m_j$ colonnes.
+$$Z = \begin{pmatrix}Z_1 \ldots Z_p\end{pmatrix}$$ $Z_j$ est donc un
+tableau à $n$ lignes et $m_j$ colonnes.
 
 ## Tableau de Burt
 
@@ -152,32 +150,30 @@ $$ $Z_j$ est donc un tableau à $n$ lignes et $m_j$ colonnes.
 
 On définit le tableau de Burt $B$ par :
 
-$$
-B = Z^\top Z = \begin{pmatrix}
+$$B = Z^\top Z = \begin{pmatrix}
 B_1 & B_{12}& \ldots &B_{1p} \\
 B_{21} & B_{2}& \ldots & \vdots \\
 \vdots & & \ddots & \vdots \\
 B_{p1} & \ldots & & B_p
-\end{pmatrix},
-$$
+\end{pmatrix},$$
 
 Comme vu pour
 l'[AFC](https://marieetienne.github.io/MAF/01_afc.html#/les-donn%C3%A9es)
 sur l'onglet Table de contingence
 
--   Les blocs diagonaux $B_j$ représentent les effectifs de chaque
-    modalité de la variable $j$ ($j=1, \ldots,p$).
--   Les blocs non diagonaux $B_{j\ell}$ comptent les individus croisant
-    les modalités des variables $j$ et $\ell$.
+- Les blocs diagonaux $B_j$ représentent les effectifs de chaque
+  modalité de la variable $j$ ($j=1, \ldots,p$).
+- Les blocs non diagonaux $B_{j\ell}$ comptent les individus croisant
+  les modalités des variables $j$ et $\ell$.
 
 La somme des valeurs dans chaque ligne ou colonne correspond à
 l'effectif total des individus.
 
 Questions :
 
--   Quelles sont les dimensions de $B$ ?
--   $\sum_{k=1}^K B_{ik} = ??$
--   $\sum_{i=1}^I B_{ik} = ??$
+- Quelles sont les dimensions de $B$ ?
+- $\sum_{k=1}^K B_{ik} = ??$
+- $\sum_{i=1}^I B_{ik} = ??$
 
 ### Exemple avec trois variables qualitatives
 
@@ -207,8 +203,7 @@ $$\bf{B} = \begin{pmatrix}
 {1} &  {1} &  {1}  & {0}& {1} & \class{vert}{2} & \class{vert}{0}& \class{vert}{0}\\
 {1} &  {1} &  {0}  & {2}& {0} & \class{vert}{0} & \class{vert}{2}& \class{vert}{0}\\
 {2} &  {0} &  {1}  & {1}& {0} & \class{vert}{0} & \class{vert}{0}& \class{vert}{2}\\
-\end{pmatrix}
-$$
+\end{pmatrix}$$
 :::
 ::::
 ::::::
@@ -220,31 +215,31 @@ $$
 
 On veut généraliser ce qu'on a fait dans l'AFC, c'est à dire
 
--   définir des distances entre des profils lignes (remarque ici profil
-    ligne et profil colonne sont identiques)
--   faire abstraction des individus, pour ne regarder que les liens
-    entre les différentes modalités.
+- définir des distances entre des profils lignes (remarque ici profil
+  ligne et profil colonne sont identiques)
+- faire abstraction des individus, pour ne regarder que les liens entre
+  les différentes modalités.
 
 On a besoin de définir une ["AFC" sur le tableau de
 Burt](https://marieetienne.github.io/MAF/01_afc.html#/profils-lignes-n_i)
 
--   le poids associé à chaque ligne sera la fréquence de la modalité
-    considérée
--   la distance pondère les colonnes, avec $1/f_{+j}$
+- le poids associé à chaque ligne sera la fréquence de la modalité
+  considérée
+- la distance pondère les colonnes, avec $1/f_{+j}$
 
 ## Les points
 
 ::::::: panel-tabset
 ### Que vaut la matrice $X$ ?
 
--   On considère $X = \frac{1}{p} \Delta^{-1} B$, où $\Delta$ est une
-    matrice diagonale qui contient les effectifs de chaque modalité,
-    c'est-à -dire $$Diag(\Delta)= Diag (B).$$
+- On considère $X = \frac{1}{p} \Delta^{-1} B$, où $\Delta$ est une
+  matrice diagonale qui contient les effectifs de chaque modalité,
+  c'est-à -dire $$Diag(\Delta)= Diag (B).$$
 
--   Ceci revient à diviser chaque ligne $i$ par l'effectif dans la
-    modalité $j$.
+- Ceci revient à diviser chaque ligne $i$ par l'effectif dans la
+  modalité $j$.
 
--   $X_{ij} = \frac{k_{ik}}{k_{i+}}.$
+- $X_{ij} = \frac{k_{ik}}{k_{i+}}.$
 
 ### Exemple avec trois variables qualitatives
 
@@ -259,8 +254,7 @@ $$\bf{\Delta^{-1}} = \begin{pmatrix}
 {0} &  {0} &  {0}  & {0}& {0} & \class{vert}{1/2} & \class{vert}{0}& \class{vert}{0}\\
 {0} &  {0} &  {0}  & {0}& {0} & \class{vert}{0} & \class{vert}{1/2}& \class{vert}{0}\\
 {0} &  {0} &  {0}  &{0}& {0} & \class{vert}{0} & \class{vert}{0}& \class{vert}{1/2}\\
-\end{pmatrix}
-$$ $$\bf{B} = \begin{pmatrix}
+\end{pmatrix}$$ $$\bf{B} = \begin{pmatrix}
 \class{orange}{4} & \class{orange}{0} & {1} & {2}& {1} & {1} & {1}& {2}\\
 \class{orange}{0} & \class{orange}{2} & {1} & {1}& {0} & {1} & {1}& {0}\\
 {1} &  {1} &  \class{rouge}{2}  & \class{rouge}{0}& \class{rouge}{0} & {1} & {0}& {1}\\
@@ -269,8 +263,7 @@ $$ $$\bf{B} = \begin{pmatrix}
 {1} &  {1} &  {1}  & {0}& {1} & \class{vert}{2} & \class{vert}{0}& \class{vert}{0}\\
 {1} &  {1} &  {0}  & {2}& {0} & \class{vert}{0} & \class{vert}{2}& \class{vert}{0}\\
 {2} &  {0} &  {1}  & {1}& {0} & \class{vert}{0} & \class{vert}{0}& \class{vert}{2}\\
-\end{pmatrix}
-$$
+\end{pmatrix}$$
 :::
 
 :::: {.column width="48%"}
@@ -292,15 +285,15 @@ $$\bf{\frac{1}{p} \Delta^{-1} B} = \bf{X} =   \frac{1}{3} \begin{pmatrix}
 
 ## Poids de chaque ligne (ici un profil ligne)
 
--   On associe à chaque profil ligne le poids ${f_{i+}}$,
+- On associe à chaque profil ligne le poids ${f_{i+}}$,
 
 Dans le formalisme vu en ACP, ceci correspond à la matrice
 $W = \frac{1}{np} \Delta$
 
 ## Metrique
 
--   On veut utiliser la métrique du $\chi^2$, telle que la distance
-    entre deux profils $i_1$ et $i_2$
+- On veut utiliser la métrique du $\chi^2$, telle que la distance entre
+  deux profils $i_1$ et $i_2$
 
 $$d(x_{i_1}, x_{i_2})^2 =\sum_{k=1}^{m}  \frac{1}{f_{+k}} \left(\frac{f_{i_1k}}{f_{i_1+}} -\frac{f_{i_2k}}{f_{i_2+}}\right)^2$$
 
@@ -321,11 +314,10 @@ ou de manière équivalente celles de la matrice
 $$VM = X^\top W X M =  \Delta^{-1} \frac{1}{p}  B^\top \frac{1}{np} \Delta \Delta^{-1} \frac{1}{p}  B np  \Delta^{-1} = \left ( \frac{1}{p} \Delta^{-1}   B \right )^2$$
 
 On peut montrer que l'inertie du nuage des profils-lignes est donnée par
+
 :
 
-$$
-I = \frac{m-p}{p^2} + \frac{n}{p^2} \sum_{j_1=1}^p \sum_{j_2 \neq j_1} \mathcal{X}^2_{j_1,j_2},
-$$
+$$I = \frac{m-p}{p^2} + \frac{n}{p^2} \sum_{j_1=1}^p \sum_{j_2 \neq j_1} \mathcal{X}^2_{j_1,j_2},$$
 
 où $\mathcal{\chi}^2_{j_1,j_2}$ est le coefficient de liaison entre les
 variables $j_1$ et $j_2$.
@@ -341,9 +333,9 @@ $$I = \frac{m-p}{p^2}$$
 
 ## Bilan de l'AFC sur le tableau de Burt
 
--   Comme en ACP, on a le triplet $(X, W, M)$
--   permet de généraliser l'AFC à plus que 2 modalités
--   MAIS Perte de l'information sur les individus
+- Comme en ACP, on a le triplet $(X, W, M)$
+- permet de généraliser l'AFC à plus que 2 modalités
+- MAIS Perte de l'information sur les individus
 
 ------------------------------------------------------------------------
 
@@ -353,10 +345,10 @@ $$I = \frac{m-p}{p^2}$$
 
 On veut garder l'information sur les individus
 
--   on va travailler à partir du tableau disjonctif complet $Z$
+- on va travailler à partir du tableau disjonctif complet $Z$
 
--   on veut garder la même métrique pour les variables que lors de l'AFC
-    sur le tableau de Burt
+- on veut garder la même métrique pour les variables que lors de l'AFC
+  sur le tableau de Burt
 
 ## Les points
 
@@ -366,7 +358,7 @@ informations relatives à chaque individu.
 ::: panel-tabset
 ### Que vaut la matrice $X$ ?
 
--   On considère $X =  \frac{1}{p} Z$.
+- On considère $X =  \frac{1}{p} Z$.
 
 ### Exemple avec trois variables qualitatives
 
@@ -383,14 +375,14 @@ $$\bf{X} = \frac{1}{p}\bf{Z} = \frac{1}{3} \overset{{\begin{matrix} \class{orang
 
 ## Poids de chaque ligne
 
--   On associe à chaque "profil ligne" le poids $1/n$,
+- On associe à chaque "profil ligne" le poids $1/n$,
 
 Dans le formalisme vu en ACP, ceci correspond à la matrice
 $W = \frac{1}{n} I_n$
 
 ## Metrique
 
--   On utilise la métrique de l'AFC
+- On utilise la métrique de l'AFC
 
 $$d(x_{i_1}, x_{i_2})^2 =\sum_{k=1}^{m}  \frac{1}{f_{+k}} \left(x_{i_1k} - x_{i_2k} \right)^2 =\sum_{k=1}^{m}  \frac{1}{p^2f_{+k}} \left(z_{i_1k} - z_{i_2k} \right)^2 $$
 
@@ -420,17 +412,15 @@ $$x_{\bullet j} = \sum_{i=1}^n w_i x_{ij} = \frac{1}{n} \sum_{i=1}^n \frac{z_{ij
 
 ## Valeurs propres
 
--   Notons $\rho_1, \ldots, \rho_q$ : Valeurs propres non triviales (i.e
-    différentes de $0$ ou $1$) de $(\frac{B\Delta^{-1}}{p})^2$ (AFC de
-    $B$).
--   et $\lambda_1, \ldots, \lambda_q$ : Valeurs propres non triviales de
-    $(\frac{B\Delta^{-1}}{p})$ (AFC de $Z$).
+- Notons $\rho_1, \ldots, \rho_q$ : Valeurs propres non triviales (i.e
+  différentes de $0$ ou $1$) de $(\frac{B\Delta^{-1}}{p})^2$ (AFC de
+  $B$).
+- et $\lambda_1, \ldots, \lambda_q$ : Valeurs propres non triviales de
+  $(\frac{B\Delta^{-1}}{p})$ (AFC de $Z$).
 
 ### Propriété :
 
-$$
-\rho_k = \lambda_k^2,
-$$
+$$\rho_k = \lambda_k^2,$$
 
 et les valeurs propres sont les mêmes.
 
@@ -445,10 +435,10 @@ fournies.
 
 On note
 
--   $F_s(i)$ les coordonnées de l'individu $i$ (tableau disjonctif
-    complet) sur l'axe $s$
--   $G_s(j)$ les coordonnées de la modalité $j$ (tableaude Burt) sur
-    l'axe $s$
+- $F_s(i)$ les coordonnées de l'individu $i$ (tableau disjonctif
+  complet) sur l'axe $s$
+- $G_s(j)$ les coordonnées de la modalité $j$ (tableaude Burt) sur l'axe
+  $s$
 
 Alors
 
@@ -459,29 +449,29 @@ $$G_s(j) = \frac{1}{\lambda_s} \sum_{i=1}^n \frac{x_{ij}}{k_{+j}} F_s(j)$$
 
 ## Règles pour l'interprétation
 
--   On regarde l'éboulis des valaurs propres pour identifier le nombre
-    d'axes pertinents.
+- On regarde l'éboulis des valaurs propres pour identifier le nombre
+  d'axes pertinents.
 
 Comme pour toutes les analyses factorielles, on interprète en
 
--   regardant les individus/variables qui contribuent le plus aux axes
--   lorsque l'on veut discuter de la position d'une variable ou d'un
-    individu, on vérifie qu'il est bien représenté
--   poids des variables (en fonction du nombre de modalités)
--   Approche de test sur les différences entre modalités (`dimdesc`)
+- regardant les individus/variables qui contribuent le plus aux axes
+- lorsque l'on veut discuter de la position d'une variable ou d'un
+  individu, on vérifie qu'il est bien représenté
+- poids des variables (en fonction du nombre de modalités)
+- Approche de test sur les différences entre modalités (`dimdesc`)
 
 # Exemple -- sur la perception des OGM
 
 ## Démarche d'analyse
 
--   Quelles Variables considérées pour la construction des axes
--   Quels sont les axes pertinents à regarder
--   Comprendre les axes par les contributions
--   Interpréter les positions des variables / des individus
--   Creuser le lien entre deux types de variables avec une AFC (comme un
-    zoom sur la relation entre deux variables)
--   Représenter les modalités supplémentaires -- quel procédé ?
--   Discuter Ellipse de confiance (revu dans le dernier TD)
+- Quelles Variables considérées pour la construction des axes
+- Quels sont les axes pertinents à regarder
+- Comprendre les axes par les contributions
+- Interpréter les positions des variables / des individus
+- Creuser le lien entre deux types de variables avec une AFC (comme un
+  zoom sur la relation entre deux variables)
+- Représenter les modalités supplémentaires -- quel procédé ?
+- Discuter Ellipse de confiance (revu dans le dernier TD)
 
 [Lien vers le Script R](ACM_ogm.R)
 
@@ -489,12 +479,12 @@ Comme pour toutes les analyses factorielles, on interprète en
 
 ## Synthèse
 
--   L'AFC du tableau de Burt permet d'évaluer les liaisons globales
-    entre les variables qualitatives.
--   L'AFC du tableau disjonctif complet permet de représenter les
-    individus et modalités dans le même espace factoriel.
+- L'AFC du tableau de Burt permet d'évaluer les liaisons globales entre
+  les variables qualitatives.
+- L'AFC du tableau disjonctif complet permet de représenter les
+  individus et modalités dans le même espace factoriel.
 
 ## Applications
 
--   Études exploratoires pour des données qualitatives complexes.
--   Analyse de dépendances entre plusieurs variables qualitatives.
+- Études exploratoires pour des données qualitatives complexes.
+- Analyse de dépendances entre plusieurs variables qualitatives.
