@@ -36,21 +36,28 @@ format:
 ## ACP sur données réelles : rarement complètes
 
 **Constat empirique**
+
 - Les tableaux analysés par ACP sont souvent incomplets :
+
   - mesures manquantes,
   - variables coûteuses ou difficiles à acquérir,
   - protocoles hétérogènes.
 
 **Exemples concrets**
+
 - Environnement : stations × variables physico-chimiques
   → capteurs défaillants, données non synchrones.
+
 - Écologie : espèces × traits fonctionnels
   → traits manquants pour certaines espèces.
+
 - Socio-économie : individus × indicateurs
   → non-réponse partielle aux questionnaires.
 
 **Objectif de l’ACP**
-> Résumer la structure de dépendance *globale* entre variables
+
+Résumer la structure de dépendance *globale* entre variables
+
 → difficile si le tableau est incomplet.
 
 
@@ -96,7 +103,7 @@ table(rowSums(is.na(ozone)))
 
 C'est bien dommage !!!
 
-## Question sur la structure des manquants
+## Attitude 2 : faire avec ce qu'on a
 
 **vision schématique**
 
@@ -106,25 +113,31 @@ x_{11} & x_{12} & \bullet & x_{14} \\
 x_{21} & \bullet & x_{23} & x_{24} \\
 x_{31} & x_{32} & x_{33} & \bullet
 \end{pmatrix}$$
-
 $\bullet$ : valeur manquante
 
+
+On peut calculer une matrice de corrélation à partir des couples de données disponibles.
+
 **Problème**
+
 - Les corrélations sont calculées sur des sous-échantillons différents.
 - La matrice de covariance peut devenir incohérente.
 
 **Conséquence**
+
 - Axes principaux instables ou difficilement interprétables.
 
 
 ## La question centrale
 
 **Question statistique**
-> Comment estimer un sous-espace principal pertinent
-> à partir d’un tableau incomplet \(\mathbf{X}_{obs}\) ?
+
+- Comment estimer un sous-espace principal pertinent à partir d’un tableau incomplet $\mathbf{X}_{obs}$ ?
 
 **Deux grandes familles de réponses**
+
 1. Compléter les données (imputation)
+
 2. Modéliser directement la structure latente (ACP comme modèle factoriel)
 
 👉 Les deux approches sont étroitement liées.
@@ -136,47 +149,64 @@ $\bullet$ : valeur manquante
 
 **Données et notations**
 
-- ( \mathbf{X} \in \mathbb{R}\^{n \times p} ) : matrice de données (souvent centrée, éventuellement réduite).
-- ( \mathbf{R} \in {0,1}\^{n \times p} ) : indicateurs de données manquantes : $$r\_{ij} = \begin{cases}
+- $\mathbf{X} \in \mathbb{R}^{n \times p}$ : matrice de données (souvent centrée, éventuellement réduite).
+- $\mathbf{R} \in {0,1}^{n \times p}$ : indicateurs de données manquantes : $$r_{ij} = \begin{cases}
   1 & \text{si } x_{ij} \text{ est observé} \\
   0 & \text{si } x_{ij} \text{ est manquant}
   \end{cases}$$
 
-- Décomposition : ( \mathbf{X} = (\mathbf{X}*{obs},* \mathbf{X}{mis}) ).
+- Décomposition : $\mathbf{X} = (\mathbf{X}*{obs},* \mathbf{X}{mis})$.
 
-**ACP complète** \[ \hat{\Sigma} = \frac{1}{n}\mathbf{X}\^\top \mathbf{X} \]
+**ACP complète**
+$$\hat{\Sigma} = \frac{1}{n}\mathbf{X}^\top \mathbf{X}$$
 
 
 **Mécanismes des données manquantes**
 
-- **MCAR** : (P(\mathbf{R}\mid \mathbf{X}) = P(\mathbf{R}))
-- **MAR** : (P(\mathbf{R}\mid \mathbf{X}) = P(\mathbf{R}\mid \mathbf{X}*{obs}))
-- **MNAR** : (P(*\mathbf{R}\mid \mathbf{X})) dépend de (\mathbf{X}{mis})
+- **MCAR** : $P(\mathbf{R}\mid \mathbf{X}) = P(\mathbf{R})$
+- **MAR** : $P(\mathbf{R}\mid \mathbf{X}) = P(\mathbf{R}\mid \mathbf{X}*{obs})$
+- **MNAR** : $P(*\mathbf{R}\mid \mathbf{X})$ dépend de $\mathbf{X}{mis}$
 
-**Impact sur l’ACP** - (\hat{\Sigma}) n’est plus directement calculable ; estimations ad hoc (\Rightarrow) biais possibles. - Distorsion des inerties et des sous-espaces principaux.
+**Impact sur l’ACP**
+- $\hat{\Sigma}$ n’est plus directement calculable ; estimations ad hoc $\Rightarrow$ biais possibles.
+- Distorsion des inerties et des sous-espaces principaux.
 
-#Imputation de données
+# Imputation de données
 
 ## Imputation simple : principe et propriétés
 
-**Principe** - Construire (\tilde{\mathbf{X}}) par remplacement **ponctuel** des valeurs manquantes. - Appliquer ensuite une ACP standard sur (\tilde{\mathbf{X}}).
+**Principe**
 
-**Exemples**
-- **Moyenne** (si centrée : (0)) : (\tilde{x}\_{ij} = \bar{x}\_j)
-- **Régression** : \[ x_j = \beta*0 +* \sum{k\neq j}\beta\_k x_k + \varepsilon \]
+- Construire $\tilde{\mathbf{X}}$ par remplacement **ponctuel** des valeurs manquantes. - Appliquer ensuite une ACP standard sur $\tilde{\mathbf{X}}$.
+
+**Quel remplacement ponctuel ?**
+
+- **Moyenne** (si centrée : $0$) : $\tilde{x}_{ij} = \bar{x}_j$
+
+- **Régression** :
+On ajuste un modèle sur les données disponibles
+
+$$x_{ij} = \beta_{0}^j +* \sum_{k\neq j}\beta_{k}^j x_{ik} + \varepsilon_{i}^j$$
+et on prédit
+
+$$\hat{x}^{miss}_{ij} = \beta_{0}^j +* \sum_{k\neq j}\beta_{k}^j x_{ik}$$
+
+
 - **ACP itérative / EM-PCA (idée)** : alternance (estimation sous-espace) / (reconstruction) jusqu’à convergence. (Hors programme nécessite les cours de stat plus avancés)
 
 **Problèmes**
-- Incertitude sur (\mathbf{X}\_{mis}) ignorée (\Rightarrow) variances souvent sous-estimées, corrélations modifiées.
+- Incertitude sur $\mathbf{X}_{mis}$ ignorée  $\Rightarrow$ variances souvent sous-estimées, corrélations modifiées.
 
 
 ## Imputation multiple et ACP
 
 **Principe**
-- Générer (M) complétions : \[ \tilde{\mathbf{X}}\^{(1)}, \ldots, \tilde{\mathbf{X}}\^{(M)} \] en simulant (\mathbf{X}*{mis}) selon une loi approchant (p(*\mathbf{X}{mis}\mid \mathbf{X}\_{obs})) (souvent sous MAR + modèle).
+- Générer (M) complétions :
+$$\tilde{\mathbf{X}}^{(1)}, \ldots, \tilde{\mathbf{X}}^{(M)}$$
+en simulant $\mathbf{X}*{mis}$ selon une loi approchant $p(\mathbf{X}{mis}\mid \mathbf{X}_{obs})$ (souvent sous MAR + modèle).
 
 **Analyse**
-- ACP sur chaque (\tilde{\mathbf{X}}\^{(m)}) (\Rightarrow) (M) jeux (valeurs propres, charges, scores).
+- ACP sur chaque $\tilde{\mathbf{X}}^{(m)}$ $\Rightarrow$ (M) jeux (valeurs propres, charges, scores).
 
 **Combinaison (une option simple)**
 
@@ -198,7 +228,7 @@ $$\bar{\Sigma}=\frac{1}{M}\sum_{m=1}^M \hat{\Sigma}^{(m)} $$ puis ACP de $\bar{\
 - **Inférence / reporting** : imputation multiple (MI), surtout sous MAR.
 
 **4) Estimer l’ACP**
-- Sur (\tilde{\mathbf{X}}) (simple) ou sur chaque (\tilde{\mathbf{X}}\^{(m)}) (IM).
+- Sur (\tilde{\mathbf{X}}) (simple) ou sur chaque (\tilde{\mathbf{X}}^{(m)}) (IM).
 - Attention à l'alignement des axes si besoin (indétermination du signe / rotations).
 
 **5) Diagnostics & sensibilité**
@@ -209,18 +239,18 @@ $$\bar{\Sigma}=\frac{1}{M}\sum_{m=1}^M \hat{\Sigma}^{(m)} $$ puis ACP de $\bar{\
 ## Deux mots sur l'ACP comme modèle factoriel (vue probabiliste)
 
 **Modèle**
-- Pour l’individu (i) : $$\mathbf{x}\_i = \boldsymbol{\mu} + \mathbf{L}\mathbf{z}\_i + \boldsymbol{\varepsilon}\_i$$
+- Pour l’individu (i) : $$\mathbf{x}_i = \boldsymbol{\mu} + \mathbf{L}\mathbf{z}_i + \boldsymbol{\varepsilon}_i$$
 où
-- $\mathbf{z}\_i \in \mathbb{R}\^q$ : facteurs latents (scores), - (\mathbf{L} \in \mathbb{R}^{p\times q}) : charges (loadings),
+- $\mathbf{z}_i \in \mathbb{R}^q$ : facteurs latents (scores), - $\mathbf{L} \in \mathbb{R}^{p\times q}$ : charges (loadings),
 - $\boldsymbol{\varepsilon}_i \sim \mathcal{N}(\mathbf{0}, \sigma^2\mathbf{I}_p)$ (hypothèse “bruit isotrope”).
 
 **Lien avec l’ACP**
-- Si $\mathbf{z}\_i \sim \mathcal{N}(0,\mathbf{I}\_q)$, alors : $$\mathrm{Cov}(\mathbf{x}\_i)=\mathbf{L}\mathbf{L}\top+\sigma2\mathbf{I}\_p$$
-- L’estimation des paramètres (par maximum de vraisemblance ou EM, cf cours statistique inférentielle) mène à un sous-espace proche de celui de l’ACP (cas $\sigma\^2 I$ : “probabilistic PCA”).
+- Si $\mathbf{z}_i \sim \mathcal{N}(0,\mathbf{I}_q)$, alors : $$\mathrm{Cov}(\mathbf{x}_i)=\mathbf{L}\mathbf{L}\top+\sigma2\mathbf{I}_p$$
+- L’estimation des paramètres (par maximum de vraisemblance ou EM, cf cours statistique inférentielle) mène à un sous-espace proche de celui de l’ACP (cas $\sigma^2 I$ : “probabilistic PCA”).
 
 **Pourquoi utile avec des manquants ?** - Le cadre probabiliste donne naturellement $p(\mathbf{X}^{mis}\mid \mathbf{X}{obs})$.
 - EM : E-step (espérances conditionnelles des facteurs et/ou manquants),
-M-step (mise à jour de $\mathbf{L},\sigma\^2)$.
+M-step (mise à jour de $\mathbf{L},\sigma^2)$.
 
 ## Exemple de mise en œuvre (R) : ACP itérative vs imputation multiple
 
@@ -258,7 +288,9 @@ res_pca <- PCA(Xmiss_pca, graph = FALSE)
 X_miss_df <- as.data.frame(Xmiss)
 
 # Méthode par défaut (pmm) souvent robuste ; adapter selon contexte
-Xmiss_im  <- mice(X_miss_df, m = 20, method = "pmm", seed = 1, printFlag = FALSE) # methode pmm regression multiple aà expliquer
+Xmiss_im  <- mice(X_miss_df,
+                  m = 20,
+                  method = "pmm", seed = 1, printFlag = FALSE) # methode pmm regression multiple aà expliquer
 
 # ACP sur chaque jeu imputé
 pcas <- lapply(1:Xmiss_im$m,
