@@ -29,7 +29,7 @@ website:
           - href: 01_afc.qmd
           - href: 01_acm.qmd
           - href: 01_afd.qmd
-          - href: 01_acp_manquante.qmd
+          - href: 01_acp_manquantes.qmd
 
       - text: "TD/TP"
         menu:
