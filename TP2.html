@@ -2,15 +2,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.9.36">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Marie-Pierre Etienne">
-<meta name="dcterms.date" content="2025-12-19">
+<meta name="dcterms.date" content="2026-11-04">
 
 <title>Labs2 - Analyse en composante Principale et au-delà – Méthodes d’analyse factorielle</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -73,10 +76,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-169b6d0432b1a799c6e7691d07d1a7fb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-850368ad0818e8b34f51a4e3509ee5f0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -309,7 +312,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">December 19, 2025</p>
+      <p class="date">November 4, 2026</p>
     </div>
   </div>
   
@@ -370,32 +373,32 @@ Tip
 <p>C’est la section de métadonnées du document. Elle est située en haut du fichier et est encadrée par des lignes —. On y définit des informations essentielles telles que : title : le titre du document ; author : l’auteur ou les auteurs du document ; date : la date de création, qui peut être dynamique avec R, par exemple en utilisant date: “r Sys.Date()” ; format : le format de sortie (HTML, PDF, Word, revealjs pour les présentations, etc.).</p>
 <pre><code>Exemple d'en-tête YAML :</code></pre>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span><span class="kw">:</span><span class="at"> </span><span class="st">"Analyse de Données avec R"</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">author</span><span class="kw">:</span><span class="at"> </span><span class="st">"Votre Nom"</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">date</span><span class="kw">:</span><span class="at"> </span><span class="st">"`r Sys.Date()`"</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">format</span><span class="kw">:</span><span class="at"> html</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="texte-en-markdown" class="level3">
 <h3 class="anchored" data-anchor-id="texte-en-markdown">Texte en Markdown</h3>
 <p>La rédaction du texte dans Quarto utilise la syntaxe Markdown pour structurer le contenu de manière simple et lisible. Markdown permet de formater le texte (titres, listes, liens, etc.) sans avoir à écrire du code complexe. Par exemple :</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="in">    # pour les titres (niveau 1, 2, etc. avec ##, ###...),</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="in">    # pour les titres (niveau 1, 2, etc. avec ##, ###...),</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="in">    - ou * pour les listes,</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="in">    [lien](url) pour les liens.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="in">    [lien](url) pour les liens.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Exemple :</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">## Introduction</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">## Introduction</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>Ce document présente une analyse de données en utilisant **R**.</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Point 1</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Point 2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Point 2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Le markup langage markdown permet aussi d’insérer des formules mathématiques, comme du latex.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>  $$x_{+k}= \sum_{i=1^n} x_{ik}$$</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>  $$x_{+k}= \sum_{i=1^n} x_{ik}$$</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="blocs-de-code" class="level3">
@@ -403,13 +406,13 @@ Tip
 <p>Quarto permet d’intégrer du code R (mais aussi Python, et Julia) grâce à des blocs de code, <code>chunks</code>. Les blocs de code sont délimités par trois accents graves (triple backtick), avec le langage spécifié entre accolades ({}). Les blocs peuvent exécuter du code directement dans le document et afficher les résultats en ligne.</p>
 <p>Exemple de bloc de code en R :</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: chunk_example</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a> <span class="co"># Calcul simple</span></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2</span><span class="sc">+</span><span class="dv">2</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Les options de rendu du bloc de code peuvent être précisées. Par exemple ici</p>
 <ul>
@@ -515,14 +518,14 @@ Tip
 </ul>
 <p>Attention on ne peut pas indiquer de variables qualitatives supplémentaires dans MFA</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>overshoot_quanti <span class="ot">&lt;-</span>  overshoot_dta <span class="sc">|&gt;</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(is.numeric))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>overshoot_quanti <span class="ot">&lt;-</span>  overshoot_dta <span class="sc">|&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(is.numeric))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>overshoot_mfa <span class="ot">&lt;-</span> <span class="fu">MFA</span>(overshoot_quanti,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>overshoot_mfa <span class="ot">&lt;-</span> <span class="fu">MFA</span>(overshoot_quanti,</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">group =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">6</span>), <span class="do">## 4 variables dans le premier groupe, les 6 suivantes dans le groupe 2</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">type =</span> <span class="fu">rep</span>(<span class="st">"s"</span>, <span class="dv">2</span>) <span class="do">## le groupe est de type quanti qu'on veut normaliser par l'eacrt type, meme chose pour le groupe 2</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <ul>
 <li><p>En vous servant de l’aide, indiquez ce que signie ce que l’argument <code>type = rep("s",2)</code> signifie.</p></li>
@@ -548,14 +551,14 @@ Tip
 </ul>
 <p>Nous allons utiliser les packages suivants: Nous allons utiliser les packages</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(imager) <span class="do">## pour manipuler les images</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(parallel) <span class="co"># pour les calculs sur les images</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(imager) <span class="do">## pour manipuler les images</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(parallel) <span class="co"># pour les calculs sur les images</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Par ailleurs pour manipuler les images, nous aurons besoin de quelques fonctions disponibles ci-dessous</p>
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to extract blocks in parallel, handling edge cases</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to extract blocks in parallel, handling edge cases</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>complete_image_with_block_size <span class="ot">&lt;-</span> <span class="cf">function</span>(channel_matrix, block_size) {</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  h <span class="ot">&lt;-</span> <span class="fu">dim</span>(channel_matrix)[<span class="dv">1</span>]  <span class="co"># Image height</span></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  w <span class="ot">&lt;-</span> <span class="fu">dim</span>(channel_matrix)[<span class="dv">2</span>]  <span class="co"># Image width</span></span>
@@ -624,39 +627,40 @@ Tip
 <span id="cb10-67"><a href="#cb10-67" aria-hidden="true" tabindex="-1"></a>  })</span>
 <span id="cb10-68"><a href="#cb10-68" aria-hidden="true" tabindex="-1"></a>  img <span class="ot">&lt;-</span><span class="fu">do.call</span>(cbind, X_reconstruction_list)</span>
 <span id="cb10-69"><a href="#cb10-69" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(img)</span>
-<span id="cb10-70"><a href="#cb10-70" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-70"><a href="#cb10-70" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p>Pour bien comprendre comment sont décomposées les images en bloc de 4 par 4, on peut créer une matrice avec des cases numérotées et constater comment elle est transformée.</p>
 <p>On choisit des blocks de 4x4 pixels.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>block_size <span class="ot">&lt;-</span> <span class="dv">4</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>block_size <span class="ot">&lt;-</span> <span class="dv">4</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Un bloc de 4x4 pixels est un individu à 16 variables.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>block_size <span class="ot">&lt;-</span> <span class="dv">4</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>test_image <span class="ot">&lt;-</span> <span class="fu">as.cimg</span>(<span class="fu">array</span>(<span class="dv">1</span><span class="sc">:</span>(<span class="dv">20</span><span class="sc">*</span><span class="dv">16</span>), <span class="at">dim=</span> <span class="fu">c</span>(<span class="dv">20</span>, <span class="dv">16</span>, <span class="dv">1</span>, <span class="dv">1</span>)), <span class="at">dim=</span><span class="fu">c</span>(<span class="dv">32</span>,<span class="dv">16</span>))</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>block_size <span class="ot">&lt;-</span> <span class="dv">8</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>test_image <span class="ot">&lt;-</span> <span class="fu">as.cimg</span>(<span class="fu">array</span>(<span class="dv">1</span><span class="sc">:</span>(<span class="dv">20</span><span class="sc">*</span>block_size<span class="sc">^</span><span class="dv">2</span>), <span class="at">dim=</span> <span class="fu">c</span>(<span class="dv">5</span><span class="sc">*</span>block_size, <span class="dv">4</span><span class="sc">*</span>block_size, <span class="dv">1</span>, <span class="dv">1</span>)), <span class="at">dim=</span><span class="fu">c</span>(<span class="dv">20</span>,block_size<span class="sc">^</span><span class="dv">2</span>))</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>test_image[,]</span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(test_image, <span class="at">interpolate =</span> <span class="cn">FALSE</span> )</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>test_image_blocks <span class="ot">&lt;-</span> <span class="fu">image2block</span>(test_image[,], <span class="at">block_size =</span> <span class="dv">4</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>test_image_blocks <span class="ot">&lt;-</span> <span class="fu">image2block</span>(test_image[,], <span class="at">block_size =</span> block_size)</span>
 <span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>test_image_blocks</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="fu">block2image</span>(test_image_blocks, <span class="fu">nrow</span>(test_image), <span class="fu">ncol</span>(test_image), <span class="at">block_size =</span> <span class="dv">4</span>)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="fu">block2image</span>(test_image_blocks, <span class="fu">nrow</span>(test_image), <span class="fu">ncol</span>(test_image), <span class="at">block_size =</span> block_size)</span>
 <span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>exemple2 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">10</span><span class="sc">*</span><span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>, <span class="at">each=</span><span class="dv">16</span>), <span class="at">byrow=</span> <span class="cn">TRUE</span>, <span class="at">ncol =</span> <span class="dv">16</span>)</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>exemple2</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>exemple2_img <span class="ot">&lt;-</span> <span class="fu">block2image</span>(exemple2, <span class="at">nrow_img =</span> <span class="dv">12</span>, <span class="at">ncol=</span><span class="dv">12</span>, <span class="at">block_size =</span> <span class="dv">4</span>)</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">as.cimg</span>(exemple2_img), <span class="at">interpolate =</span> <span class="cn">FALSE</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>nblock <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>exemple2 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">10</span><span class="sc">*</span><span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>nblock<span class="sc">^</span><span class="dv">2</span>, <span class="at">each=</span>block_size<span class="sc">^</span><span class="dv">2</span>), <span class="at">byrow=</span> <span class="cn">TRUE</span>, <span class="at">ncol =</span> block_size<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>exemple2</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>exemple2_img <span class="ot">&lt;-</span> <span class="fu">block2image</span>(exemple2, <span class="at">nrow_img =</span> nblock<span class="sc">*</span>block_size, <span class="at">ncol=</span>nblock<span class="sc">*</span>block_size, <span class="at">block_size =</span> block_size)</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">as.cimg</span>(exemple2_img), <span class="at">interpolate =</span> <span class="cn">FALSE</span> )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>On encode donc l’image des Beattles avec ce système de patches.</p>
 <p>Pour charger avec R, on utilise le package <code>imager</code> et la fonction <code>load.image</code>. puis la fonction <code>grayscale</code>pour bien s’assurer que l’image est codée en niveaux de gris.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>image <span class="ot">&lt;-</span> <span class="fu">load.image</span>(<span class="st">'img/abbey_road.jpg'</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>image <span class="ot">&lt;-</span> <span class="fu">load.image</span>(<span class="st">'img/abbey_road.jpg'</span>)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>image <span class="ot">&lt;-</span> <span class="fu">grayscale</span>(image)</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(image)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(image)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 709 709   1   1</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">as.cimg</span>(image), <span class="at">interpolate =</span> <span class="dv">0</span>, <span class="at">rescale =</span> <span class="cn">FALSE</span>,  <span class="at">axes =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">as.cimg</span>(image), <span class="at">interpolate =</span> <span class="dv">0</span>, <span class="at">rescale =</span> <span class="cn">FALSE</span>,  <span class="at">axes =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -664,9 +668,9 @@ Tip
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="do">## on complete l'image pour qu'elle ait une dimension multiple de la taille des blocks</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="do">## on complete l'image pour qu'elle ait une dimension multiple de la taille des blocks</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>abbey_comp <span class="ot">&lt;-</span> <span class="fu">complete_image_with_block_size</span>(image, <span class="at">block_size =</span> block_size)</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">as.cimg</span>(abbey_comp), <span class="at">interpolate =</span> <span class="dv">0</span>, <span class="at">rescale =</span> <span class="cn">FALSE</span>,  <span class="at">axes =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">as.cimg</span>(abbey_comp), <span class="at">interpolate =</span> <span class="dv">0</span>, <span class="at">rescale =</span> <span class="cn">FALSE</span>,  <span class="at">axes =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -674,17 +678,17 @@ Tip
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>abbey_matrix <span class="ot">&lt;-</span> <span class="fu">image2block</span>(abbey_comp, <span class="at">block_size =</span> block_size)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co">#head(abbey_matrix)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>abbey_matrix <span class="ot">&lt;-</span> <span class="fu">image2block</span>(abbey_comp, <span class="at">block_size =</span> block_size)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co">#head(abbey_matrix)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <ul>
 <li>Que représente le baycentre de ce nuage de points ?</li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>barycentre <span class="ot">&lt;-</span> abbey_matrix <span class="sc">|&gt;</span> <span class="fu">as_data_frame</span>() <span class="sc">|&gt;</span> <span class="fu">summarise_all</span>(mean) <span class="sc">|&gt;</span> <span class="fu">as.numeric</span>()</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>patch_moy <span class="ot">&lt;-</span> barycentre <span class="sc">|&gt;</span> <span class="fu">matrix</span>(<span class="at">ncol=</span><span class="dv">16</span>, <span class="at">nrow=</span><span class="dv">1</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>barycentre <span class="ot">&lt;-</span> abbey_matrix <span class="sc">|&gt;</span> <span class="fu">as_data_frame</span>() <span class="sc">|&gt;</span> <span class="fu">summarise_all</span>(mean) <span class="sc">|&gt;</span> <span class="fu">as.numeric</span>()</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>patch_moy <span class="ot">&lt;-</span> barycentre <span class="sc">|&gt;</span> <span class="fu">matrix</span>(<span class="at">ncol=</span>block_size<span class="sc">^</span><span class="dv">2</span>, <span class="at">nrow=</span><span class="dv">1</span>)</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">block2image</span>(patch_moy, <span class="at">nrow_img =</span> <span class="dv">4</span>, <span class="at">ncol_img =</span> <span class="dv">4</span>, <span class="at">block_size =</span> <span class="dv">4</span>)  <span class="sc">|&gt;</span> <span class="fu">as.cimg</span>(<span class="at">width =</span> <span class="dv">4</span>, <span class="at">col=</span><span class="dv">4</span>)  <span class="sc">|&gt;</span> <span class="fu">plot</span>( <span class="at">interpolate =</span> <span class="dv">0</span>, <span class="at">axes =</span> <span class="cn">FALSE</span>, <span class="at">rescale=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">block2image</span>(patch_moy, <span class="at">nrow_img =</span> block_size, <span class="at">ncol_img =</span> block_size, <span class="at">block_size =</span> block_size)  <span class="sc">|&gt;</span> <span class="fu">as.cimg</span>(<span class="at">width =</span> block_size, <span class="at">col=</span>block_size)  <span class="sc">|&gt;</span> <span class="fu">plot</span>( <span class="at">interpolate =</span> <span class="dv">0</span>, <span class="at">axes =</span> <span class="cn">FALSE</span>, <span class="at">rescale=</span><span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -692,8 +696,8 @@ Tip
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="do">##pour voir les différences on peut rescaler les niveaux de gris</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">block2image</span>(patch_moy, <span class="at">nrow_img =</span> <span class="dv">4</span>, <span class="at">ncol_img =</span> <span class="dv">4</span>, <span class="at">block_size =</span> <span class="dv">4</span>)  <span class="sc">|&gt;</span> <span class="fu">as.cimg</span>(<span class="at">width =</span> <span class="dv">4</span>, <span class="at">col=</span><span class="dv">4</span>)  <span class="sc">|&gt;</span> <span class="fu">plot</span>( <span class="at">interpolate =</span> <span class="dv">0</span>, <span class="at">axes =</span> <span class="cn">FALSE</span>, <span class="at">rescale=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="do">##pour voir les différences on peut rescaler les niveaux de gris</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">block2image</span>(patch_moy, <span class="at">nrow_img =</span> block_size, <span class="at">ncol_img =</span> block_size, <span class="at">block_size =</span> block_size)  <span class="sc">|&gt;</span> <span class="fu">as.cimg</span>(<span class="at">width =</span> block_size, <span class="at">col=</span>block_size)  <span class="sc">|&gt;</span> <span class="fu">plot</span>( <span class="at">interpolate =</span> <span class="dv">0</span>, <span class="at">axes =</span> <span class="cn">FALSE</span>, <span class="at">rescale=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -709,8 +713,8 @@ Tip
 <li><p>Combien d’axes proposez vous de garder ?</p></li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>abbey_pca <span class="ot">&lt;-</span> <span class="fu">PCA</span>(abbey_matrix, <span class="at">scale.unit=</span><span class="cn">FALSE</span>, <span class="at">ncp=</span>block_size<span class="sc">*</span>block_size, <span class="at">graph=</span><span class="cn">FALSE</span>)</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>abbey_pca<span class="sc">$</span>eig</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>abbey_pca <span class="ot">&lt;-</span> <span class="fu">PCA</span>(abbey_matrix, <span class="at">scale.unit=</span><span class="cn">FALSE</span>, <span class="at">ncp=</span>block_size<span class="sc">*</span>block_size, <span class="at">graph=</span><span class="cn">FALSE</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>abbey_pca<span class="sc">$</span>eig</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          eigenvalue percentage of variance cumulative percentage of variance
 comp 1  1.7163307540            93.50934097                          93.50934
@@ -730,6 +734,14 @@ comp 14 0.0007401018             0.04032231                          99.95147
 comp 15 0.0006473342             0.03526814                          99.98674
 comp 16 0.0002434073             0.01326134                         100.00000</code></pre>
 </div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_eig</span>(abbey_pca)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="TP2_files/figure-html/abbey_pca-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
 </div>
 <ul>
 <li>Que représente un vecteur propre ici ?</li>
@@ -741,17 +753,17 @@ comp 16 0.0002434073             0.01326134                         100.00000</c
 <li>on souhaite reconstruire l’image à partir de l’information contenue dans une seule composante. Expliquez à quoi correspond le code ci-dessous</li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>abbey_recons_centred <span class="ot">&lt;-</span> abbey_pca<span class="sc">$</span>ind<span class="sc">$</span>coord[,<span class="dv">1</span>,drop<span class="ot">=</span><span class="cn">FALSE</span>] <span class="sc">%*%</span> <span class="fu">t</span>(abbey_pca<span class="sc">$</span>svd<span class="sc">$</span>V)[<span class="dv">1</span>,,drop<span class="ot">=</span><span class="cn">FALSE</span>]</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co">#on rajoute la moyenne</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co"># X_recon_centred &lt;- block2image(abbey_recons_centred, nrow_img = nrow(abbey_comp), ncol_img = ncol(abbey_comp), block_size = 4)</span></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(as.cimg(array(X_recon_centred, dim=dim(abbey_comp))), interpolate = FALSE, rescale = FALSE)</span></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>abbey_recons <span class="ot">&lt;-</span> abbey_recons_centred <span class="sc">|&gt;</span> <span class="fu">sweep</span>(<span class="dv">2</span>, barycentre, <span class="at">FUN =</span> <span class="st">"+"</span>)</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="do">## doit etre en 0 et 1</span></span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>abbey_recons_norm <span class="ot">&lt;-</span> <span class="fu">pmin</span>(abbey_recons,<span class="dv">1</span>)</span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>X_recon <span class="ot">&lt;-</span> <span class="fu">block2image</span>(abbey_recons_norm, <span class="at">nrow_img =</span> <span class="fu">nrow</span>(abbey_comp), <span class="at">ncol_img =</span> <span class="fu">ncol</span>(abbey_comp), <span class="at">block_size =</span> block_size)</span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">as.cimg</span>(<span class="fu">array</span>(X_recon, <span class="at">dim=</span><span class="fu">dim</span>(abbey_comp))), <span class="at">interpolate =</span> <span class="cn">FALSE</span>, <span class="at">rescale =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>abbey_recons_centred <span class="ot">&lt;-</span> abbey_pca<span class="sc">$</span>ind<span class="sc">$</span>coord[,<span class="dv">1</span>,drop<span class="ot">=</span><span class="cn">FALSE</span>] <span class="sc">%*%</span> <span class="fu">t</span>(abbey_pca<span class="sc">$</span>svd<span class="sc">$</span>V)[<span class="dv">1</span>,,drop<span class="ot">=</span><span class="cn">FALSE</span>]</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co">#on rajoute la moyenne</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co"># X_recon_centred &lt;- block2image(abbey_recons_centred, nrow_img = nrow(abbey_comp), ncol_img = ncol(abbey_comp), block_size = 4)</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(as.cimg(array(X_recon_centred, dim=dim(abbey_comp))), interpolate = FALSE, rescale = FALSE)</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>abbey_recons <span class="ot">&lt;-</span> abbey_recons_centred <span class="sc">|&gt;</span> <span class="fu">sweep</span>(<span class="dv">2</span>, barycentre, <span class="at">FUN =</span> <span class="st">"+"</span>)</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="do">## doit etre en 0 et 1</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>abbey_recons_norm <span class="ot">&lt;-</span> <span class="fu">pmin</span>(abbey_recons,<span class="dv">1</span>)</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>X_recon <span class="ot">&lt;-</span> <span class="fu">block2image</span>(abbey_recons_norm, <span class="at">nrow_img =</span> <span class="fu">nrow</span>(abbey_comp), <span class="at">ncol_img =</span> <span class="fu">ncol</span>(abbey_comp), <span class="at">block_size =</span> block_size)</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">as.cimg</span>(<span class="fu">array</span>(X_recon, <span class="at">dim=</span><span class="fu">dim</span>(abbey_comp))), <span class="at">interpolate =</span> <span class="cn">FALSE</span>, <span class="at">rescale =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -764,20 +776,38 @@ comp 16 0.0002434073             0.01326134                         100.00000</c
 <section id="reconstruction-avec-2-composantes" class="level3">
 <h3 class="anchored" data-anchor-id="reconstruction-avec-2-composantes">Reconstruction avec 2 composantes</h3>
 <ul>
-<li>Modifier le code pour garder 2 composantes principales (taille de l’image divisée par 8 au lieu de 16)</li>
+<li><p>Modifier le code pour garder 2 composantes principales (taille de l’image divisée par 8 au lieu de 16)</p></li>
+<li><p>Modifier le code pour garderles composantes 3 et 4 pour la reconstruction.</p></li>
 </ul>
 </section>
 <section id="evaluation-de-lerreur-de-reconstruction" class="level3">
 <h3 class="anchored" data-anchor-id="evaluation-de-lerreur-de-reconstruction">Evaluation de l’erreur de reconstruction</h3>
 <p>Une autre manière de faire serait de ne garder que la valeur moyenne pour chaque patch. On compare les deux méthodes ci-dessous.</p>
 <ul>
+<li>Visaliser l’erreur spatial, en regardant l’ereur entre l’image originale et l’image reconstruite.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>error <span class="ot">&lt;-</span>   <span class="fu">abs</span>(abbey_recons_norm<span class="sc">-</span>abbey_matrix )</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">as.cimg</span>(<span class="fu">array</span>(error, <span class="at">dim=</span><span class="fu">dim</span>(abbey_comp))), <span class="at">interpolate =</span> <span class="cn">FALSE</span>, <span class="at">rescale =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="TP2_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co">#simple filter</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>abbey_filter <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rowMeans</span>(abbey_matrix), <span class="at">ncol =</span> <span class="dv">16</span>, <span class="at">nrow =</span> <span class="fu">nrow</span>(abbey_matrix))</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>rmse_filter <span class="ot">&lt;-</span> <span class="fu">mean</span>((abbey_filter<span class="sc">-</span>abbey_matrix )<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
 <li>Ajoutez la comparaison avec la méthode qui utilise les 2 premiers composantes principales et commentez</li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>rmse_pca <span class="ot">&lt;-</span> <span class="fu">mean</span>((abbey_recons<span class="sc">-</span>abbey_matrix )<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co">#simple filter</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>abbey_filter <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rowMeans</span>(abbey_matrix), <span class="at">ncol =</span> <span class="dv">16</span>, <span class="at">nrow =</span> <span class="fu">nrow</span>(abbey_matrix))</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>rmse_filter <span class="ot">&lt;-</span> <span class="fu">mean</span>((abbey_filter<span class="sc">-</span>abbey_matrix )<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>rmse_pca <span class="ot">&lt;-</span> <span class="fu">mean</span>((abbey_recons<span class="sc">-</span>abbey_matrix )<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co">#simple filter</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>abbey_filter <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rowMeans</span>(abbey_matrix), <span class="at">ncol =</span> <span class="dv">16</span>, <span class="at">nrow =</span> <span class="fu">nrow</span>(abbey_matrix))</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>rmse_filter <span class="ot">&lt;-</span> <span class="fu">mean</span>((abbey_filter<span class="sc">-</span>abbey_matrix )<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="exercice-dextension" class="level3">
@@ -849,13 +879,14 @@ comp 16 0.0002434073             0.01326134                         100.00000</c
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
