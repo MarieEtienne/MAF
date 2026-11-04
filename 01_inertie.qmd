@@ -5,6 +5,7 @@ author:
     affiliation:
       - ENSAI - CREST
     email: marie-pierre.etienne@ensai.fr
+
 date: "Last updated on `r format(Sys.time(), '%d %B, %Y')`"
 institute: https://marieetienne.github.io/MAF/
 execute:
@@ -12,6 +13,8 @@ execute:
 editor:
   markdown:
     wrap: 72
+  visual:
+    canonical: true
 format:
   revealjs:
     css: mpe_pres_revealjs.css
@@ -25,14 +28,8 @@ format:
       useTextContentForMissingTitles: false
     mathjax: true
     embed-resources: true
-  beamer:
+  mpe-beamer:
     keep-tex: true
-    pdf-engine: xelatex
-    slide-level: 2
-    toc: false
-    fontsize: 10pt
-    include-in-header: beamer-pream.tex
-
 ---
 
 ```{r setup, include=FALSE, eval = TRUE}
@@ -60,15 +57,14 @@ scale2 <- function(x, na.rm = FALSE) (x - mean(x, na.rm = na.rm)) / (sqrt((lengt
 
 :::: {.content-visible when-format="revealjs"}
 ::: hidden
-$$
-\newcommand\R{{\mathbb{R}}}
+
+$$\newcommand\R{{\mathbb{R}}}
 \newcommand\Xbf{{\boldsymbol{X}}}
 \newcommand\norm[1]{\lVert#1\rVert}
 \newcommand\xcol[1]{\boldsymbol{x}^{#1}}
 \newcommand\xrow[1]{\boldsymbol{x}_{#1}}
 \newcommand\xbf{\boldsymbol{x}}
-\newcommand\ybf{\boldsymbol{y}}
-$$
+\newcommand\ybf{\boldsymbol{y}}$$
 :::
 ::::
 
@@ -98,26 +94,25 @@ ou
 C'est la quantité d'information perdue lorsque l'on résume l'ensemble du
 nuages de points par le point $g$
 
-::::: {.content-visible when-format="revealjs"}
 :::: panel-tabset
 ### Ingrédients
 
 Il faut donc une
 
--   une notion de distance
+- une notion de distance
 
--   un point résumé
+- un point résumé
 
 ### Variables quantitatives
 
 Quelle distance choisir et que représente $g$ ?
 
 ::: incremental
--   On peut choisir la distance euclidienne
-    $$d(x_i, g)^2 = \sum_{j=1}^p (x_{i}^j - g^j)^2.$$
+- On peut choisir la distance euclidienne
+  $$d(x_i, g)^2 = \sum_{j=1}^p (x_{i}^j - g^j)^2.$$
 
--   $g= (\bar{x^1}, \ldots, \bar{x^p})$ est un choix naturel et la
-    distance euclidienne
+- $g= (\bar{x^1}, \ldots, \bar{x^p})$ est un choix naturel et la
+  distance euclidienne
 :::
 
 ### Variables qualitatives
@@ -129,26 +124,6 @@ cas de données qualitatives
 le choix de la distance est le des différences entre ACP, AFC, ACM etc
 ... A venir donc ...
 ::::
-:::::
-
-::: {.content-visible unless-format="revealjs"}
-**Ingrédients**
-
-Il faut donc une notion de distance et un point résumé.
-
-**Variables quantitatives** : Quelle distance choisir et que représente
-$g$ ?
-
--   On peut choisir la distance euclidienne
-    $d(x_i, g)^2 = \sum_{j=1}^p (x_{i}^j - g^j)^2.$
--   $g= (\bar{x^1}, \ldots, \bar{x^p})$ est un choix naturel avec la
-    distance euclidienne.
-
-**Variables qualitatives** : D'autres choix sont possibles pour la
-distance, dont certaines adaptées aux variables qualitatives. Il faudra
-réfléchir à qui est $g$ dans le cas de données qualitatives. Le choix de
-la distance est ce qui différencie ACP, AFC, ACM etc.
-:::
 
 ## L'inertie par rapport d'un nuage par rapport à un point quelconque
 
@@ -160,7 +135,6 @@ par\
 $$I_{\boldsymbol{a}} = \frac{1}{n} \sum_{i=1}^n d({x}_{i} - \boldsymbol{a})^2 = \frac{1}{n} \sum_{i=1}^n\sum_{k=1}^p  (x_i^k -a^k)^2$$
 :::
 
-::::: {.content-visible when-format="revealjs"}
 :::: panel-tabset
 ### Géométriquement
 
@@ -221,47 +195,6 @@ $$\forall \boldsymbol{a}\in\mathbb{R}^p,\; I_{\boldsymbol{a}}=I_{\boldsymbol{g}}
 
 (preuve dans les notes de cours)
 ::::
-:::::
-
-::: {.content-visible unless-format="revealjs"}
-**Géométriquement**
-
-```{r inertie_nuage_pdf}
-individus <- data.frame(
-  x = c(1.5, -0.5, -1),
-  y = c(0.9, 1, -0.5)
-)
-
-individus_dessin <- individus |>  mutate(xg= mean(x), yg=mean(y), xO =0, yO=0)
-barycentre <-  individus |>  summarise_all(mean)
-
-ggplot() +
-  geom_point(data = individus, aes(x = x, y = y), size = 3, col= "#398d55") +
-  geom_segment(data = individus_dessin, aes(x = x, y = y, xend = xg, yend = yg), linetype = "dashed",  col= "#398d55") +
-  geom_segment(data = individus_dessin, aes(x = x, y = y, xend = xO, yend = yO), linetype = "dotted",  col= "#fdc455") +
-  geom_text(data= individus_dessin, aes(x = x, y =y),  label = paste0("x[", 1:3, "]"), parse = TRUE, vjust = -0.8, size = 5, col = "#398d55") +
-  geom_text(data=barycentre, aes(x = x, y = y), label = "G", vjust = -0.8, size = 5, col = "#398d55") +
-  geom_point(data=barycentre, aes(x = x, y = y),   size = 2, col = "#398d55") +
-  geom_text(aes(x = 0, y = 0), label = "O", vjust = +1.5, size = 5, col = "#fdc455") +
-  geom_point(aes(x = 0, y = 0),  size = 2, col = "#fdc455") +
-  theme_minimal()  +
-  coord_fixed() +
-  theme(axis.title=element_blank(), axis.text=element_blank(),
-        axis.ticks=element_blank(), panel.grid = element_blank())
-```
-
-**Intuitivement** : L'inertie par rapport à un point quantifie
-l'information perdue lorsque le jeu de données est résumé par ce point.
-Quel est le point $\boldsymbol{a}$ qui minimise $I_{\boldsymbol{a}}$ ?
-
-**Réponse** : Il s'agit du barycentre
-$\boldsymbol{g}=({x}_{\bullet}^1, \ldots, {x}_{\bullet}^p )^\top$. Si
-les variables sont centrées, $g=O$.
-
-**Théorème de Huyghens** :
-$$\forall \boldsymbol{a}\in\mathbb{R}^p,\; I_{\boldsymbol{a}}=I_{\boldsymbol{g}}+ \lVert\boldsymbol{a}- \boldsymbol{g}\rVert^2.$$
-(preuve dans les notes de cours)
-:::
 
 ## L'inertie du nuage de points
 
@@ -281,7 +214,7 @@ dimensions.
 
 La quantité d'information perdue lors de ce résumé est $I$
 
-## Des extensions
+## Des extensions {.allowframebreaks}
 
 ### Poids des individus
 
@@ -302,10 +235,10 @@ On a évoqué la distance Euclidienne mais toute autre distance est
 possible. Chaque choix de distance correspond à une méthode d'analyse
 factorielle différente.
 
--   euclidienne : ACP
--   euclidienne normalisée : ACP normée ou AFM selon le type de
-    normalisation
--   distance du $\chi^2$ : AFC ou ACM
+- euclidienne : ACP
+- euclidienne normalisée : ACP normée ou AFM selon le type de
+  normalisation
+- distance du $\chi^2$ : AFC ou ACM
 
 Cours présenté sans les poids mais tout se généralise.
 
@@ -326,9 +259,9 @@ $$I = p$$
 
 Formellement, il nous faut
 
--   une matrice $X$ (dimension $n\times p$),
--   une distance, i.e une métrique (dimension $p\times p$)
--   Optionnellement une matrice de poids $D$
+- une matrice $X$ (dimension $n\times p$),
+- une distance, i.e une métrique (dimension $p\times p$)
+- Optionnellement une matrice de poids $D$
 
 ::: {.callout-note icon="false" appearance="minimal"}
 ### Définition
@@ -338,7 +271,6 @@ définie et positive. Elle permet de définir une distance entre les
 observations.
 :::
 
-:::: {.content-visible when-format="revealjs"}
 ::: panel-tabset
 ### Distance
 
@@ -366,20 +298,6 @@ $$\tilde{X} = X - \boldsymbol{1}_n g = \begin{pmatrix} x_1^1- g^1 & x_1^2- g^2 &
 x_n^1- g^1 & x_n^2- g^2 & \ldots & x_n^p- g^p \end{pmatrix}$$\
 Alors $$I = \frac{1}{n}  tr(\tilde{X}^\top \tilde{X}).$$
 :::
-::::
-
-::: {.content-visible unless-format="revealjs"}
-**Distance** : Si $x_1\in\mathbb{R}^p$ et $x_2\in\mathbb{R}^p$, la
-distance pour la métrique $M$ est $d_M(x_1,x_2) = \|x_1 - x_2\|_M$ où
-$\|x_1 - x_2\|_M^2 = (x_1 - x_2)^\top M (x_1 - x_2).$
-
-**Cas euclidien** : $M= I_p$, donc
-$(x_1 -x_2 )^\top (x_1 -x_2 )= \sum_{j=1}^p  (x_1^j -x_2^j)^2.$
-
-**Inertie matricielle** : En notant $\tilde{X}$ la matrice des données
-centrées,
-$$I = \frac{1}{n}  \operatorname{tr}(\tilde{X}^\top \tilde{X}).$$
-:::
 
 ## Et dans toute la suite
 
@@ -398,7 +316,6 @@ L'inertie *par rapport à l'axe* $\Delta$ passant par $g$ est définie par
 $$I_{\boldsymbol{\Delta}} = \frac{1}{n} \sum_{i=1}^n d(\boldsymbol{x}_{i} - \boldsymbol{p_i}^{\Delta})^2  \quad \mbox{où }\  \boldsymbol{p_i}^{\Delta} \mbox{ est le projeté orthogonal de } \boldsymbol{x_i} \mbox{ sur }\Delta.$$
 :::
 
-::::::::::::: {.content-visible when-format="revealjs"}
 :::::::::::: panel-tabset
 ### Intuitivement
 
@@ -510,34 +427,6 @@ p1 +
 :::
 :::::
 ::::::::::::
-:::::::::::::
-
-::: {.content-visible unless-format="revealjs"}
-L'inertie par rapport à l'axe $\Delta$ quantifie l'information perdue
-lorsque l'on résume le nuage de points à son projeté sur $\Delta$. On
-perd toute l'information "orthogonale".
-
-```{r inertie_delta_pdf}
-individus <- data.frame(x = c(1.5, -0.5, -1), y = c(0.9, 1, -0.5))
-u = c(1,2); norme_u = sum(u^2)
-ind_proj <- (as.matrix(individus)%*% as.matrix(u, ncol= 1)/(norme_u)) %*% matrix(u, ncol = 2, nrow=1)
-ind_proj <- as.data.frame(ind_proj) %>% rename(xend= V1, yend=V2)
-individus_dessin <- cbind(individus, ind_proj) %>% as.data.frame() |> mutate(xg=0, yg=0)
-
-ggplot() +
-  geom_segment(aes(x=-1,y=-2,xend=1,yend=2), arrow=arrow(length=unit(0.3,"cm")), alpha=0.2) +
-  geom_point(data=individus, aes(x=x,y=y), size=3, col="#398d55") +
-  geom_segment(data=individus_dessin, aes(x=x,y=y,xend=xend,yend=yend), linetype="dotted", col="#C94326", linewidth=1) +
-  geom_segment(data=individus_dessin, aes(x=xend,y=yend,xend=xg,yend=yg), linetype="dashed", col="#33658a", linewidth=1) +
-  geom_text(data=individus_dessin, aes(x=x,y=y), label=paste0("x[",1:3,"]"), parse=TRUE, vjust=-0.8, size=4, col="#398d55") +
-  geom_text(data=individus_dessin, aes(x=xend,y=yend), label=paste0("p[",1:3,"]"), parse=TRUE, vjust=-0.8, size=4) +
-  geom_point(aes(x=0,y=0), size=2) +
-  geom_point(data=individus_dessin, aes(x=xend,y=yend), size=2) +
-  theme_minimal() + coord_fixed() +
-  theme(axis.title=element_blank(), axis.text=element_blank(),
-        axis.ticks=element_blank(), panel.grid=element_blank())
-```
-:::
 
 ## Projeter en perdant un minimum d'information
 
@@ -549,29 +438,28 @@ sur $\Delta$ déforme le moins possible le nuage de points.
 Dans le cadre de l'ACP, on veut construire un ensemble d'axes
 orthogonaux (une nouvelle base de ${\mathbb{R}}^p$), de façon à ce que
 
--   la projection sur le premier axe, soit le meilleur résumé du nuage
-    de points en une dimension,
--   le deuxième axe est orthogonal au premier et représente "le deuxième
-    meilleur choix" ... dans un sens que l'on va définir,
--   le troisième ...
+- la projection sur le premier axe, soit le meilleur résumé du nuage de
+  points en une dimension,
+- le deuxième axe est orthogonal au premier et représente "le deuxième
+  meilleur choix" ... dans un sens que l'on va définir,
+- le troisième ...
 
-## Où l'algèbre linéaire revient
+## Où l'algèbre linéaire revient {.allowframebreaks}
 
 **Rappel projection orthogonale**
 
+- **Produit scalaire** : Soient deux éléments $\boldsymbol{x}$ et
+  $\boldsymbol{y}$ de $\mathbb{R}^p$, le produit scalaire est noté
+  $\langle\boldsymbol{x},\boldsymbol{y}\rangle$ et
+  $\langle\boldsymbol{x},\boldsymbol{y}\rangle=\sum_{i=1}^p x_i y_i = \boldsymbol{x}^\top \boldsymbol{y}.$
 
--   **Produit scalaire** : Soient deux éléments $\boldsymbol{x}$ et
-    $\boldsymbol{y}$ de $\mathbb{R}^p$, le produit scalaire est noté
-    $\langle\boldsymbol{x},\boldsymbol{y}\rangle$ et
-    $\langle\boldsymbol{x},\boldsymbol{y}\rangle=\sum_{i=1}^p x_i y_i = \boldsymbol{x}^\top \boldsymbol{y}.$
+- **Orthogonalité** : on dit que $\boldsymbol{x}$ et $\boldsymbol{y}$
+  sont orthogonaux si
+  $\langle\boldsymbol{x},\boldsymbol{y}\rangle = \boldsymbol{x}^\top  \boldsymbol{y}=0.$
 
--   **Orthogonalité** : on dit que $\boldsymbol{x}$ et $\boldsymbol{y}$
-    sont orthogonaux si
-    $\langle\boldsymbol{x},\boldsymbol{y}\rangle = \boldsymbol{x}^\top  \boldsymbol{y}=0.$
-
--   **Projection orthogonale** : le projeté de $\boldsymbol{a}$ sur la
-    droite $\Delta$ de vecteur directeur unitaire $\boldsymbol{u}$ est
-    $$\boldsymbol{a}_u = \langle \boldsymbol{a}, \boldsymbol{u} \rangle \boldsymbol{u} = (\boldsymbol{a}^\top \boldsymbol{u})\,  \boldsymbol{u}.$$
+- **Projection orthogonale** : le projeté de $\boldsymbol{a}$ sur la
+  droite $\Delta$ de vecteur directeur unitaire $\boldsymbol{u}$ est
+  $$\boldsymbol{a}_u = \langle \boldsymbol{a}, \boldsymbol{u} \rangle \boldsymbol{u} = (\boldsymbol{a}^\top \boldsymbol{u})\,  \boldsymbol{u}.$$
 
 ```{r proj_prodscalaire}
 point_a <- c(3, 0.8)
@@ -605,19 +493,18 @@ ggplot() +
 Que signifie projeter sur l'axe des abscisses ? sur l'axe des ordonnées
 ?
 
--   Il y a un lien fort entre coordonnées dans un système d'axes et
-    projection.
+- Il y a un lien fort entre coordonnées dans un système d'axes et
+  projection.
 
--   Si on sait projeter sur un autre système orthogonal, on a les
-    coordonnées.
+- Si on sait projeter sur un autre système orthogonal, on a les
+  coordonnées.
 
 ## Où l'algèbre linéaire reste encore
 
--   **Espace orthogonal** : Soit $E$ un sous-espace vectoriel de
-    $\mathbb{R}^p$. On définit
-    $E^\perp=\{\boldsymbol{x}\in \mathbb{R}^p:\; \forall \boldsymbol{y}\in E,\; \boldsymbol{x}\perp \boldsymbol{y}\}$.
+- **Espace orthogonal** : Soit $E$ un sous-espace vectoriel de
+  $\mathbb{R}^p$. On définit
+  $E^\perp=\{\boldsymbol{x}\in \mathbb{R}^p:\; \forall \boldsymbol{y}\in E,\; \boldsymbol{x}\perp \boldsymbol{y}\}$.
 
-::::::: {.content-visible when-format="revealjs"}
 :::::: panel-tabset
 ### Exemple
 
@@ -656,24 +543,6 @@ ggplot() +
 :::
 :::::
 ::::::
-:::::::
-
-::: {.content-visible unless-format="revealjs"}
-**Exemple** : Dans ${\mathbb{R}}^2$,
-$E = \{ \boldsymbol{x} : x_1 = x_2 \}$ (droite $y=x$).
-
-**Solution** : $E^\perp = \{ \boldsymbol{y} : y_1 + y_2 = 0 \}$.
-
-```{r espace_ortho_pdf}
-point_a <- c(1, 1); orthogonal <- c(1, -1)
-ggplot() +
-  geom_segment(aes(x=-point_a[1],y=-point_a[2],xend=point_a[1],yend=point_a[2]), color="#F7A913", linetype="dashed") +
-  geom_text(aes(x=point_a[1],y=point_a[2],label="E"), color="#F7A913", size=5) +
-  geom_text(aes(x=orthogonal[1],y=orthogonal[2],label="E^perp"), parse=TRUE, color="#99b6b2", size=5) +
-  geom_segment(aes(x=-orthogonal[1],y=-orthogonal[2],xend=orthogonal[1],yend=orthogonal[2]), color="#99b6b2", linetype="dashed") +
-  coord_fixed() + labs(x="",y="") + xlim(c(-1.2,1.2)) + ylim(c(-1.2,1.2))
-```
-:::
 
 ## L'inertie par rapport à un sous espace affine
 
@@ -688,7 +557,7 @@ $$I_{E} = \frac{1}{n} \sum_{i=1}^n \lVert\boldsymbol{x}_{i} - \boldsymbol{p_i}^{
 C'est l'inertie perdue lorsque l'on résume le nuage de points à sa
 projection sur le sous espace $E$.
 
-## Décomposition de l'inertie
+## Décomposition de l'inertie {.allowframebreaks}
 
 ::: {.callout-note icon="false" appearance="minimal"}
 ### Lemme
@@ -699,8 +568,6 @@ $$I = I_E + I_{E^\perp}.$$
 
 **Preuve** : Un dessin vaut mieux qu'un long discours et Pythagore est
 votre ami !
-
-
 
 $$\lVert \boldsymbol{x}_{i} \rVert^2 = \lVert \boldsymbol{x}_{i}- \boldsymbol{x}_{i}^E\rVert^2 + \lVert \boldsymbol{x}_{i}^E \rVert^2 = \lVert \boldsymbol{x}_{i}- \boldsymbol{x}_{i}^E\rVert^2 + \lVert \boldsymbol{x}_{i} - \boldsymbol{x}_{i}^{E^\perp} \rVert^2.$$
 
@@ -782,7 +649,6 @@ p3_full <- p3 + geom_point(data=individus, aes(x=CP21,y=CP22)) +
   geom_segment(data=individus, aes(x=CP21,y=CP22,xend=x,yend=y), linetype="dashed", col="#0c324e")
 ```
 
-:::::::::: {.content-visible when-format="revealjs"}
 ::::::::: panel-tabset
 ### Au début
 
@@ -830,46 +696,6 @@ plot(pca_res, choix = "var")
 :::
 :::::
 :::::::::
-::::::::::
-
-::: {.content-visible unless-format="revealjs"}
-**Au début** — le nuage de points dans le repère original :
-
-```{r acp_pdf_1}
-p1
-```
-
-**Un nouveau repère** — on cherche les axes qui minimisent l'inertie
-perdue :
-
-```{r acp_pdf_2}
-p2 + geom_segment(aes(xend=2*new_var[1,2],yend=2*new_var[2,2],x=-2*new_var[1,2],y=-2*new_var[2,2]), col="#F7A913", alpha=0.3)
-```
-
-**Information perdue lors de la projection** sur l'axe 1 (gauche) et
-l'axe 2 (droite) :
-
-```{r acp_pdf_3}
-#| fig-cap: "Sur l'axe 1"
-p2_full
-```
-
-```{r acp_pdf_4}
-#| fig-cap: "Sur l'axe 2"
-p3_full
-```
-
-**But final** — représentation dans le nouveau repère (individus et
-variables) :
-
-```{r acp_pdf_5}
-plot(pca_res, choix = "ind")
-```
-
-```{r acp_pdf_6}
-plot(pca_res, choix = "var")
-```
-:::
 
 ## Principe de toutes les décompositions à venir
 
@@ -892,24 +718,24 @@ $$I= I_{E_1} + I_{E_2} + \ldots + I_{E_p}, \quad \mbox{avec } I_{E_1} \leq I_{E_
 
 ## En quoi est ce utile ?
 
--   L'essentiel de l'information est portée par les premiers axes
-    (puisque ce sont les axes sur lesquels on perd le moins
-    d'information lorsqu'on projette)
-    -   facilité de visualisation
-    -   compression de l'information
--   Ce qui est plus complexe
-    -   donner un sens aux nouveaux axes
+- L'essentiel de l'information est portée par les premiers axes (puisque
+  ce sont les axes sur lesquels on perd le moins d'information lorsqu'on
+  projette)
+  - facilité de visualisation
+  - compression de l'information
+- Ce qui est plus complexe
+  - donner un sens aux nouveaux axes
 
 # Conclusion
 
 ## Bilan de ce cours
 
--   Mise en place de tous les outils de base
+- Mise en place de tous les outils de base
 
--   L'inertie = de l'information
+- L'inertie = de l'information
 
--   on veut le plus d'information avec le moins de "variables possibles"
+- on veut le plus d'information avec le moins de "variables possibles"
 
--   on va utiliser de l'algèbre linéaire
+- on va utiliser de l'algèbre linéaire
 
--   Il nous reste à comprendre comment trouver ce bon système d'axe
+- Il nous reste à comprendre comment trouver ce bon système d'axe

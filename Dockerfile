@@ -1,38 +1,30 @@
 FROM rocker/verse:4.5
-RUN export DEBIAN_FRONTEND=noninteractive; apt-get -y update \
- && apt-get install -y pandoc
+
+ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
-  mercurial gdal-bin libgdal-dev gsl-bin libgsl-dev \
-  libc6-i386
-RUN apt-get install -y --no-install-recommends unzip python3-pip dvipng  wget git make python3-venv
-RUN pip3 install --break-system-packages jupyter jupyter-cache flatlatex matplotlib
-RUN apt-get --purge -y remove texlive.\*-doc$
-RUN apt-get clean
-RUN apt-get update && apt-get install -y \
-    texlive-xetex \
-    texlive-latex-base \
-    texlive-latex-recommended \
-    texlive-latex-extra \
-    texlive-fonts-recommended \
-    texlive-fonts-extra \
-    texlive-pictures
-RUN fmtutil-sys --all
-RUN R -e "install.packages(c('reticulate', 'remotes', 'purrr'))"
-ENV R_CRAN_WEB="https://cran.rstudio.com/"
-RUN R -e "install.packages(c('FactoMineR', 'Factoshiny', 'factoextra', 'explor', 'parallel', 'ggpubr', 'imager', 'RefManageR', 'wesanderson', 'plotly'))" # GET function
-RUN R -e "install.packages(c('palmerpenguins','GGally', 'ggforce', 'flextable'))"
-RUN apt-get update && apt-get install -y \
-    wget \
-    perl \
-    xz-utils \
-    ghostscript \
-    unzip \
-    tar \
-    fontconfig && \
-    wget -qO- "https://yihui.org/tinytex/install-bin-unx.sh" | sh && \
-    apt-get clean
+      pandoc mercurial gdal-bin libgdal-dev gsl-bin libgsl-dev libc6-i386 \
+      unzip python3-pip python3-venv dvipng wget git make \
+      ghostscript fontconfig \
+ && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-ENV PATH="${PATH}:/root/bin"
-RUN R -e "install.packages(c('kableExtra'))"
-RUN R -e "install.packages(c('janitor'))"
+# --- Python dans un venv (évite le conflit avec le numpy de Debian) ---
+RUN python3 -m venv /opt/venv \
+ && /opt/venv/bin/pip install --no-cache-dir jupyter jupyter-cache flatlatex matplotlib
+ENV PATH="/opt/venv/bin:$PATH"
+ENV QUARTO_PYTHON=/opt/venv/bin/python
+ENV RETICULATE_PYTHON=/opt/venv/bin/python
+
+# --- LaTeX : on complète la TeX Live déjà fournie par rocker/verse ---
+RUN tlmgr install \
+      xetex beamer pgf translator tcolorbox environ fontspec unicode-math \
+      lm lm-math tex-gyre xcolor etoolbox iftex amsmath tools caption \
+      bookmark xurl booktabs fancyvrb framed upquote microtype parskip \
+      footnotehyper \
+ && fmtutil-sys --all
+
+# --- R ---
+ENV R_CRAN_WEB="https://cran.rstudio.com/"
+RUN R -e "install.packages(c('reticulate', 'remotes', 'purrr'))"
+RUN R -e "install.packages(c('FactoMineR', 'Factoshiny', 'factoextra', 'explor', 'ggpubr', 'imager', 'RefManageR', 'wesanderson', 'plotly'))"
+RUN R -e "install.packages(c('palmerpenguins', 'GGally', 'ggforce', 'flextable', 'kableExtra', 'janitor'))"
