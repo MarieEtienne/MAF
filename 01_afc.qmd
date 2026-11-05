@@ -12,10 +12,12 @@ execute:
 editor:
   markdown:
     wrap: 72
-  mode: source
-css: mpe_pres_revealjs.css
+    canonical: true
+  visual:
+    canonical: true
 format:
   revealjs:
+    css: mpe_pres_revealjs.css
     theme: [default, custom.scss]
     width: 1050
     margin: 0.05
@@ -24,8 +26,10 @@ format:
     show-slide-number: print
     menu:
       useTextContentForMissingTitles: false
-    mathjax: true  # Active MathJax
-    self-contained: true
+    mathjax: true
+    embed-resources: true
+  mpe-beamer:
+    keep-tex: true
 ---
 
 ```{r setup, include=FALSE, eval = TRUE, message=FALSE}
@@ -82,9 +86,11 @@ penguins <- penguins %>% na.omit() %>%
 
 ## Les manchots comme exemple introductif
 
-L'étude sur les manchots de Palmer s'intéresse à diverses espèces de manchots sur diverses îles.
+L'étude sur les manchots de Palmer s'intéresse à diverses espèces de
+manchots sur diverses îles.
 
-[Question : est ce que les différentes espèces sont présentes de la même manière sur les différentes îles ?]{.rouge}
+[Question : est ce que les différentes espèces sont présentes de la même
+manière sur les différentes îles ?]{.rouge}
 
 ```{r}
 #| echo: false
@@ -100,13 +106,20 @@ penguin_cont |> rownames_to_column(var = 'island') |>
   flextable()
 ```
 
-Avec peu d'espèces, et peu d'îles, il est facile de constater que les espèces ne sont pas présentes de la même manière sur toutes les îles.
+Avec peu d'espèces, et peu d'îles, il est facile de constater que les
+espèces ne sont pas présentes de la même manière sur toutes les îles.
 
-[Conclusion : Il y a un lien entre espèce et île où le manchot est observé.]{.rouge}
+[Conclusion : Il y a un lien entre espèce et île où le manchot est
+observé.]{.rouge}
 
 ## Exemple causes de décès en France
 
-Le [fichier des décès en France](%22http://factominer.free.fr/livreV2/deces.csv%22) contient pour 65 causes de décès le nombre cumulés de morts en 1979 et 2006 par tranche d'age, puis dans Les 65 lignes suivantes uniquement ce cumul pour 1979, puis pour 2006 et enfin pour chaque année le nombre de décès par tranche d'ages, toutes causes confondues.
+Le [fichier des décès en
+France](%22http://factominer.free.fr/livreV2/deces.csv%22) contient pour
+65 causes de décès le nombre cumulés de morts en 1979 et 2006 par
+tranche d'age, puis dans Les 65 lignes suivantes uniquement ce cumul
+pour 1979, puis pour 2006 et enfin pour chaque année le nombre de décès
+par tranche d'ages, toutes causes confondues.
 
 ```{r}
 #| echo: false
@@ -118,33 +131,42 @@ head(deces_dta) |> flextable()
 
 [Objectif : Etude de la liaison entre age et cause de décès.]{.rouge}.
 
-Les tranches d'âge sont définies a priori pour représenter des causes de décès similaires.
+Les tranches d'âge sont définies a priori pour représenter des causes de
+décès similaires.
 
 ## Cadre général
 
-L'analyse factorielle des correspondances (AFC) est une méthode factorielle pour l'exploration statistique d'une [table de contingence]{.rouge} définie par [deux]{.rouge} variables [qualitatives]{.rouge}.
+L'analyse factorielle des correspondances (AFC) est une méthode
+factorielle pour l'exploration statistique d'une [table de
+contingence]{.rouge} définie par [deux]{.rouge} variables
+[qualitatives]{.rouge}.
 
-[Objectif : Le but est d'étudier la liaison entre ces deux variables qualitatives]{.rouge .large}(notamment quelles associations de modalités sont sur-représentées).
+[Objectif : Le but est d'étudier la liaison entre ces deux variables
+qualitatives]{.rouge .large}(notamment quelles associations de modalités
+sont sur-représentées).
 
 ::: callout-note
-La terminologie analyse des correspondances vient du fait que l'on analyse un tableau mettant en correspondance deux ensembles:
+La terminologie analyse des correspondances vient du fait que l'on
+analyse un tableau mettant en correspondance deux ensembles:
 
-* L'ensemble des lignes du tableau,
-* et l'ensemble des colonnes du tableau.
-
+- L'ensemble des lignes du tableau,
+- et l'ensemble des colonnes du tableau.
 :::
 
 ## Les données
 
 :::::::::::::: panel-tabset
-
 ### Les données brutes
 
-On considère deux variables qualitatives $A$ et $B$ ayant respectivement $I$ ( $a_1, \ldots, a_I$) et $J$ ( $b_1, \ldots, b_J$) modalités. Ces variables sont observées simultanément sur $n$ individus affectés de poids identiques $1/n$.
+On considère deux variables qualitatives $A$ et $B$ ayant respectivement
+$I$ ( $a_1, \ldots, a_I$) et $J$ ( $b_1, \ldots, b_J$) modalités. Ces
+variables sont observées simultanément sur $n$ individus affectés de
+poids identiques $1/n$.
 
 ::::: columns
 ::: {.column width="45%"}
-Les données se présentent initialement sous la forme d'un tableau à $n$ lignes et 2 (ou 3 colonnes si on ajoute un identifiant).
+Les données se présentent initialement sous la forme d'un tableau à $n$
+lignes et 2 (ou 3 colonnes si on ajoute un identifiant).
 :::
 
 ::: {.column width="45%"}
@@ -165,12 +187,14 @@ Les données se présentent initialement sous la forme d'un tableau à $n$ ligne
 
 ::::: columns
 ::: {.column width="45%"}
-Il est fréquent de recoder (ou même de récolter) les variables sous la forme d'un tableau disjoinctif complet. A chaque variable $\ell$, on associe une table $X^{\ell},$ à $n$ et autant de colonnes que la variable $\ell$, qui contient pour chaque individu $k,$ à la colonne $m$ un $1$ si l'individu $k$ possède la modalité $m$ et un $0$ sinon.
-
+Il est fréquent de recoder (ou même de récolter) les variables sous la
+forme d'un tableau disjoinctif complet. A chaque variable $\ell$, on
+associe une table $X^{\ell},$ à $n$ et autant de colonnes que la
+variable $\ell$, qui contient pour chaque individu $k,$ à la colonne $m$
+un $1$ si l'individu $k$ possède la modalité $m$ et un $0$ sinon.
 :::
 
 ::: {.column width="45%"}
-
 **Sur l'exemple précédent**
 
 $$\bf{X} =\begin{pmatrix} \class{orange}{X^{1}} & \class{rouge}{X^{2}} \end{pmatrix}$$
@@ -190,7 +214,9 @@ $$\bf{X} = \overset{{\begin{matrix} \class{orange}{a_1} & \class{orange}{a_2} & 
 
 ::::::: columns
 ::::: {.column width="45%"}
-Il s'agit de la matrice $K$ à $I$ lignes et $J$ colonnes, dont le terme général $k_{ij}$ compte le nombre d'individus possédant simultanément les carcatéristiques $a_i$ et $b_j$.
+Il s'agit de la matrice $K$ à $I$ lignes et $J$ colonnes, dont le terme
+général $k_{ij}$ compte le nombre d'individus possédant simultanément
+les carcatéristiques $a_i$ et $b_j$.
 
 $$\class{vert}{K}=\begin{bmatrix}
 \class{vert}{k_{ij}}
@@ -209,12 +235,12 @@ $$\class{vert}{K} = (\class{orange}{X^1})^\top  \class{rouge}{X^2}$$
 ## Remarque 2
 
 $${\boldsymbol{X}}^\top {\boldsymbol{X}}= \begin{pmatrix} \class{orange}{C_1} & \class{vert}{K} \\ \class{vert}{K^\top} & \class{rouge}{C_2}\end{pmatrix},$$
-$C_{\ell}$ une matrice diagonale, dont la diagonale est le nombre d'observations dans chaque modalité.
+$C_{\ell}$ une matrice diagonale, dont la diagonale est le nombre
+d'observations dans chaque modalité.
 :::
 :::::
 
 ::: {.column width="45%"}
-
 **Sur l'exemple précédent**
 
 $$\class{vert}{K}  = \begin{pmatrix}
@@ -242,22 +268,26 @@ $${\boldsymbol{X}}^\top {\boldsymbol{X}}=
 
 On note les effectifs
 
-- $k_{\class{orange}{i+}} = \sum_{\class{rouge}{j=1}}^{\class{rouge}{J}} k_{ij}$ le nombre total d'individus ayant la modalité $\class{orange}{i}$
-- $k_{\class{rouge}{+j}} =  \sum_{\class{orange}{i=1}}^{\class{orange}{I}}  k_{ij}$ le nombre total d'individus ayant la modalité $\class{rouge}{j}$
+- $k_{\class{orange}{i+}} = \sum_{\class{rouge}{j=1}}^{\class{rouge}{J}} k_{ij}$
+  le nombre total d'individus ayant la modalité $\class{orange}{i}$
+
+- $k_{\class{rouge}{+j}} =  \sum_{\class{orange}{i=1}}^{\class{orange}{I}}  k_{ij}$
+  le nombre total d'individus ayant la modalité $\class{rouge}{j}$
+
 - $n = \sum_{\class{orange}{i=1}}^{\class{orange}{I}}\sum_{\class{rouge}{j=1}}^{\class{rouge}{J}}  k_{ij}$
 
 - les proportions $f_{ij} = k_{ij}/n,$
 
 Et les proportions marginales
 
-- $f_{\class{orange}{i+}} = \sum_{\class{rouge}{j=1}}^{\class{rouge}{J}} f_{ij}$ la proportion d'individus ayant la modalité $\class{orange}{i}$
-- $f_{\class{rouge}{+j}} =  \sum_{\class{orange}{i=1}}^{\class{orange}{I}}  f_{ij}$ la proportion d'individus ayant la modalité $\class{rouge}{j}$
+- $f_{\class{orange}{i+}} = \sum_{\class{rouge}{j=1}}^{\class{rouge}{J}} f_{ij}$
+  la proportion d'individus ayant la modalité $\class{orange}{i}$
+- $f_{\class{rouge}{+j}} =  \sum_{\class{orange}{i=1}}^{\class{orange}{I}}  f_{ij}$
+  la proportion d'individus ayant la modalité $\class{rouge}{j}$
 - $f_{++}= 1$
-
 :::
 
 ::: {.column width="45%"}
-
 ### Sur l'exemple
 
 $$\class{vert}{K}  = \begin{array}{ccc||c}
@@ -271,27 +301,34 @@ $$\class{vert}{K}  = \begin{array}{ccc||c}
 
 ## Modèle d'indépendance
 
-On dit que deux variables $A$ et $B$ sont [non liées]{.rouge} si et seulement si
+On dit que deux variables $A$ et $B$ sont [non liées]{.rouge} si et
+seulement si
 $$\forall (i,j)\in\{1,\ldots,I\}\times\{1,\ldots,J\}: \; k_{ij}=\frac{k_{i +} k_{+ j}}{n}$$
 
-Cette notion est bien sûr liée à l'indépendance en probabilité. En effet, deux variables aléatoires $A$ et $B$ sont indépendantes ssi
+Cette notion est bien sûr liée à l'indépendance en probabilité. En
+effet, deux variables aléatoires $A$ et $B$ sont indépendantes ssi
 
 \begin{align*} \underbrace{\mathbb{P}(A=i  \cap B=j)}_{\text{estimée par } \frac{k_{ij}}{n}= f_{ij}} = \underbrace{\mathbb{P}(A=i)}_{\text{estimée par} \frac{k_{i +}}{n} = f_{i +}} \times \underbrace{\mathbb{P}(B=j)}_{\text{estimée par} \frac{k_{+ j}}{n}=f_{+j}}, \forall (i,j)\;
 \end{align*}
 
-On souhaite étudier la liaison entre $A$ et $B$ à partir de nos observations.
+On souhaite étudier la liaison entre $A$ et $B$ à partir de nos
+observations.
 
-La représentation graphique des profils-lignes ou des profils-colonnes, au moyen de diagrammes en barres parallèles, ainsi que le calcul de coefficients de liaison (Cramer) donnent une première idée de la variation conjointe des deux variables.
+La représentation graphique des profils-lignes ou des profils-colonnes,
+au moyen de diagrammes en barres parallèles, ainsi que le calcul de
+coefficients de liaison (Cramer) donnent une première idée de la
+variation conjointe des deux variables.
 
-Le test du $\chi^2$ permet de plus de s'assurer du caractère significatif de cette liaison.
+Le test du $\chi^2$ permet de plus de s'assurer du caractère
+significatif de cette liaison.
 
 ## Test d'indépendance du $\chi^2$
 
 *(cf cours sur les tests du 2d semestre)*
 
--   l'hypothèse nulle est $H_0$: $A$ et $B$ sont indépendantes,
--   l'hypothèse alternative est $H_1$: $A$ et $B$ ne sont pas
-    indépendantes.
+- l'hypothèse nulle est $H_0$: $A$ et $B$ sont indépendantes,
+- l'hypothèse alternative est $H_1$: $A$ et $B$ ne sont pas
+  indépendantes.
 
 La statistique de test est
 $$T = \sum_{i=1}^{I} \sum_{j=1}^{J}  \frac{\left(\text{Effectif observé}_{ij} - \text{Effectif ettendu}_{ij} \right)^2}{\text{Effectif attendu}_{ij} } =  \sum_{i=1}^{I} \sum_{j=1}^{J} \frac{( n f_{ij} - n f_{i+ } f_{ +j})^2}{n f_{i+} f_{+j}}= n \class{bleu}{\sum_{i=1}^{I} \sum_{j=1}^{J} \frac{(  f_{ij} -  f_{i+ } f_{ +j})^2}{f_{i+} f_{+j}}} = n \class{bleu}{\Phi^2} .$$
@@ -311,13 +348,13 @@ $$P(A=i\vert B= j) = \frac{P(A=i,  B= j)}{P(B= j)}$$
 
 ### Déclinaison sur les fréquences
 
--   $\frac{f_{ij}}{f_{i+}}$ est la fréquence d'apparition de la modalité
-    $j$ au sein de la population $A=i$. Si $A$ et $B$ sont
-    indépendantes, alors $\frac{f_{ij}}{f_{i+}}= f_{+j}$
+- $\frac{f_{ij}}{f_{i+}}$ est la fréquence d'apparition de la modalité
+  $j$ au sein de la population $A=i$. Si $A$ et $B$ sont indépendantes,
+  alors $\frac{f_{ij}}{f_{i+}}= f_{+j}$
 
--   $\frac{f_{ij}}{f_{+j}}$ est la fréquence d'apparition de la modalité
-    $i$au sein de la population $B=j$. Si $A$ et $B$ sont indépendantes,
-    alors $\frac{f_{ij}}{f_{+j}}= f_{i+}$
+- $\frac{f_{ij}}{f_{+j}}$ est la fréquence d'apparition de la modalité
+  $i$au sein de la population $B=j$. Si $A$ et $B$ sont indépendantes,
+  alors $\frac{f_{ij}}{f_{+j}}= f_{i+}$
 
 # Profils-lignes et profils-colonnes
 
@@ -337,8 +374,8 @@ i=1,\ldots,I\\
 j=1,\ldots,J
 \end{array}}$$
 
-Ainsi avec les notations du cours d'ACP $$
-X = \begin{pmatrix}
+Ainsi avec les notations du cours d'ACP
+$$X = \begin{pmatrix}
 x_1^\top\\
 \vdots\\
 x_i^\top\\
@@ -355,7 +392,8 @@ f_{iJ}/f_{i+}\\
 \end{pmatrix}\in\mathbb{R}^J.$$
 
 ::: {.callout-note appearance="simple" icon="false"}
-A chaque ligne $i$, on fait correspondre un point dans ${\mathbb{R}}^J$ dont la j$^\text{ème}$ coordonnée vaut $f_{ij}/f_{i+}$.
+A chaque ligne $i$, on fait correspondre un point dans ${\mathbb{R}}^J$
+dont la j$^\text{ème}$ coordonnée vaut $f_{ij}/f_{i+}$.
 :::
 
 ### Les poids
@@ -407,8 +445,8 @@ i=1,\ldots,I\\
 j=1,\ldots,J
 \end{array}}$$
 
-Ainsi avec les notations du cours d'ACP $$
-X = \begin{pmatrix}
+Ainsi avec les notations du cours d'ACP
+$$X = \begin{pmatrix}
 x^1  & \ldots & x^j & \ldots & x^J
 \end{pmatrix}
 \text{ avec }
@@ -421,7 +459,8 @@ f_{Ij}/f_{+j}\\
 \end{pmatrix}\in\mathbb{R}^I.$$
 
 ::: {.callout-note appearance="simple" icon="false"}
-A chaque colonne $j$, on fait correspondre un point dans ${\mathbb{R}}^I$ dont la i$^\text{ème}$ coordonnée vaut $f_{ij}/f_{+j}$.
+A chaque colonne $j$, on fait correspondre un point dans
+${\mathbb{R}}^I$ dont la i$^\text{ème}$ coordonnée vaut $f_{ij}/f_{+j}$.
 :::
 
 ### Les poids
@@ -435,7 +474,10 @@ nuage de points $X$, complété par les poids $f_{+j}.$
 
 ### La métrique
 
-La distance dont on munit l'espace ${\mathbb{R}}^I$ consiste à donner un poids $1/f_{i+}$ à la i$^\text{ème}$ dimension, la distance au carré (dite distance du $\chi^2$) entre les points $j_1$ et $j_2$ est définie par
+La distance dont on munit l'espace ${\mathbb{R}}^I$ consiste à donner un
+poids $1/f_{i+}$ à la i$^\text{ème}$ dimension, la distance au carré
+(dite distance du $\chi^2$) entre les points $j_1$ et $j_2$ est définie
+par
 
 $$I_{G_J}(x^j) = f_{+j} d_{\chi^2}^2(x^{j}, G_J) =  f_{+j}  \sum_{i=1}^I \frac{1}{f_{i+}}\left (\frac{f_{ij}}{f_{+j}} -f_{i+} \right)^2=  \sum_{i=1}^I \frac{\left ( f_{ij} - f_{i+}f_{+j} \right)^2 }{f_{i+} f_{+j}}.$$
 
@@ -443,7 +485,8 @@ Ainsi l'inertie totale du nuage par rapport à $G_I$ vaut
 
 $$I_{G_J} = \sum_{i=1}^I  \sum_{j=1}^J \frac{\left ( f_{ij} - f_{i+}f_{+j} \right)^2 }{f_{i+} f_{+j}} = \Phi^2$$
 
-L'inertie mesure l'écart à l'indépendance. L'étude du nuage $N_J$ rend compte de la structure des données.
+L'inertie mesure l'écart à l'indépendance. L'étude du nuage $N_J$ rend
+compte de la structure des données.
 ::::
 
 ## ACP des nuages lignes et colonnes
@@ -453,33 +496,40 @@ L'inertie mesure l'écart à l'indépendance. L'étude du nuage $N_J$ rend compt
 
 Réalisé une l'ACP profils lignes.
 
--   L'origine des axes est placée au centre $G_I$ du nuage $N_I$
+- L'origine des axes est placée au centre $G_I$ du nuage $N_I$
 
--   On recherche une suite d'axes othogonaux d'inertie maximale
+- On recherche une suite d'axes othogonaux d'inertie maximale
 
--   Le nuage est projeté sur ces axes et on représente ces projections en associant deux axes pour créer un plan.
+- Le nuage est projeté sur ces axes et on représente ces projections en
+  associant deux axes pour créer un plan.
 
--   la proximité entre deux profils lignes, s'exprime par la même manière de s'écarter de l'indépendance.
+- la proximité entre deux profils lignes, s'exprime par la même manière
+  de s'écarter de l'indépendance.
 
 ### ACP de $N_J$
 
 Réalisé une l'ACP profils colonnes
 
--   L'origine des axes est placée au centre $G_J$ du nuage $N_J$
+- L'origine des axes est placée au centre $G_J$ du nuage $N_J$
 
--   On recherche une suite d'axes othogonaux d'inertie maximale
+- On recherche une suite d'axes othogonaux d'inertie maximale
 
--   Le nuage est projeté sur ces axes et on représente ces projections en associant deux axes pour créer un plan.
+- Le nuage est projeté sur ces axes et on représente ces projections en
+  associant deux axes pour créer un plan.
 
--   la proximité entre deux profiils colonne, s'exprime par la même manière de s'écarter de l'indépendance.
+- la proximité entre deux profiils colonne, s'exprime par la même
+  manière de s'écarter de l'indépendance.
 
 ### Nombre d'axes
 
-Puisque le nuage $N_I$ se place dans l'espace ${\mathbb{R}}^J$, on peut penser qu'il faut $J$ axes pour tout représenter. Mais
+Puisque le nuage $N_I$ se place dans l'espace ${\mathbb{R}}^J$, on peut
+penser qu'il faut $J$ axes pour tout représenter. Mais
 
-- La somme des coordonnées d'un profil vaut 1, on est donc dans un espace de dimension ${\mathbb{R}}^{J-1}$
+- La somme des coordonnées d'un profil vaut 1, on est donc dans un
+  espace de dimension ${\mathbb{R}}^{J-1}$
 
-- Le nuage $N_I$ centré comporte $I$ lignes, il est possible de les représenter tous avec $I-1$ dimensions
+- Le nuage $N_I$ centré comporte $I$ lignes, il est possible de les
+  représenter tous avec $I-1$ dimensions
 
 On représente donc toute l'information avec $\min(I-1, J-1)$ axes.
 :::
@@ -520,19 +570,24 @@ plot(penguins.CA, invisible = "row" )
 
 - Les deux nuages $N_I$ et $N_J$ ont la même inertie
 
-- L'inertie projetée sur l'axe $\ell$ est données par l'inertie du nuage projeté sur cet axe.
+- L'inertie projetée sur l'axe $\ell$ est données par l'inertie du nuage
+  projeté sur cet axe.
 
-    - concernant les profils lignes
-        $\sum_{i}^I f_{i+} \lVert OH_i^{\ell}\rVert^2 = \lambda_{\ell}$
-    - concernant les profils colonnes $\sum_{j}^J f_{+j} \lVert OH_j^{\ell}\rVert^2 = \lambda_{\ell}$
-        Ainsi les deux nuages ont la même inertie projetée sur chaque axe.
+  - concernant les profils lignes
+    $\sum_{i}^I f_{i+} \lVert OH_i^{\ell}\rVert^2 = \lambda_{\ell}$
+  - concernant les profils colonnes
+    $\sum_{j}^J f_{+j} \lVert OH_j^{\ell}\rVert^2 = \lambda_{\ell}$
+    Ainsi les deux nuages ont la même inertie projetée sur chaque axe.
 
-- Lien entre coordonnées des lignes et des colonnes : relations pseudo-barycentriques suivantes pour $\ell=1,\ldots,min(I-1, J-I)$
+- Lien entre coordonnées des lignes et des colonnes : relations
+  pseudo-barycentriques suivantes pour $\ell=1,\ldots,min(I-1, J-I)$
 
 $$F_{\ell}(i) =\frac{1}{\sqrt{\lambda_{\ell}}} \sum_{j=1}^J \frac{f_{ij}}{f_{i+}} G_{\ell(j)},$$
 $$G_{\ell}(j) =\frac{1}{\sqrt{\lambda_{\ell}}} \sum_{i=1}^I \frac{f_{ij}}{f_{+j}} F_{\ell(i)},$$
 
-où $F_{\ell}(i)$ désigne la coordonnée de la ligne $i$ sur l'axe $\ell$, tandis que $G_{\ell}(j)$ désigne la coordonnée de la colonne $j$ sur l'axe $\ell$.
+où $F_{\ell}(i)$ désigne la coordonnée de la ligne $i$ sur l'axe $\ell$,
+tandis que $G_{\ell}(j)$ désigne la coordonnée de la colonne $j$ sur
+l'axe $\ell$.
 
 ### Visualisation
 
@@ -557,8 +612,10 @@ penguin_cont |> rownames_to_column(var = 'island') |>
 Puisque l'origine du repère est confondue avec le barycentre des nuages.
 
 - Si un profil ligne a une coordonnée positive sur un axe, il s'associe
-    - plus que dans le modèle d'indépendance aux modalités $j$ ayant une coordonnées positive
-    - moins que dans le modèle d'indépendance aux modalités $j$ ayant une coordonnées négative
+  - plus que dans le modèle d'indépendance aux modalités $j$ ayant une
+    coordonnées positive
+  - moins que dans le modèle d'indépendance aux modalités $j$ ayant une
+    coordonnées négative
 
 ## Inerties associés aux axes
 
@@ -566,8 +623,11 @@ En AFC, l'inertie a un sens particulier.
 
 En effet, si on considère la projection de $N_I$ sur l'axe $\ell$.
 
-- Si on place chaque profil colonne $G_{\ell}(j)$ à l'exact barycentre, alors $N_J$ est au centre du nuage $N_I$ et donc $N_I$ ne peut-être un nuage de barycentre de $N_J$.
-- C'est la valeur $\lambda_{\ell}$ qui dilate les barycentres de $1/\sqrt{\lambda_{\ell}}$ et donc $\lambda_{\ell}\leq 1$.
+- Si on place chaque profil colonne $G_{\ell}(j)$ à l'exact barycentre,
+  alors $N_J$ est au centre du nuage $N_I$ et donc $N_I$ ne peut-être un
+  nuage de barycentre de $N_J$.
+- C'est la valeur $\lambda_{\ell}$ qui dilate les barycentres de
+  $1/\sqrt{\lambda_{\ell}}$ et donc $\lambda_{\ell}\leq 1$.
 
 La valeur propre $1$ signifie que donc une association parfaite entre
 ligne et colonnes.
@@ -588,7 +648,8 @@ penguins.CA$eig[,1]
 ::: {.column width="45%"}
 ### Qualité de la représentation d'un profil ligne $i$
 
-La qualité de la réprésentation de l'individu $i$ sur l'axe $\ell$ est donné par
+La qualité de la réprésentation de l'individu $i$ sur l'axe $\ell$ est
+donné par
 $$Qual_{\ell}(i) = \frac{\text{inertie de }i\text{ projeté sur }\ell}{\text{inertie de } i}= \frac{(OH_i^{\ell)^2}}{(Oi)^2}$$
 \text{inertie de $i$ projeté sur $\ell$}
 :::
@@ -608,8 +669,10 @@ Le fichier présente pour chaque tranche d'âge
 
 - 65 lignes présentant le cumul de décès par cause en 1979 et 2006
 - 65 lignes présentant le cumul de décès par cause en 2006
-- 64 lignes présentant le cumul de décès par cause en 1979 (le SIDA n'est pas pris en compte)
-- 28 lignes présentant le cumul de décès toutes causes confondues cause en 1979 à 2006.
+- 64 lignes présentant le cumul de décès par cause en 1979 (le SIDA
+  n'est pas pris en compte)
+- 28 lignes présentant le cumul de décès toutes causes confondues cause
+  en 1979 à 2006.
 
 ```{r}
 #| echo: true

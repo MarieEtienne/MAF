@@ -22,34 +22,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      # - name: Additional R packages
-      #   run: |
-      #     Rscript -e "install.packages(c('palmerpenguins'))"
-      #     Rscript -e "install.packages(c('factoextra','flextable', 'imager'))"
-
-      # --- LaTeX pour la sortie beamer (PDF) -------------------------------
-      # Inutile si l'image Docker contient déjà TinyTeX (voir Dockerfile).
-      # Le cache évite de réinstaller TinyTeX et les paquets à chaque run.
-      - name: Cache TinyTeX
-        uses: actions/cache@v4
-        with:
-          path: /github/home/.TinyTeX
-          key: tinytex-${{ runner.os }}-v1
-
-      - name: Install TinyTeX (si absent de l'image)
-        run: |
-          if ! command -v xelatex >/dev/null 2>&1 && [ ! -x "$HOME/.TinyTeX/bin/x86_64-linux/xelatex" ]; then
-            quarto install tinytex --update-path --no-prompt
-          fi
-          TLMGR="$HOME/.TinyTeX/bin/x86_64-linux/tlmgr"
-          if [ -x "$TLMGR" ]; then
-            "$TLMGR" install beamer pgf translator tcolorbox fontspec unicode-math \
-              lm lm-math tex-gyre xcolor etoolbox iftex caption bookmark xurl \
-              booktabs fancyvrb framed upquote microtype parskip footnotehyper \
-              amsmath tools environ || true
-          fi
-      # ----------------------------------------------------------------------
-
       - name: Generate slides (revealjs + beamer)
         run: quarto render
 

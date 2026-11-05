@@ -30,6 +30,24 @@ website:
           - href: 01_acm.qmd
           - href: 01_afd.qmd
           - href: 01_acp_manquantes.qmd
+          - text: "---"
+          - text: "Versions PDF"
+          - text: "Introduction (PDF)"
+            href: 01_intro.pdf
+          - text: "Inertie (PDF)"
+            href: 01_inertie.pdf
+          - text: "ACP (PDF)"
+            href: 01_acp.pdf
+          - text: "AFM (PDF)"
+            href: 01_afm.pdf
+          - text: "AFC (PDF)"
+            href: 01_afc.pdf
+          - text: "ACM (PDF)"
+            href: 01_acm.pdf
+          - text: "AFD (PDF)"
+            href: 01_afd.pdf
+          - text: "ACP données manquantes (PDF)"
+            href: 01_acp_manquantes.pdf
 
       - text: "TD/TP"
         menu:

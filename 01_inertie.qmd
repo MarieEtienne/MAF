@@ -5,7 +5,6 @@ author:
     affiliation:
       - ENSAI - CREST
     email: marie-pierre.etienne@ensai.fr
-
 date: "Last updated on `r format(Sys.time(), '%d %B, %Y')`"
 institute: https://marieetienne.github.io/MAF/
 execute:
@@ -13,10 +12,8 @@ execute:
 editor:
   markdown:
     wrap: 72
-  visual:
-    canonical: true
 format:
-  revealjs:
+  mpe-revealjs:
     css: mpe_pres_revealjs.css
     theme: [default, custom.scss]
     width: 1050
@@ -57,14 +54,15 @@ scale2 <- function(x, na.rm = FALSE) (x - mean(x, na.rm = na.rm)) / (sqrt((lengt
 
 :::: {.content-visible when-format="revealjs"}
 ::: hidden
-
-$$\newcommand\R{{\mathbb{R}}}
+$$
+\newcommand\R{{\mathbb{R}}}
 \newcommand\Xbf{{\boldsymbol{X}}}
 \newcommand\norm[1]{\lVert#1\rVert}
 \newcommand\xcol[1]{\boldsymbol{x}^{#1}}
 \newcommand\xrow[1]{\boldsymbol{x}_{#1}}
 \newcommand\xbf{\boldsymbol{x}}
-\newcommand\ybf{\boldsymbol{y}}$$
+\newcommand\ybf{\boldsymbol{y}}
+$$
 :::
 ::::
 
@@ -99,20 +97,20 @@ nuages de points par le point $g$
 
 Il faut donc une
 
-- une notion de distance
+-   une notion de distance
 
-- un point résumé
+-   un point résumé
 
 ### Variables quantitatives
 
 Quelle distance choisir et que représente $g$ ?
 
 ::: incremental
-- On peut choisir la distance euclidienne
-  $$d(x_i, g)^2 = \sum_{j=1}^p (x_{i}^j - g^j)^2.$$
+-   On peut choisir la distance euclidienne
+    $$d(x_i, g)^2 = \sum_{j=1}^p (x_{i}^j - g^j)^2.$$
 
-- $g= (\bar{x^1}, \ldots, \bar{x^p})$ est un choix naturel et la
-  distance euclidienne
+-   $g= (\bar{x^1}, \ldots, \bar{x^p})$ est un choix naturel et la
+    distance euclidienne
 :::
 
 ### Variables qualitatives
@@ -235,10 +233,10 @@ On a évoqué la distance Euclidienne mais toute autre distance est
 possible. Chaque choix de distance correspond à une méthode d'analyse
 factorielle différente.
 
-- euclidienne : ACP
-- euclidienne normalisée : ACP normée ou AFM selon le type de
-  normalisation
-- distance du $\chi^2$ : AFC ou ACM
+-   euclidienne : ACP
+-   euclidienne normalisée : ACP normée ou AFM selon le type de
+    normalisation
+-   distance du $\chi^2$ : AFC ou ACM
 
 Cours présenté sans les poids mais tout se généralise.
 
@@ -259,9 +257,9 @@ $$I = p$$
 
 Formellement, il nous faut
 
-- une matrice $X$ (dimension $n\times p$),
-- une distance, i.e une métrique (dimension $p\times p$)
-- Optionnellement une matrice de poids $D$
+-   une matrice $X$ (dimension $n\times p$),
+-   une distance, i.e une métrique (dimension $p\times p$)
+-   Optionnellement une matrice de poids $D$
 
 ::: {.callout-note icon="false" appearance="minimal"}
 ### Définition
@@ -438,28 +436,29 @@ sur $\Delta$ déforme le moins possible le nuage de points.
 Dans le cadre de l'ACP, on veut construire un ensemble d'axes
 orthogonaux (une nouvelle base de ${\mathbb{R}}^p$), de façon à ce que
 
-- la projection sur le premier axe, soit le meilleur résumé du nuage de
-  points en une dimension,
-- le deuxième axe est orthogonal au premier et représente "le deuxième
-  meilleur choix" ... dans un sens que l'on va définir,
-- le troisième ...
+-   la projection sur le premier axe, soit le meilleur résumé du nuage
+    de points en une dimension,
+-   le deuxième axe est orthogonal au premier et représente "le deuxième
+    meilleur choix" ... dans un sens que l'on va définir,
+-   le troisième ...
 
 ## Où l'algèbre linéaire revient {.allowframebreaks}
 
 **Rappel projection orthogonale**
 
-- **Produit scalaire** : Soient deux éléments $\boldsymbol{x}$ et
-  $\boldsymbol{y}$ de $\mathbb{R}^p$, le produit scalaire est noté
-  $\langle\boldsymbol{x},\boldsymbol{y}\rangle$ et
-  $\langle\boldsymbol{x},\boldsymbol{y}\rangle=\sum_{i=1}^p x_i y_i = \boldsymbol{x}^\top \boldsymbol{y}.$
 
-- **Orthogonalité** : on dit que $\boldsymbol{x}$ et $\boldsymbol{y}$
-  sont orthogonaux si
-  $\langle\boldsymbol{x},\boldsymbol{y}\rangle = \boldsymbol{x}^\top  \boldsymbol{y}=0.$
+-   **Produit scalaire** : Soient deux éléments $\boldsymbol{x}$ et
+    $\boldsymbol{y}$ de $\mathbb{R}^p$, le produit scalaire est noté
+    $\langle\boldsymbol{x},\boldsymbol{y}\rangle$ et
+    $\langle\boldsymbol{x},\boldsymbol{y}\rangle=\sum_{i=1}^p x_i y_i = \boldsymbol{x}^\top \boldsymbol{y}.$
 
-- **Projection orthogonale** : le projeté de $\boldsymbol{a}$ sur la
-  droite $\Delta$ de vecteur directeur unitaire $\boldsymbol{u}$ est
-  $$\boldsymbol{a}_u = \langle \boldsymbol{a}, \boldsymbol{u} \rangle \boldsymbol{u} = (\boldsymbol{a}^\top \boldsymbol{u})\,  \boldsymbol{u}.$$
+-   **Orthogonalité** : on dit que $\boldsymbol{x}$ et $\boldsymbol{y}$
+    sont orthogonaux si
+    $\langle\boldsymbol{x},\boldsymbol{y}\rangle = \boldsymbol{x}^\top  \boldsymbol{y}=0.$
+
+-   **Projection orthogonale** : le projeté de $\boldsymbol{a}$ sur la
+    droite $\Delta$ de vecteur directeur unitaire $\boldsymbol{u}$ est
+    $$\boldsymbol{a}_u = \langle \boldsymbol{a}, \boldsymbol{u} \rangle \boldsymbol{u} = (\boldsymbol{a}^\top \boldsymbol{u})\,  \boldsymbol{u}.$$
 
 ```{r proj_prodscalaire}
 point_a <- c(3, 0.8)
@@ -493,17 +492,17 @@ ggplot() +
 Que signifie projeter sur l'axe des abscisses ? sur l'axe des ordonnées
 ?
 
-- Il y a un lien fort entre coordonnées dans un système d'axes et
-  projection.
+-   Il y a un lien fort entre coordonnées dans un système d'axes et
+    projection.
 
-- Si on sait projeter sur un autre système orthogonal, on a les
-  coordonnées.
+-   Si on sait projeter sur un autre système orthogonal, on a les
+    coordonnées.
 
 ## Où l'algèbre linéaire reste encore
 
-- **Espace orthogonal** : Soit $E$ un sous-espace vectoriel de
-  $\mathbb{R}^p$. On définit
-  $E^\perp=\{\boldsymbol{x}\in \mathbb{R}^p:\; \forall \boldsymbol{y}\in E,\; \boldsymbol{x}\perp \boldsymbol{y}\}$.
+-   **Espace orthogonal** : Soit $E$ un sous-espace vectoriel de
+    $\mathbb{R}^p$. On définit
+    $E^\perp=\{\boldsymbol{x}\in \mathbb{R}^p:\; \forall \boldsymbol{y}\in E,\; \boldsymbol{x}\perp \boldsymbol{y}\}$.
 
 :::::: panel-tabset
 ### Exemple
@@ -568,6 +567,8 @@ $$I = I_E + I_{E^\perp}.$$
 
 **Preuve** : Un dessin vaut mieux qu'un long discours et Pythagore est
 votre ami !
+
+
 
 $$\lVert \boldsymbol{x}_{i} \rVert^2 = \lVert \boldsymbol{x}_{i}- \boldsymbol{x}_{i}^E\rVert^2 + \lVert \boldsymbol{x}_{i}^E \rVert^2 = \lVert \boldsymbol{x}_{i}- \boldsymbol{x}_{i}^E\rVert^2 + \lVert \boldsymbol{x}_{i} - \boldsymbol{x}_{i}^{E^\perp} \rVert^2.$$
 
@@ -718,24 +719,24 @@ $$I= I_{E_1} + I_{E_2} + \ldots + I_{E_p}, \quad \mbox{avec } I_{E_1} \leq I_{E_
 
 ## En quoi est ce utile ?
 
-- L'essentiel de l'information est portée par les premiers axes (puisque
-  ce sont les axes sur lesquels on perd le moins d'information lorsqu'on
-  projette)
-  - facilité de visualisation
-  - compression de l'information
-- Ce qui est plus complexe
-  - donner un sens aux nouveaux axes
+-   L'essentiel de l'information est portée par les premiers axes
+    (puisque ce sont les axes sur lesquels on perd le moins
+    d'information lorsqu'on projette)
+    -   facilité de visualisation
+    -   compression de l'information
+-   Ce qui est plus complexe
+    -   donner un sens aux nouveaux axes
 
 # Conclusion
 
 ## Bilan de ce cours
 
-- Mise en place de tous les outils de base
+-   Mise en place de tous les outils de base
 
-- L'inertie = de l'information
+-   L'inertie = de l'information
 
-- on veut le plus d'information avec le moins de "variables possibles"
+-   on veut le plus d'information avec le moins de "variables possibles"
 
-- on va utiliser de l'algèbre linéaire
+-   on va utiliser de l'algèbre linéaire
 
-- Il nous reste à comprendre comment trouver ce bon système d'axe
+-   Il nous reste à comprendre comment trouver ce bon système d'axe

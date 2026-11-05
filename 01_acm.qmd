@@ -6,16 +6,16 @@ author:
       - ENSAI - CREST
     email: marie-pierre.etienne@ensai.fr
 date: last-modified
-editor:
-  markdown:
-    canonical: true
-    wrap: 72
 institute: https://marieetienne.github.io/MAF/
 execute:
   freeze: auto
-css: mpe_pres_revealjs.css
+editor:
+  markdown:
+    wrap: 72
+    canonical: true
 format:
   revealjs:
+    css: mpe_pres_revealjs.css
     theme: [default, custom.scss]
     width: 1050
     margin: 0.05
@@ -24,8 +24,10 @@ format:
     show-slide-number: print
     menu:
       useTextContentForMissingTitles: false
-    mathjax: true  # Active MathJax
-    self-contained: true
+    mathjax: true
+    embed-resources: true
+  mpe-beamer:
+    keep-tex: true
 ---
 
 ```{r setup, include=FALSE, eval = TRUE, message=FALSE}

@@ -12,9 +12,10 @@ execute:
 editor:
   markdown:
     wrap: 72
-css: mpe_pres_revealjs.css
+    canonical: true
 format:
   revealjs:
+    css: mpe_pres_revealjs.css
     theme: [default, custom.scss]
     width: 1050
     margin: 0.05
@@ -23,8 +24,10 @@ format:
     show-slide-number: print
     menu:
       useTextContentForMissingTitles: false
-    mathjax: true  # Active MathJax
-    self-contained: true
+    mathjax: true
+    embed-resources: true
+  mpe-beamer:
+    keep-tex: true
 ---
 
 ```{r setup, include=FALSE, eval = TRUE}
@@ -98,13 +101,13 @@ Les 6 premières lignes (parmi 333 )
 :::
 
 ::: {.column width="48%"}
--   bill_length_mm : la longueur du bec,
+- bill_length_mm : la longueur du bec,
 
--   bill_depth_mm : l'épaisseur du bec,
+- bill_depth_mm : l'épaisseur du bec,
 
--   flipper_length_mm : la longueur de la nageoire,
+- flipper_length_mm : la longueur de la nageoire,
 
--   body_mass_g : le poids du corps.
+- body_mass_g : le poids du corps.
 :::
 :::::
 
@@ -116,12 +119,12 @@ entre variables et identifier des resemblances entre individus
 
 ### Objectifs
 
--   Représenter sans perdre trop d'information,
--   Quantifier la perte d'information,
--   Comprendre quelles sont les informations redondantes (variables
-    liées),
--   Idéalement des individus éloignés dans le nuage initial, restent
-    éloignés dans la représentation
+- Représenter sans perdre trop d'information,
+- Quantifier la perte d'information,
+- Comprendre quelles sont les informations redondantes (variables
+  liées),
+- Idéalement des individus éloignés dans le nuage initial, restent
+  éloignés dans la représentation
 
 Dans toute la suite, sans perte de généralité, on va considérer que les
 variables sont centrées.
@@ -158,9 +161,9 @@ plot(penguins.PCA, choix = "ind")
 
 [Reste à comprendre]{.rouge}
 
--   Comment quantifier l'information contenue dans un nuage de points
--   Comment est construite cette meilleure projection
--   Quels sont les individus bien représentés ?
+- Comment quantifier l'information contenue dans un nuage de points
+- Comment est construite cette meilleure projection
+- Quels sont les individus bien représentés ?
 
 ### Représentation des variables
 
@@ -177,10 +180,10 @@ plot(penguins.PCA, choix = "var")
 
 [Reste à comprendre]{.rouge}
 
--   Comment interpréter cette représentation ?
--   Quelles sont les variables bien représentées ?
--   Que peut-on déduire de ce graphique sur le lien entre les variables.
--   Comment lier graphique des individus et graphique des variables
+- Comment interpréter cette représentation ?
+- Quelles sont les variables bien représentées ?
+- Que peut-on déduire de ce graphique sur le lien entre les variables.
+- Comment lier graphique des individus et graphique des variables
 
 ### Visualisation par ACP
 
@@ -407,7 +410,6 @@ ggplot() +
 
 [Bien sûr les deux nuages sont intimement liés]{.question}
 
-
 # Construction de la base des composantes principales
 
 ## Se donner des intuitions
@@ -499,24 +501,21 @@ p2 +
 
 :::::: columns
 ::: {.column width="45%"}
--   On cherche $\boldsymbol{u_1}$ tel que $I_{u_1}$ soit minimale mais
-    $I_{u_1} + I_{u_1^\perp}=I$. [Minimiser $I_{u_1}$ revient à
-    maximiser $I_{u_1^\perp}$]{.rouge}, i.e l'inertie du nuage projeté.
+- On cherche $\boldsymbol{u_1}$ tel que $I_{u_1}$ soit minimale mais
+  $I_{u_1} + I_{u_1^\perp}=I$. [Minimiser $I_{u_1}$ revient à maximiser
+  $I_{u_1^\perp}$]{.rouge}, i.e l'inertie du nuage projeté.
 
-    -   Le premier individu se projette en
-        $\class{alea}{x_{1}}^\top \boldsymbol{u_1}$ sur
-        $\boldsymbol{u_1}$
-    -   Le deuxième individu se projette en
-        $\class{alea}{x_{2}}^\top \boldsymbol{u_1}$ sur
-        $\boldsymbol{u_1}$
-    -   ...
+  - Le premier individu se projette en
+    $\class{alea}{x_{1}}^\top \boldsymbol{u_1}$ sur $\boldsymbol{u_1}$
+  - Le deuxième individu se projette en
+    $\class{alea}{x_{2}}^\top \boldsymbol{u_1}$ sur $\boldsymbol{u_1}$
+  - ...
 
--   On rappelle que
-    $${\boldsymbol{X}}= \begin{pmatrix} \class{alea}{x_{1}}^\top \\ \vdots \\ \class{alea}{x_{n}}^\top \end{pmatrix}.$$
-    La projection de l'individu $i$ est obtenue en multipliant le
-    vecteur ligne $\class{alea}{x_{1}}^\top$ par $\boldsymbol{u_1}$. Le
-    vecteur des coordonnées sur $\boldsymbol{u_1}$ pour chaque individu
-    est
+- On rappelle que
+  $${\boldsymbol{X}}= \begin{pmatrix} \class{alea}{x_{1}}^\top \\ \vdots \\ \class{alea}{x_{n}}^\top \end{pmatrix}.$$
+  La projection de l'individu $i$ est obtenue en multipliant le vecteur
+  ligne $\class{alea}{x_{1}}^\top$ par $\boldsymbol{u_1}$. Le vecteur
+  des coordonnées sur $\boldsymbol{u_1}$ pour chaque individu est
 
 $$\begin{pmatrix} \class{alea}{x_{1}}^\top \boldsymbol{u_1} \\ \vdots \\ \class{alea}{x_{n}}^\top \boldsymbol{u_1} \end{pmatrix} = X  \boldsymbol{u_1}.$$
 :::
@@ -533,21 +532,21 @@ sous la contrainte $\lVert\boldsymbol{u_1}\rVert$ \begin{align}
 ::: panel-tabset
 #### Remarque
 
--   $\frac{1}{n} X^\top X$ est la matrice de covariance, on écrit
-    souvent $\frac{1}{n} X^\top X$ sous la forme $X^\top W X$ ($W$ est
-    une matrice diagonale, dont chaque terme diagonal vaut $1/n$,
-    $W_{ii}$ est le poids attribué à l'observation $i$).
+- $\frac{1}{n} X^\top X$ est la matrice de covariance, on écrit souvent
+  $\frac{1}{n} X^\top X$ sous la forme $X^\top W X$ ($W$ est une matrice
+  diagonale, dont chaque terme diagonal vaut $1/n$, $W_{ii}$ est le
+  poids attribué à l'observation $i$).
 
--   $V= X^\top W X$ est [symétrique]{.rouge} et [ positive]{.rouge}
-    donc [diagonalisable]{.rouge}.
+- $V= X^\top W X$ est [symétrique]{.rouge} et [positive]{.rouge} donc
+  [diagonalisable]{.rouge}.
 
--   Il existe une matrice $P$ unitaire $P^\top P = I_p,$ et $D$ une
-    matrice diagonale telle que $$V = P D P^\top.$$
+- Il existe une matrice $P$ unitaire $P^\top P = I_p,$ et $D$ une
+  matrice diagonale telle que $$V = P D P^\top.$$
 
--   Les termes diagonaux de $D$ sont les [valeurs propres, toutes
-    positives,]{.rouge} de $X^\top W X$ rangées par odre décroissant,
-    $\lambda_1 > \lambda_1 \ldots >\lambda_p$ et $U$ est la matrice des
-    vecteurs propres associés.
+- Les termes diagonaux de $D$ sont les [valeurs propres, toutes
+  positives,]{.rouge} de $X^\top W X$ rangées par odre décroissant,
+  $\lambda_1 > \lambda_1 \ldots >\lambda_p$ et $U$ est la matrice des
+  vecteurs propres associés.
 
 #### Ce que ça signifie
 
@@ -592,30 +591,27 @@ $$\boldsymbol{v_2} = (0, 1, \ldots, 0)^\top, \quad \boldsymbol{u_2} = P \boldsym
 [$\boldsymbol{u_2}$ est le deuxième vecteur propre]{.rouge} de de
 $X^\top W X$.
 
-
-
-
 ## Mesurer l'information préservée par projection
 
 ### Sur un axe principal
 
--   Lorsque l'on résume le nuage à sa projection sur un [axe
-    factoriel]{.rouge} $\boldsymbol{u_k}$, on ne garde que l'information
-    associée à cet axe soit $I_{\boldsymbol{u_k}^\perp}=\lambda_k$.
+- Lorsque l'on résume le nuage à sa projection sur un [axe
+  factoriel]{.rouge} $\boldsymbol{u_k}$, on ne garde que l'information
+  associée à cet axe soit $I_{\boldsymbol{u_k}^\perp}=\lambda_k$.
 
--   La quantité d'information préservée par projection sur l'axe $k$ est
-    donc $\lambda_k$.
+- La quantité d'information préservée par projection sur l'axe $k$ est
+  donc $\lambda_k$.
 
--   La part d'information portée par l'axe $k$ est donnée par
-    $\displaystyle\frac{\lambda_k}{\sum_{k=1}^p\lambda_k}$
+- La part d'information portée par l'axe $k$ est donnée par
+  $\displaystyle\frac{\lambda_k}{\sum_{k=1}^p\lambda_k}$
 
 ### Sur un axe principal
 
--   L'inertie du nuage projeté sur plan $k_1, k_2$ est donnée par
-    $$\lambda_{k_1} +\lambda_{k_2}$$
+- L'inertie du nuage projeté sur plan $k_1, k_2$ est donnée par
+  $$\lambda_{k_1} +\lambda_{k_2}$$
 
--   La part d'information portée par le plan $k_1, k_2$ est donnée par
-    $$\frac{\lambda_{k_1} +\lambda_{k_2}}{\sum_{k=1}^p\lambda_k}$$
+- La part d'information portée par le plan $k_1, k_2$ est donnée par
+  $$\frac{\lambda_{k_1} +\lambda_{k_2}}{\sum_{k=1}^p\lambda_k}$$
 
 ## Attention aux unités - Illustration sur les données de manchots
 
@@ -738,15 +734,17 @@ de la variable $i$,
 $$d_M(\boldsymbol{x}_1, \boldsymbol{x}_2)^2=  (\boldsymbol{x}_1 - \boldsymbol{x}_2)^\top M (\boldsymbol{x}_1 - \boldsymbol{x}_2) =\sum_{k=1}^p \frac{(x_{1k}-x_{2k})^2}{s_k^2}=\sum_{k=1}^p \left ( \frac{x_{1k}}{s_k}-\frac{x_{2k}}{s_k} \right)^2.$$
 
 Dans une ACP normée on s'intéresse donc aux valeurs propres de la
-matrice $M^{1/2} X^\top  W X M^{1/2},$ il s'agit de la matrice de corrélation.
+matrice $M^{1/2} X^\top  W X M^{1/2},$ il s'agit de la matrice de
+corrélation.
 
-On note $V$ la matrice de covariance et on va donc travailler sur $M^{1/2} V M^{1/2}$
+On note $V$ la matrice de covariance et on va donc travailler sur
+$M^{1/2} V M^{1/2}$
 :::
-
 
 ## Identifier les directions principales pour une métrique quelconque $M$
 
 ### Maximiser $I_{u_1^\perp}$
+
 sous la contrainte $\lVert\boldsymbol{u_1}\rVert$ \begin{align}
 
  I_{u_1^\perp} & = \frac{1}{n}\lVert X  \boldsymbol{u_1}\rVert^2_M \\
@@ -754,12 +752,11 @@ sous la contrainte $\lVert\boldsymbol{u_1}\rVert$ \begin{align}
         & =   \boldsymbol{u_1}^\top M^{1/2} \left (\frac{1}{n} X^\top X\right)  M^{1/2} \boldsymbol{u_1}
 \end{align}
 
-D'apères ce qui précède [$\boldsymbol{u_1}$ est le premier vecteur propre]{.rouge} de
-$M^{1/2} V M^{1/2}.$
+D'apères ce qui précède [$\boldsymbol{u_1}$ est le premier vecteur
+propre]{.rouge} de $M^{1/2} V M^{1/2}.$
 
-[Le changement de métrique a un impact sur la matrice à diagonaliser mais pas sur la logique de construction.]{.rouge}
-
-
+[Le changement de métrique a un impact sur la matrice à diagonaliser
+mais pas sur la logique de construction.]{.rouge}
 
 # Etude du nuage des individus
 
@@ -772,22 +769,19 @@ Les coordonnées des $n$ observations sur les $p$ axes factoriels sont
 groupées dans la matrice $C$: $c_{ik}$ est la coordonnée de
 l'observation $i$ sur l'axe $\Delta_{\boldsymbol{u_k}}$. La $k$-ème
 composante principale est la colonne $k$ de la matrice $C$, notée $C^k$.
-$$
-C = [\class{orange}{C^1} | \ldots | \class{orange}{C^p}] \text{ avec } \class{orange}{C^k}=\begin{pmatrix}
+$$C = [\class{orange}{C^1} | \ldots | \class{orange}{C^p}] \text{ avec } \class{orange}{C^k}=\begin{pmatrix}
 c_{1k}\\
 \vdots\\
 c_{nk}
-\end{pmatrix}.
-$$
+\end{pmatrix}.$$
 :::
 
 ::: panel-tabset
 ### Vectoriellement
 
-On a les expressions suivantes $$
-C^k=Xu_k \mbox{ et } C=XP,
-$$ où $P$ désigne la matrice de changement base, i.e la matrice
-contenant les vecteurs propres.
+On a les expressions suivantes $$C^k=Xu_k \mbox{ et } C=XP,$$ où $P$
+désigne la matrice de changement base, i.e la matrice contenant les
+vecteurs propres.
 
 ### Visuellement
 
@@ -795,11 +789,11 @@ contenant les vecteurs propres.
 
 ### Remarques
 
--   Les $C^k$ sont des combinaisons linéaires des variables de départ.
--   Elles sont centrées, de variance
-    $\lambda_k=\sum_{i=1}^n w_i c_{ik}^2$ et non-corrélées 2 à 2.
--   Les $C^k$ sont vecteurs propres (non unitaires) de $\frac{1}{n}X W X^\top$ de valeur propre
-    $\lambda_k$.
+- Les $C^k$ sont des combinaisons linéaires des variables de départ.
+- Elles sont centrées, de variance $\lambda_k=\sum_{i=1}^n w_i c_{ik}^2$
+  et non-corrélées 2 à 2.
+- Les $C^k$ sont vecteurs propres (non unitaires) de
+  $\frac{1}{n}X W X^\top$ de valeur propre $\lambda_k$.
 :::
 
 ## Représentation des manchots
@@ -839,8 +833,8 @@ fviz_pca_ind(penguins.PCA, label="none", addEllipses=FALSE)
 
 ## Qualité de la représentation d'un individu
 
--   Même avec ces précautions, on déforme le nuage de points
--   Certains sont plus déformés que d'autre, il faut les identifier
+- Même avec ces précautions, on déforme le nuage de points
+- Certains sont plus déformés que d'autre, il faut les identifier
 
 Un individu est d'autant moins déformé qu'il est proche du plan sur
 lequel on le projette, ce qui est donné par l'angle entre le vecteur
@@ -906,8 +900,7 @@ mieux l'individu est représenté.
 
 ## Contribution d'un individu à la définition de l'axe
 
--   Les individus sont plus ou moins important dans la définition des
-    axes
+- Les individus sont plus ou moins important dans la définition des axes
 
 :::::: panel-tabset
 ### Intuitivement
@@ -1017,9 +1010,9 @@ ggplot() +
 :::
 
 ::: {.column width="45%"}
--   Une variable est bien représentée sur l'axe $k$ si l'angle entre
-    cette variable et la composante $C^k$ est petit, son cosinus est
-    proche de 1 ou -1.
+- Une variable est bien représentée sur l'axe $k$ si l'angle entre cette
+  variable et la composante $C^k$ est petit, son cosinus est proche de 1
+  ou -1.
 
 Or $<X^j, C^k> = \lVert X^j\rVert\lVert C^k\rVert cos(\theta_{jk})$
 
@@ -1029,8 +1022,8 @@ Or $<X^j, C^k> = \lVert X^j\rVert\lVert C^k\rVert cos(\theta_{jk})$
 \end{align}
 
 Ainsi $<X^j, C^k>$ est le $j^\text{ème}$ terme du vecteur $PC^\top C^k$,
-or $C^\top C$ est diagonale avec $\lVert C_k \rVert  = n \lambda_k$, donc
-$(C^\top C)^k=(0, \dots, n\lambda_k, 0, \ldots)^\top$ et
+or $C^\top C$ est diagonale avec $\lVert C_k \rVert  = n \lambda_k$,
+donc $(C^\top C)^k=(0, \dots, n\lambda_k, 0, \ldots)^\top$ et
 
 $$\cos(\theta_{jk}) = \frac{n \lambda_k \boldsymbol{u_k^j}}{\sqrt{\lVert X^j\rVert^2 \, \lVert C_k\rVert^2}}=  \sqrt{\lambda_k} \boldsymbol{u_k^j},  \quad \cos^2(\theta_{jk}) =  \lambda_k{(\boldsymbol{u_k^j})^2}$$
 :::
@@ -1045,25 +1038,25 @@ Il est possible d'ajouter des informations supplémentaires
 
 Si on veut ajouter un nouvel individu $x_{new}$
 
--   on calcule $\boldsymbol{x}_{new} - \boldsymbol{g}$, le point centré
-    (et potentiellement on divise par l'écart type des variables
-    calculés sur le jeu de données initial)
+- on calcule $\boldsymbol{x}_{new} - \boldsymbol{g}$, le point centré
+  (et potentiellement on divise par l'écart type des variables calculés
+  sur le jeu de données initial)
 
--   On projette sur les axes principaux :
-    $(\boldsymbol{x}_{new} - \boldsymbol{g} )^\top \boldsymbol{u_k}$
+- On projette sur les axes principaux :
+  $(\boldsymbol{x}_{new} - \boldsymbol{g} )^\top \boldsymbol{u_k}$
 
 ### Une variable supplémentaire
 
 Si on souhaite ajouter une nouvelle variable
 $\boldsymbol{x}^{new}= (x^{new}_1, \ldots, x^{new}_n)^\top \in {\mathbb{R}}^n$
 
--   On soustrait sa moyenne
-    $\tilde{\boldsymbol{x}}^{new} = \boldsymbol{x}^{new} - m^{new}$,
-    $m^{new}=\frac{1}{n} \sum_{i=1}^n x^{new}_i$ (ou
-    $m^{new}= \sum_{i=1}^n w_i x^{new}_i$ si toutes les observations
-    n'ont pas le même poids)
+- On soustrait sa moyenne
+  $\tilde{\boldsymbol{x}}^{new} = \boldsymbol{x}^{new} - m^{new}$,
+  $m^{new}=\frac{1}{n} \sum_{i=1}^n x^{new}_i$ (ou
+  $m^{new}= \sum_{i=1}^n w_i x^{new}_i$ si toutes les observations n'ont
+  pas le même poids)
 
--   On projette $\tilde{\boldsymbol{x}}^{new}$ sur $\boldsymbol{u_k},$
+- On projette $\tilde{\boldsymbol{x}}^{new}$ sur $\boldsymbol{u_k},$
 
 $$Cor(\tilde{\boldsymbol{x}}^{new}, u_k) = \frac{(\tilde{\boldsymbol{x}}^{new})^\top W \boldsymbol{u_k} }{\lVert\tilde{\boldsymbol{x}}^{new}\rVert}$$
 
@@ -1104,17 +1097,17 @@ doubs.env %>% print(n=6)
 :::
 
 ::: {.column width="48%"}
--   das : distance à la source ( $km$ ),
--   alt : altitude ( $m$ )
--   pen : la pente (dénivelé pour 1000m)
--   deb : le débit () $m^3.s^{-1}$ )
--   pH : le pH de l'eau,
--   dur : la concentration en calcium ( $mg.L^{-1}$ ),
--   pho : concentration en phosphate ( $mg.L^{-1}$ ),
--   nit : concentration en nitrate ( $mg.L^{-1}$ ),
--   amn : concentration en ammonium ( $mg.L^{-1}$ ),
--   oxy : concentration d'oxygène dissous ( $mg.L^{-1}$ ),
--   dbo : Demande biologique en oxygène ( $mg.L^{-1}$ ).
+- das : distance à la source ( $km$ ),
+- alt : altitude ( $m$ )
+- pen : la pente (dénivelé pour 1000m)
+- deb : le débit () $m^3.s^{-1}$ )
+- pH : le pH de l'eau,
+- dur : la concentration en calcium ( $mg.L^{-1}$ ),
+- pho : concentration en phosphate ( $mg.L^{-1}$ ),
+- nit : concentration en nitrate ( $mg.L^{-1}$ ),
+- amn : concentration en ammonium ( $mg.L^{-1}$ ),
+- oxy : concentration d'oxygène dissous ( $mg.L^{-1}$ ),
+- dbo : Demande biologique en oxygène ( $mg.L^{-1}$ ).
 :::
 :::::
 
@@ -1124,17 +1117,16 @@ entre variables et identifier des ressemblances entre individus
 
 ## Analyse par ACP
 
--   Poids des individus ?
--   Quelle distance entre les variables ?
--   Lancer l'analyse
-    -   quelles sont les composantes intéressantes (règle empririque du
-        choix du nombre d'axes) ?
-    -   quelles informations sont visibles sur le premier plan factoriel
-        ?
-    -   Que peut on dire des liens entre les variables ?
-    -   A votre avis quels sites contribuent le plus à la formation de
-        l'axe 1 ?
-    -   Que peut on dire du pH ?
+- Poids des individus ?
+- Quelle distance entre les variables ?
+- Lancer l'analyse
+  - quelles sont les composantes intéressantes (règle empririque du
+    choix du nombre d'axes) ?
+  - quelles informations sont visibles sur le premier plan factoriel ?
+  - Que peut on dire des liens entre les variables ?
+  - A votre avis quels sites contribuent le plus à la formation de l'axe
+    1 ?
+  - Que peut on dire du pH ?
 
 # L'ACP comme une méthode de compression
 
@@ -1159,7 +1151,7 @@ $$I = \sum_{i=1}^n w_i \lVert\class{alea}{x_i} -\boldsymbol{g}\rVert^2_M$$
 On a considéré des variables centrées donc
 $\boldsymbol{g} = \boldsymbol{0}$.
 
--   Or
+- Or
 
 \begin{align}
  I = & \sum_{i=1}^n w_i x_i^\top M x_i = tr(\sum_{i=1}^n w_i x_i^\top M x_i ) \\
@@ -1175,11 +1167,11 @@ $\boldsymbol{g} = \boldsymbol{0}$.
 ::: {.column width="49%"}
 ### Exemple sur les cas présentés
 
--   Dans le cas de l'ACP, la matrice $V$ est la matrice de covariance et
-    $M = Id$,
+- Dans le cas de l'ACP, la matrice $V$ est la matrice de covariance et
+  $M = Id$,
 
--   Dans le cas de l'ACP normée , la matrice $V$ est la matrice de
-    covariance et $M = Diag(s_k^{-2})$,
+- Dans le cas de l'ACP normée , la matrice $V$ est la matrice de
+  covariance et $M = Diag(s_k^{-2})$,
 :::
 :::::
 
@@ -1187,29 +1179,29 @@ $\boldsymbol{g} = \boldsymbol{0}$.
 
 ## Ce que vous pensez devoir retenir
 
--   l'ACP permet de mettre en valeur l'information principale contenu
-    dans un jeu de données
+- l'ACP permet de mettre en valeur l'information principale contenu dans
+  un jeu de données
 
-    -   les relations entre variables
-    -   les proximités entre individus
+  - les relations entre variables
+  - les proximités entre individus
 
--   Cette méthode permet d'obtenir une projection sur queluqes axes
-    indépendants et bien choisis, au sens ou ils résument le mieux
-    l'information
+- Cette méthode permet d'obtenir une projection sur queluqes axes
+  indépendants et bien choisis, au sens ou ils résument le mieux
+  l'information
 
--   Techniquement l'ACP consiste à diagonaliser la matrice de covariance
+- Techniquement l'ACP consiste à diagonaliser la matrice de covariance
 
--   Les axes sont définis par les vecteurs propres de la matrice\
-    $$ X^\top W X$$
+- Les axes sont définis par les vecteurs propres de la matrice\
+  $$ X^\top W X$$
 
--   Ils sont rangés par ordre d'importance décroissante, au sens où le
-    premier est celui qui préserve le plus l'inertie du nuage projeté
-    (i.e a la plus grande valeur propre)
+- Ils sont rangés par ordre d'importance décroissante, au sens où le
+  premier est celui qui préserve le plus l'inertie du nuage projeté (i.e
+  a la plus grande valeur propre)
 
--   Il faut adapter la métrique au probleme
+- Il faut adapter la métrique au probleme
 
--   l'information portée par un axe est mesurée par la valeur propre
-    associé à l'axe
+- l'information portée par un axe est mesurée par la valeur propre
+  associé à l'axe
 
--   il faut savoir interpréter le nuage des individus, éclairés par les
-    liens entre axes principaux et anciennes variables
+- il faut savoir interpréter le nuage des individus, éclairés par les
+  liens entre axes principaux et anciennes variables

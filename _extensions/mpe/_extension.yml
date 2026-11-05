@@ -1,9 +1,13 @@
-title: MPE slides (beamer)
+title: MPE slides (revealjs + beamer)
 author: Marie-Pierre Etienne
-version: 1.0.0
+version: 1.1.0
 quarto-required: ">=1.4.0"
 contributes:
   formats:
+    # revealjs habituel + lien vers la version PDF en bas à gauche
+    revealjs:
+      include-after-body: pdf-link.html
+    # beamer aux couleurs du CSS, une frame par onglet
     beamer:
       pdf-engine: xelatex
       slide-level: 2

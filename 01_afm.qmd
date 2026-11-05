@@ -13,9 +13,10 @@ execute:
 editor:
   markdown:
     wrap: 72
-css: mpe_pres_revealjs.css
+    canonical: true
 format:
   revealjs:
+    css: mpe_pres_revealjs.css
     theme: [default, custom.scss]
     width: 1050
     margin: 0.05
@@ -24,8 +25,10 @@ format:
     show-slide-number: print
     menu:
       useTextContentForMissingTitles: false
-    mathjax: true  # Active MathJax
-    self-contained: true
+    mathjax: true
+    embed-resources: true
+  mpe-beamer:
+    keep-tex: true
 ---
 
 ```{r setup, include=FALSE, eval = TRUE}
@@ -100,17 +103,17 @@ chimiques]{.orange}, des [caractéristiques écologiques]{.vert}.
 :::
 
 ::: {.column width="49%"}
--   [das : distance à la source ( $km$ )]{.bleu},
--   [alt : altitude ( $m$ )]{.bleu}
--   [pen : la pente (dénivelé pour 1000m)]{.bleu}
--   [deb : le débit () $m^3.s^{-1}$ )]{.bleu}
--   [pH : le pH de l'eau,]{.orange}
--   [dur : la concentration en calcium ( $mg.L^{-1}$ )]{.orange},
--   [pho : concentration en phosphate ( $mg.L^{-1}$ )]{.orange},
--   [nit : concentration en nitrate ( $mg.L^{-1}$ )]{.orange},
--   [amn : concentration en ammonium ( $mg.L^{-1}$ )]{.orange},
--   [oxy : concentration d'oxygène dissous ( $mg.L^{-1}$ )]{.vert},
--   [dbo : Demande biologique en oxygène ( $mg.L^{-1}$ )]{.vert}.
+- [das : distance à la source ( $km$ )]{.bleu},
+- [alt : altitude ( $m$ )]{.bleu}
+- [pen : la pente (dénivelé pour 1000m)]{.bleu}
+- [deb : le débit () $m^3.s^{-1}$ )]{.bleu}
+- [pH : le pH de l'eau,]{.orange}
+- [dur : la concentration en calcium ( $mg.L^{-1}$ )]{.orange},
+- [pho : concentration en phosphate ( $mg.L^{-1}$ )]{.orange},
+- [nit : concentration en nitrate ( $mg.L^{-1}$ )]{.orange},
+- [amn : concentration en ammonium ( $mg.L^{-1}$ )]{.orange},
+- [oxy : concentration d'oxygène dissous ( $mg.L^{-1}$ )]{.vert},
+- [dbo : Demande biologique en oxygène ( $mg.L^{-1}$ )]{.vert}.
 :::
 :::::
 
@@ -124,19 +127,19 @@ poids que les variables écologiques.
 On s'intéresse aux notes des 30 élèves d'une classe. Le tableau de note
 complet contient
 
--   [8 notes de mathématiques]{.bleu}
--   [4 notes d'anglais]{.orange}
--   [3 notes d'histoire géographie]{.vert}
--   [3 notes de français]{.rouge}
--   [1 note de dessin]{.jaune}
+- [8 notes de mathématiques]{.bleu}
+- [4 notes d'anglais]{.orange}
+- [3 notes d'histoire géographie]{.vert}
+- [3 notes de français]{.rouge}
+- [1 note de dessin]{.jaune}
 
 On aimerait visualiser les notes à l'aide d'une méthode factorielle,
 notamment pour savoir si ce sont les mêmes élèves qui rencontrent des
 difficultés dans les différentes matières.
 
--   On normalise les données car les gammes de variation des notes dans
-    les différentes matières sont assez différentes
--   Que se passe-t-il si on fait une ACP normée ?
+- On normalise les données car les gammes de variation des notes dans
+  les différentes matières sont assez différentes
+- Que se passe-t-il si on fait une ACP normée ?
 
 Les mathématiques ont 8 fois plus de poids dans la détermination des
 axes que la note de dessin.
@@ -167,11 +170,11 @@ head(vins, n= 4)
 ::: {.column width="49%"}
 10 vins blancs du Val de Loire : 5 Vouvray - 5 Sauvignon
 
--   descripteurs sensoriels : acidité, amertume, odeur agrume, etc.
--   description sensorielle de 3 jurys : [oenologue]{.rouge},
-    [consommateurs]{.orange}, [étudiant]{.bleu}
--   notes hédoniques de 60 consommateurs : [appréciation globale]{.
-    vert}
+- descripteurs sensoriels : acidité, amertume, odeur agrume, etc.
+- description sensorielle de 3 jurys : [oenologue]{.rouge},
+  [consommateurs]{.orange}, [étudiant]{.bleu}
+- notes hédoniques de 60 consommateurs : \[appréciation globale\]{.
+  vert}
 
 Au total 118 variables, dont 60 sont des notes hédoniques
 :::
@@ -200,23 +203,23 @@ X & = \begin{pmatrix}
 
 On souhaite mettre en évidence
 
--   Les relations entre les groupes de variables
+- Les relations entre les groupes de variables
 
--   Equilibrer les contribution de chaque groupe de variables
+- Equilibrer les contribution de chaque groupe de variables
 :::
 
 ::: {.column width="49%"}
 ### Première idée
 
--   Rééquilibrer les variables entre groupes en attribuant à chaque
-    variable $k$ du groupe $i$ un poids $1/n_k$, où $n_k$ est le nombre
-    de variables dans le groupe $k$.
+- Rééquilibrer les variables entre groupes en attribuant à chaque
+  variable $k$ du groupe $i$ un poids $1/n_k$, où $n_k$ est le nombre de
+  variables dans le groupe $k$.
 :::
 :::::
 
 ## Illustration
 
-:::::: panel-tabset
+::::::::: panel-tabset
 ### Le Doubs
 
 ::::: columns
@@ -250,7 +253,6 @@ doubs_pca_normgroup <- PCA(dta, scale.unit = FALSE,
 :::
 
 ::: {.column width="40%"}
-
 ### Poids des groupes de variables (variance préservée )
 
 ```{r}
@@ -323,40 +325,35 @@ comp |> as.data.frame() |>
   bind_cols(doubs_pca_normgroup$var$contrib[,1:2]) |>
   rename(Dim.1_nk = Dim.1, Dim.2_nk = Dim.2)
 ```
-
 :::
 :::::
 
 ### Première idée
 
-
 ::::: columns
 ::: {.column width="49%"}
-
--   Rééquilibrer les variables entre groupes en attribuant à chaque
-    variable $k$ du groupe $i$ un poids $1/n_k$, où $n_k$ est le nombre
-    de variables dans le groupe $k$.
-
+- Rééquilibrer les variables entre groupes en attribuant à chaque
+  variable $k$ du groupe $i$ un poids $1/n_k$, où $n_k$ est le nombre de
+  variables dans le groupe $k$.
 
 [Problème]{.rouge}
 
--   les deux variables écologiques sont presque parfaitement corrélées,
-    l'information qu'elles portent se résume très bien avec un seul axe.
-    Ainsi cet axe porte presque la même information que l'ensemble des
-    variables, elles ont donc beaucoup de poids dans la création des
-    axes finaux.
+- les deux variables écologiques sont presque parfaitement corrélées,
+  l'information qu'elles portent se résume très bien avec un seul axe.
+  Ainsi cet axe porte presque la même information que l'ensemble des
+  variables, elles ont donc beaucoup de poids dans la création des axes
+  finaux.
 
--   Les variables chimiques (pH, dureté, phosphate, nitrite et
-    ammoniaque) sont moins corélées, l'information qu'elles portent se
-    diffusent sur plusieurs axes et donc le poids de ces variables est
-    réparti sur plusieurs axes.
+- Les variables chimiques (pH, dureté, phosphate, nitrite et ammoniaque)
+  sont moins corélées, l'information qu'elles portent se diffusent sur
+  plusieurs axes et donc le poids de ces variables est réparti sur
+  plusieurs axes.
 
 [La première idée n'est pas toujours la bonne !]{.rouge}
 
 On souhaiterait que l'axe résume aussi bien les différents types de
 variable, et donc que chaque groupe de variable ait un poids 1 pour le
 premier axe.
-
 :::
 
 ::: {.column width="49%"}
@@ -368,21 +365,17 @@ premier axe.
 plot(doubs_pca_normgroup, choix = "var")
 valeurs_propres_nk
 ```
-
 :::
-
 :::::
-
-
-::::::
+:::::::::
 
 ## L'AFM en pratique
 
 Pour chaque groupe de variable $k$,
 
--   On calcule la 1ère valeur propre $\lambda_{k1}$ du groupe de
-    variable $k$, (chaque variable ayant été normée)
--   On réalise l'ACP globale sur le tableau pondéré :
+- On calcule la 1ère valeur propre $\lambda_{k1}$ du groupe de variable
+  $k$, (chaque variable ayant été normée)
+- On réalise l'ACP globale sur le tableau pondéré :
 
 \begin{align}
 X & = \begin{pmatrix}
@@ -413,11 +406,11 @@ valeurs_propres |>
 
 Finalement dans une AFM, on étudie
 
--   le nuage de points $\boldsymbol{X}$,
--   Les points sont potentiellement pondérés avec la matrice de poids
-    $W \in {\mathbb{R}}^{n\times n}$,
--   on utilise la mérique
-    $$M = Diag\left (\frac{1}{s_1^2 \lambda_{c_1}},\ldots ,\frac{1}{s_p^2 \lambda_{c_p}} \right)$$
+- le nuage de points $\boldsymbol{X}$,
+- Les points sont potentiellement pondérés avec la matrice de poids
+  $W \in {\mathbb{R}}^{n\times n}$,
+- on utilise la mérique
+  $$M = Diag\left (\frac{1}{s_1^2 \lambda_{c_1}},\ldots ,\frac{1}{s_p^2 \lambda_{c_p}} \right)$$
 
 où Diag désigne la matrice diagonale, le terme $i$ est donné par
 $\frac{1}{s_i^2 \lambda_{c_i},}$ $s_i$ est l'écart type de la variable
@@ -435,15 +428,15 @@ L'analyse des individus et des variables se fait comment en ACP.
 en ACP, on maximise
 $$\frac{1}{n} \lVert X \boldsymbol{u_1}\rVert_M^2 =\frac{1}{n}\sum_{j=1}^p (\boldsymbol{u_1}^\top X^j)^2\, m_j$$
 
-
 Réécriture avec les groupes
 $$\frac{1}{n} \lVert X \boldsymbol{u_1}\rVert_M^2 =\frac{1}{n}\sum_{j=1}^p (\boldsymbol{u_1}^\top X^j)^2\, m_j = \sum_{\ell=1}^{n_g} \class{bleu}{\frac{1}{n}\sum_{j\in K_{\ell}} (\boldsymbol{u_1}^\top X^j)^2\, m_j}$$
 
+$\class{bleu}{\mathcal{L}_g(K_\ell, \boldsymbol{u_1})}=\class{bleu}{\frac{1}{n}\sum_{j\in K_{\ell}} (\boldsymbol{u_1}^\top X^j)^2\, m_j}$
+est l'inertie projetée de toutes les variables de $K_j$ sur
+$\boldsymbol{u_1}$
 
-$\class{bleu}{\mathcal{L}_g(K_\ell, \boldsymbol{u_1})}=\class{bleu}{\frac{1}{n}\sum_{j\in K_{\ell}} (\boldsymbol{u_1}^\top X^j)^2\, m_j}$ est l'inertie projetée de toutes les variables de $K_j$ sur  $\boldsymbol{u_1}$
-
-Ainsi $\class{bleu}{\mathcal{L}_g(K_\ell, \boldsymbol{u_1})}$ est le mesure du lien entre le groupe $\ell$ et la première dimension.
-
+Ainsi $\class{bleu}{\mathcal{L}_g(K_\ell, \boldsymbol{u_1})}$ est le
+mesure du lien entre le groupe $\ell$ et la première dimension.
 
 ## En pratique
 
@@ -482,14 +475,14 @@ doubs_mfa <- MFA(doubs.env,
 On *choisit* de faire une AFM si on veut mettre l'accent sur les liens
 entre les groupes de variables
 
--   Pour ce faire, on veut que chaque groupe contribue de la même
-    manière à construire des premmiers axes principaux
+- Pour ce faire, on veut que chaque groupe contribue de la même manière
+  à construire des premmiers axes principaux
 
--   Pour normaliser l'importance de chaque groupe, on calcule la
-    première valeur propre de chaque groupe et on normalise les données
-    par la racine de cette vp, ou de manière équivalente on prend une
-    métrique \$M£ dans maquelle le terme $M_{ii}$ contient la première
-    valeur propre du groupe de variables auquel appartient $i$.
+- Pour normaliser l'importance de chaque groupe, on calcule la première
+  valeur propre de chaque groupe et on normalise les données par la
+  racine de cette vp, ou de manière équivalente on prend une métrique
+  \$M£ dans maquelle le terme $M_{ii}$ contient la première valeur
+  propre du groupe de variables auquel appartient $i$.
 
 La méthode est proche de l'ACP, c'est une ACP avec une métrique
 particulière.
