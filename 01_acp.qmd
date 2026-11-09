@@ -615,8 +615,9 @@ $X^\top W X$.
 
 ## Attention aux unités - Illustration sur les données de manchots
 
-```{r PCA_manchots_2, eval = TRUE, echo = TRUE}
+```{r PCA_manchots_2}
 #| echo: true
+#| eval: true
 #| classes: custom3565
 #| output-location: column
 #| results: hold
@@ -644,8 +645,9 @@ en terme d'inertie soit $99.98%$ de l'inertie totale.
 Réfléchissons aux données, ce qui est crucial dans toutes analyses de
 données.
 
-```{r PCA_manchots_desc, eval = TRUE, echo = TRUE}
+```{r PCA_manchots_desc}
 #| echo: true
+#| eval: true
 #| classes: custom3565
 #| output-location: column
 #| results: hold
@@ -670,8 +672,9 @@ plus importante que celle de la variable `bill_length_mm`.
 
 ## Attention aux unités - Illustration sur les données de manchots normalisées
 
-```{r PCA_manchots_3, eval = TRUE, echo = TRUE}
+```{r PCA_manchots_3}
 #| echo: true
+#| eval: true
 #| classes: custom3565
 #| output-location: column
 #| results: hold
@@ -745,8 +748,9 @@ $M^{1/2} V M^{1/2}$
 
 ### Maximiser $I_{u_1^\perp}$
 
-sous la contrainte $\lVert\boldsymbol{u_1}\rVert$ \begin{align}
+sous la contrainte $\lVert\boldsymbol{u_1}\rVert$
 
+\begin{align}
  I_{u_1^\perp} & = \frac{1}{n}\lVert X  \boldsymbol{u_1}\rVert^2_M \\
         & = \frac{1}{n} (X  \boldsymbol{u_1})^\top M (X  \boldsymbol{u_1})\\
         & =   \boldsymbol{u_1}^\top M^{1/2} \left (\frac{1}{n} X^\top X\right)  M^{1/2} \boldsymbol{u_1}
@@ -798,8 +802,9 @@ vecteurs propres.
 
 ## Représentation des manchots
 
-```{r CompPrinc_manchots, eval = TRUE, echo = TRUE}
+```{r CompPrinc_manchots}
 #| echo: true
+#| eval: true
 #| classes: custom3565
 #| output-location: column
 #| results: hold
@@ -1062,8 +1067,9 @@ $$Cor(\tilde{\boldsymbol{x}}^{new}, u_k) = \frac{(\tilde{\boldsymbol{x}}^{new})^
 
 ## Retournons à nos manchots
 
-```{r PCA_manchots_final, eval = TRUE, echo = TRUE}
+```{r PCA_manchots_final}
 #| echo: true
+#| eval: true
 #| classes: custom3565
 #| output-location: column
 #| results: hold
@@ -1160,7 +1166,6 @@ $\boldsymbol{g} = \boldsymbol{0}$.
    = & tr(M X^\top W X)\\
    = & tr( X^\top W X M)\\
    = & tr( V M)\\
-
 \end{align}
 :::
 
