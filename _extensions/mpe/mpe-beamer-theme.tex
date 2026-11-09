@@ -109,6 +109,9 @@
 \providecommand\ybf{\boldsymbol{y}}
 % \class{couleur}{...} (extension HTML de MathJax) -> texte coloré en LaTeX
 \providecommand\class[2]{\textcolor{#1}{#2}}
+% Macro de bordure de flextable : définie ici car sa définition (avec #1)
+% dans une frame beamer fait planter LaTeX ; le filtre la retire des tableaux.
+\providecommand{\ascline}[3]{\noalign{\global\arrayrulewidth #1}\arrayrulecolor[HTML]{#2}\cline{#3}}
 
 %% ---------- Taille maximale des figures ----------
 % Les figures sont réduites pour tenir dans \mpefigmaxh de la hauteur de texte
