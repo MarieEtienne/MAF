@@ -31,7 +31,7 @@ format:
 ```{r utils, echo = FALSE}
 library(parallel)
 library(ggpubr)
-
+library(imager)
 library(tidyverse)
 
 
