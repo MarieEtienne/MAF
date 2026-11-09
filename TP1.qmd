@@ -1,12 +1,16 @@
 ---
 title: "TD1 - Analyse en composante Principale"
 author:
-  - name: MAF 2025-2026
+  - name: MAF 2026-2027
     affiliation:
       - ENSAI - CREST
     email: marie-pierre.etienne@ensai.fr
 institute: https://marieetienne.github.io/MAF/
 bibliography: TPs.bib
+editor:
+  markdown:
+    wrap: 72
+    canonical: true
 execute:
   freeze: auto
 format: pdf
@@ -39,13 +43,13 @@ scale2 <- function(x, na.rm = FALSE) (x - mean(x, na.rm = na.rm)) / ( sqrt((leng
 
 Les TD et TP du cours MAF servent trois objectifs:
 
--   Revenir sur certaines notions de cours pour mieux les appréhender
+- Revenir sur certaines notions de cours pour mieux les appréhender
 
--   donner des outils pratiques pour mettre en oeuvre les méthodes vues
-    en cours,
+- donner des outils pratiques pour mettre en oeuvre les méthodes vues en
+  cours,
 
--   réfléchir à leur mise en oeuvre et leur application dans des cas
-    concrets.
+- réfléchir à leur mise en oeuvre et leur application dans des cas
+  concrets.
 
 Il est donc fréquent que l'on fasse certaine partie avec peu d'outils (à
 la main) pouur bien faire le lien avec les concets de cours, tandis que
@@ -66,10 +70,10 @@ mesure 4 variables
 walking_dta <- read.table('walking_dataset_100.csv', sep = ',', header = TRUE, row.names = 1)
 ```
 
--   le poids en $Kg$ (variable `P` )
--   la taille en $m$,
--   la longueur de pas en $cm$,
--   la vitesse de marche en $m.s^{-1}$.
+- le poids en $Kg$ (variable `P` )
+- la taille en $m$,
+- la longueur de pas en $cm$,
+- la vitesse de marche en $m.s^{-1}$.
 
 ```{r}
 #| label: donnees_marche_sum
@@ -97,7 +101,6 @@ sum_dta
 2.  Combien vaut l'inertie projeté sur l'axe de vecteur directeur
     $(1,0,0,0)^\top$ ?
 
-
 ```{r}
 sum_dta  |> summarise(Inertie = sum(variance))
 ```
@@ -105,14 +108,12 @@ sum_dta  |> summarise(Inertie = sum(variance))
 3.  Combien vaut l'inertie projeté sur l'axe de vecteur directeur
     $(0,1,0,0)^\top$ ?
 
-
-
 On note $X$ de dimension $100 \times 4$ la matrice des données centrées.
 Chaque individu a le même poids.
 
 4.  On souhaite utiliser la distance euclidienne puis réaliser une ACP.
-    le cours indique qu'on diagonalise la matrice $M^{1/2}VM^{1/2}$. Indiquer ce que
-    sont les matrices $V$ et $M$ impliquées.
+    le cours indique qu'on diagonalise la matrice $M^{1/2}VM^{1/2}$.
+    Indiquer ce que sont les matrices $V$ et $M$ impliquées.
 
 ```{r}
 #| label: donnees_marche_XX
@@ -124,11 +125,11 @@ X <- scale(walking_dta, center = TRUE, scale =FALSE) |> as.matrix()
 V <- 1/n * t(X) %*% X
 ```
 
-5.  On diagonalise la matrice $M^{1/2}VM^{1/2}$ et on obtient les valeurs propres
-    suivantes. Quelle est l'inertie portée par le premier plan
-    principal, quel pourcentage de l'inertie totale ceci représente-t-il
-    ? Pensez vous qu'on ait ainsi une bonne manière de représenter les
-    données inditiales en seulement deux dimensions ?
+5.  On diagonalise la matrice $M^{1/2}VM^{1/2}$ et on obtient les
+    valeurs propres suivantes. Quelle est l'inertie portée par le
+    premier plan principal, quel pourcentage de l'inertie totale ceci
+    représente-t-il ? Pensez vous qu'on ait ainsi une bonne manière de
+    représenter les données inditiales en seulement deux dimensions ?
 
 ```{r}
 #| label: donnees_marche_eigen
@@ -138,11 +139,11 @@ V <- 1/n * t(X) %*% X
 round(eigen(V)$values,3)
 ```
 
-6.  Si on sqouhaite réaliser une ACP normée, on change de métrique,  quelle est l'inertie portée par l'axe de vecteur directeur   $(1,0,0,0)^\top$ dans ce cas ?
-
+6.  Si on sqouhaite réaliser une ACP normée, on change de métrique,
+    quelle est l'inertie portée par l'axe de vecteur directeur
+    $(1,0,0,0)^\top$ dans ce cas ?
 
 7.  Que deviennent les matrices $V$ et $M$ dans ce cas ?
-
 
 8.  Les valeurs propres de $M V M$ sont données ci-dessous. Quelle est
     maintenant la part d'inertie représentée sur le premier axe
@@ -157,7 +158,6 @@ round(eigen(V)$values,3)
 M <- diag(1/sqrt(sum_dta$variance))
 round(eigen(M%*%V%*%M)$values,3)
 ```
-
 
 9.  On utilise le package `FactoMineR` pour réaliser l'ACP. Peut on
     deviner quelle est la métrique utilisée par défaut ? Quelles sont
@@ -177,8 +177,8 @@ plot(walking_dta_pca, choix = "var")
 
 10. En utilisant le graphique ci-dessous, que pouvez-vous dire
 
--   sur l'individu 10 ?
--   sur l'individu 94 ?
+- sur l'individu 10 ?
+- sur l'individu 94 ?
 
 ```{r}
 #| label: donnees_marche_eigen_facto_ind
@@ -201,7 +201,6 @@ plot(walking_dta_pca, choix = "ind")
 walking_dta_pca$ind$contrib |> as_tibble() |> rowid_to_column("Ind") |> arrange(-Dim.1)
 ```
 
-
 ```{r}
 walking_dta_pca$ind$contrib |> as_tibble() |> rowid_to_column("Ind") |> arrange(-Dim.2)
 ```
@@ -222,14 +221,19 @@ walking_dta_pca$ind$cos2 |> as_tibble() |> rowid_to_column("Ind") |> arrange(-Di
 14. Comment mesurer la qualité de la représentation sur le premier plan
     ?
 
-
 # Une première ACP. Etude des performance au Décathlon
 
+La package `FactoMineR`contient un jeu de données sur des performances
+au Décathlon. Le tableau de données contient 41 lignes et 13 colonnes.
+Les dix premières colonnes correspondent aux performances des athlètes
+pour les dix épreuves du décathlon et les colonnes 11 et 12
+correspondent respectivement au rang et au nombre de points obtenus. La
+dernière colonne indique la compétition durant laquelle a eu lieu cette
+performance (Jeux Olympiques de 2004 ou Décastar 2004). Les lignes sont
+identifiés avec le nom de l'athlète.
 
-La package `FactoMineR`contient un jeu de données sur des performances au Décathlon. Le tableau de données contient 41 lignes et 13 colonnes. Les dix premières colonnes correspondent aux performances des athlètes pour les dix épreuves du décathlon et les colonnes 11 et 12 correspondent respectivement au rang et au nombre de points obtenus. La dernière colonne indique la compétition durant laquelle a eu lieu cette performance  (Jeux Olympiques de 2004 ou Décastar 2004). Les lignes sont identifiés avec le nom de l'athlète.
-
-Chargez la package FactoMineR et le tableau de données en tapant la ligne de code suivante :
-
+Chargez la package FactoMineR et le tableau de données en tapant la
+ligne de code suivante :
 
 ```{r}
 #| label: donnees_decathlon
@@ -242,8 +246,6 @@ data("decathlon")
 ```
 
 1.  Discuter de la nature des variables
-
-
 
 Le code ci-dessous calcule des résumés quantitatifs pour les variables
 pertinentes.
@@ -267,8 +269,8 @@ decathlon |> summarise(across(is.numeric, list(moyenne=mean, variance=var ))) |>
 2.  Pour comprendre les relations entre les variables, nous pouvons
     réaliser une ACP.
 
--   Faut il prendre en compte toutes les variables quantitatives ?
--   Quelle choix de distance feriez vous ?
+- Faut il prendre en compte toutes les variables quantitatives ?
+- Quelle choix de distance feriez vous ?
 
 3.  l'ACP est réalisée grâce aux commandes suivantes. A quoi servent les
     options `quanti.sup` et `quali.sup` ? pourquoi ce choix ? Combien y
@@ -353,8 +355,6 @@ fviz_pca_ind(decathlon_pca, axes = c(1,2), alpha.ind = "cos2")
 11. Le graphique suivant ajoute l'information sur la Competition. Que
     pouvez vous déduire des résultats au Decastar et aux Jeux Olympiques
     ?
-
-
 
 ```{r}
 #| label: donnees_decathlon_compare
