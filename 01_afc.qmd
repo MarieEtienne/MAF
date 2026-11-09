@@ -38,6 +38,7 @@ library(tidyverse) ## to benefit from the tidyverse coding system
 library(wesanderson)
 library(FactoMineR)
 library(flextable)
+set_flextable_defaults(fonts_ignore = TRUE)
 ```
 
 ```{r reference,  include=FALSE, cache=FALSE, eval = TRUE}
@@ -374,8 +375,7 @@ i=1,\ldots,I\\
 j=1,\ldots,J
 \end{array}}$$
 
-Ainsi avec les notations du cours d'ACP
-$$X = \begin{pmatrix}
+Ainsi avec les notations du cours d'ACP $$X = \begin{pmatrix}
 x_1^\top\\
 \vdots\\
 x_i^\top\\
@@ -445,8 +445,7 @@ i=1,\ldots,I\\
 j=1,\ldots,J
 \end{array}}$$
 
-Ainsi avec les notations du cours d'ACP
-$$X = \begin{pmatrix}
+Ainsi avec les notations du cours d'ACP $$X = \begin{pmatrix}
 x^1  & \ldots & x^j & \ldots & x^J
 \end{pmatrix}
 \text{ avec }
