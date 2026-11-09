@@ -240,8 +240,23 @@ end
 ------------------------------------------------------------------------
 -- \begin{align} -> \begin{align*} (MathJax ne numérote pas, LaTeX si)
 ------------------------------------------------------------------------
+-- flextable : définition de \ascline (avec #1, #2, #3) émise dans chaque
+-- tableau ; dans une frame beamer elle provoque "Illegal parameter number
+-- in definition of \iterate". On la retire (elle est dans le thème).
+local ascline_def = "\\providecommand{\\ascline}[3]{\\noalign{\\global\\arrayrulewidth #1}\\arrayrulecolor[HTML]{#2}\\cline{#3}}"
+
+local function remove_plain(text, s)
+  local i, j = text:find(s, 1, true)
+  while i do
+    text = text:sub(1, i - 1) .. text:sub(j + 1)
+    i, j = text:find(s, 1, true)
+  end
+  return text
+end
+
 local function unnumber(el)
   if el.format == "latex" or el.format == "tex" then
+    el.text = remove_plain(el.text, ascline_def)
     el.text = el.text
       :gsub("\\begin{(%a+)}", function(env)
         if env == "align" or env == "equation" or env == "gather" or env == "multline" then
