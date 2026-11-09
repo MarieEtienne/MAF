@@ -231,12 +231,12 @@ imputation).
 (moyenne / kNN / ACP itérative). - **Inférence / reporting** :
 imputation multiple (MI), surtout sous MAR.
 
-**4) Estimer l’ACP** - Sur (\tilde{\mathbf{X}}) (simple) ou sur chaque
-(\tilde{\mathbf{X}}\^{(m)}) (IM). - Attention à l'alignement des axes si
+**4) Estimer l’ACP** - Sur $\tilde{\mathbf{X}}$ (simple) ou sur chaque
+$\tilde{\mathbf{X}}^{(m)}$ (IM). - Attention à l'alignement des axes si
 besoin (indétermination du signe / rotations).
 
 **5) Diagnostics & sensibilité** - Stabilité des charges/axes (bootstrap
-ou IM). - Sensibilité au nombre de composantes (q), au modèle
+ou IM). - Sensibilité au nombre de composantes $q$, au modèle
 d’imputation, et (si plausible) scénarios MNAR.
 
 ## Deux mots sur l'ACP comme modèle factoriel (vue probabiliste)
