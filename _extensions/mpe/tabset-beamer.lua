@@ -83,6 +83,11 @@ local callout_colors = {
 }
 
 local function callout(div)
+  -- ::: hidden (macros MathJax pour revealjs) : supprimé en beamer.
+  -- Les macros sont déjà fournies par mpe-beamer-theme.tex, et ce bloc
+  -- finirait dans une frame où les #1 des \newcommand font planter LaTeX
+  -- ("Illegal parameter number in definition of \iterate").
+  if div.classes:includes("hidden") then return {} end
   local col
   for cls, c in pairs(callout_colors) do
     if div.classes:includes(cls) then col = c end
