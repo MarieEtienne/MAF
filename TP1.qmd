@@ -145,9 +145,9 @@ round(eigen(V)$values,3)
 
 7.  Que deviennent les matrices $V$ et $M$ dans ce cas ?
 
-8.  Les valeurs propres de $M V M$ sont données ci-dessous. Quelle est
-    maintenant la part d'inertie représentée sur le premier axe
-    principal, sur le premier plan principal.
+8.  Les valeurs propres de $M^{1/2}VM^{1/2}$ sont données ci-dessous.
+    Quelle est maintenant la part d'inertie représentée sur le premier
+    axe principal, sur le premier plan principal.
 
 ```{r}
 #| label: donnees_marche_eigen_normed
