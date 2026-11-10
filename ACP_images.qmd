@@ -232,8 +232,8 @@ peut donc les visualiser sous cette forme
 ```{r eigenvectors_buffer}
 list_eigen <- lapply(1:block_size^2, function(i){
 
-  X_restreint <- matrix(images_pca$svd$V[,i], ncol = 4, nrow = 4)
-  image_eig <- as.cimg(matrix(X_restreint, dim = c(4,4)))
+X_restreint <- matrix(images_pca$svd$V[,i], ncol = block_size, nrow = block_size)
+image_eig <- as.cimg(X_restreint)
   p <- image_eig %>% as.data.frame() %>% ggplot(aes(x,y))+geom_raster(aes(fill=value)) +
    scale_y_continuous(trans=scales::reverse_trans(), expand = c(0,0)) + ## pour mettre l'image dans le bon sens et supprimer les bors gris
   scale_x_continuous(expand=c(0,0)) +
@@ -265,8 +265,9 @@ ok <- block2image(test_block, nrow_img = 712, ncol_img = 712, block_size = 4)
 
 X_reconstruction <- block2image(reconstruction, nrow_img = nrow(image_cp), ncol_img = ncol(image_cp), block_size = block_size )
 
-df_1 <-as.cimg(array(X_reconstruction, dim=dim(image_cp)))
-plot(df_1)
+img_1 <- as.cimg(array(X_reconstruction, dim=dim(image_cp)))
+plot(img_1)
+df_1 <- as.data.frame(img_1)
 
 
 p_1 <- ggplot(df_1,aes(x,y))+geom_raster(aes(fill=value)) +
@@ -294,8 +295,7 @@ X_reconstruction_list_2 <- lapply(1:n_col_block, function(j){
 
 X_reconstruction_2 <- do.call(cbind, X_reconstruction_list_2)
 
-
-df_2 <-as.cimg(array(X_reconstruction_2, dim=dim(image))) %>% as.data.frame
+df_2 <-as.cimg(array(X_reconstruction_2, dim=dim(image_cp))) %>% as.data.frame
 p_2 <- ggplot(df_2,aes(x,y))+geom_raster(aes(fill=value)) +
    scale_y_continuous(trans=scales::reverse_trans(), expand = c(0,0)) + ## pour mettre l'image dans le bon sens et supprimer les bors gris
   scale_x_continuous(expand=c(0,0)) +
