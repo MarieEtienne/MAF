@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="MAF 2025-2026">
+
+<title>TD1 - Analyse en composante Principale – Méthodes d’analyse factorielle</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-de87a0c65705785f335a80af640a2190.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Méthodes d’analyse factorielle</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/MarieEtienne/MAF.git"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-references-" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">References</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-references-">    
+        <li>
+    <a class="dropdown-item" href="./references_maf.html">
+ <span class="dropdown-text">Cours</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./references_linear.html">
+ <span class="dropdown-text">Algèbre linéaire</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-cours" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Cours</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-cours">    
+        <li>
+    <a class="dropdown-item" href="./01_intro.html">
+ <span class="dropdown-text">Introduction</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./01_inertie.html">
+ <span class="dropdown-text">Une mesure de la quantité d’information</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./01_acp.html">
+ <span class="dropdown-text">Analyse en Composantes Principales</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./01_afm.html">
+ <span class="dropdown-text">Analyse Factorielle Multiple</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./01_afc.html">
+ <span class="dropdown-text">Analyse Factorielle des Correspondances</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./01_acm.html">
+ <span class="dropdown-text">Analyse Correspondances Multiples</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./01_afd.html">
+ <span class="dropdown-text">Analyse Factorielle Discrimante</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./01_acp_manquantes.html">
+ <span class="dropdown-text">ACP : données manquantes, imputation, imputation multiple</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Versions PDF</li>
+        <li>
+    <a class="dropdown-item" href="./01_intro.pdf">
+ <span class="dropdown-text">Introduction (PDF)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./01_inertie.pdf">
+ <span class="dropdown-text">Inertie (PDF)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./01_acp.pdf">
+ <span class="dropdown-text">ACP (PDF)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./01_afm.pdf">
+ <span class="dropdown-text">AFM (PDF)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./01_afc.pdf">
+ <span class="dropdown-text">AFC (PDF)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./01_acm.pdf">
+ <span class="dropdown-text">ACM (PDF)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./01_afd.pdf">
+ <span class="dropdown-text">AFD (PDF)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./01_acp_manquantes.pdf">
+ <span class="dropdown-text">ACP données manquantes (PDF)</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tdtp" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">TD/TP</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-tdtp">    
+        <li>
+    <a class="dropdown-item" href="./TP1.pdf">
+ <span class="dropdown-text">TD1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./TP2.html">
+ <span class="dropdown-text">TD2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./TP3.pdf">
+ <span class="dropdown-text">TD3</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./TP3_scriptR.html">
+ <span class="dropdown-text">TD3 - script R</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./TP4.html">
+ <span class="dropdown-text">TD4</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#avant-propos" id="toc-avant-propos" class="nav-link active" data-scroll-target="#avant-propos">Avant-propos</a></li>
+  <li><a href="#faire-le-lien-avec-le-cours" id="toc-faire-le-lien-avec-le-cours" class="nav-link" data-scroll-target="#faire-le-lien-avec-le-cours">Faire le lien avec le cours</a></li>
+  <li><a href="#une-première-acp.-etude-des-performance-au-décathlon" id="toc-une-première-acp.-etude-des-performance-au-décathlon" class="nav-link" data-scroll-target="#une-première-acp.-etude-des-performance-au-décathlon">Une première ACP. Etude des performance au Décathlon</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="TP1_correction.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">TD1 - Analyse en composante Principale</h1>
+</div>
+
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Author</div>
+  <div class="quarto-title-meta-heading">Affiliations</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">MAF 2025-2026 <a href="mailto:marie-pierre.etienne@ensai.fr" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            ENSAI - CREST
+          </p>
+        <p class="affiliation">
+            https://marieetienne.github.io/MAF/
+          </p>
+      </div>
+  </div>
+
+<div class="quarto-title-meta">
+
+      
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="hidden">
+
+</div>
+<section id="avant-propos" class="level1">
+<h1>Avant-propos</h1>
+<p>Les TD et TP du cours MAF servent trois objectifs:</p>
+<ul>
+<li><p>Revenir sur certaines notions de cours pour mieux les appréhender</p></li>
+<li><p>donner des outils pratiques pour mettre en oeuvre les méthodes vues en cours,</p></li>
+<li><p>réfléchir à leur mise en oeuvre et leur application dans des cas concrets.</p></li>
+</ul>
+<p>Il est donc fréquent que l’on fasse certaine partie avec peu d’outils (à la main) pouur bien faire le lien avec les concets de cours, tandis que d’autres servent d’exemple pour illustrer comment dérouler une analyse sur un jeu de données en particulier.</p>
+</section>
+<section id="faire-le-lien-avec-le-cours" class="level1">
+<h1>Faire le lien avec le cours</h1>
+<p>On s’intéresse à un jeu de données de 100 individus, pour lesquels on mesure 4 variables</p>
+<ul>
+<li>le poids en <span class="math inline">\(Kg\)</span> (variable <code>P</code> )</li>
+<li>la taille en <span class="math inline">\(m\)</span>,</li>
+<li>la longueur de pas en <span class="math inline">\(cm\)</span>,</li>
+<li>la vitesse de marche en <span class="math inline">\(m.s^{-1}\)</span>.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 3
+  variable     moyenne variance
+  &lt;chr&gt;          &lt;dbl&gt;    &lt;dbl&gt;
+1 weight         68.8    153.  
+2 height          1.69     0.01
+3 steplength     70.5     52.1 
+4 walkingspeed    1.35     0.02</code></pre>
+</div>
+</div>
+<ol type="1">
+<li><p>Que peut-on dire de la dispersion le long de chacun des axes initiaux. <em>Les variance des variables weight et steplength sont bien plus grandes.</em></p></li>
+<li><p>Combien vaut l’inertie projeté sur l’axe de vecteur directeur <span class="math inline">\((1,0,0,0)^\top\)</span> ?</p></li>
+</ol>
+<p><em>L’inertie totale est la somme des variances.</em></p>
+<p><em>En projetant sur le premier axe, on ne garde que l’information sur la première variable. Donc l’inertie du nuage ainsi projeté est la variance de la première variable soit</em> 153.342475</p>
+<p><em>L’inertie par rapport à un axe est l’inertie perdu en projetant sur cet axe. Donc c’est l’inertie totale moins l’inertie portée par l’axe soit</em> 52.167525</p>
+<ol start="3" type="1">
+<li>Combien vaut l’inertie projeté sur l’axe de vecteur directeur <span class="math inline">\((0,1,0,0)^\top\)</span> ?</li>
+</ol>
+<p>0.008212</p>
+<p>On note <span class="math inline">\(X\)</span> de dimension <span class="math inline">\(100 \times 4\)</span> la matrice des données centrées. Chaque individu a le même poids.</p>
+<ol start="4" type="1">
+<li>On souhaite utiliser la distance euclidienne puis réaliser une ACP. le cours indique qu’on diagonalise la matrice <span class="math inline">\(M^{1/2}VM^{1/2}\)</span>. Indiquer ce que sont les matrices <span class="math inline">\(V\)</span> et <span class="math inline">\(M\)</span> impliquées.</li>
+</ol>
+<p><em>Puisqu’on choisit la distance euclidienne la métrique</em> <span class="math inline">\(M\)</span> est la matrice Identité <span class="math inline">\(4 \times 4\)</span>.</p>
+<p><em>Dans le cours la matrice</em> <span class="math inline">\(V= X^\top W X\)</span>, où <span class="math inline">\(W\)</span> est la métrique sur l’espece des variables <span class="math inline">\(\mathbb{R}^n\)</span>. Puisque tous les individus ont le même poids, <span class="math inline">\(W = 1/n I_n\)</span>, donc <span class="math inline">\(V\)</span> est la matrice de covariance.</p>
+<ol start="5" type="1">
+<li>On diagonalise la matrice <span class="math inline">\(M^{1/2}VM^{1/2}\)</span> et on obtient les valeurs propres suivantes. Quelle est l’inertie portée par le premier plan principal, quel pourcentage de l’inertie totale ceci représente-t-il ? Pensez vous qu’on ait ainsi une bonne manière de représenter les données inditiales en seulement deux dimensions ?</li>
+</ol>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 160.754  44.752   0.004   0.002</code></pre>
+</div>
+</div>
+<p><em>L’inertie portée par le premier plan est la somme des deux plus grandes valeurs propres.</em></p>
+<p>205.5061163</p>
+<p><em>Le pourcentage que ceci représente est donné par</em> <span class="math inline">\(\frac{\lambda_1 +\lambda_2}{\sum_{i=1}^p \lambda_i}\)</span></p>
+<p>0.999969</p>
+<p><em>A cause des ordres de grandeur différents des différentes variables, la représentation est telle qu’on n’a pas d’intérêt à préserver l’information sur les variables 2 et 4, car elles sont associées à une plus petite variance. Les variables initiales ont des poids tres différents dans la construction des axes ce qui n’est pas vraiment pertinent. On va vouloir donner une importance identique à chacune des variables.</em></p>
+<p><em>On propose de faire une ACP normée, c’est à dire qu’on change la métrique dans l’espace des individus pour donner le même poids à chaque variable.</em></p>
+<ol start="6" type="1">
+<li>Quelle est l’inertie portée par l’axe de vecteur directeur <span class="math inline">\((1,0,0,0)^\top\)</span> dans ce cas ?</li>
+</ol>
+<p><em>Le premier axe comme tous les autres porte une valeur d’inertie de 1.</em></p>
+<ol start="7" type="1">
+<li>Que deviennent les matrices <span class="math inline">\(V\)</span> et <span class="math inline">\(M\)</span> dans ce cas ?</li>
+</ol>
+<p><em>La matrice</em> <span class="math inline">\(V\)</span> ne change pas, <span class="math inline">\(M\)</span> est une matrice diagonale diagonale <span class="math inline">\(4 \times 4\)</span>, dont le terme diagonal <span class="math inline">\(i\)</span> est l’inverse de l’écart type de la variable <span class="math inline">\(i\)</span>.</p>
+<ol start="8" type="1">
+<li>Les valeurs propres de <span class="math inline">\(M V M\)</span> sont données ci-dessous. Quelle est maintenant la part d’inertie représentée sur le premier axe principal, sur le premier plan principal.</li>
+</ol>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.689 0.877 0.377 0.058</code></pre>
+</div>
+</div>
+<p><em>On obtient à nouveau en faisant</em> <span class="math inline">\(\frac{\lambda_1 +\lambda_2}{\sum_{i=1}^p \lambda_i}\)</span>, ce qui vaut maintenant 0.8913926</p>
+<ol start="9" type="1">
+<li>On utilise le package <code>FactoMineR</code> pour réaliser l’ACP. Peut on deviner quelle est la métrique utilisée par défaut ? Quelles sont les variables bien représentées ? Discuter du lien entre les variables.</li>
+</ol>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>walking_dta_pca <span class="ot">&lt;-</span> <span class="fu">PCA</span>(walking_dta, <span class="at">graph =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>walking_dta_pca<span class="sc">$</span>eig</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       eigenvalue percentage of variance cumulative percentage of variance
+comp 1 2.68869333              67.217333                          67.21733
+comp 2 0.87687700              21.921925                          89.13926
+comp 3 0.37659068               9.414767                          98.55403
+comp 4 0.05783899               1.445975                         100.00000</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(walking_dta_pca, <span class="at">choix =</span> <span class="st">"var"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="TP1_correction_files/figure-html/donnees_marche_eigen_facto_var-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><em>La somme des valeurs propres vaut 4, soit le nombre de variables, ont peut donc en déduire que par défaut la fonction PCA fait une ACP normée. On peut aussi vérifier dans l’aide.</em></p>
+<p><em>Les vecteurs de variables sont de norme 1 dans l’ACP normé, on constante que la norme des vecteurs projetés est proche de 1 (proche du bord du cercle), on ne perd donc que peux d’information, l’information portée par ces variables est bien représentée dans la projection proposée. Puisque toutes les variables sont bien représentées on peut discuter leur lien. steplength et walkingspeed sont très fortement corrélée mais quasimment orthogonale et donc indépendante du poids. Surprenant, la taille et le poids ne sontn pas si fortement corrélées.</em></p>
+<ol start="10" type="1">
+<li>En utilisant le graphique ci-dessous, que pouvez-vous dire</li>
+</ol>
+<ul>
+<li>sur l’individu 10 ?</li>
+<li>sur l’individu 94 ?</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(walking_dta_pca, <span class="at">choix =</span> <span class="st">"ind"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="TP1_correction_files/figure-html/donnees_marche_eigen_facto_ind-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><em>L’individu 21 se caractérise par une coordonée très prositive sur l’axe 1 et quasi nulle sur l’axe 2. L’axe 1 étant fortement lié à la vitesse de marche et à la taille, l’individu 21 marche vite, avec de grands pas et semble grand au regard de l’ensemble de notre échantillon. La valeur presque nulle sur l’axe 2, donne à penser qu’il a plutot un poids relativement moyen. L’individu 94 a une valeur très négative sur l’axe 2, ce qui indique qu’il a un poids plus faible que la moyenne (l’origine est le point représentant un poids moyen), sa faible valeur sur l’axe 1 donne à penser que sa vitesse de marche, sa longueur de pas et sa taille sont dans dans la moyenne.</em></p>
+<ol start="11" type="1">
+<li>Quels sont les individus qui contribuent le plus à la formation du premier axe ?</li>
+</ol>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>walking_dta_pca<span class="sc">$</span>ind<span class="sc">$</span>contrib <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span> <span class="fu">rowid_to_column</span>(<span class="st">"Ind"</span>) <span class="sc">|&gt;</span> <span class="fu">arrange</span>(<span class="sc">-</span>Dim<span class="fl">.1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 100 × 5
+     Ind Dim.1  Dim.2  Dim.3  Dim.4
+   &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+ 1    21  7.39 0.0142 1.09   0.0424
+ 2    75  5.41 0.302  2.09   1.94  
+ 3     7  5.38 4.40   1.15   2.90  
+ 4    10  5.30 3.40   2.80   2.01  
+ 5    63  4.58 4.40   0.233  0.233 
+ 6    24  3.56 0.866  0.333  3.48  
+ 7     4  3.22 0.607  0.645  0.594 
+ 8    45  3.09 0.102  0.0596 0.242 
+ 9    35  3.08 3.27   0.0590 0.715 
+10    32  2.76 1.05   1.54   0.663 
+# ℹ 90 more rows</code></pre>
+</div>
+</div>
+<p><em>La contribution d’un individu</em> <span class="math inline">\(i\)</span> à la formation de l’axe <span class="math inline">\(j\)</span> est la proportion de l’inertie portée par cet axe du à un individu</p>
+<p><span class="math display">\[contrib_{ij} = \frac{1/n C_{ij}^2}{\lambda_j}\]</span></p>
+<p><em>Sans surprise les individus extremes contribuent fortement à la formation des axes, c’est le cas de 21, 75, 7 et 10 pour l’axe 1 qui contribuent pour plus de</em> <span class="math inline">\(5\%\)</span> alors qu’on s’attend en moyenne à une contribution de 1/n soit <span class="math inline">\(1\%\)</span> par individu</p>
+<p><em>Si on regarde sur l’axe 2, on trouve 68 et 63 et dans une moindre mesure 94 identifié plus tôt</em></p>
+<ol start="12" type="1">
+<li>Quels sont les individus les mieux représentés sur le premier axe ?</li>
+</ol>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>walking_dta_pca<span class="sc">$</span>ind<span class="sc">$</span>cos2 <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span> <span class="fu">rowid_to_column</span>(<span class="st">"Ind"</span>) <span class="sc">|&gt;</span> <span class="fu">arrange</span>(<span class="sc">-</span>Dim<span class="fl">.1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 100 × 5
+     Ind Dim.1      Dim.2     Dim.3    Dim.4
+   &lt;int&gt; &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+ 1    17 0.994 0.000398   0.00178   0.00398 
+ 2    54 0.990 0.00000331 0.00686   0.00347 
+ 3    45 0.985 0.0106     0.00266   0.00166 
+ 4    21 0.979 0.000615   0.0202    0.000121
+ 5    96 0.972 0.00465    0.0184    0.00483 
+ 6    29 0.962 0.0209     0.0000642 0.0169  
+ 7    64 0.957 0.0348     0.00753   0.000453
+ 8    34 0.936 0.0412     0.0111    0.0120  
+ 9    75 0.926 0.0169     0.0502    0.00713 
+10     8 0.925 0.0505     0.0144    0.0100  
+# ℹ 90 more rows</code></pre>
+</div>
+</div>
+<p><em>La qualité de la représentation d’un individu sur le premier axe est la part d’information portée par cet individu qui est bien représentée dans l’e plan’axe</em></p>
+<p><span class="math display">\[\frac{ C_{i1}^2 }{\rVert x_i \lVert^2}\]</span></p>
+<ol start="13" type="1">
+<li>Comment sont définies ces deux quantités ?</li>
+</ol>
+<p><em>Je viens de répondre</em></p>
+<ol start="14" type="1">
+<li>Comment mesurer la qualité de la représentation sur le premier plan ?</li>
+</ol>
+<p><em>On additionne les qualité de représentations ou autrement dit</em></p>
+<p><span class="math display">\[\frac{ C_{i1}^2 +  C_{i2}^2 + }{\rVert x_i \lVert^2}\]</span></p>
+</section>
+<section id="une-première-acp.-etude-des-performance-au-décathlon" class="level1">
+<h1>Une première ACP. Etude des performance au Décathlon</h1>
+<p>La package <code>FactoMineR</code>contient un jeu de données sur des performances au Décathlon. Le tableau de données contient 41 lignes et 13 colonnes. Les dix premières colonnes correspondent aux performances des athlètes pour les dix épreuves du décathlon et les colonnes 11 et 12 correspondent respectivement au rang et au nombre de points obtenus. La dernière colonne indique la compétition durant laquelle a eu lieu cette performance (Jeux Olympiques de 2004 ou Décastar 2004). Les lignes sont identifiés avec le nom de l’athlète.</p>
+<p>Chargez la package FactoMineR et le tableau de données en tapant la ligne de code suivante :</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(FactoMineR)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"decathlon"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ol type="1">
+<li>Discuter de la nature des variables</li>
+</ol>
+<p><em>On a 11 variables quantitatives, les performances aux épreuves et le nombre total de points. Le rang est une variable numérique mais qui a un rôle particulier, on ne peut pas vraiment donner de sens au rang moyen par exemple. enfin on a une variable qualitative la competition dont il s’agit.</em></p>
+<p>Le code ci-dessous calcule des résumés quantitatifs pour les variables pertinentes.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>decathlon <span class="sc">|&gt;</span> <span class="fu">summarise</span>(<span class="fu">across</span>(is.numeric, <span class="fu">list</span>(<span class="at">moyenne=</span>mean, <span class="at">variance=</span>var ))) <span class="sc">|&gt;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">everything</span>(),</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"variable"</span>, <span class="st">".value"</span>),</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_sep =</span> <span class="st">"_"</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mutate</span>(<span class="at">variance =</span> variance <span class="sc">*</span>(n<span class="dv">-1</span>)<span class="sc">/</span>n) <span class="sc">|&gt;</span> <span class="co"># pour corriger la variance par défaut de R</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(is.numeric, \(x) <span class="fu">round</span>(x, <span class="dv">2</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 12 × 3
+   variable    moyenne  variance
+   &lt;chr&gt;         &lt;dbl&gt;     &lt;dbl&gt;
+ 1 100m          11         0.07
+ 2 Long.jump      7.26      0.1 
+ 3 Shot.put      14.5       0.67
+ 4 High.jump      1.98      0.01
+ 5 400m          49.6       1.32
+ 6 110m.hurdle   14.6       0.22
+ 7 Discus        44.3      11.3 
+ 8 Pole.vault     4.76      0.08
+ 9 Javeline      58.3      23.1 
+10 1500m        279.      135.  
+11 Rank          12.1      62.1 
+12 Points      8005.   116055.  </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>decathlon <span class="ot">&lt;-</span> decathlon <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">Competition =</span> <span class="fu">as.character</span>(Competition))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ol start="2" type="1">
+<li>Pour comprendre les relations entre les variables, nous pouvons réaliser une ACP.</li>
+</ol>
+<ul>
+<li>Faut il prendre en compte toutes les variables quantitatives ?</li>
+<li>Si vous deviez construire un score basée sur les 10 épreuves comment feriez vous ?</li>
+<li>Quelle choix de distance feriez vous ?</li>
+</ul>
+<p><em>On peut prendre en compte les 10 résultats aux épreuves, et mettre le score de coté pour construire les axes. Dans l’idée le score devrait être une combinaison des 10 variables de base qui résument le mieux la variabilité entre les participants. l’axe 1 est un bon candidat. Les épreuves sont dans des unités différentes, on veut donner le même poids à toutes les épreuves donc une ACP normée vaec la distance qui pondère la distance euclidienne par l’inverse de l’écart type.</em></p>
+<ol start="3" type="1">
+<li>l’ACP est réalisée grâce aux commandes suivantes. A quoi servent les options <code>quanti.sup</code> et <code>quali.sup</code> ? pourquoi ce choix ? Combien y a t il de variables quantitatives au total ?</li>
+</ol>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>decathlon_pca <span class="ot">&lt;-</span> <span class="fu">PCA</span>(decathlon, <span class="at">scale.unit =</span> <span class="cn">TRUE</span>, <span class="at">quanti.sup =</span> <span class="fu">c</span>(<span class="st">"Rank"</span>, <span class="st">"Points"</span>), <span class="at">quali.sup =</span> <span class="st">"Competition"</span>, <span class="at">graph =</span> <span class="cn">FALSE</span>, <span class="at">ncp =</span> <span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><em>quanti.sup et quali.sup sont des variables que l’on pourra représenter par la suite mais qui ne sont pas utilisé pour construire les axes. Il y a 10 variables prises en compte au total</em></p>
+<ol start="4" type="1">
+<li>Combien suggérez d’axes vous semble-t-il pertinent de regarder ?</li>
+</ol>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(factoextra) <span class="co"># for nice vizualisation</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>decathlon_pca<span class="sc">$</span>eig</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        eigenvalue percentage of variance cumulative percentage of variance
+comp 1   3.2719055              32.719055                          32.71906
+comp 2   1.7371310              17.371310                          50.09037
+comp 3   1.4049167              14.049167                          64.13953
+comp 4   1.0568504              10.568504                          74.70804
+comp 5   0.6847735               6.847735                          81.55577
+comp 6   0.5992687               5.992687                          87.54846
+comp 7   0.4512353               4.512353                          92.06081
+comp 8   0.3968766               3.968766                          96.02958
+comp 9   0.2148149               2.148149                          98.17773
+comp 10  0.1822275               1.822275                         100.00000</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_eig</span>(decathlon_pca, <span class="at">choice =</span> <span class="st">"eigenvalue"</span>, <span class="at">ncp =</span> <span class="dv">11</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="TP1_correction_files/figure-html/donnees_decathlon_eig-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><em>Dans la représenation initiale, chaque variable compte pour 1 d’inertie, on peut considérer que dès qu’un axe porte plus que 1 d’inertie il résume un peu plus qu’une variable et on peut le regarder. Ce qui nous conduit à regarder 4 axes. L’autre règle est la règle du coude, qui nous conduit à regarder 2 axes</em></p>
+<ol start="5" type="1">
+<li>Quelles sont les variables bien représentées sur le premier plan principal ?</li>
+</ol>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(factoextra) <span class="co"># for nice vizualisation</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_var</span>(decathlon_pca, <span class="at">axes =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="at">alpha.var =</span> <span class="st">"cos2"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="TP1_correction_files/figure-html/donnees_decathlon_var-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><em>toutes les variables sont assez bien représentées à l’exception de 1500m, Javeline High.jump et Pole.vault (saut à la perche). On peut remarque que les points sont très bien représentés alors que cette variable n’a pas servi à construire les axes. C’est parfaitement lié à l’axe 1. le système de score du décathlon est bien conçu pour résumer la variabitlité des performances à l’aide d’une seule variable.</em></p>
+<ol start="6" type="1">
+<li>Discuter du lien entre les variables. Cela semble-t-il surprenant ?</li>
+</ol>
+<p><em>100m, et 110m haies sont très fortement corrélés et finalement assez corrélés au 400m. ces épreuves sont des épreuves de vitesse. Les résultats sont parfaitement anti corrélés avec le saut en longueur. Ce qui peut paraitre surepnant au premier abord puisque les athlètes qui performent au saut au longueur sont souvent également performant aux épreuves de vitesse. Pour bien comprendre, il faut prendre en compte qu’une bonne performance à la vitesse est un temps petit, tandis qu’une bonne performance aux sauts en lobgueurs est une longue distance. Un athlète performant dans ces disciplines aurant une forte valeur de sauts en longueur et une petite valeur au 100m, les deux valeurs sont bien anti corrélées. Le saut en hauteur et le disque sont orthogonaux au saut en hauteur, donc indépendants</em></p>
+<p><em>Le saut à la perche est tout à fait orthogonale au plan de projection, il est donc indépendant de tout ce qui est bien représenté dans ce plan. Donc la performance au saut à la perche est indépendante de la performance au saut en longueur.</em></p>
+<ol start="7" type="1">
+<li>Le saut à la perche <code>Pole.vault</code> est il bien représenté ? Sur quel plan faut-il projeté pour pouvoir visualiser les performances au saut à la perche ?</li>
+</ol>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>decathlon_pca<span class="sc">$</span>var<span class="sc">$</span>cos2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  Dim.1      Dim.2        Dim.3        Dim.4       Dim.5
+100m        0.600190812 0.03502213 0.0340059930 0.0014302206 0.091322660
+Long.jump   0.550415232 0.11931587 0.0332008675 0.0103603165 0.001345279
+Shot.put    0.387509426 0.35796686 0.0005465513 0.0363251605 0.012354505
+High.jump   0.327121422 0.12270561 0.0673464410 0.0183857880 0.308513117
+400m        0.461869674 0.32425938 0.0172842817 0.0008586058 0.007689811
+110m.hurdle 0.556882084 0.05234639 0.0085816841 0.0845826853 0.027001375
+Discus      0.305219255 0.36761593 0.0018448960 0.0674292539 0.010988725
+Pole.vault  0.002534268 0.03252860 0.4785272696 0.3041897208 0.108873151
+Javeline    0.076790421 0.10048206 0.1518313365 0.5073389244 0.093103658
+1500m       0.003372945 0.22488818 0.6117473613 0.0259496775 0.023581254
+                  Dim.6       Dim.7        Dim.8       Dim.9      Dim.10
+100m        0.052532985 0.065768884 8.456508e-02 0.002357417 0.032803826
+Long.jump   0.056158895 0.177786116 1.752168e-04 0.050045300 0.001196908
+Shot.put    0.055920005 0.043286926 3.911301e-02 0.039220335 0.027757216
+High.jump   0.131125895 0.003773728 6.210295e-03 0.012753657 0.002064046
+400m        0.066261577 0.006985401 1.807328e-02 0.065485634 0.031232355
+110m.hurdle 0.005949349 0.057615948 2.006940e-01 0.004841992 0.001504535
+Discus      0.121013911 0.083390649 5.849093e-04 0.005148092 0.036764380
+Pole.vault  0.041030940 0.004330144 1.258004e-02 0.001479064 0.013926802
+Javeline    0.015961591 0.005141616 3.480612e-02 0.013140353 0.001403912
+1500m       0.053313533 0.003155852 7.467951e-05 0.020343009 0.033573506</code></pre>
+</div>
+</div>
+<p><em>On voit sur la mesure de corrélation capturé par les cos2 que le saut à la perche est bien corrélé avec Dim3 et 4, en effet environ 78% de l’information propre aux performance de saut à la perche est portée par ce plan</em></p>
+<ol start="8" type="1">
+<li>Le saut à la perche est la huitième épreuve au décathlon, le javelot la neuvième, le 1500 m la dernière. Que laisse espérer une bonne performance au saut à la perche, quant à la performance au javelot à venir ?</li>
+</ol>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_var</span>(decathlon_pca, <span class="at">axes =</span> <span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">4</span>), <span class="at">alpha.var =</span> <span class="st">"cos2"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="TP1_correction_files/figure-html/donnees_decathlon_var_34-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><em>On rentre dans des questions d’interprétation plus fine. Sur le plan 3,4 javelot saut à la perche et 1500 m sont bien représentés. le saut à la perche et le javelot sont indpédants. Visiblement les deux performances sont indpéendantes l’une de l’autre. le 1500 m est lui aussi assez faiblement lié.</em></p>
+<ol start="9" type="1">
+<li>La variable nombre de points est très bien représentée par l’axe 1. que pensez de l’intérêt des trois dernières épreuves sur le résultat final ?</li>
+</ol>
+<p>*L’information présente sur les 3 dernières epreuves est plutot sur les axes 3 et 4, donc orthogonale à l’axe 1, ce qui signifie que les performances à ces 3 dernières épreuves sont indépendantes du score final. On peut se poser la question de l’intérêt de ces épreuves.”</p>
+<ol start="10" type="1">
+<li>Ci-dessous le code pour obtenir la représentation des individus dans le premier plan principal. Citer un excellent décathlonien. Discuter de la performance de Casarsa (en haut à gauche) au 400m. Peut-on affirmer que Qi (près de l’origine) est un décathlonien moyen ?</li>
+</ol>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_ind</span>(decathlon_pca, <span class="at">axes =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="at">alpha.ind =</span> <span class="st">"cos2"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="TP1_correction_files/figure-html/donnees_decathlon_ind12-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><em>Karpov est excellent, a une valeur très forte le long de l’axe 1 qui porte les scores</em></p>
+<p><em>Casarsa est particulièrement mauvais au saut en longueur et à la vitess dans ce jeu de données</em></p>
+<p><em>Qi est mal représenté, on ne peut pas vraiment parler de lui dans cette représentation</em></p>
+<ol start="11" type="1">
+<li>Le graphique suivant ajoute l’information sur la Competition. Que pouvez vous déduire des résultats au Decastar et aux Jeux Olympiques ?</li>
+</ol>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>Nobs <span class="ot">&lt;-</span> <span class="fu">nrow</span>(decathlon)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.PCA</span>(decathlon_pca,<span class="at">invisible=</span><span class="fu">c</span>(<span class="st">'ind.sup'</span>), <span class="at">habillage =</span> <span class="fu">c</span>(<span class="st">"Competition"</span>), <span class="at">palette =</span> <span class="fu">c</span>(<span class="st">"#999999"</span>, <span class="st">"#222222"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="TP1_correction_files/figure-html/donnees_decathlon_compare-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><em>Sur ces données, les performances au Decastar sont en général moins bonnes qu’aux JO</em></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
