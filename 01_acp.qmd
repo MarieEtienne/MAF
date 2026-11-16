@@ -1184,29 +1184,38 @@ $\boldsymbol{g} = \boldsymbol{0}$.
 
 ## Ce que vous pensez devoir retenir
 
-- l'ACP permet de mettre en valeur l'information principale contenu dans
-  un jeu de données
+<!-- - l'ACP permet de mettre en valeur l'information principale contenu dans -->
 
-  - les relations entre variables
-  - les proximités entre individus
+<!--   un jeu de données -->
 
-- Cette méthode permet d'obtenir une projection sur queluqes axes
-  indépendants et bien choisis, au sens ou ils résument le mieux
-  l'information
+<!--   - les relations entre variables -->
 
-- Techniquement l'ACP consiste à diagonaliser la matrice de covariance
+<!--   - les proximités entre individus -->
 
-- Les axes sont définis par les vecteurs propres de la matrice\
-  $$ X^\top W X$$
+<!-- - Cette méthode permet d'obtenir une projection sur queluqes axes -->
 
-- Ils sont rangés par ordre d'importance décroissante, au sens où le
-  premier est celui qui préserve le plus l'inertie du nuage projeté (i.e
-  a la plus grande valeur propre)
+<!--   indépendants et bien choisis, au sens ou ils résument le mieux -->
 
-- Il faut adapter la métrique au probleme
+<!--   l'information -->
 
-- l'information portée par un axe est mesurée par la valeur propre
-  associé à l'axe
+<!-- - Techniquement l'ACP consiste à diagonaliser la matrice de covariance -->
 
-- il faut savoir interpréter le nuage des individus, éclairés par les
-  liens entre axes principaux et anciennes variables
+<!-- - Les axes sont définis par les vecteurs propres de la matrice\ -->
+
+<!--   $$ X^\top W X$$ -->
+
+<!-- - Ils sont rangés par ordre d'importance décroissante, au sens où le -->
+
+<!--   premier est celui qui préserve le plus l'inertie du nuage projeté (i.e -->
+
+<!--   a la plus grande valeur propre) -->
+
+<!-- - Il faut adapter la métrique au probleme -->
+
+<!-- - l'information portée par un axe est mesurée par la valeur propre -->
+
+<!--   associé à l'axe -->
+
+<!-- - il faut savoir interpréter le nuage des individus, éclairés par les -->
+
+<!--   liens entre axes principaux et anciennes variables -->

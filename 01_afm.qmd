@@ -472,19 +472,26 @@ doubs_mfa <- MFA(doubs.env,
 
 ## Ce que vous pensez devoir retenir
 
-On *choisit* de faire une AFM si on veut mettre l'accent sur les liens
-entre les groupes de variables
+<!-- On *choisit* de faire une AFM si on veut mettre l'accent sur les liens -->
 
-- Pour ce faire, on veut que chaque groupe contribue de la même manière
-  à construire des premmiers axes principaux
+<!-- entre les groupes de variables -->
 
-- Pour normaliser l'importance de chaque groupe, on calcule la première
-  valeur propre de chaque groupe et on normalise les données par la
-  racine de cette vp, ou de manière équivalente on prend une métrique
-  \$M£ dans maquelle le terme $M_{ii}$ contient la première valeur
-  propre du groupe de variables auquel appartient $i$.
+<!-- - Pour ce faire, on veut que chaque groupe contribue de la même manière -->
 
-La méthode est proche de l'ACP, c'est une ACP avec une métrique
-particulière.
+<!--   à construire des premmiers axes principaux -->
 
-On va inetrpéter les relations entre les groupes de variables.
+<!-- - Pour normaliser l'importance de chaque groupe, on calcule la première -->
+
+<!--   valeur propre de chaque groupe et on normalise les données par la -->
+
+<!--   racine de cette vp, ou de manière équivalente on prend une métrique -->
+
+<!--   \$M£ dans maquelle le terme $M_{ii}$ contient la première valeur -->
+
+<!--   propre du groupe de variables auquel appartient $i$. -->
+
+<!-- La méthode est proche de l'ACP, c'est une ACP avec une métrique -->
+
+<!-- particulière. -->
+
+<!-- On va inetrpéter les relations entre les groupes de variables. -->
