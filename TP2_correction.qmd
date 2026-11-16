@@ -11,7 +11,9 @@ bibliography: TPs.bib
 editor:
   markdown:
     wrap: 72
-css: mpe_pres_revealjs.css
+    canonical: true
+execute:
+  freeze: auto
 format:
   html: default
   pdf: default
@@ -96,7 +98,7 @@ C'est la section de métadonnées du document. Elle est située en haut du fichi
 
     Exemple d'en-tête YAML :
 
-```{yaml}
+```yaml
 #| echo: true
 
 ---
@@ -112,7 +114,7 @@ format: html
 
 La rédaction du texte dans Quarto utilise la syntaxe Markdown pour structurer le contenu de manière simple et lisible. Markdown permet de formater le texte (titres, listes, liens, etc.) sans avoir à écrire du code complexe. Par exemple :
 
-```{markdown}
+```markdown
     # pour les titres (niveau 1, 2, etc. avec ##, ###...),
     - ou * pour les listes,
     [lien](url) pour les liens.
@@ -455,6 +457,7 @@ Au contraire le Suriname et le Guyana, grace à la foret tropicale se caractéri
 
 Singapour est à la fois important pour l'axe 1 et 2, ca vaut la peine de refaire l'analyse sans singapour pour vérifier que toutes nos conclusions ne sont pas influencées par ce pays.
 
+:::
 
 -   Comment l'ACP est-elle modifiée si on retire Singapour de l'analyse ?
 

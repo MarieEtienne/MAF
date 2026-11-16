@@ -8,13 +8,15 @@ author:
 date: last-modified
 institute: https://marieetienne.github.io/MAF/
 bibliography: TPs.bib
-execute:
-  echo: true
-  eval: true
 editor:
   markdown:
     wrap: 72
-css: mpe_pres_revealjs.css
+    canonical: true
+execute:
+  freeze: auto
+format:
+  html: default
+  pdf: default
 ---
 
 ```{r setup, include=FALSE, eval = TRUE}
@@ -154,29 +156,29 @@ Les définitions des modes de calcul sont disponibles sur le site
 
 ## Quelques remarques préalables
 
--   Les variables 20 à 25, donnent des effectifs par EPCI, ceci peut
-    constituer une table de contingence, mais elles peuvent aussi être
-    aggrégées à l'échelle du département pour construire des profils de
-    département.
+- Les variables 20 à 25, donnent des effectifs par EPCI, ceci peut
+  constituer une table de contingence, mais elles peuvent aussi être
+  aggrégées à l'échelle du département pour construire des profils de
+  département.
 
--   la même remarque peut être faite pour les variables 26 à 32.
+- la même remarque peut être faite pour les variables 26 à 32.
 
--   On va travailler par département, certains EPCI sont à cheval sur
-    plusieurs départements, il faut faire des choix les concernant.
-    L'objectif du TP étant de mettre en oeuvre les méthodes vues en
-    cours, nous allons opter pour un choix drastique et discutable,
-    consistant à associer l'EPCI au département sur le lequel il a la
-    plus grosse population.
+- On va travailler par département, certains EPCI sont à cheval sur
+  plusieurs départements, il faut faire des choix les concernant.
+  L'objectif du TP étant de mettre en oeuvre les méthodes vues en cours,
+  nous allons opter pour un choix drastique et discutable, consistant à
+  associer l'EPCI au département sur le lequel il a la plus grosse
+  population.
 
 ## Les questions que l'on se pose
 
 Ces données permmettent d'extraire des informations en rapport avec
 différente question.
 
--   Peut on faire des typologies de département en terme d'habitat ?
--   Ces données permettent-elles de faire des hypothèses sur le lien
-    entre type d'habitat et consommation ? ou entre vétusté du parc
-    immobilier et consommation ?
+- Peut on faire des typologies de département en terme d'habitat ?
+- Ces données permettent-elles de faire des hypothèses sur le lien entre
+  type d'habitat et consommation ? ou entre vétusté du parc immobilier
+  et consommation ?
 
 # Mise en oeuvre
 
@@ -457,20 +459,22 @@ sites**.
 
 L’objectif de l'analyse est
 
--   d'explorer la structure des données qualitatives,
--   d'identifier les **grands gradients écologiques**,
+- d'explorer la structure des données qualitatives,
+- d'identifier les **grands gradients écologiques**,
 
 ## Données
 
-Le fichier [sites_acm.csv]((https://raw.githubusercontent.com/MarieEtienne/MAF/refs/heads/master/sites_acm.csv) contient les variables suivantes.
+Le fichier
+\[sites_acm.csv\]((https://raw.githubusercontent.com/MarieEtienne/MAF/refs/heads/master/sites_acm.csv)
+contient les variables suivantes.
 
--   **Milieu** : urbain / periurbain / rural
--   **Couverture** : boise / prairial / agricole / mixte
--   **Gestion** : fauche_tardive / fauche_frequente / paturage / aucune
--   **Pression** : forte / moyenne / faible
--   **Eau** : proche / eloigne
--   **Artificialisation** : oui / non
--   **Usage** : loisirs / agricole / conservation / mixte
+- **Milieu** : urbain / periurbain / rural
+- **Couverture** : boise / prairial / agricole / mixte
+- **Gestion** : fauche_tardive / fauche_frequente / paturage / aucune
+- **Pression** : forte / moyenne / faible
+- **Eau** : proche / eloigne
+- **Artificialisation** : oui / non
+- **Usage** : loisirs / agricole / conservation / mixte
 
 On a également des informations sur \* **Richesse écologique** : faible
 / moyenne / elevee (classe de richesse spécifique) \* **Region** : Nord
